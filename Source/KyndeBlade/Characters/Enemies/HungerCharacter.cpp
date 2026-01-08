@@ -42,9 +42,8 @@ void AHungerCharacter::Tick(float DeltaTime)
 void AHungerCharacter::UpdateHungerPower()
 {
 	// Hunger's power grows as more enemies become hungry
-	int32 HungryCount = GetHungryEnemyCount();
-	HungerPower = FMath::Min(MaxHungerPower, 1.0f + (HungryCount * 0.2f));
-	
+	// Note: In full implementation, would get enemies from combat system
+	// For now, HungerPower updates based on combat state
 	// Hunger becomes stronger as more enemies suffer
 	Stats.AttackPower = 16.0f * HungerPower;
 }
@@ -171,17 +170,13 @@ void AHungerCharacter::TheFeastOfWant()
 
 	// From Piers Plowman: Hunger feeds on the hungry
 	// Heals Hunger based on how many enemies are hungry
-	int32 HungryCount = GetHungryEnemyCount();
+	// Note: In full implementation, would get enemies from combat system
+	// For now, uses current HungerPower to determine healing
+	float HealAmount = 20.0f * HungerPower;
+	Heal(HealAmount);
 	
-	if (HungryCount > 0)
-	{
-		// Heal for each hungry enemy
-		float HealAmount = 20.0f * HungryCount * HungerPower;
-		Heal(HealAmount);
-		
-		// Increase hunger power
-		HungerPower = FMath::Min(MaxHungerPower, HungerPower + 0.1f);
-	}
+	// Increase hunger power
+	HungerPower = FMath::Min(MaxHungerPower, HungerPower + 0.1f);
 }
 
 void AHungerCharacter::TheUnendingNeed(const TArray<AMedievalCharacter*>& Targets)
@@ -218,14 +213,16 @@ void AHungerCharacter::TheUnendingNeed(const TArray<AMedievalCharacter*>& Target
 	}
 }
 
-int32 AHungerCharacter::GetHungryEnemyCount() const
+int32 AHungerCharacter::GetHungryEnemyCount(const TArray<AMedievalCharacter*>& Enemies) const
 {
-	// Count how many player characters are hungry
-	// This would need access to the turn manager or combat system
-	// For now, we'll need to pass in the enemy list or get it from combat system
-	// This is a placeholder - would be implemented with proper combat system integration
-	
-	// In a full implementation, this would query the combat system for all player characters
-	// and count how many have the hunger status effect
-	return 0;
+	// Count how many enemies are hungry
+	int32 HungryCount = 0;
+	for (AMedievalCharacter* Enemy : Enemies)
+	{
+		if (Enemy && Enemy->IsAlive() && Enemy->IsHungry())
+		{
+			HungryCount++;
+		}
+	}
+	return HungryCount;
 }

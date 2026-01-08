@@ -237,7 +237,7 @@ The campaign follows the structure of *Piers Plowman*, divided into **Passus** (
 - **Glotonye** (Gluttony) - The wealthy consuming resources
 - Poverty itself as an enemy
 
-**Boss:** **Hunger** (Mid-Game Boss - The Worst Status Effect)
+**Boss:** **Hunger** (Mid-Game Boss - The Worst Status Effect, replaces Poverte Personified)
 - **Visual Design (Alan Lee-inspired):**
   - Ethereal, gaunt figure - skeletal but not undead, personification of want
   - Wispy, translucent form that fades in and out

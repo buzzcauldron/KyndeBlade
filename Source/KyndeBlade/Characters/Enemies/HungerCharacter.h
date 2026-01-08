@@ -78,7 +78,7 @@ public:
 	void TheUnendingNeed(const TArray<AMedievalCharacter*>& Targets);
 
 	UFUNCTION(BlueprintCallable)
-	int32 GetHungryEnemyCount() const;
+	int32 GetHungryEnemyCount(const TArray<AMedievalCharacter*>& Enemies) const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetHungerPower() const { return HungerPower; }
