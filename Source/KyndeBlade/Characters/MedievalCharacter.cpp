@@ -92,7 +92,9 @@ void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
 	if (bIsDodging && AttemptDodge())
 	{
 		// Successful dodge - no damage, gain VP
-		bool bPerfectDodge = (DodgeWindowRemaining <= PerfectDodgeWindow);
+		// Perfect dodge is in last 30% of window
+		float PerfectWindow = DodgeWindowRemaining * 0.3f;
+		bool bPerfectDodge = (DodgeWindowRemaining <= PerfectWindow);
 		float VPReward = bPerfectDodge ? 2.0f : 1.0f; // Perfect dodge gives more VP
 		GainVirtuePoints(VPReward);
 		return;
@@ -101,7 +103,9 @@ void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
 	if (bIsParrying && AttemptParry())
 	{
 		// Successful parry - reduced damage, gain VP, counter opportunity
-		bool bPerfectParry = (ParryWindowRemaining <= PerfectParryWindow);
+		// Perfect parry is in last 25% of window
+		float PerfectWindow = ParryWindowRemaining * 0.25f;
+		bool bPerfectParry = (ParryWindowRemaining <= PerfectWindow);
 		float VPReward = bPerfectParry ? 4.0f : 2.0f; // Perfect parry gives more VP
 		GainVirtuePoints(VPReward);
 		ActualDamage *= 0.3f;
