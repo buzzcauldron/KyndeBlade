@@ -109,6 +109,25 @@ protected:
 	// Timer handle for delayed turn transitions
 	FTimerHandle NextTurnTimerHandle;
 
+	// Timing for action execution
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float ActionCastTimeRemaining = 0.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float ActionExecutionTimeRemaining = 0.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class UCombatAction* CurrentExecutingAction = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AMedievalCharacter* CurrentActionTarget = nullptr;
+
+	UFUNCTION()
+	void ProcessActionCast();
+
+	UFUNCTION()
+	void ProcessActionExecution();
+
 	UFUNCTION()
 	void CalculateTurnOrder();
 

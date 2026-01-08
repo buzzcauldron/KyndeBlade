@@ -13,10 +13,25 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 		return;
 	}
 
+	// Expedition 33-inspired: Check VP cost before executing
+	if (ActionData.VirtuePointsCost > 0.0f)
+	{
+		if (!Executor->ConsumeVirtuePoints(ActionData.VirtuePointsCost))
+		{
+			return; // Not enough VP, action fails
+		}
+	}
+
 	// Consume stamina
 	if (Executor)
 	{
 		Executor->ConsumeStamina(ActionData.StaminaCost);
+	}
+
+	// Expedition 33-inspired: Generate VP from melee attacks
+	if (ActionData.VirtuePointsGenerated > 0.0f && Executor)
+	{
+		Executor->GainVirtuePoints(ActionData.VirtuePointsGenerated);
 	}
 
 	// Execute the action based on type
@@ -25,7 +40,24 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 	case ECombatActionType::Attack:
 		if (Target)
 		{
-			Target->TakeDamage(ActionData.Damage, Executor);
+			float FinalDamage = ActionData.Damage;
+			
+			// Expedition 33-inspired: Apply elemental damage modifiers
+			// (Elemental weakness/resistance system would be implemented here)
+			
+			// Expedition 33-inspired: Broken enemies take 50% more damage
+			if (Target->IsBroken())
+			{
+				FinalDamage *= 1.5f;
+			}
+			
+			Target->TakeDamage(FinalDamage, Executor);
+			
+			// Expedition 33-inspired: Apply break damage
+			if (ActionData.BreakDamage > 0.0f && Target)
+			{
+				Target->TakeBreakDamage(ActionData.BreakDamage);
+			}
 		}
 		break;
 	case ECombatActionType::Dodge:

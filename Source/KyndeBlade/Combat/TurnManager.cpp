@@ -31,6 +31,34 @@ void ATurnManager::Tick(float DeltaTime)
 			// Process results and move to next turn
 			NextTurn();
 		}
+		return; // Early return to prevent processing action timing
+	}
+
+	// Process action timing (cast and execution phases)
+	// Use else-if chain to ensure only one phase processes per frame
+	if (CombatState == ECombatState::ExecutingAction)
+	{
+		// Process cast time first
+		if (ActionCastTimeRemaining > 0.0f)
+		{
+			ActionCastTimeRemaining -= DeltaTime;
+			if (ActionCastTimeRemaining <= 0.0f)
+			{
+				// Cast complete, move to execution phase
+				ProcessActionCast();
+				// Don't process execution in the same frame - it will be processed next frame
+			}
+		}
+		// Only process execution if cast is complete (not in the same frame)
+		else if (ActionExecutionTimeRemaining > 0.0f)
+		{
+			ActionExecutionTimeRemaining -= DeltaTime;
+			if (ActionExecutionTimeRemaining <= 0.0f)
+			{
+				// Execution complete
+				ProcessActionExecution();
+			}
+		}
 	}
 }
 
@@ -148,15 +176,59 @@ void ATurnManager::ExecuteAction(UCombatAction* Action, AMedievalCharacter* Targ
 	}
 
 	CombatState = ECombatState::ExecutingAction;
+	CurrentExecutingAction = Action;
+	CurrentActionTarget = Target;
+
+	// Handle cast time
+	if (Action->GetCastTime() > 0.0f)
+	{
+		// Enter cast phase
+		ActionCastTimeRemaining = Action->GetCastTime();
+		ActionExecutionTimeRemaining = 0.0f;
+		// Process cast time in Tick
+	}
+	else
+	{
+		// No cast time, execute immediately
+		ProcessActionCast();
+	}
+}
+
+void ATurnManager::ProcessActionCast()
+{
+	if (!CurrentExecutingAction || !CurrentCharacter)
+	{
+		return;
+	}
 
 	// Execute the action
-	CurrentCharacter->ExecuteCombatAction(Action, Target);
+	CurrentCharacter->ExecuteCombatAction(CurrentExecutingAction, CurrentActionTarget);
+
+	// Handle execution time
+	if (CurrentExecutingAction->GetExecutionTime() > 0.0f)
+	{
+		ActionExecutionTimeRemaining = CurrentExecutingAction->GetExecutionTime();
+		// Process execution time in Tick
+	}
+	else
+	{
+		// No execution time, finish immediately
+		ProcessActionExecution();
+	}
+}
+
+void ATurnManager::ProcessActionExecution()
+{
+	if (!CurrentExecutingAction)
+	{
+		return;
+	}
 
 	// If action has real-time mechanics, start the window
-	if (Action->ActionData.ActionType == ECombatActionType::Dodge || 
-		Action->ActionData.ActionType == ECombatActionType::Parry)
+	if (CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Dodge || 
+		CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Parry)
 	{
-		StartRealTimeWindow(Action->ActionData.SuccessWindow);
+		StartRealTimeWindow(CurrentExecutingAction->ActionData.SuccessWindow);
 	}
 	else
 	{
@@ -166,6 +238,12 @@ void ATurnManager::ExecuteAction(UCombatAction* Action, AMedievalCharacter* Targ
 		GetWorld()->GetTimerManager().ClearTimer(NextTurnTimerHandle);
 		GetWorld()->GetTimerManager().SetTimer(NextTurnTimerHandle, this, &ATurnManager::NextTurn, 0.01f, false);
 	}
+
+	// Clear action references
+	CurrentExecutingAction = nullptr;
+	CurrentActionTarget = nullptr;
+	ActionCastTimeRemaining = 0.0f;
+	ActionExecutionTimeRemaining = 0.0f;
 }
 
 void ATurnManager::StartRealTimeWindow(float Duration)

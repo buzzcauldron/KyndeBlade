@@ -65,6 +65,17 @@ void AMedievalCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	UpdateRealTimeCombat(DeltaTime);
+	UpdateActionCooldowns(DeltaTime);
+	
+	// Expedition 33-inspired: Update broken state
+	if (bIsBroken && BrokenStunRemaining > 0.0f)
+	{
+		BrokenStunRemaining -= DeltaTime;
+		if (BrokenStunRemaining <= 0.0f)
+		{
+			RecoverFromBreak();
+		}
+	}
 }
 
 void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
@@ -77,16 +88,22 @@ void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
 	// Apply defense reduction
 	float ActualDamage = FMath::Max(0.0f, Damage - Stats.Defense);
 	
-	// Check for dodge/parry
+	// Expedition 33-inspired: Check for dodge/parry with VP rewards
 	if (bIsDodging && AttemptDodge())
 	{
-		// Successful dodge - no damage
+		// Successful dodge - no damage, gain VP
+		bool bPerfectDodge = (DodgeWindowRemaining <= PerfectDodgeWindow);
+		float VPReward = bPerfectDodge ? 2.0f : 1.0f; // Perfect dodge gives more VP
+		GainVirtuePoints(VPReward);
 		return;
 	}
 
 	if (bIsParrying && AttemptParry())
 	{
-		// Successful parry - reduced damage and counter opportunity
+		// Successful parry - reduced damage, gain VP, counter opportunity
+		bool bPerfectParry = (ParryWindowRemaining <= PerfectParryWindow);
+		float VPReward = bPerfectParry ? 4.0f : 2.0f; // Perfect parry gives more VP
+		GainVirtuePoints(VPReward);
 		ActualDamage *= 0.3f;
 		// Could trigger counter attack here
 	}
@@ -113,6 +130,61 @@ void AMedievalCharacter::RestoreStamina(float Amount)
 {
 	Stats.CurrentStamina = FMath::Min(Stats.MaxStamina, Stats.CurrentStamina + Amount);
 	OnStaminaChanged.Broadcast(Stats.CurrentStamina, Stats.MaxStamina);
+}
+
+// Expedition 33-inspired: Virtue Points (AP) management
+void AMedievalCharacter::GainVirtuePoints(float Amount)
+{
+	CurrentVirtuePoints = FMath::Min(MaxVirtuePoints, CurrentVirtuePoints + Amount);
+	OnVirtuePointsChanged.Broadcast(CurrentVirtuePoints, MaxVirtuePoints);
+}
+
+bool AMedievalCharacter::ConsumeVirtuePoints(float Amount)
+{
+	if (CurrentVirtuePoints >= Amount)
+	{
+		CurrentVirtuePoints -= Amount;
+		OnVirtuePointsChanged.Broadcast(CurrentVirtuePoints, MaxVirtuePoints);
+		return true;
+	}
+	return false;
+}
+
+// Expedition 33-inspired: Break system
+void AMedievalCharacter::TakeBreakDamage(float BreakAmount)
+{
+	if (bIsBroken)
+	{
+		return; // Already broken, break gauge doesn't decrease further
+	}
+
+	CurrentBreakGauge = FMath::Max(0.0f, CurrentBreakGauge - BreakAmount);
+	OnBreakGaugeChanged.Broadcast(CurrentBreakGauge, MaxBreakGauge);
+
+	if (CurrentBreakGauge <= 0.0f)
+	{
+		BreakCharacter();
+	}
+}
+
+void AMedievalCharacter::BreakCharacter()
+{
+	if (bIsBroken)
+	{
+		return; // Already broken
+	}
+
+	bIsBroken = true;
+	BrokenStunRemaining = 2.0f; // Stunned for 2 turns (will be decremented in Tick)
+	OnCharacterBroken.Broadcast(this);
+}
+
+void AMedievalCharacter::RecoverFromBreak()
+{
+	bIsBroken = false;
+	BrokenStunRemaining = 0.0f;
+	CurrentBreakGauge = MaxBreakGauge; // Reset break gauge
+	OnBreakGaugeChanged.Broadcast(CurrentBreakGauge, MaxBreakGauge);
 }
 
 void AMedievalCharacter::StartDodge(float WindowDuration)
@@ -155,7 +227,13 @@ void AMedievalCharacter::ExecuteCombatAction(UCombatAction* Action, AMedievalCha
 {
 	if (Action)
 	{
+		// Expedition 33-inspired: Generate VP from melee attacks before executing
+		// (VP generation is handled in CombatAction::ExecuteAction, but we can add bonus here)
+		
 		Action->ExecuteAction(this, Target);
+		
+		// Expedition 33-inspired: Apply break damage if action has it
+		// (Break damage is handled in CombatAction::ExecuteAction)
 	}
 }
 

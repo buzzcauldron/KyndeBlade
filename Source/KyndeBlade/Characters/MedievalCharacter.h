@@ -40,6 +40,26 @@ struct FCharacterStats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Speed = 10.0f; // Affects turn order
 
+	// Expedition 33-inspired: Ability Points (called Virtue Points in medieval theme)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxVirtuePoints = 10.0f; // Max AP (Virtue Points)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentVirtuePoints = 0.0f; // Current AP
+
+	// Break system (Expedition 33-inspired)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxBreakGauge = 100.0f; // Break gauge maximum
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentBreakGauge = 100.0f; // Current break gauge
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsBroken = false; // Is the character in broken state?
+
+	UPROPERTY(BlueprintReadOnly)
+	float BrokenStunRemaining = 0.0f; // Time remaining in broken state
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Level = 1;
 
@@ -52,13 +72,20 @@ struct FCharacterStats
 		AttackPower = 10.0f;
 		Defense = 5.0f;
 		Speed = 10.0f;
+		MaxVirtuePoints = 10.0f;
+		CurrentVirtuePoints = 0.0f;
+		MaxBreakGauge = 100.0f;
+		CurrentBreakGauge = 100.0f;
 		Level = 1;
 	}
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, MaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStaminaChanged, float, NewStamina, float, MaxStamina);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVirtuePointsChanged, float, NewVP, float, MaxVP);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBreakGaugeChanged, float, NewBreak, float, MaxBreak);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterDefeated, AMedievalCharacter*, Character);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBroken, AMedievalCharacter*, Character);
 
 /**
  * Base character class for medieval-themed combat
@@ -111,9 +138,47 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnCharacterDefeated OnCharacterDefeated;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnVirtuePointsChanged OnVirtuePointsChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnBreakGaugeChanged OnBreakGaugeChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCharacterBroken OnCharacterBroken;
+
 	// Combat Functions
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float Damage, AMedievalCharacter* Attacker);
+
+	// Expedition 33-inspired: Virtue Points (AP) management
+	UFUNCTION(BlueprintCallable)
+	void GainVirtuePoints(float Amount);
+
+	UFUNCTION(BlueprintCallable)
+	bool ConsumeVirtuePoints(float Amount);
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentVirtuePoints() const { return CurrentVirtuePoints; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxVirtuePoints() const { return MaxVirtuePoints; }
+
+	// Expedition 33-inspired: Break system
+	UFUNCTION(BlueprintCallable)
+	void TakeBreakDamage(float BreakAmount);
+
+	UFUNCTION(BlueprintCallable)
+	void BreakCharacter(); // Called when break gauge reaches zero
+
+	UFUNCTION(BlueprintCallable)
+	void RecoverFromBreak(); // Called when broken state ends
+
+	UFUNCTION(BlueprintCallable)
+	float GetCurrentBreakGauge() const { return CurrentBreakGauge; }
+
+	UFUNCTION(BlueprintCallable)
+	bool IsBroken() const { return bIsBroken; }
 
 	UFUNCTION(BlueprintCallable)
 	void Heal(float Amount);
