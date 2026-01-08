@@ -11,13 +11,13 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 
 **Turn-Based Phase:**
 - Players select actions during their turn
-- Actions include: Melee Attack (generates AP), Ranged Attack (consumes AP), Skills (consume AP), Dodge, Parry
+- Actions include: Melee Strike (generates Kynde), Ranged Strike (consumes Kynde), Skills (consume Kynde), Escapade, Ward
 - Turn order based on Speed stat
 
 **Real-Time Phase:**
 - During enemy turns, players can react in real-time
-- **Dodge**: Press button during attack window to avoid damage
-- **Parry**: Precise timing to block and gain AP + counter opportunity
+- **Escapade** (Kynde's Evasion): Press button during attack window to avoid damage
+- **Ward** (Trewthe's Sheeld): Precise timing to block and gain Kynde + counter opportunity
 - **Jump Over**: Some attacks can be jumped over (medieval version: duck/roll)
 
 ---
@@ -89,16 +89,16 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 
 ### 5. Real-Time Defense Mechanics
 
-**Dodge:**
+**Escapade** (Kynde's Evasion):
 - Window: 1.0-2.0 seconds (varies by attack)
 - Success: Avoid all damage, gain 1-2 Kynde
-- Perfect Dodge: Last 30% of window, gain 2 Kynde + momentum bonus
+- Perfect Escapade: Last 30% of window, gain 2 Kynde + momentum bonus
 - Failure: Take full damage
 
-**Parry:**
+**Ward** (Trewthe's Sheeld):
 - Window: 0.5-1.0 seconds (smaller, more skill)
 - Success: Reduce damage by 80%, gain 2-4 Kynde, enable counter
-- Perfect Parry: Last 25% of window, gain 4 Kynde + counter opportunity
+- Perfect Ward: Last 25% of window, gain 4 Kynde + counter opportunity
 - Failure: Take full damage
 
 **Counter-Attack:**
@@ -207,7 +207,7 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 2. **Enemy Turn:**
    - Enemy selects action
    - **Real-Time Window Opens**
-   - Player can dodge/parry/jump
+   - Player can Escapade/Ward/jump
    - Success: Avoid/reduce damage, gain Kynde
    - Failure: Take damage
 
@@ -219,7 +219,7 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 4. **Kynde Management:**
    - Balance generating Kynde (melee) vs spending (skills)
    - Save Kynde for powerful combos
-   - Use parry to generate Kynde during enemy turns
+   - Use Ward to generate Kynde during enemy turns
 
 ---
 
