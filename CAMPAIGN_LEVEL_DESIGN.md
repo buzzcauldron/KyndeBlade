@@ -237,17 +237,42 @@ The campaign follows the structure of *Piers Plowman*, divided into **Passus** (
 - **Glotonye** (Gluttony) - The wealthy consuming resources
 - Poverty itself as an enemy
 
-**Boss:** **Poverte Personified** (The Depths)
-- Multi-phase boss fight
-- Represents the crushing weight of economic hardship
-- Makes spiritual quests seem impossible
-- Cannot be fully defeated - only survived
+**Boss:** **Hunger** (Mid-Game Boss - The Worst Status Effect)
+- **Visual Design (Alan Lee-inspired):**
+  - Ethereal, gaunt figure - skeletal but not undead, personification of want
+  - Wispy, translucent form that fades in and out
+  - Dark, shadowy colors with earth tones (browns, grays, deep purples)
+  - Surrounded by faint, hungry shadows that reach out like grasping hands
+  - Hollow but watchful eyes - the eyes of someone who has known true hunger
+  - Tattered, worn clothes like the poorest in medieval society
+  - Desolate environment - barren field after harvest
+  - Atmospheric lighting - dim, with long shadows
+  - Detailed textures showing the effects of hunger on the body
+  - Mystical, otherworldly quality while remaining grounded in medieval reality
+- **Abilities (from Piers Plowman):**
+  - **Hunger's Grip**: Applies hunger status effect to all enemies (forces people to work)
+  - **The Empty Belly**: Drains stamina and Kynde from all enemies (physical reality of hunger)
+  - **The Barren Field**: Area effect that applies hunger over time (hunger from lack of food)
+  - **The Work That Never Ends**: Applies hunger and forces stamina consumption (hunger forces endless labor)
+  - **The Feast of Want**: Heals Hunger based on hungry enemies (hunger feeds on the hungry)
+  - **The Unending Need**: Stacks hunger on all enemies (hunger is never satisfied)
+- **Mechanics:**
+  - Hunger's power grows as more enemies become hungry
+  - Applies the worst status effect (hunger) constantly
+  - Feeds on the party's suffering
+  - Represents the crushing reality of poverty and starvation
+  - Multi-phase fight - becomes stronger as the party weakens
+- **Thematic Significance:**
+  - From Piers Plowman: Hunger is a personification that forces people to work
+  - Represents the harsh reality that poverty and hunger make spiritual quests nearly impossible
+  - Cannot be fully defeated - only survived, like poverty itself
+  - The fight itself applies hunger, making it harder as it goes on
 
 **Musical Theme:** "The Dongeoun" - Deeply melancholic, representing despair and the weight of poverty
 
 **Rewards:**
 - Party level 12-15
-- Understanding that poverty is an enemy that cannot be fully defeated
+- Understanding that hunger and poverty are enemies that cannot be fully defeated
 - The quest continues, but hope diminishes
 
 ---
