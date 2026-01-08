@@ -13,12 +13,12 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 		return;
 	}
 
-	// Expedition 33-inspired: Check VP cost before executing
-	if (ActionData.VirtuePointsCost > 0.0f)
+	// Expedition 33-inspired: Check Kynde cost before executing
+	if (ActionData.KyndeCost > 0.0f)
 	{
-		if (!Executor->ConsumeVirtuePoints(ActionData.VirtuePointsCost))
+		if (!Executor->ConsumeKynde(ActionData.KyndeCost))
 		{
-			return; // Not enough VP, action fails
+			return; // Not enough Kynde, action fails
 		}
 	}
 
@@ -28,10 +28,10 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 		Executor->ConsumeStamina(ActionData.StaminaCost);
 	}
 
-	// Expedition 33-inspired: Generate VP from melee attacks
-	if (ActionData.VirtuePointsGenerated > 0.0f && Executor)
+	// Expedition 33-inspired: Generate Kynde from melee attacks
+	if (ActionData.KyndeGenerated > 0.0f && Executor)
 	{
-		Executor->GainVirtuePoints(ActionData.VirtuePointsGenerated);
+		Executor->GainKynde(ActionData.KyndeGenerated);
 	}
 
 	// Execute the action based on type

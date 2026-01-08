@@ -88,26 +88,26 @@ void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
 	// Apply defense reduction
 	float ActualDamage = FMath::Max(0.0f, Damage - Stats.Defense);
 	
-	// Expedition 33-inspired: Check for dodge/parry with VP rewards
+	// Expedition 33-inspired: Check for dodge/parry with Kynde rewards
 	if (bIsDodging && AttemptDodge())
 	{
-		// Successful dodge - no damage, gain VP
+		// Successful dodge - no damage, gain Kynde
 		// Perfect dodge is in last 30% of window
 		float PerfectWindow = DodgeWindowRemaining * 0.3f;
 		bool bPerfectDodge = (DodgeWindowRemaining <= PerfectWindow);
-		float VPReward = bPerfectDodge ? 2.0f : 1.0f; // Perfect dodge gives more VP
-		GainVirtuePoints(VPReward);
+		float KyndeReward = bPerfectDodge ? 2.0f : 1.0f; // Perfect dodge gives more Kynde
+		GainKynde(KyndeReward);
 		return;
 	}
 
 	if (bIsParrying && AttemptParry())
 	{
-		// Successful parry - reduced damage, gain VP, counter opportunity
+		// Successful parry - reduced damage, gain Kynde, counter opportunity
 		// Perfect parry is in last 25% of window
 		float PerfectWindow = ParryWindowRemaining * 0.25f;
 		bool bPerfectParry = (ParryWindowRemaining <= PerfectWindow);
-		float VPReward = bPerfectParry ? 4.0f : 2.0f; // Perfect parry gives more VP
-		GainVirtuePoints(VPReward);
+		float KyndeReward = bPerfectParry ? 4.0f : 2.0f; // Perfect parry gives more Kynde
+		GainKynde(KyndeReward);
 		ActualDamage *= 0.3f;
 		// Could trigger counter attack here
 	}
@@ -136,19 +136,19 @@ void AMedievalCharacter::RestoreStamina(float Amount)
 	OnStaminaChanged.Broadcast(Stats.CurrentStamina, Stats.MaxStamina);
 }
 
-// Expedition 33-inspired: Virtue Points (AP) management
-void AMedievalCharacter::GainVirtuePoints(float Amount)
+// Expedition 33-inspired: Kynde management
+void AMedievalCharacter::GainKynde(float Amount)
 {
-	CurrentVirtuePoints = FMath::Min(MaxVirtuePoints, CurrentVirtuePoints + Amount);
-	OnVirtuePointsChanged.Broadcast(CurrentVirtuePoints, MaxVirtuePoints);
+	CurrentKynde = FMath::Min(MaxKynde, CurrentKynde + Amount);
+	OnKyndeChanged.Broadcast(CurrentKynde, MaxKynde);
 }
 
-bool AMedievalCharacter::ConsumeVirtuePoints(float Amount)
+bool AMedievalCharacter::ConsumeKynde(float Amount)
 {
-	if (CurrentVirtuePoints >= Amount)
+	if (CurrentKynde >= Amount)
 	{
-		CurrentVirtuePoints -= Amount;
-		OnVirtuePointsChanged.Broadcast(CurrentVirtuePoints, MaxVirtuePoints);
+		CurrentKynde -= Amount;
+		OnKyndeChanged.Broadcast(CurrentKynde, MaxKynde);
 		return true;
 	}
 	return false;
@@ -231,8 +231,8 @@ void AMedievalCharacter::ExecuteCombatAction(UCombatAction* Action, AMedievalCha
 {
 	if (Action)
 	{
-		// Expedition 33-inspired: Generate VP from melee attacks before executing
-		// (VP generation is handled in CombatAction::ExecuteAction, but we can add bonus here)
+		// Expedition 33-inspired: Generate Kynde from melee attacks before executing
+		// (Kynde generation is handled in CombatAction::ExecuteAction, but we can add bonus here)
 		
 		Action->ExecuteAction(this, Target);
 		

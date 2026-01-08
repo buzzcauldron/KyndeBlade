@@ -22,22 +22,22 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 
 ---
 
-### 2. Ability Points (AP) System
+### 2. Kynde System
 
-**AP Generation:**
-- **Melee Attacks**: Generate 1-3 AP (based on attack type)
-- **Successful Parry**: Generate 2-4 AP (based on timing)
-- **Perfect Dodge**: Generate 1-2 AP
+**Kynde Generation:**
+- **Melee Attacks**: Generate 1-3 Kynde (based on attack type)
+- **Successful Parry**: Generate 2-4 Kynde (based on timing)
+- **Perfect Dodge**: Generate 1-2 Kynde
 
-**AP Consumption:**
-- **Ranged Attacks**: Consume 2-4 AP
-- **Skills/Abilities**: Consume 3-8 AP (varies by skill)
+**Kynde Consumption:**
+- **Ranged Attacks**: Consume 2-4 Kynde
+- **Skills/Abilities**: Consume 3-8 Kynde (varies by skill)
 - **Special Actions**: Consume varying amounts
 
-**AP Management:**
-- Max AP: 10 (can be increased with equipment)
-- AP persists between turns
-- Strategic decision: Generate AP with melee or spend on powerful skills
+**Kynde Management:**
+- Max Kynde: 10 (can be increased with equipment)
+- Kynde persists between turns
+- Strategic decision: Generate Kynde with melee or spend on powerful skills
 
 ---
 
@@ -91,21 +91,21 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 
 **Dodge:**
 - Window: 1.0-2.0 seconds (varies by attack)
-- Success: Avoid all damage, gain 1-2 AP
-- Perfect Dodge: Last 30% of window, gain 2 AP + momentum bonus
+- Success: Avoid all damage, gain 1-2 Kynde
+- Perfect Dodge: Last 30% of window, gain 2 Kynde + momentum bonus
 - Failure: Take full damage
 
 **Parry:**
 - Window: 0.5-1.0 seconds (smaller, more skill)
-- Success: Reduce damage by 80%, gain 2-4 AP, enable counter
-- Perfect Parry: Last 25% of window, gain 4 AP + counter opportunity
+- Success: Reduce damage by 80%, gain 2-4 Kynde, enable counter
+- Perfect Parry: Last 25% of window, gain 4 Kynde + counter opportunity
 - Failure: Take full damage
 
 **Counter-Attack:**
 - Available after successful parry
 - Window: 0.5 seconds
 - Success: Deal 150% damage + break damage
-- Consumes no AP (reward for good parry)
+- Consumes no Kynde (reward for good parry)
 
 **Jump Over / Duck:**
 - Some attacks can be avoided by jumping/ducking
@@ -117,9 +117,9 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 ### 6. Skill System
 
 **Skill Types:**
-- **Melee Skills**: Generate AP, deal break damage
-- **Ranged Skills**: Consume AP, high damage
-- **Support Skills**: Consume AP, buff/heal party
+- **Melee Skills**: Generate Kynde, deal break damage
+- **Ranged Skills**: Consume Kynde, high damage
+- **Support Skills**: Consume Kynde, buff/heal party
 - **Break Skills**: Focus on breaking enemies
 - **Elemental Skills**: Exploit weaknesses
 
@@ -134,7 +134,7 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 ### 7. Character Customization
 
 **Equipment System:**
-- **Weapons**: Affect damage, AP generation, break damage
+- **Weapons**: Affect damage, Kynde generation, break damage
 - **Armor**: Affect defense, elemental resistance
 - **Accessories**: Provide unique perks and bonuses
 - **Relics** (medieval version of Pictos): Special items with passive bonuses
@@ -165,11 +165,11 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 
 ## Implementation Plan
 
-### Phase 1: Core AP System
-1. Add AP to character stats
-2. Implement AP generation from melee attacks
-3. Implement AP consumption for skills
-4. Update UI to show AP
+### Phase 1: Core Kynde System
+1. Add Kynde to character stats
+2. Implement Kynde generation from melee attacks
+3. Implement Kynde consumption for skills
+4. Update UI to show Kynde
 
 ### Phase 2: Break System
 1. Add Break Gauge to enemies
@@ -200,7 +200,7 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
 ## Combat Flow (Expedition 33 Style)
 
 1. **Player Turn:**
-   - Select action (melee generates AP, ranged/skills consume AP)
+   - Select action (melee generates Kynde, ranged/skills consume Kynde)
    - Choose target
    - Action executes
 
@@ -208,7 +208,7 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
    - Enemy selects action
    - **Real-Time Window Opens**
    - Player can dodge/parry/jump
-   - Success: Avoid/reduce damage, gain AP
+   - Success: Avoid/reduce damage, gain Kynde
    - Failure: Take damage
 
 3. **Break State:**
@@ -216,24 +216,24 @@ This document outlines the combat system inspired by Clair Obscur: Expedition 33
    - Enemy stunned, takes extra damage
    - Opportunity for powerful attacks
 
-4. **AP Management:**
-   - Balance generating AP (melee) vs spending (skills)
-   - Save AP for powerful combos
-   - Use parry to generate AP during enemy turns
+4. **Kynde Management:**
+   - Balance generating Kynde (melee) vs spending (skills)
+   - Save Kynde for powerful combos
+   - Use parry to generate Kynde during enemy turns
 
 ---
 
 ## Medieval Adaptation
 
 **Expedition 33 → Kynde Blade:**
-- AP System → **Virtue Points** (VP) - representing spiritual/moral strength
+- AP System → **Kynde** - representing Nature and spiritual/natural strength
 - Break System → **Shield Break** - breaking enemy defenses
 - Elements → **Virtues/Vices** - Trewthe (Truth), Fals (False), Kynde (Nature), etc.
 - Pictos → **Relics** - medieval artifacts with spiritual power
 - Camp System → **Monastery/Tavern** - places of rest and reflection
 
 **Themes:**
-- AP/Virtue Points represent spiritual strength
+- Kynde represents Nature and spiritual/natural strength
 - Break represents breaking through corruption/falsehood
 - Elements represent virtues and vices from Piers Plowman
 - Combat is both physical and spiritual

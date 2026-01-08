@@ -40,12 +40,12 @@ struct FCharacterStats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Speed = 10.0f; // Affects turn order
 
-	// Expedition 33-inspired: Ability Points (called Virtue Points in medieval theme)
+	// Expedition 33-inspired: Kynde (Nature) - represents spiritual/natural strength
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxVirtuePoints = 10.0f; // Max AP (Virtue Points)
+	float MaxKynde = 10.0f; // Max Kynde
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CurrentVirtuePoints = 0.0f; // Current AP
+	float CurrentKynde = 0.0f; // Current Kynde
 
 	// Break system (Expedition 33-inspired)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -72,8 +72,8 @@ struct FCharacterStats
 		AttackPower = 10.0f;
 		Defense = 5.0f;
 		Speed = 10.0f;
-		MaxVirtuePoints = 10.0f;
-		CurrentVirtuePoints = 0.0f;
+		MaxKynde = 10.0f;
+		CurrentKynde = 0.0f;
 		MaxBreakGauge = 100.0f;
 		CurrentBreakGauge = 100.0f;
 		Level = 1;
@@ -82,7 +82,7 @@ struct FCharacterStats
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, MaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStaminaChanged, float, NewStamina, float, MaxStamina);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnVirtuePointsChanged, float, NewVP, float, MaxVP);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnKyndeChanged, float, NewKynde, float, MaxKynde);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnBreakGaugeChanged, float, NewBreak, float, MaxBreak);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterDefeated, AMedievalCharacter*, Character);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCharacterBroken, AMedievalCharacter*, Character);
@@ -139,7 +139,7 @@ public:
 	FOnCharacterDefeated OnCharacterDefeated;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnVirtuePointsChanged OnVirtuePointsChanged;
+	FOnKyndeChanged OnKyndeChanged;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnBreakGaugeChanged OnBreakGaugeChanged;
@@ -151,18 +151,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float Damage, AMedievalCharacter* Attacker);
 
-	// Expedition 33-inspired: Virtue Points (AP) management
+	// Expedition 33-inspired: Kynde management
 	UFUNCTION(BlueprintCallable)
-	void GainVirtuePoints(float Amount);
+	void GainKynde(float Amount);
 
 	UFUNCTION(BlueprintCallable)
-	bool ConsumeVirtuePoints(float Amount);
+	bool ConsumeKynde(float Amount);
 
 	UFUNCTION(BlueprintCallable)
-	float GetCurrentVirtuePoints() const { return CurrentVirtuePoints; }
+	float GetCurrentKynde() const { return CurrentKynde; }
 
 	UFUNCTION(BlueprintCallable)
-	float GetMaxVirtuePoints() const { return MaxVirtuePoints; }
+	float GetMaxKynde() const { return MaxKynde; }
 
 	// Expedition 33-inspired: Break system
 	UFUNCTION(BlueprintCallable)
