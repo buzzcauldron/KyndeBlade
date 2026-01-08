@@ -76,6 +76,9 @@ void ATurnManager::StartCombat()
 		return;
 	}
 
+	// Clear any existing timers
+	GetWorld()->GetTimerManager().ClearTimer(NextTurnTimerHandle);
+
 	CombatState = ECombatState::WaitingForInput;
 	TurnNumber = 1;
 	CurrentCharacter = TurnOrder[0];
@@ -132,6 +135,7 @@ void ATurnManager::NextTurn()
 	} while (NextIndex != StartIndex);
 
 	// No alive characters found - end combat
+	GetWorld()->GetTimerManager().ClearTimer(NextTurnTimerHandle);
 	CombatState = ECombatState::CombatEnded;
 	OnCombatEnded.Broadcast();
 }
@@ -158,8 +162,9 @@ void ATurnManager::ExecuteAction(UCombatAction* Action, AMedievalCharacter* Targ
 	{
 		// Move to next turn after a short delay
 		CombatState = ECombatState::ProcessingResults;
-		FTimerHandle TimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ATurnManager::NextTurn, 0.01f, false);
+		// Clear any existing timer first
+		GetWorld()->GetTimerManager().ClearTimer(NextTurnTimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(NextTurnTimerHandle, this, &ATurnManager::NextTurn, 0.01f, false);
 	}
 }
 
@@ -204,6 +209,8 @@ void ATurnManager::CheckCombatEnd()
 
 	if (bPlayersDefeated || bEnemiesDefeated)
 	{
+		// Clear any pending timers when combat ends
+		GetWorld()->GetTimerManager().ClearTimer(NextTurnTimerHandle);
 		CombatState = ECombatState::CombatEnded;
 		OnCombatEnded.Broadcast();
 	}
