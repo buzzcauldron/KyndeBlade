@@ -72,18 +72,11 @@ void UStatusEffect::ApplyStatModifiers(AMedievalCharacter* Target, bool bApply)
 		return;
 	}
 
-	// Store original stats if applying (for proper removal)
-	static TMap<AMedievalCharacter*, float> OriginalAttackPower;
-	static TMap<AMedievalCharacter*, float> OriginalDefense;
-	static TMap<AMedievalCharacter*, float> OriginalSpeed;
-
+	// Apply or remove stat modifiers
+	// Note: In a full implementation, characters would track base stats separately
+	// For now, we apply multipliers directly (effects should be applied in order)
 	if (bApply)
 	{
-		// Store original values
-		OriginalAttackPower.Add(Target, Target->Stats.AttackPower);
-		OriginalDefense.Add(Target, Target->Stats.Defense);
-		OriginalSpeed.Add(Target, Target->Stats.Speed);
-		
 		// Apply modifiers
 		Target->Stats.AttackPower *= EffectData.AttackPowerModifier;
 		Target->Stats.Defense *= EffectData.DefenseModifier;
@@ -91,21 +84,18 @@ void UStatusEffect::ApplyStatModifiers(AMedievalCharacter* Target, bool bApply)
 	}
 	else
 	{
-		// Restore original values
-		if (OriginalAttackPower.Contains(Target))
+		// Remove modifiers (divide by the modifier to reverse)
+		if (EffectData.AttackPowerModifier > 0.0f)
 		{
-			Target->Stats.AttackPower = OriginalAttackPower[Target];
-			OriginalAttackPower.Remove(Target);
+			Target->Stats.AttackPower /= EffectData.AttackPowerModifier;
 		}
-		if (OriginalDefense.Contains(Target))
+		if (EffectData.DefenseModifier > 0.0f)
 		{
-			Target->Stats.Defense = OriginalDefense[Target];
-			OriginalDefense.Remove(Target);
+			Target->Stats.Defense /= EffectData.DefenseModifier;
 		}
-		if (OriginalSpeed.Contains(Target))
+		if (EffectData.SpeedModifier > 0.0f)
 		{
-			Target->Stats.Speed = OriginalSpeed[Target];
-			OriginalSpeed.Remove(Target);
+			Target->Stats.Speed /= EffectData.SpeedModifier;
 		}
 	}
 }
