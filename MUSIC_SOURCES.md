@@ -3,6 +3,11 @@
 
 This document lists copyright-free music sources suitable for Kynde Blade's melancholic, contemplative themes about aging, work, poverty, and the unresolved quest for Grace.
 
+**Music Requirements:**
+- **Minor keys only** - All music must be in minor keys to maintain the melancholic, sad tone
+- **Instrumental only** - No vocals, only instrumental compositions
+- **Copyright-free** - Must be from sources that allow commercial use
+
 ---
 
 ## Primary Sources
@@ -19,13 +24,14 @@ This document lists copyright-free music sources suitable for Kynde Blade's mela
 - **Chris Zabriskie** - Emotional, melancholic compositions
 
 **Search Terms:**
-- "medieval"
-- "orchestral"
-- "melancholic"
-- "contemplative"
-- "elegiac"
-- "sad"
-- "beautiful"
+- "medieval instrumental"
+- "orchestral minor key"
+- "melancholic instrumental"
+- "contemplative instrumental"
+- "elegiac instrumental"
+- "sad instrumental"
+- "beautiful instrumental minor"
+- "minor key orchestral"
 
 ---
 
@@ -34,13 +40,15 @@ This document lists copyright-free music sources suitable for Kynde Blade's mela
 **License:** CC BY 3.0 (Attribution required)
 **Best For:** Classical, orchestral, emotional music
 
-**Recommended Tracks:**
-- "Gymnopedie No. 1" (medieval/classical style)
-- "Mysterious Bazaar"
-- "Sorrow"
-- "Tranquility"
-- "Meditation Impromptu"
-- "Elegy"
+**Recommended Tracks (Minor Key, Instrumental):**
+- "Gymnopedie No. 1" (medieval/classical style, minor key)
+- "Mysterious Bazaar" (minor key, instrumental)
+- "Sorrow" (minor key, instrumental)
+- "Tranquility" (minor key, instrumental)
+- "Meditation Impromptu" (minor key, instrumental)
+- "Elegy" (minor key, instrumental)
+
+**Note:** Always verify tracks are in minor keys and have no vocals before using.
 
 **Usage:** Free with attribution. Perfect for melancholic themes.
 
@@ -87,11 +95,11 @@ This document lists copyright-free music sources suitable for Kynde Blade's mela
 **Best For:** Diverse selection of music
 
 **Search Terms:**
-- "medieval"
-- "orchestral"
-- "sad"
-- "contemplative"
-- "melancholic"
+- "medieval instrumental minor"
+- "orchestral minor key"
+- "sad instrumental"
+- "contemplative instrumental minor"
+- "melancholic instrumental"
 
 ---
 
@@ -101,89 +109,89 @@ This document lists copyright-free music sources suitable for Kynde Blade's mela
 **Best For:** Diverse music library
 
 **Search Terms:**
-- "medieval"
-- "orchestral"
-- "sad"
-- "melancholic"
-- "contemplative"
+- "medieval instrumental minor"
+- "orchestral minor key"
+- "sad instrumental"
+- "melancholic instrumental"
+- "contemplative instrumental minor"
 
 ---
 
 ## Specific Track Recommendations
 
 ### For "The First Dream" Theme
-- **Kevin MacLeod - "Gymnopedie No. 1"** (Incompetech)
-- **Blue Dot Sessions - "The Zeppelin"** (FMA)
-- Search FMA for "hopeful melancholy"
+- **Kevin MacLeod - "Gymnopedie No. 1"** (Incompetech) - Minor key, instrumental
+- **Blue Dot Sessions - "The Zeppelin"** (FMA) - Verify minor key, instrumental
+- Search FMA for "hopeful melancholy instrumental minor"
 
 ### For "The Field of Work" Theme
-- **Kevin MacLeod - "Sorrow"** (Incompetech)
-- **Chris Zabriskie - "I Am a Man Who Will Fight for Your Honor"** (FMA)
-- Search for "labor," "work," "melancholic orchestral"
+- **Kevin MacLeod - "Sorrow"** (Incompetech) - Minor key, instrumental
+- **Chris Zabriskie - "I Am a Man Who Will Fight for Your Honor"** (FMA) - Verify minor key, instrumental
+- Search for "labor instrumental minor," "work melancholic orchestral minor," "instrumental minor key"
 
 ### For "The Plowman's Song" Theme
-- **Javolenus - Medieval compositions** (FMA)
-- **Kevin MacLeod - "Meditation Impromptu"** (Incompetech)
-- Search for "medieval folk," "contemplative"
+- **Javolenus - Medieval compositions** (FMA) - Verify minor key, instrumental
+- **Kevin MacLeod - "Meditation Impromptu"** (Incompetech) - Minor key, instrumental
+- Search for "medieval folk instrumental minor," "contemplative instrumental minor"
 
 ### For "Defending While Weary" Theme
-- **Kevin MacLeod - "Tranquility"** (Incompetech)
-- Search for "tired," "weary," "determined"
+- **Kevin MacLeod - "Tranquility"** (Incompetech) - Minor key, instrumental
+- Search for "tired instrumental minor," "weary instrumental," "determined minor key"
 
 ### For "The Depths" Theme
-- **Chris Zabriskie - "The Temperature of the Air on the Bow of the Kaleetan"** (FMA)
-- Search for "despair," "deep," "melancholic"
+- **Chris Zabriskie - "The Temperature of the Air on the Bow of the Kaleetan"** (FMA) - Verify minor key, instrumental
+- Search for "despair instrumental minor," "deep melancholic instrumental," "minor key dark"
 
 ### For "The Years Pass" Theme
-- **Kevin MacLeod - "Elegy"** (Incompetech)
-- Search for "elegiac," "time," "passing"
+- **Kevin MacLeod - "Elegy"** (Incompetech) - Minor key, instrumental
+- Search for "elegiac instrumental minor," "time passing instrumental," "minor key elegy"
 
 ### For "Piers Grows Old" Theme
-- **Blue Dot Sessions - "The Zeppelin"** (FMA)
-- Search for "aging," "old," "beautiful sadness"
+- **Blue Dot Sessions - "The Zeppelin"** (FMA) - Verify minor key, instrumental
+- Search for "aging instrumental minor," "old beautiful sadness instrumental," "minor key contemplative"
 
 ### For "The Cost of Wisdom" Theme
-- Search for "barriers," "learning," "melancholic"
+- Search for "barriers instrumental minor," "learning melancholic instrumental," "minor key contemplative"
 
 ### For "The Hard Choice" Theme
-- **Chris Zabriskie - "I Am a Man Who Will Fight for Your Honor"** (FMA)
-- Search for "moral," "struggle," "choice"
+- **Chris Zabriskie - "I Am a Man Who Will Fight for Your Honor"** (FMA) - Verify minor key, instrumental
+- Search for "moral struggle instrumental minor," "choice contemplative instrumental," "minor key decision"
 
 ### For "Nature's Indifference" Theme
-- Search for "nature," "cold," "beautiful," "indifferent"
+- Search for "nature instrumental minor," "cold beautiful instrumental," "indifferent minor key"
 
 ### For "Incomplete" Theme
-- Search for "incomplete," "unfinished," "melancholic"
+- Search for "incomplete instrumental minor," "unfinished melancholic instrumental," "minor key incomplete"
 
 ### For "The Struggling Community" Theme
-- Search for "community," "shared," "hardship"
+- Search for "community instrumental minor," "shared hardship instrumental," "minor key community"
 
 ### For "Exhausted Care" Theme
-- Search for "exhaustion," "care," "moving"
+- Search for "exhaustion instrumental minor," "care moving instrumental," "minor key exhausted"
 
 ### For "The Unfair Market" Theme
-- Search for "unfair," "economic," "melancholic"
+- Search for "unfair instrumental minor," "economic melancholic instrumental," "minor key market"
 
 ### For "The Distant Church" Theme
-- Search for "church," "distant," "spiritual," "sad"
+- Search for "church instrumental minor," "distant spiritual instrumental," "minor key church"
 
 ### For "Grace Remains Distant" Theme
-- **Kevin MacLeod - "Elegy"** (Incompetech)
-- Search for "distant," "unresolved," "melancholic"
+- **Kevin MacLeod - "Elegy"** (Incompetech) - Minor key, instrumental
+- Search for "distant instrumental minor," "unresolved melancholic instrumental," "minor key distant"
 
 ### For "The Final Path" Theme
-- Search for "final," "last," "attempt," "beautiful sadness"
+- Search for "final instrumental minor," "last attempt instrumental," "beautiful sadness minor key"
 
 ### For "The Unbalanced World" Theme
-- Search for "unbalanced," "systemic," "injustice"
+- Search for "unbalanced instrumental minor," "systemic injustice instrumental," "minor key world"
 
 ### For "Pride's Domain" Theme
-- Search for "pride," "obstacle," "final"
+- Search for "pride instrumental minor," "obstacle final instrumental," "minor key pride"
 
 ### For "The Unresolved Quest" Theme (Final Theme)
-- **Kevin MacLeod - "Elegy"** (Incompetech)
-- **Chris Zabriskie - "The Temperature of the Air on the Bow of the Kaleetan"** (FMA)
-- Search for "unresolved," "quest," "beautiful," "melancholic," "final"
+- **Kevin MacLeod - "Elegy"** (Incompetech) - Minor key, instrumental
+- **Chris Zabriskie - "The Temperature of the Air on the Bow of the Kaleetan"** (FMA) - Verify minor key, instrumental
+- Search for "unresolved instrumental minor," "quest beautiful melancholic instrumental," "final minor key elegy"
 
 ---
 
@@ -217,6 +225,14 @@ This document lists copyright-free music sources suitable for Kynde Blade's mela
 
 ## Implementation Notes
 
+### Music Selection Checklist
+Before using any track, verify:
+- [ ] Track is in a **minor key** (A minor, D minor, E minor, etc.)
+- [ ] Track is **instrumental only** (no vocals)
+- [ ] Track has appropriate **melancholic/sad tone**
+- [ ] License allows **commercial use**
+- [ ] Attribution requirements are documented (if needed)
+
 ### Music Integration
 1. **Create music folders:**
    - `Content/Music/Act1/`
@@ -237,6 +253,11 @@ This document lists copyright-free music sources suitable for Kynde Blade's mela
    - Format: OGG Vorbis (recommended for Unreal)
    - Quality: 192-320 kbps
    - Sample Rate: 44.1 kHz or 48 kHz
+
+4. **Key Verification:**
+   - Use music analysis tools or ear training to verify minor keys
+   - Minor keys typically sound sad, melancholic, or contemplative
+   - Common minor keys: A minor, D minor, E minor, G minor, C minor
 
 ### Credits
 Create a `CREDITS.md` file listing all music sources with:

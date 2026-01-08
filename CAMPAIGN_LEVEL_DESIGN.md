@@ -5,7 +5,7 @@
 
 **Theme:** A melancholic journey about aging, unfulfilled spiritual quests, the nature of work and poverty, and the ultimate search for Grace that may never be found. The game is sad, contemplative, and beautiful - like a medieval elegy set to music.
 
-**Musical Direction:** Beautiful, melancholic orchestral music throughout. Themes of longing, work, poverty, and spiritual yearning. No triumphant fanfares - only the quiet beauty of unfulfilled dreams. Music sourced from copyright-free sources (see MUSIC_SOURCES.md).
+**Musical Direction:** Beautiful, melancholic orchestral music throughout. All music must be in **minor keys** and **instrumental only** (no vocals). Themes of longing, work, poverty, and spiritual yearning. No triumphant fanfares - only the quiet beauty of unfulfilled dreams. Music sourced from copyright-free sources (see MUSIC_SOURCES.md).
 
 ---
 
