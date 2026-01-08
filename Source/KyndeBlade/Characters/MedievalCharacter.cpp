@@ -148,6 +148,16 @@ void AMedievalCharacter::ConsumeStamina(float Amount)
 
 void AMedievalCharacter::RestoreStamina(float Amount)
 {
+	// Hunger reduces stamina restoration (the worst status effect)
+	if (IsHungry())
+	{
+		UStatusEffect* HungerEffect = GetStatusEffect(EStatusEffectType::Hunger);
+		if (HungerEffect)
+		{
+			Amount *= HungerEffect->EffectData.StaminaRegenModifier;
+		}
+	}
+	
 	Stats.CurrentStamina = FMath::Min(Stats.MaxStamina, Stats.CurrentStamina + Amount);
 	OnStaminaChanged.Broadcast(Stats.CurrentStamina, Stats.MaxStamina);
 }
