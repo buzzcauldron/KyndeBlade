@@ -2,6 +2,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Combat/CombatAction.h"
+#include "Combat/StatusEffect.h"
 
 AMedievalCharacter::AMedievalCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -76,6 +77,9 @@ void AMedievalCharacter::Tick(float DeltaTime)
 			RecoverFromBreak();
 		}
 	}
+
+	// Update status effects (Hunger is the worst)
+	UpdateStatusEffects(DeltaTime);
 }
 
 void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
@@ -87,6 +91,18 @@ void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
 
 	// Apply defense reduction
 	float ActualDamage = FMath::Max(0.0f, Damage - Stats.Defense);
+	
+	// Hunger makes you take MORE damage (the worst status effect)
+	if (IsHungry())
+	{
+		UStatusEffect* HungerEffect = GetStatusEffect(EStatusEffectType::Hunger);
+		if (HungerEffect)
+		{
+			// Hunger reduces defense effectiveness - take 20% more damage per stack
+			float HungerVulnerability = 1.0f + (HungerEffect->EffectData.StackCount * 0.2f);
+			ActualDamage *= HungerVulnerability;
+		}
+	}
 	
 	// Expedition 33-inspired: Check for Escapade/Ward with Kynde rewards (Piers Plowman)
 	if (bIsDodging && AttemptDodge())
@@ -139,6 +155,16 @@ void AMedievalCharacter::RestoreStamina(float Amount)
 // Expedition 33-inspired: Kynde management
 void AMedievalCharacter::GainKynde(float Amount)
 {
+	// Hunger reduces Kynde generation (the worst status effect)
+	if (IsHungry())
+	{
+		UStatusEffect* HungerEffect = GetStatusEffect(EStatusEffectType::Hunger);
+		if (HungerEffect)
+		{
+			Amount *= HungerEffect->EffectData.KyndeGenerationModifier;
+		}
+	}
+	
 	CurrentKynde = FMath::Min(MaxKynde, CurrentKynde + Amount);
 	OnKyndeChanged.Broadcast(CurrentKynde, MaxKynde);
 }
@@ -270,4 +296,108 @@ void AMedievalCharacter::CheckDefeated()
 	{
 		OnCharacterDefeated.Broadcast(this);
 	}
+}
+
+// Status Effect Functions
+void AMedievalCharacter::ApplyStatusEffect(UStatusEffect* Effect)
+{
+	if (!Effect)
+	{
+		return;
+	}
+
+	// Check if effect already exists
+	UStatusEffect* ExistingEffect = GetStatusEffect(Effect->EffectData.EffectType);
+	if (ExistingEffect)
+	{
+		// Stack the effect
+		ExistingEffect->StackEffect(Effect->EffectData.StackCount);
+		ExistingEffect->ApplyEffect(this);
+	}
+	else
+	{
+		// Add new effect
+		ActiveStatusEffects.Add(Effect);
+		Effect->ApplyEffect(this);
+	}
+}
+
+void AMedievalCharacter::RemoveStatusEffect(EStatusEffectType EffectType)
+{
+	for (int32 i = ActiveStatusEffects.Num() - 1; i >= 0; i--)
+	{
+		if (ActiveStatusEffects[i] && ActiveStatusEffects[i]->EffectData.EffectType == EffectType)
+		{
+			ActiveStatusEffects[i]->RemoveEffect(this);
+			ActiveStatusEffects.RemoveAt(i);
+			break;
+		}
+	}
+}
+
+bool AMedievalCharacter::HasStatusEffect(EStatusEffectType EffectType) const
+{
+	return GetStatusEffect(EffectType) != nullptr;
+}
+
+UStatusEffect* AMedievalCharacter::GetStatusEffect(EStatusEffectType EffectType) const
+{
+	for (UStatusEffect* Effect : ActiveStatusEffects)
+	{
+		if (Effect && Effect->EffectData.EffectType == EffectType)
+		{
+			return Effect;
+		}
+	}
+	return nullptr;
+}
+
+void AMedievalCharacter::UpdateStatusEffects(float DeltaTime)
+{
+	for (int32 i = ActiveStatusEffects.Num() - 1; i >= 0; i--)
+	{
+		if (!ActiveStatusEffects[i])
+		{
+			ActiveStatusEffects.RemoveAt(i);
+			continue;
+		}
+
+		UStatusEffect* Effect = ActiveStatusEffects[i];
+		
+		// Update effect timer
+		Effect->UpdateEffect(DeltaTime);
+
+		// Apply damage over time (Hunger causes constant damage)
+		if (Effect->EffectData.DamagePerSecond > 0.0f)
+		{
+			Effect->ApplyDamageOverTime(this, DeltaTime);
+		}
+
+		// Remove expired effects
+		if (Effect->IsExpired())
+		{
+			Effect->RemoveEffect(this);
+			ActiveStatusEffects.RemoveAt(i);
+		}
+	}
+}
+
+void AMedievalCharacter::ApplyHunger(int32 Stacks, float Duration)
+{
+	// Hunger is the WORST status effect - apply it
+	UStatusEffect* HungerEffect = UStatusEffect::CreateHungerEffect(Duration, Stacks);
+	if (HungerEffect)
+	{
+		ApplyStatusEffect(HungerEffect);
+	}
+}
+
+void AMedievalCharacter::RemoveHunger()
+{
+	RemoveStatusEffect(EStatusEffectType::Hunger);
+}
+
+bool AMedievalCharacter::IsHungry() const
+{
+	return HasStatusEffect(EStatusEffectType::Hunger);
 }

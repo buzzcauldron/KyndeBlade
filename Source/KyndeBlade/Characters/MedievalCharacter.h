@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Combat/CombatAction.h"
+#include "Combat/StatusEffect.h"
 #include "MedievalCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -115,6 +116,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UCombatAction*> AvailableActions;
 
+	// Status Effects (Piers Plowman: Hunger is the worst)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<class UStatusEffect*> ActiveStatusEffects;
+
 	// Real-time combat state (Piers Plowman: Escapade/Ward)
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsDodging = false; // Escapade (Kynde's Evasion)
@@ -146,6 +151,31 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCharacterBroken OnCharacterBroken;
+
+	// Status Effect Functions
+	UFUNCTION(BlueprintCallable)
+	void ApplyStatusEffect(class UStatusEffect* Effect);
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveStatusEffect(EStatusEffectType EffectType);
+
+	UFUNCTION(BlueprintCallable)
+	bool HasStatusEffect(EStatusEffectType EffectType) const;
+
+	UFUNCTION(BlueprintCallable)
+	class UStatusEffect* GetStatusEffect(EStatusEffectType EffectType) const;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateStatusEffects(float DeltaTime);
+
+	UFUNCTION(BlueprintCallable)
+	void ApplyHunger(int32 Stacks = 1, float Duration = 0.0f); // Hunger is the worst status effect
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveHunger();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsHungry() const;
 
 	// Combat Functions
 	UFUNCTION(BlueprintCallable)
