@@ -8,9 +8,9 @@
 class UInputAction;
 class UInputMappingContext;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDodgeInput);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnParryInput);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCounterInput);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDodgeInput); // Escapade (Kynde's Evasion)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnParryInput); // Ward (Trewthe's Sheeld)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCounterInput); // Counter-strike
 
 /**
  * Component for handling real-time combat input during turn-based combat
@@ -29,15 +29,15 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetupInputBindings(class UInputComponent* PlayerInputComponent);
 
-	// Input Actions
+	// Input Actions (Piers Plowman terminology)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* DodgeAction;
+	UInputAction* DodgeAction; // Escapade (Kynde's Evasion)
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* ParryAction;
+	UInputAction* ParryAction; // Ward (Trewthe's Sheeld)
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	UInputAction* CounterAction;
+	UInputAction* CounterAction; // Counter-strike
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputMappingContext* CombatMappingContext;
@@ -52,15 +52,15 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnCounterInput OnCounterInput;
 
-	// Input Handlers
+	// Input Handlers (Piers Plowman terminology)
 	UFUNCTION(BlueprintCallable)
-	void HandleDodge();
+	void HandleDodge(); // Handle Escapade (Kynde's Evasion)
 
 	UFUNCTION(BlueprintCallable)
-	void HandleParry();
+	void HandleParry(); // Handle Ward (Trewthe's Sheeld)
 
 	UFUNCTION(BlueprintCallable)
-	void HandleCounter();
+	void HandleCounter(); // Handle Counter-strike
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bRealTimeWindowActive = false;

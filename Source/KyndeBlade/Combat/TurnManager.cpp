@@ -224,9 +224,9 @@ void ATurnManager::ProcessActionExecution()
 		return;
 	}
 
-	// If action has real-time mechanics, start the window
-	if (CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Dodge || 
-		CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Parry)
+	// If action has real-time mechanics, start the window (Escapade/Ward)
+	if (CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Escapade || 
+		CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Ward)
 	{
 		StartRealTimeWindow(CurrentExecutingAction->ActionData.SuccessWindow);
 	}

@@ -7,12 +7,12 @@
 UENUM(BlueprintType)
 enum class ECombatActionType : uint8
 {
-	Attack,
-	Dodge,
-	Parry,
-	Counter,
-	Special,
-	Wait
+	Strike,      // Attack - Piers Plowman: "Sothfastnesse's Stroke" (Truth's Strike)
+	Escapade,    // Dodge - Piers Plowman: "Kynde's Evasion" (Nature's Evasion)
+	Ward,        // Parry - Piers Plowman: "Trewthe's Sheeld" (Truth's Shield)
+	Counter,     // Counter-attack - Piers Plowman: Counter-strike
+	Special,     // Special actions - Various Piers-themed abilities
+	Rest         // Wait - Piers Plowman: "Kynde's Rest" (Nature's Rest)
 };
 
 USTRUCT(BlueprintType)
@@ -30,7 +30,7 @@ struct FCombatActionData
 	float StaminaCost = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SuccessWindow = 0.0f; // Time window for real-time mechanics (dodge/parry)
+	float SuccessWindow = 0.0f; // Time window for real-time mechanics (Escapade/Ward)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CastTime = 0.0f; // Time before action executes
@@ -70,7 +70,7 @@ struct FCombatActionData
 
 	FCombatActionData()
 	{
-		ActionType = ECombatActionType::Wait;
+		ActionType = ECombatActionType::Rest;
 		Damage = 0.0f;
 		StaminaCost = 0.0f;
 		SuccessWindow = 0.0f;
@@ -80,7 +80,7 @@ struct FCombatActionData
 		KyndeCost = 0.0f;
 		BreakDamage = 0.0f;
 		ElementType = EElementType::None;
-		ActionName = TEXT("Wait");
+		ActionName = TEXT("Kyndes Rest");
 	}
 };
 

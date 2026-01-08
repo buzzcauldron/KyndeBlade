@@ -34,10 +34,10 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 		Executor->GainKynde(ActionData.KyndeGenerated);
 	}
 
-	// Execute the action based on type
+	// Execute the action based on type (Piers Plowman terminology)
 	switch (ActionData.ActionType)
 	{
-	case ECombatActionType::Attack:
+	case ECombatActionType::Strike: // Attack - "Sothfastnesse's Stroke"
 		if (Target)
 		{
 			float FinalDamage = ActionData.Damage;
@@ -60,16 +60,23 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 			}
 		}
 		break;
-	case ECombatActionType::Dodge:
-		// Dodge logic handled in real-time
+	case ECombatActionType::Escapade: // Dodge - "Kynde's Evasion"
+		// Escapade logic handled in real-time
 		break;
-	case ECombatActionType::Parry:
-		// Parry logic handled in real-time
+	case ECombatActionType::Ward: // Parry - "Trewthe's Sheeld"
+		// Ward logic handled in real-time
 		break;
-	case ECombatActionType::Counter:
+	case ECombatActionType::Counter: // Counter-attack
 		if (Target)
 		{
 			Target->TakeDamage(ActionData.Damage * 1.5f, Executor);
+		}
+		break;
+	case ECombatActionType::Rest: // Wait - "Kynde's Rest"
+		// Rest restores stamina
+		if (Executor)
+		{
+			Executor->RestoreStamina(20.0f);
 		}
 		break;
 	default:

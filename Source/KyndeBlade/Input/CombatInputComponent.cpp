@@ -35,7 +35,7 @@ void UCombatInputComponent::SetupInputBindings(UInputComponent* PlayerInputCompo
 	}
 }
 
-void UCombatInputComponent::HandleDodge()
+void UCombatInputComponent::HandleDodge() // Handle Escapade (Kynde's Evasion)
 {
 	if (bRealTimeWindowActive)
 	{
@@ -43,7 +43,7 @@ void UCombatInputComponent::HandleDodge()
 	}
 }
 
-void UCombatInputComponent::HandleParry()
+void UCombatInputComponent::HandleParry() // Handle Ward (Trewthe's Sheeld)
 {
 	if (bRealTimeWindowActive)
 	{
@@ -51,7 +51,7 @@ void UCombatInputComponent::HandleParry()
 	}
 }
 
-void UCombatInputComponent::HandleCounter()
+void UCombatInputComponent::HandleCounter() // Handle Counter-strike
 {
 	if (bRealTimeWindowActive)
 	{

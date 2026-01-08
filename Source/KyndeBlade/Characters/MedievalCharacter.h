@@ -115,18 +115,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UCombatAction*> AvailableActions;
 
-	// Real-time combat state
+	// Real-time combat state (Piers Plowman: Escapade/Ward)
 	UPROPERTY(BlueprintReadOnly)
-	bool bIsDodging = false;
+	bool bIsDodging = false; // Escapade (Kynde's Evasion)
 
 	UPROPERTY(BlueprintReadOnly)
-	bool bIsParrying = false;
+	bool bIsParrying = false; // Ward (Trewthe's Sheeld)
 
 	UPROPERTY(BlueprintReadOnly)
-	float DodgeWindowRemaining = 0.0f;
+	float DodgeWindowRemaining = 0.0f; // Escapade window
 
 	UPROPERTY(BlueprintReadOnly)
-	float ParryWindowRemaining = 0.0f;
+	float ParryWindowRemaining = 0.0f; // Ward window
 
 	// Delegates
 	UPROPERTY(BlueprintAssignable)
@@ -204,24 +204,24 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const { return Stats.CurrentHealth > 0.0f; }
 
-	// Real-time combat mechanics
+	// Real-time combat mechanics (Piers Plowman: Escapade/Ward)
 	UFUNCTION(BlueprintCallable)
-	void StartDodge(float WindowDuration);
+	void StartDodge(float WindowDuration); // Start Escapade (Kynde's Evasion)
 
 	UFUNCTION(BlueprintCallable)
-	void StartParry(float WindowDuration);
+	void StartParry(float WindowDuration); // Start Ward (Trewthe's Sheeld)
 
 	UFUNCTION(BlueprintCallable)
-	void EndDodge();
+	void EndDodge(); // End Escapade
 
 	UFUNCTION(BlueprintCallable)
-	void EndParry();
+	void EndParry(); // End Ward
 
 	UFUNCTION(BlueprintCallable)
-	bool AttemptDodge();
+	bool AttemptDodge(); // Attempt Escapade
 
 	UFUNCTION(BlueprintCallable)
-	bool AttemptParry();
+	bool AttemptParry(); // Attempt Ward
 
 	// Turn-based functions
 	UFUNCTION(BlueprintCallable)

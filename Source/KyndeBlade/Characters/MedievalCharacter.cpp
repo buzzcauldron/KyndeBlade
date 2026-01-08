@@ -88,25 +88,25 @@ void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
 	// Apply defense reduction
 	float ActualDamage = FMath::Max(0.0f, Damage - Stats.Defense);
 	
-	// Expedition 33-inspired: Check for dodge/parry with Kynde rewards
+	// Expedition 33-inspired: Check for Escapade/Ward with Kynde rewards (Piers Plowman)
 	if (bIsDodging && AttemptDodge())
 	{
-		// Successful dodge - no damage, gain Kynde
-		// Perfect dodge is in last 30% of window
+		// Successful Escapade (Kynde's Evasion) - no damage, gain Kynde
+		// Perfect Escapade is in last 30% of window
 		float PerfectWindow = DodgeWindowRemaining * 0.3f;
 		bool bPerfectDodge = (DodgeWindowRemaining <= PerfectWindow);
-		float KyndeReward = bPerfectDodge ? 2.0f : 1.0f; // Perfect dodge gives more Kynde
+		float KyndeReward = bPerfectDodge ? 2.0f : 1.0f; // Perfect Escapade gives more Kynde
 		GainKynde(KyndeReward);
 		return;
 	}
 
 	if (bIsParrying && AttemptParry())
 	{
-		// Successful parry - reduced damage, gain Kynde, counter opportunity
-		// Perfect parry is in last 25% of window
+		// Successful Ward (Trewthe's Sheeld) - reduced damage, gain Kynde, counter opportunity
+		// Perfect Ward is in last 25% of window
 		float PerfectWindow = ParryWindowRemaining * 0.25f;
 		bool bPerfectParry = (ParryWindowRemaining <= PerfectWindow);
-		float KyndeReward = bPerfectParry ? 4.0f : 2.0f; // Perfect parry gives more Kynde
+		float KyndeReward = bPerfectParry ? 4.0f : 2.0f; // Perfect Ward gives more Kynde
 		GainKynde(KyndeReward);
 		ActualDamage *= 0.3f;
 		// Could trigger counter attack here
@@ -243,7 +243,7 @@ void AMedievalCharacter::ExecuteCombatAction(UCombatAction* Action, AMedievalCha
 
 void AMedievalCharacter::UpdateRealTimeCombat(float DeltaTime)
 {
-	// Update dodge window
+	// Update Escapade window (Kynde's Evasion)
 	if (bIsDodging)
 	{
 		DodgeWindowRemaining -= DeltaTime;
@@ -253,7 +253,7 @@ void AMedievalCharacter::UpdateRealTimeCombat(float DeltaTime)
 		}
 	}
 
-	// Update parry window
+	// Update Ward window (Trewthe's Sheeld)
 	if (bIsParrying)
 	{
 		ParryWindowRemaining -= DeltaTime;
