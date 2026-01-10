@@ -15,6 +15,18 @@ enum class ECombatActionType : uint8
 	Rest         // Wait - Piers Plowman: "Kynde's Rest" (Nature's Rest)
 };
 
+UENUM(BlueprintType)
+enum class EKyndeElementType : uint8
+{
+	None,
+	Flamme,    // Fire
+	Frost,     // Ice
+	Thunder,   // Lightning
+	Trewthe,   // Holy/Truth
+	Fals,      // Dark/False
+	Kynde      // Nature
+};
+
 USTRUCT(BlueprintType)
 struct FCombatActionData
 {
@@ -49,21 +61,8 @@ struct FCombatActionData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float BreakDamage = 0.0f; // Break damage dealt by this action
 
-	// Expedition 33-inspired: Elemental system
-	UENUM(BlueprintType)
-	enum class EElementType : uint8
-	{
-		None,
-		Flamme,    // Fire
-		Frost,     // Ice
-		Thunder,   // Lightning
-		Trewthe,   // Holy/Truth
-		Fals,      // Dark/False
-		Kynde      // Nature
-	};
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EElementType ElementType = EElementType::None;
+	EKyndeElementType ElementType = EKyndeElementType::None;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString ActionName;
@@ -79,7 +78,7 @@ struct FCombatActionData
 		KyndeGenerated = 0.0f;
 		KyndeCost = 0.0f;
 		BreakDamage = 0.0f;
-		ElementType = EElementType::None;
+		ElementType = EKyndeElementType::None;
 		ActionName = TEXT("Kyndes Rest");
 	}
 };
@@ -117,7 +116,7 @@ public:
 	float GetBreakDamage() const { return ActionData.BreakDamage; }
 
 	UFUNCTION(BlueprintCallable)
-	EElementType GetElementType() const { return ActionData.ElementType; }
+	EKyndeElementType GetElementType() const { return ActionData.ElementType; }
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnActionExecuted(AMedievalCharacter* Executor, AMedievalCharacter* Target);

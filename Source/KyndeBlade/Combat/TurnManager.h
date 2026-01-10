@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Characters/MedievalCharacter.h"
+#include "../Characters/MedievalCharacter.h"
 #include "TurnManager.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTurnChanged, AMedievalCharacter*, CurrentCharacter);

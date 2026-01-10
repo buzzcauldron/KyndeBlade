@@ -127,10 +127,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Status Effects")
 	static UStatusEffect* CreateStunEffect(float Duration);
 
+	// Apply damage over time
+	UFUNCTION(BlueprintCallable)
+	void ApplyDamageOverTime(AMedievalCharacter* Target, float DeltaTime);
+
 protected:
 	// Apply stat modifications to character
 	void ApplyStatModifiers(AMedievalCharacter* Target, bool bApply);
-
-	// Apply damage over time
-	void ApplyDamageOverTime(AMedievalCharacter* Target, float DeltaTime);
 };

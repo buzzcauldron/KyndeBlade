@@ -1,0 +1,19 @@
+QUICK FIX - Use Python Console!
+===============================
+
+1. Open Python Console:
+   - Window → Developer Tools → Python Console
+   - Or Tools → Python → Python Console
+
+2. Copy/paste this code:
+
+import unreal
+world = unreal.EditorLevelLibrary.get_editor_world()
+knight = unreal.EditorAssetLibrary.load_class(None, "/Script/KyndeBlade.KnightCharacter")
+if knight:
+    unreal.EditorLevelLibrary.spawn_actor_from_class(knight, unreal.Vector(-500,-150,200), unreal.Rotator(0,0,0))
+    print("Knight spawned!")
+
+3. Check World Outliner - character should appear!
+
+This works without Play mode or GameMode!

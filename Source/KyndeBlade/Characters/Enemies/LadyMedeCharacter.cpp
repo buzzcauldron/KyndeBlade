@@ -1,5 +1,5 @@
-#include "Characters/Enemies/LadyMedeCharacter.h"
-#include "Characters/MedievalCharacter.h"
+#include "LadyMedeCharacter.h"
+#include "../MedievalCharacter.h"
 
 ALadyMedeCharacter::ALadyMedeCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -31,7 +31,7 @@ void ALadyMedeCharacter::CorruptingGold(AMedievalCharacter* Target)
 	if (Target && CurrentCorruptionMana >= CorruptingGoldManaCost)
 	{
 		ConsumeCorruptionMana(CorruptingGoldManaCost);
-		Target->TakeDamage(CorruptingGoldDamage, this);
+		Target->ApplyCustomDamage(CorruptingGoldDamage, this);
 		// Could add corruption status effect that reduces stats
 	}
 }
@@ -51,7 +51,7 @@ void ALadyMedeCharacter::WealthBolt(AMedievalCharacter* Target)
 	if (Target && CurrentCorruptionMana >= WealthBoltManaCost)
 	{
 		ConsumeCorruptionMana(WealthBoltManaCost);
-		Target->TakeDamage(WealthBoltDamage, this);
+		Target->ApplyCustomDamage(WealthBoltDamage, this);
 		// Could add gold-themed visual effects
 	}
 }

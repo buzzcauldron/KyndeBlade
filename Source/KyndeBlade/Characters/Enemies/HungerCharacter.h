@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Characters/MedievalCharacter.h"
-#include "Combat/StatusEffect.h"
+#include "../MedievalCharacter.h"
+#include "../../Combat/StatusEffect.h"
 #include "HungerCharacter.generated.h"
 
 /**

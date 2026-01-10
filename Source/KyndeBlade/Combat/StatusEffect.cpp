@@ -1,5 +1,5 @@
-#include "Combat/StatusEffect.h"
-#include "Characters/MedievalCharacter.h"
+#include "StatusEffect.h"
+#include "../Characters/MedievalCharacter.h"
 
 UStatusEffect::UStatusEffect()
 {
@@ -108,7 +108,7 @@ void UStatusEffect::ApplyDamageOverTime(AMedievalCharacter* Target, float DeltaT
 	}
 
 	float Damage = EffectData.DamagePerSecond * DeltaTime;
-	Target->TakeDamage(Damage, nullptr);
+	Target->ApplyCustomDamage(Damage, nullptr);
 }
 
 // Static factory methods

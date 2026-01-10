@@ -2,9 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Combat/CombatAction.h"
-#include "Combat/TurnManager.h"
-#include "Characters/MedievalCharacter.h"
+#include "../Combat/CombatAction.h"
+#include "../Combat/TurnManager.h"
+#include "../Characters/MedievalCharacter.h"
 #include "CombatUI.generated.h"
 
 /**

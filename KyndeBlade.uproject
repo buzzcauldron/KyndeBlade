@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "5.3",
+	"EngineAssociation": "5.7",
 	"Category": "",
 	"Description": "Medieval-themed turn-based RPG with real-time combat mechanics, inspired by Expedition 33",
 	"Modules": [
@@ -17,6 +17,11 @@
 		},
 		{
 			"Name": "GeometryScript",
+			"Enabled": false
+		}
+		,
+		{
+			"Name": "GameplayAbilities",
 			"Enabled": true
 		}
 	],

@@ -1,5 +1,5 @@
-#include "Characters/Enemies/WrathCharacter.h"
-#include "Characters/MedievalCharacter.h"
+#include "WrathCharacter.h"
+#include "../MedievalCharacter.h"
 
 AWrathCharacter::AWrathCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -40,7 +40,7 @@ void AWrathCharacter::RageStrike(AMedievalCharacter* Target)
 		// Damage increases with rage level
 		float RageBonus = 1.0f + (RageLevel / MaxRageLevel);
 		float RageDamage = Stats.AttackPower * RageBonus * 1.5f;
-		Target->TakeDamage(RageDamage, this);
+		Target->ApplyCustomDamage(RageDamage, this);
 	}
 }
 
@@ -68,7 +68,7 @@ void AWrathCharacter::FuriousCharge(AMedievalCharacter* Target)
 		{
 			ChargeDamage *= 1.5f;
 		}
-		Target->TakeDamage(ChargeDamage, this);
+		Target->ApplyCustomDamage(ChargeDamage, this);
 	}
 }
 

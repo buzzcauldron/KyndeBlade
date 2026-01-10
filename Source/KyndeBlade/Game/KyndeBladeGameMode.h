@@ -2,7 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "Combat/TurnManager.h"
+#include "../Combat/TurnManager.h"
+#include "../Characters/MedievalCharacter.h"
 #include "KyndeBladeGameMode.generated.h"
 
 /**
@@ -28,9 +29,46 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ATurnManager* GetTurnManager() const { return TurnManager; }
 
+	// Auto-spawn test characters for quick testing
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Setup")
+	bool bAutoSpawnTestCharacters = true;
+
+	UFUNCTION(BlueprintCallable)
+	void AutoSpawnTestCharacters();
+
+	UFUNCTION()
+	void DelayedStartCombat();
+
+	// Console command to manually spawn characters
+	UFUNCTION(Exec)
+	void SpawnTestCharacters();
+
+protected:
+	// Temporary storage for auto-spawned characters
+	UPROPERTY()
+	TArray<AMedievalCharacter*> AutoSpawnedPlayers;
+
+	UPROPERTY()
+	TArray<AMedievalCharacter*> AutoSpawnedEnemies;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	TSubclassOf<ATurnManager> TurnManagerClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Auto Setup")
+	TSubclassOf<class AKnightCharacter> DefaultKnightClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Auto Setup")
+	TSubclassOf<class AMageCharacter> DefaultMageClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Auto Setup")
+	TSubclassOf<class AFalseCharacter> DefaultFalseClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Auto Setup")
+	TSubclassOf<class ALadyMedeCharacter> DefaultLadyMedeClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Auto Setup")
+	TSubclassOf<class AWrathCharacter> DefaultWrathClass;
 
 	UFUNCTION()
 	void SpawnTurnManager();

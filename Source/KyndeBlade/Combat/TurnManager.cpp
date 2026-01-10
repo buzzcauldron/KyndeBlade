@@ -1,6 +1,6 @@
-#include "Combat/TurnManager.h"
-#include "Characters/MedievalCharacter.h"
-#include "Combat/CombatAction.h"
+#include "TurnManager.h"
+#include "../Characters/MedievalCharacter.h"
+#include "CombatAction.h"
 #include "Algo/Sort.h"
 
 ATurnManager::ATurnManager()

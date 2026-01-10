@@ -1,5 +1,5 @@
-#include "Characters/Enemies/FalseCharacter.h"
-#include "Characters/MedievalCharacter.h"
+#include "FalseCharacter.h"
+#include "../MedievalCharacter.h"
 
 AFalseCharacter::AFalseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -29,7 +29,7 @@ void AFalseCharacter::DeceptiveStrike(AMedievalCharacter* Target)
 	{
 		ConsumeStamina(25.0f);
 		float DeceptiveDamage = Stats.AttackPower * DeceptionDamageMultiplier;
-		Target->TakeDamage(DeceptiveDamage, this);
+		Target->ApplyCustomDamage(DeceptiveDamage, this);
 		// Could add confusion or debuff effect
 	}
 }
@@ -52,6 +52,6 @@ void AFalseCharacter::ShadowStep(AMedievalCharacter* Target)
 		ConsumeStamina(35.0f);
 		// Teleport behind target and attack
 		float BackstabDamage = Stats.AttackPower * 2.0f;
-		Target->TakeDamage(BackstabDamage, this);
+		Target->ApplyCustomDamage(BackstabDamage, this);
 	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Characters/MedievalCharacter.h"
+#include "MedievalCharacter.h"
 #include "MageCharacter.generated.h"
 
 /**
@@ -23,7 +23,7 @@ public:
 	void Fireball(AMedievalCharacter* Target);
 
 	UFUNCTION(BlueprintCallable)
-	void Heal(AMedievalCharacter* Target);
+	void HealTarget(AMedievalCharacter* Target);
 
 	UFUNCTION(BlueprintCallable)
 	void LightningBolt(AMedievalCharacter* Target);

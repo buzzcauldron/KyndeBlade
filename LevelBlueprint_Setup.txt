@@ -1,0 +1,34 @@
+LEVEL BLUEPRINT SETUP INSTRUCTIONS
+===================================
+
+Since TestLevelSetup isn't spawning, let's use the Level Blueprint instead.
+
+STEP 1: Open Level Blueprint
+-----------------------------
+1. In your level, click the "Blueprints" button in the toolbar
+2. Select "Open Level Blueprint"
+   OR
+   Go to: Blueprints → Open Level Blueprint
+
+STEP 2: Add Event BeginPlay
+-----------------------------
+1. Right-click in the graph
+2. Search for "Event BeginPlay"
+3. Add it to the graph
+
+STEP 3: Spawn TestLevelSetup Actor
+-----------------------------------
+1. From Event BeginPlay, drag out
+2. Search for "Spawn Actor from Class"
+3. Set the Class to: "Test Level Setup" (or BP_TestLevelSetup if you created it)
+4. Set Transform to: (0, 0, 0) or wherever you want
+5. Connect the output to "Spawn Actor from Class"
+
+STEP 4: Call Spawn Functions
+------------------------------
+1. From the spawned actor, get a reference to it
+2. Drag out and search for "Spawn Player Characters" (call it)
+3. Drag out and search for "Spawn Enemies" (call it)
+4. Drag out and search for "Start Combat" (call it with a delay)
+
+ALTERNATIVE: Use a simpler C++ spawner that doesn't need placement
