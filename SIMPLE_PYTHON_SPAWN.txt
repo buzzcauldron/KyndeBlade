@@ -1,0 +1,20 @@
+SIMPLE PYTHON CODE TO SPAWN CHARACTERS
+======================================
+
+If you can find Python Console, paste this:
+
+import unreal
+w = unreal.EditorLevelLibrary.get_editor_world()
+k = unreal.EditorAssetLibrary.load_class(None, "/Script/KyndeBlade.KnightCharacter")
+m = unreal.EditorAssetLibrary.load_class(None, "/Script/KyndeBlade.MageCharacter")
+f = unreal.EditorAssetLibrary.load_class(None, "/Script/KyndeBlade.FalseCharacter")
+l = unreal.EditorAssetLibrary.load_class(None, "/Script/KyndeBlade.LadyMedeCharacter")
+wr = unreal.EditorAssetLibrary.load_class(None, "/Script/KyndeBlade.WrathCharacter")
+
+if k: unreal.EditorLevelLibrary.spawn_actor_from_class(k, unreal.Vector(-500,-150,200), unreal.Rotator(0,0,0))
+if m: unreal.EditorLevelLibrary.spawn_actor_from_class(m, unreal.Vector(-500,150,200), unreal.Rotator(0,0,0))
+if f: unreal.EditorLevelLibrary.spawn_actor_from_class(f, unreal.Vector(500,-300,200), unreal.Rotator(0,0,0))
+if l: unreal.EditorLevelLibrary.spawn_actor_from_class(l, unreal.Vector(500,0,200), unreal.Rotator(0,0,0))
+if wr: unreal.EditorLevelLibrary.spawn_actor_from_class(wr, unreal.Vector(500,300,200), unreal.Rotator(0,0,0))
+
+print("Characters spawned! Check World Outliner.")
