@@ -1,0 +1,13 @@
+QUICKEST METHOD - NO PLACEMENT NEEDED!
+=======================================
+
+Just use the console command:
+
+1. Press PLAY (enter game mode)
+2. Press ` (backtick key, above Tab)
+3. Type: SpawnTestCharacters
+4. Press Enter
+
+That's it! Characters spawn immediately.
+
+No need to place any actors or search for anything.
