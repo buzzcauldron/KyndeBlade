@@ -1,5 +1,5 @@
-#include "Characters/KnightCharacter.h"
-#include "Characters/MedievalCharacter.h"
+#include "KnightCharacter.h"
+#include "MedievalCharacter.h"
 
 AKnightCharacter::AKnightCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -19,7 +19,7 @@ void AKnightCharacter::ShieldBash(AMedievalCharacter* Target)
 	if (Target && Stats.CurrentStamina >= 25.0f)
 	{
 		ConsumeStamina(25.0f);
-		Target->TakeDamage(ShieldBashDamage, this);
+		Target->ApplyCustomDamage(ShieldBashDamage, this);
 		// Could add stun effect here
 	}
 }
@@ -41,6 +41,6 @@ void AKnightCharacter::ChargeAttack(AMedievalCharacter* Target)
 	{
 		ConsumeStamina(40.0f);
 		float ChargeDamage = Stats.AttackPower * 2.0f;
-		Target->TakeDamage(ChargeDamage, this);
+		Target->ApplyCustomDamage(ChargeDamage, this);
 	}
 }

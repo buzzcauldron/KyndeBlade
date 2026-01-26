@@ -1,5 +1,5 @@
-#include "Combat/CombatAction.h"
-#include "Characters/MedievalCharacter.h"
+#include "CombatAction.h"
+#include "../Characters/MedievalCharacter.h"
 
 UCombatAction::UCombatAction()
 {
@@ -51,7 +51,7 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 				FinalDamage *= 1.5f;
 			}
 			
-			Target->TakeDamage(FinalDamage, Executor);
+			Target->ApplyCustomDamage(FinalDamage, Executor);
 			
 			// Expedition 33-inspired: Apply break damage
 			if (ActionData.BreakDamage > 0.0f && Target)
@@ -69,7 +69,7 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 	case ECombatActionType::Counter: // Counter-attack
 		if (Target)
 		{
-			Target->TakeDamage(ActionData.Damage * 1.5f, Executor);
+			Target->ApplyCustomDamage(ActionData.Damage * 1.5f, Executor);
 		}
 		break;
 	case ECombatActionType::Rest: // Wait - "Kynde's Rest"

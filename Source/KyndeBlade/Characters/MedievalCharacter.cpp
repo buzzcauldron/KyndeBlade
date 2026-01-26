@@ -1,8 +1,8 @@
-#include "Characters/MedievalCharacter.h"
+#include "MedievalCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Combat/CombatAction.h"
-#include "Combat/StatusEffect.h"
+#include "../Combat/CombatAction.h"
+#include "../Combat/StatusEffect.h"
 
 AMedievalCharacter::AMedievalCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -69,10 +69,10 @@ void AMedievalCharacter::Tick(float DeltaTime)
 	UpdateActionCooldowns(DeltaTime);
 	
 	// Expedition 33-inspired: Update broken state
-	if (bIsBroken && BrokenStunRemaining > 0.0f)
+	if (Stats.bIsBroken && Stats.BrokenStunRemaining > 0.0f)
 	{
-		BrokenStunRemaining -= DeltaTime;
-		if (BrokenStunRemaining <= 0.0f)
+		Stats.BrokenStunRemaining -= DeltaTime;
+		if (Stats.BrokenStunRemaining <= 0.0f)
 		{
 			RecoverFromBreak();
 		}
@@ -82,7 +82,7 @@ void AMedievalCharacter::Tick(float DeltaTime)
 	UpdateStatusEffects(DeltaTime);
 }
 
-void AMedievalCharacter::TakeDamage(float Damage, AMedievalCharacter* Attacker)
+void AMedievalCharacter::ApplyCustomDamage(float Damage, AMedievalCharacter* Attacker)
 {
 	if (!IsAlive())
 	{
@@ -175,16 +175,16 @@ void AMedievalCharacter::GainKynde(float Amount)
 		}
 	}
 	
-	CurrentKynde = FMath::Min(MaxKynde, CurrentKynde + Amount);
-	OnKyndeChanged.Broadcast(CurrentKynde, MaxKynde);
+	Stats.CurrentKynde = FMath::Min(Stats.MaxKynde, Stats.CurrentKynde + Amount);
+	OnKyndeChanged.Broadcast(Stats.CurrentKynde, Stats.MaxKynde);
 }
 
 bool AMedievalCharacter::ConsumeKynde(float Amount)
 {
-	if (CurrentKynde >= Amount)
+	if (Stats.CurrentKynde >= Amount)
 	{
-		CurrentKynde -= Amount;
-		OnKyndeChanged.Broadcast(CurrentKynde, MaxKynde);
+		Stats.CurrentKynde -= Amount;
+		OnKyndeChanged.Broadcast(Stats.CurrentKynde, Stats.MaxKynde);
 		return true;
 	}
 	return false;
@@ -193,15 +193,15 @@ bool AMedievalCharacter::ConsumeKynde(float Amount)
 // Expedition 33-inspired: Break system
 void AMedievalCharacter::TakeBreakDamage(float BreakAmount)
 {
-	if (bIsBroken)
+	if (Stats.bIsBroken)
 	{
 		return; // Already broken, break gauge doesn't decrease further
 	}
 
-	CurrentBreakGauge = FMath::Max(0.0f, CurrentBreakGauge - BreakAmount);
-	OnBreakGaugeChanged.Broadcast(CurrentBreakGauge, MaxBreakGauge);
+	Stats.CurrentBreakGauge = FMath::Max(0.0f, Stats.CurrentBreakGauge - BreakAmount);
+	OnBreakGaugeChanged.Broadcast(Stats.CurrentBreakGauge, Stats.MaxBreakGauge);
 
-	if (CurrentBreakGauge <= 0.0f)
+	if (Stats.CurrentBreakGauge <= 0.0f)
 	{
 		BreakCharacter();
 	}
@@ -209,22 +209,22 @@ void AMedievalCharacter::TakeBreakDamage(float BreakAmount)
 
 void AMedievalCharacter::BreakCharacter()
 {
-	if (bIsBroken)
+	if (Stats.bIsBroken)
 	{
 		return; // Already broken
 	}
 
-	bIsBroken = true;
-	BrokenStunRemaining = 2.0f; // Stunned for 2 turns (will be decremented in Tick)
+	Stats.bIsBroken = true;
+	Stats.BrokenStunRemaining = 2.0f; // Stunned for 2 turns (will be decremented in Tick)
 	OnCharacterBroken.Broadcast(this);
 }
 
 void AMedievalCharacter::RecoverFromBreak()
 {
-	bIsBroken = false;
-	BrokenStunRemaining = 0.0f;
-	CurrentBreakGauge = MaxBreakGauge; // Reset break gauge
-	OnBreakGaugeChanged.Broadcast(CurrentBreakGauge, MaxBreakGauge);
+	Stats.bIsBroken = false;
+	Stats.BrokenStunRemaining = 0.0f;
+	Stats.CurrentBreakGauge = Stats.MaxBreakGauge; // Reset break gauge
+	OnBreakGaugeChanged.Broadcast(Stats.CurrentBreakGauge, Stats.MaxBreakGauge);
 }
 
 void AMedievalCharacter::StartDodge(float WindowDuration)
@@ -410,4 +410,9 @@ void AMedievalCharacter::RemoveHunger()
 bool AMedievalCharacter::IsHungry() const
 {
 	return HasStatusEffect(EStatusEffectType::Hunger);
+}
+void AMedievalCharacter::UpdateActionCooldowns(float DeltaTime)
+{
+	// TODO: Implement action cooldown logic
+	// For now, this is a stub to satisfy the build
 }

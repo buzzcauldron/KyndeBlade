@@ -4111,7 +4111,7 @@
 				"args": [
 					"-projectfiles",
 					"-vscode",
-					"-project=/home/sethj/KyndeBlade/KyndeBlade.uproject",
+					"-project=/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject",
 					"-game",
 					"-engine",
 					"-dotnet"

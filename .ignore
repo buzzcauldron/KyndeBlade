@@ -63,12 +63,12 @@
 /Engine/Source/Programs/AutomationTool/IOS/bin
 /Engine/Source/Programs/AutomationTool/Insights/obj
 /Engine/Source/Programs/AutomationTool/Insights/bin
-/KyndeBlade/.vscode
-/KyndeBlade/.git
-/KyndeBlade/Intermediate
-/KyndeBlade/Saved
-/KyndeBlade/Intermediate/Build/BuildRulesProjects/KyndeBladeModuleRules/obj
-/KyndeBlade/Intermediate/Build/BuildRulesProjects/KyndeBladeModuleRules/bin
+/KyndeBlade 5.7/.vscode
+/KyndeBlade 5.7/.git
+/KyndeBlade 5.7/Saved
+/KyndeBlade 5.7/Intermediate
+/KyndeBlade 5.7/Intermediate/Build/BuildRulesProjects/KyndeBladeModuleRules/obj
+/KyndeBlade 5.7/Intermediate/Build/BuildRulesProjects/KyndeBladeModuleRules/bin
 /Engine/Source/Programs/AutomationTool/Linux/obj
 /Engine/Source/Programs/AutomationTool/Linux/bin
 /Engine/Source/Programs/AutomationTool/LiveLinkHub/obj

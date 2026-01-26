@@ -2,8 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Combat/CombatAction.h"
-#include "Combat/StatusEffect.h"
+#include "../Combat/CombatAction.h"
+#include "../Combat/StatusEffect.h"
 #include "MedievalCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -179,7 +179,7 @@ public:
 
 	// Combat Functions
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float Damage, AMedievalCharacter* Attacker);
+	void ApplyCustomDamage(float Damage, AMedievalCharacter* Attacker);
 
 	// Expedition 33-inspired: Kynde management
 	UFUNCTION(BlueprintCallable)
@@ -189,10 +189,10 @@ public:
 	bool ConsumeKynde(float Amount);
 
 	UFUNCTION(BlueprintCallable)
-	float GetCurrentKynde() const { return CurrentKynde; }
+	float GetCurrentKynde() const { return Stats.CurrentKynde; }
 
 	UFUNCTION(BlueprintCallable)
-	float GetMaxKynde() const { return MaxKynde; }
+	float GetMaxKynde() const { return Stats.MaxKynde; }
 
 	// Expedition 33-inspired: Break system
 	UFUNCTION(BlueprintCallable)
@@ -205,10 +205,10 @@ public:
 	void RecoverFromBreak(); // Called when broken state ends
 
 	UFUNCTION(BlueprintCallable)
-	float GetCurrentBreakGauge() const { return CurrentBreakGauge; }
+	float GetCurrentBreakGauge() const { return Stats.CurrentBreakGauge; }
 
 	UFUNCTION(BlueprintCallable)
-	bool IsBroken() const { return bIsBroken; }
+	bool IsBroken() const { return Stats.bIsBroken; }
 
 	UFUNCTION(BlueprintCallable)
 	void Heal(float Amount);
@@ -252,6 +252,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool AttemptParry(); // Attempt Ward
+
+	// Action cooldown update
+	UFUNCTION(BlueprintCallable)
+	void UpdateActionCooldowns(float DeltaTime);
 
 	// Turn-based functions
 	UFUNCTION(BlueprintCallable)

@@ -1,6 +1,6 @@
-#include "Characters/Enemies/HungerCharacter.h"
-#include "Characters/MedievalCharacter.h"
-#include "Combat/StatusEffect.h"
+#include "HungerCharacter.h"
+#include "../MedievalCharacter.h"
+#include "../../Combat/StatusEffect.h"
 
 AHungerCharacter::AHungerCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -156,7 +156,7 @@ void AHungerCharacter::TheWorkThatNeverEnds(AMedievalCharacter* Target)
 	
 	// Deal damage representing the exhaustion of endless work
 	float ExhaustionDamage = 15.0f * HungerPower;
-	Target->TakeDamage(ExhaustionDamage, this);
+	Target->ApplyCustomDamage(ExhaustionDamage, this);
 }
 
 void AHungerCharacter::TheFeastOfWant()

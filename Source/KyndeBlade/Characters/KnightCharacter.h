@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Characters/MedievalCharacter.h"
+#include "MedievalCharacter.h"
 #include "KnightCharacter.generated.h"
 
 /**

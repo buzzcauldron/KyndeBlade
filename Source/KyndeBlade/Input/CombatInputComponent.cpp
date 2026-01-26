@@ -1,4 +1,4 @@
-#include "Input/CombatInputComponent.h"
+#include "CombatInputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"

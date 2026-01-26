@@ -1,5 +1,5 @@
-#include "Characters/MageCharacter.h"
-#include "Characters/MedievalCharacter.h"
+#include "MageCharacter.h"
+#include "MedievalCharacter.h"
 
 AMageCharacter::AMageCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -21,12 +21,12 @@ void AMageCharacter::Fireball(AMedievalCharacter* Target)
 	if (Target && CurrentMana >= FireballManaCost)
 	{
 		ConsumeMana(FireballManaCost);
-		Target->TakeDamage(FireballDamage, this);
+		Target->ApplyCustomDamage(FireballDamage, this);
 		// Could add burning effect
 	}
 }
 
-void AMageCharacter::Heal(AMedievalCharacter* Target)
+void AMageCharacter::HealTarget(AMedievalCharacter* Target)
 {
 	if (Target && CurrentMana >= HealManaCost)
 	{
@@ -40,7 +40,7 @@ void AMageCharacter::LightningBolt(AMedievalCharacter* Target)
 	if (Target && CurrentMana >= LightningBoltManaCost)
 	{
 		ConsumeMana(LightningBoltManaCost);
-		Target->TakeDamage(LightningBoltDamage, this);
+		Target->ApplyCustomDamage(LightningBoltDamage, this);
 		// Could add stun effect
 	}
 }

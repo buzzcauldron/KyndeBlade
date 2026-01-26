@@ -1,6 +1,6 @@
-#include "UI/CombatUI.h"
-#include "Characters/MedievalCharacter.h"
-#include "Combat/CombatAction.h"
+#include "CombatUI.h"
+#include "../Characters/MedievalCharacter.h"
+#include "../Combat/CombatAction.h"
 
 UCombatUI::UCombatUI(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

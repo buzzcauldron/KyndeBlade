@@ -101,43 +101,43 @@ UnrealGame-LinuxArm64-Shipping:
 UnrealGame: UnrealGame-Linux-Development
 
 KyndeBlade-Android-DebugGame:
-	 $(BUILD) KyndeBlade Android DebugGame  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade Android DebugGame  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade-Android-Development:
-	 $(BUILD) KyndeBlade Android Development  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade Android Development  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade-Android-Shipping:
-	 $(BUILD) KyndeBlade Android Shipping  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade Android Shipping  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade-Linux-DebugGame:
-	 $(BUILD) KyndeBlade Linux DebugGame  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade Linux DebugGame  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade-Linux-Development:
-	 $(BUILD) KyndeBlade Linux Development  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade Linux Development  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade-Linux-Shipping:
-	 $(BUILD) KyndeBlade Linux Shipping  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade Linux Shipping  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade-LinuxArm64-DebugGame:
-	 $(BUILD) KyndeBlade LinuxArm64 DebugGame  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade LinuxArm64 DebugGame  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade-LinuxArm64-Development:
-	 $(BUILD) KyndeBlade LinuxArm64 Development  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade LinuxArm64 Development  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade-LinuxArm64-Shipping:
-	 $(BUILD) KyndeBlade LinuxArm64 Shipping  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBlade LinuxArm64 Shipping  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBlade: KyndeBlade-Linux-Development
 
 KyndeBladeEditor-Linux-DebugGame:
-	 $(BUILD) KyndeBladeEditor Linux DebugGame  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBladeEditor Linux DebugGame  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBladeEditor-Linux-Development:
-	 $(BUILD) KyndeBladeEditor Linux Development  -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" $(ARGS)
+	 $(BUILD) KyndeBladeEditor Linux Development  -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" $(ARGS)
 
 KyndeBladeEditor: KyndeBladeEditor-Linux-Development
 
 configure:
-	$(BUILD) -ProjectFiles -Project="/home/sethj/KyndeBlade/KyndeBlade.uproject" -Game 
+	$(BUILD) -ProjectFiles -Project="/home/sethj/KyndeBlade 5.7/KyndeBlade.uproject" -Game 
 
 .PHONY: $(TARGETS)
