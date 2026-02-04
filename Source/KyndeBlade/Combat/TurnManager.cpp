@@ -27,11 +27,24 @@ void ATurnManager::Tick(float DeltaTime)
 		RealTimeWindowRemaining -= DeltaTime;
 		if (RealTimeWindowRemaining <= 0.0f)
 		{
+			// Timeout: apply full pending damage if any (defender failed to dodge/parry)
+			if (PendingDamageTarget && PendingDamageAttacker)
+			{
+				PendingDamageTarget->ApplyCustomDamage(PendingDamageAmount, PendingDamageAttacker);
+				if (PendingBreakDamage > 0.0f)
+				{
+					PendingDamageTarget->TakeBreakDamage(PendingBreakDamage);
+				}
+			}
+			PendingDamageAmount = 0.0f;
+			PendingBreakDamage = 0.0f;
+			PendingDamageTarget = nullptr;
+			PendingDamageAttacker = nullptr;
+			OnRealTimeWindowEnded.Broadcast();
 			CombatState = ECombatState::ProcessingResults;
-			// Process results and move to next turn
 			NextTurn();
 		}
-		return; // Early return to prevent processing action timing
+		return;
 	}
 
 	// Process action timing (cast and execution phases)
@@ -201,8 +214,18 @@ void ATurnManager::ProcessActionCast()
 		return;
 	}
 
-	// Execute the action
-	CurrentCharacter->ExecuteCombatAction(CurrentExecutingAction, CurrentActionTarget);
+	// For Strike vs player target, defer damage so defender gets real-time window
+	const bool bDeferDamage = (CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Strike
+		&& CurrentActionTarget && PlayerCharacters.Contains(CurrentActionTarget));
+
+	if (bDeferDamage)
+	{
+		CurrentCharacter->ExecuteCombatActionWithDeferredDamage(CurrentExecutingAction, CurrentActionTarget);
+	}
+	else
+	{
+		CurrentCharacter->ExecuteCombatAction(CurrentExecutingAction, CurrentActionTarget);
+	}
 
 	// Handle execution time
 	if (CurrentExecutingAction->GetExecutionTime() > 0.0f)
@@ -224,22 +247,36 @@ void ATurnManager::ProcessActionExecution()
 		return;
 	}
 
-	// If action has real-time mechanics, start the window (Escapade/Ward)
-	if (CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Escapade || 
-		CurrentExecutingAction->ActionData.ActionType == ECombatActionType::Ward)
+	const ECombatActionType ActionType = CurrentExecutingAction->ActionData.ActionType;
+	const bool bStrikeVsPlayer = (ActionType == ECombatActionType::Strike && CurrentActionTarget && PlayerCharacters.Contains(CurrentActionTarget));
+
+	if (bStrikeVsPlayer)
+	{
+		// Store pending damage and give defender a real-time window
+		float FinalDamage = CurrentExecutingAction->ActionData.Damage;
+		if (CurrentActionTarget->IsBroken())
+		{
+			FinalDamage *= 1.5f;
+		}
+		PendingDamageAmount = FinalDamage;
+		PendingBreakDamage = CurrentExecutingAction->ActionData.BreakDamage;
+		PendingDamageTarget = CurrentActionTarget;
+		PendingDamageAttacker = CurrentCharacter;
+		StartRealTimeWindow(CurrentExecutingAction->ActionData.SuccessWindow > 0.0f ? CurrentExecutingAction->ActionData.SuccessWindow : 1.5f);
+		OnRealTimeWindowStarted.Broadcast(CurrentActionTarget);
+	}
+	else if (ActionType == ECombatActionType::Escapade || ActionType == ECombatActionType::Ward)
 	{
 		StartRealTimeWindow(CurrentExecutingAction->ActionData.SuccessWindow);
+		OnRealTimeWindowStarted.Broadcast(CurrentCharacter);
 	}
 	else
 	{
-		// Move to next turn after a short delay
 		CombatState = ECombatState::ProcessingResults;
-		// Clear any existing timer first
 		GetWorld()->GetTimerManager().ClearTimer(NextTurnTimerHandle);
 		GetWorld()->GetTimerManager().SetTimer(NextTurnTimerHandle, this, &ATurnManager::NextTurn, 0.01f, false);
 	}
 
-	// Clear action references
 	CurrentExecutingAction = nullptr;
 	CurrentActionTarget = nullptr;
 	ActionCastTimeRemaining = 0.0f;
@@ -251,13 +288,45 @@ void ATurnManager::StartRealTimeWindow(float Duration)
 	RealTimeWindowDuration = Duration;
 	RealTimeWindowRemaining = Duration;
 	CombatState = ECombatState::RealTimeWindow;
+}
 
-	// Set up dodge/parry windows for characters
-	if (CurrentCharacter)
+void ATurnManager::NotifyDodgeSuccess(AMedievalCharacter* Defender)
+{
+	if (CombatState != ECombatState::RealTimeWindow || Defender != PendingDamageTarget)
 	{
-		// Enable real-time mechanics for the current character
-		// This will be handled by the character's combat system
+		return;
 	}
+	PendingDamageAmount = 0.0f;
+	PendingBreakDamage = 0.0f;
+	PendingDamageTarget = nullptr;
+	PendingDamageAttacker = nullptr;
+	OnRealTimeWindowEnded.Broadcast();
+	CombatState = ECombatState::ProcessingResults;
+	NextTurn();
+}
+
+void ATurnManager::NotifyParrySuccess(AMedievalCharacter* Defender)
+{
+	if (CombatState != ECombatState::RealTimeWindow || Defender != PendingDamageTarget)
+	{
+		return;
+	}
+	if (PendingDamageTarget && PendingDamageAttacker)
+	{
+		const float ReducedDamage = PendingDamageAmount * 0.3f;
+		PendingDamageTarget->ApplyCustomDamage(ReducedDamage, PendingDamageAttacker);
+		if (PendingBreakDamage > 0.0f)
+		{
+			PendingDamageTarget->TakeBreakDamage(PendingBreakDamage * 0.3f);
+		}
+	}
+	PendingDamageAmount = 0.0f;
+	PendingBreakDamage = 0.0f;
+	PendingDamageTarget = nullptr;
+	PendingDamageAttacker = nullptr;
+	OnRealTimeWindowEnded.Broadcast();
+	CombatState = ECombatState::ProcessingResults;
+	NextTurn();
 }
 
 bool ATurnManager::IsPlayerTurn() const

@@ -7,6 +7,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTurnChanged, AMedievalCharacter*, CurrentCharacter);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCombatEnded);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRealTimeWindowStarted, AMedievalCharacter*, CharacterWithWindow);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRealTimeWindowEnded);
 
 UENUM(BlueprintType)
 enum class ECombatState : uint8
@@ -74,12 +76,26 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StartRealTimeWindow(float Duration);
 
+	/** Called when defender successfully dodges; ends window and applies no damage. */
+	UFUNCTION(BlueprintCallable)
+	void NotifyDodgeSuccess(AMedievalCharacter* Defender);
+
+	/** Called when defender successfully parries; ends window and applies 30% damage. */
+	UFUNCTION(BlueprintCallable)
+	void NotifyParrySuccess(AMedievalCharacter* Defender);
+
 	// Delegates
 	UPROPERTY(BlueprintAssignable)
 	FOnTurnChanged OnTurnChanged;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCombatEnded OnCombatEnded;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnRealTimeWindowStarted OnRealTimeWindowStarted;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnRealTimeWindowEnded OnRealTimeWindowEnded;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -121,6 +137,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	AMedievalCharacter* CurrentActionTarget = nullptr;
+
+	// Deferred damage (Strike vs player): applied when real-time window ends or on dodge/parry
+	float PendingDamageAmount = 0.0f;
+	float PendingBreakDamage = 0.0f;
+	AMedievalCharacter* PendingDamageTarget = nullptr;
+	AMedievalCharacter* PendingDamageAttacker = nullptr;
 
 	UFUNCTION()
 	void ProcessActionCast();

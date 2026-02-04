@@ -13,6 +13,8 @@ void AMageCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	CharacterClass = ECharacterClass::Mage;
+	Stats.MaxMana = MaxMana;
+	Stats.CurrentMana = MaxMana;
 	CurrentMana = MaxMana;
 }
 
@@ -45,7 +47,9 @@ void AMageCharacter::LightningBolt(AMedievalCharacter* Target)
 	}
 }
 
-void AMageCharacter::ConsumeMana(float Amount)
+bool AMageCharacter::ConsumeMana(float Amount)
 {
-	CurrentMana = FMath::Max(0.0f, CurrentMana - Amount);
+	const bool bSuccess = Super::ConsumeMana(Amount);
+	CurrentMana = Stats.CurrentMana;
+	return bSuccess;
 }

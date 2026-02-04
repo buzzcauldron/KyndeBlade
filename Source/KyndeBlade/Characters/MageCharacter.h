@@ -29,10 +29,10 @@ public:
 	void LightningBolt(AMedievalCharacter* Target);
 
 	UFUNCTION(BlueprintCallable)
-	float GetMana() const { return CurrentMana; }
+	float GetMana() const { return Stats.CurrentMana; }
 
 	UFUNCTION(BlueprintCallable)
-	float GetMaxMana() const { return MaxMana; }
+	float GetMaxManaValue() const { return MaxMana; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -59,6 +59,5 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float LightningBoltManaCost = 35.0f;
 
-	UFUNCTION(BlueprintCallable)
-	void ConsumeMana(float Amount);
+	bool ConsumeMana(float Amount) override;
 };
