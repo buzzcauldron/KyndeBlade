@@ -1,4 +1,5 @@
 #include "KyndeBladeGameMode.h"
+#include "CombatPlayerController.h"
 #include "../Combat/TurnManager.h"
 #include "../Characters/MedievalCharacter.h"
 #include "../Characters/KnightCharacter.h"
@@ -14,7 +15,8 @@ AKyndeBladeGameMode::AKyndeBladeGameMode()
 	TurnManager = nullptr;
 	TurnManagerClass = ATurnManager::StaticClass();
 	bAutoSpawnTestCharacters = true;
-	
+	PlayerControllerClass = ACombatPlayerController::StaticClass();
+
 	// Set default classes
 	DefaultKnightClass = AKnightCharacter::StaticClass();
 	DefaultMageClass = AMageCharacter::StaticClass();
@@ -114,7 +116,7 @@ void AKyndeBladeGameMode::AutoSpawnTestCharacters()
 			Knight->CharacterName = TEXT("Player Knight");
 			PlayerChars.Add(Knight);
 			UE_LOG(LogTemp, Warning, TEXT("✓ SUCCESS: Spawned Knight at %s"), *Player1Loc.ToString());
-			DrawDebugSphere(World, Player1Loc, 100.0f, 12, FColor::Green, true, 30.0f);
+			if (bDrawDebugSpheres) { DrawDebugSphere(World, Player1Loc, 100.0f, 12, FColor::Green, true, 30.0f); }
 		}
 		else
 		{
@@ -135,7 +137,7 @@ void AKyndeBladeGameMode::AutoSpawnTestCharacters()
 			Mage->CharacterName = TEXT("Player Mage");
 			PlayerChars.Add(Mage);
 			UE_LOG(LogTemp, Warning, TEXT("Spawned Mage at %s"), *Player2Loc.ToString());
-			DrawDebugSphere(World, Player2Loc, 100.0f, 12, FColor::Blue, true, 30.0f);
+			if (bDrawDebugSpheres) { DrawDebugSphere(World, Player2Loc, 100.0f, 12, FColor::Blue, true, 30.0f); }
 		}
 	}
 
@@ -150,9 +152,10 @@ void AKyndeBladeGameMode::AutoSpawnTestCharacters()
 		AFalseCharacter* False = World->SpawnActor<AFalseCharacter>(DefaultFalseClass, FalseTransform, SpawnParams);
 		if (False)
 		{
+			False->SpawnDefaultController();
 			EnemyChars.Add(False);
 			UE_LOG(LogTemp, Warning, TEXT("Spawned False at %s"), *FalseLoc.ToString());
-			DrawDebugSphere(World, FalseLoc, 100.0f, 12, FColor::Red, true, 30.0f);
+			if (bDrawDebugSpheres) { DrawDebugSphere(World, FalseLoc, 100.0f, 12, FColor::Red, true, 30.0f); }
 		}
 	}
 
@@ -162,9 +165,10 @@ void AKyndeBladeGameMode::AutoSpawnTestCharacters()
 		ALadyMedeCharacter* Mede = World->SpawnActor<ALadyMedeCharacter>(DefaultLadyMedeClass, MedeTransform, SpawnParams);
 		if (Mede)
 		{
+			Mede->SpawnDefaultController();
 			EnemyChars.Add(Mede);
 			UE_LOG(LogTemp, Warning, TEXT("Spawned Lady Mede at %s"), *MedeLoc.ToString());
-			DrawDebugSphere(World, MedeLoc, 100.0f, 12, FColor::Yellow, true, 30.0f);
+			if (bDrawDebugSpheres) { DrawDebugSphere(World, MedeLoc, 100.0f, 12, FColor::Yellow, true, 30.0f); }
 		}
 	}
 
@@ -174,9 +178,10 @@ void AKyndeBladeGameMode::AutoSpawnTestCharacters()
 		AWrathCharacter* Wrath = World->SpawnActor<AWrathCharacter>(DefaultWrathClass, WrathTransform, SpawnParams);
 		if (Wrath)
 		{
+			Wrath->SpawnDefaultController();
 			EnemyChars.Add(Wrath);
 			UE_LOG(LogTemp, Warning, TEXT("Spawned Wrath at %s"), *WrathLoc.ToString());
-			DrawDebugSphere(World, WrathLoc, 100.0f, 12, FColor::Magenta, true, 30.0f);
+			if (bDrawDebugSpheres) { DrawDebugSphere(World, WrathLoc, 100.0f, 12, FColor::Magenta, true, 30.0f); }
 		}
 	}
 

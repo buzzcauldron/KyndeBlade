@@ -22,10 +22,13 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 		}
 	}
 
-	// Consume stamina
 	if (Executor)
 	{
 		Executor->ConsumeStamina(ActionData.StaminaCost);
+		if (ActionData.ManaCost > 0.0f)
+		{
+			Executor->ConsumeMana(ActionData.ManaCost);
+		}
 	}
 
 	// Expedition 33-inspired: Generate Kynde from melee attacks
@@ -41,18 +44,15 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 		if (Target)
 		{
 			float FinalDamage = ActionData.Damage;
-			
-			// Expedition 33-inspired: Apply elemental damage modifiers
-			// (Elemental weakness/resistance system would be implemented here)
-			
+
 			// Expedition 33-inspired: Broken enemies take 50% more damage
 			if (Target->IsBroken())
 			{
 				FinalDamage *= 1.5f;
 			}
-			
+
 			Target->ApplyCustomDamage(FinalDamage, Executor);
-			
+
 			// Expedition 33-inspired: Apply break damage
 			if (ActionData.BreakDamage > 0.0f && Target)
 			{
@@ -72,8 +72,77 @@ void UCombatAction::ExecuteAction(AMedievalCharacter* Executor, AMedievalCharact
 			Target->ApplyCustomDamage(ActionData.Damage * 1.5f, Executor);
 		}
 		break;
+	case ECombatActionType::Guard:
+		if (Executor)
+		{
+			Executor->SetGuarding(true);
+			Executor->RestoreStamina(15.0f);
+		}
+		break;
 	case ECombatActionType::Rest: // Wait - "Kynde's Rest"
-		// Rest restores stamina
+		if (Executor)
+		{
+			Executor->RestoreStamina(20.0f);
+		}
+		break;
+	default:
+		break;
+	}
+
+	OnActionExecuted(Executor, Target);
+}
+
+void UCombatAction::ExecuteActionWithDeferredDamage(AMedievalCharacter* Executor, AMedievalCharacter* Target)
+{
+	if (!CanExecute(Executor))
+	{
+		return;
+	}
+
+	if (ActionData.KyndeCost > 0.0f)
+	{
+		if (!Executor->ConsumeKynde(ActionData.KyndeCost))
+		{
+			return;
+		}
+	}
+
+	if (Executor)
+	{
+		Executor->ConsumeStamina(ActionData.StaminaCost);
+		if (ActionData.ManaCost > 0.0f)
+		{
+			Executor->ConsumeMana(ActionData.ManaCost);
+		}
+	}
+
+	if (ActionData.KyndeGenerated > 0.0f && Executor)
+	{
+		Executor->GainKynde(ActionData.KyndeGenerated);
+	}
+
+	switch (ActionData.ActionType)
+	{
+	case ECombatActionType::Strike:
+		// Damage and break applied by TurnManager after real-time window
+		break;
+	case ECombatActionType::Escapade:
+	case ECombatActionType::Ward:
+		break;
+	case ECombatActionType::Counter:
+		if (Target)
+		{
+			Target->ApplyCustomDamage(ActionData.Damage * 1.5f, Executor);
+		}
+		break;
+	case ECombatActionType::Guard:
+		if (Executor)
+		{
+			Executor->SetGuarding(true);
+			Executor->RestoreStamina(15.0f);
+		}
+		break;
+	case ECombatActionType::Rest:
 		if (Executor)
 		{
 			Executor->RestoreStamina(20.0f);
@@ -93,5 +162,13 @@ bool UCombatAction::CanExecute(AMedievalCharacter* Executor)
 		return false;
 	}
 
-	return Executor->GetCurrentStamina() >= ActionData.StaminaCost;
+	if (Executor->GetCurrentStamina() < ActionData.StaminaCost)
+	{
+		return false;
+	}
+	if (ActionData.ManaCost > 0.0f && Executor->GetCurrentMana() < ActionData.ManaCost)
+	{
+		return false;
+	}
+	return true;
 }

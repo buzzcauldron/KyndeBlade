@@ -1,5 +1,6 @@
 #include "WrathCharacter.h"
 #include "../MedievalCharacter.h"
+#include "../../Game/CombatAIController.h"
 
 AWrathCharacter::AWrathCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -8,6 +9,7 @@ AWrathCharacter::AWrathCharacter(const FObjectInitializer& ObjectInitializer)
 	CharacterName = TEXT("Wrath");
 	RageLevel = 0.0f;
 	bIsBerserk = false;
+	AIControllerClass = ACombatAIController::StaticClass();
 }
 
 void AWrathCharacter::BeginPlay()

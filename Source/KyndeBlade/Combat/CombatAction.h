@@ -11,6 +11,7 @@ enum class ECombatActionType : uint8
 	Escapade,    // Dodge - Piers Plowman: "Kynde's Evasion" (Nature's Evasion)
 	Ward,        // Parry - Piers Plowman: "Trewthe's Sheeld" (Truth's Shield)
 	Counter,     // Counter-attack - Piers Plowman: Counter-strike
+	Guard,       // Reduce incoming damage, restore stamina
 	Special,     // Special actions - Various Piers-themed abilities
 	Rest         // Wait - Piers Plowman: "Kynde's Rest" (Nature's Rest)
 };
@@ -40,6 +41,9 @@ struct FCombatActionData
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float StaminaCost = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float ManaCost = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SuccessWindow = 0.0f; // Time window for real-time mechanics (Escapade/Ward)
@@ -72,6 +76,7 @@ struct FCombatActionData
 		ActionType = ECombatActionType::Rest;
 		Damage = 0.0f;
 		StaminaCost = 0.0f;
+		ManaCost = 0.0f;
 		SuccessWindow = 0.0f;
 		CastTime = 0.0f;
 		ExecutionTime = 0.0f;
@@ -99,6 +104,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void ExecuteAction(class AMedievalCharacter* Executor, class AMedievalCharacter* Target);
+
+	/** When true, Strike does not apply damage (TurnManager will apply after real-time window). */
+	UFUNCTION(BlueprintCallable)
+	virtual void ExecuteActionWithDeferredDamage(class AMedievalCharacter* Executor, class AMedievalCharacter* Target);
 
 	UFUNCTION(BlueprintCallable)
 	float GetCastTime() const { return ActionData.CastTime; }

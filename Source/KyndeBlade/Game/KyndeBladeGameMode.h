@@ -6,6 +6,8 @@
 #include "../Characters/MedievalCharacter.h"
 #include "KyndeBladeGameMode.generated.h"
 
+class ACombatPlayerController;
+
 /**
  * Main game mode for Kynde Blade
  */
@@ -32,6 +34,10 @@ public:
 	// Auto-spawn test characters for quick testing
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Setup")
 	bool bAutoSpawnTestCharacters = true;
+
+	// When true, draw debug spheres at spawn locations (disable once character Blueprints have meshes)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Auto Setup")
+	bool bDrawDebugSpheres = true;
 
 	UFUNCTION(BlueprintCallable)
 	void AutoSpawnTestCharacters();

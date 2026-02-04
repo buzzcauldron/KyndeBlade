@@ -29,12 +29,11 @@ Your characters ARE spawning! The colored spheres prove it. They just need visua
 
 ## Step 2: Update Spawner to Use Blueprints
 
-### Option A: Update GameMode
-1. Find **Project Settings** → **Game** → **Default Game Mode**
-2. If there's a Blueprint version, open it
-3. Set **Default Knight Class** to `BP_PlayerKnight`
-4. Set **Default Mage Class** to `BP_PlayerMage`
-5. Set enemy classes to their Blueprints
+### Option A: Update GameMode (recommended)
+1. **Project Settings** → **Game** → **Default Game Mode** → set to `BP_KyndeBladeGameMode` (create this from KyndeBladeGameMode if needed via **Blueprint Class**).
+2. Open **BP_KyndeBladeGameMode** in the Content Browser.
+3. In **Details** under **Auto Setup**: set **Default Knight Class** = `BP_PlayerKnight`, **Default Mage Class** = `BP_PlayerMage`, **Default False Class** = `BP_False`, **Default Lady Mede Class** = `BP_LadyMede`, **Default Wrath Class** = `BP_Wrath`.
+4. Optionally clear **Draw Debug Spheres** once characters have meshes.
 
 ### Option B: Update TestLevelSetup
 1. If you placed TestLevelSetup actor, select it

@@ -91,7 +91,13 @@ void AMedievalCharacter::ApplyCustomDamage(float Damage, AMedievalCharacter* Att
 
 	// Apply defense reduction
 	float ActualDamage = FMath::Max(0.0f, Damage - Stats.Defense);
-	
+
+	if (bIsGuarding)
+	{
+		ActualDamage *= (1.0f - GuardDamageReduction);
+		SetGuarding(false);
+	}
+
 	// Hunger makes you take MORE damage (the worst status effect)
 	if (IsHungry())
 	{
@@ -132,6 +138,12 @@ void AMedievalCharacter::ApplyCustomDamage(float Damage, AMedievalCharacter* Att
 	OnHealthChanged.Broadcast(Stats.CurrentHealth, Stats.MaxHealth);
 
 	CheckDefeated();
+
+	// Grant XP to attacker when this character is defeated
+	if (!IsAlive() && Attacker)
+	{
+		Attacker->AddExperience(25);
+	}
 }
 
 void AMedievalCharacter::Heal(float Amount)
@@ -160,6 +172,21 @@ void AMedievalCharacter::RestoreStamina(float Amount)
 	
 	Stats.CurrentStamina = FMath::Min(Stats.MaxStamina, Stats.CurrentStamina + Amount);
 	OnStaminaChanged.Broadcast(Stats.CurrentStamina, Stats.MaxStamina);
+}
+
+bool AMedievalCharacter::ConsumeMana(float Amount)
+{
+	if (Stats.CurrentMana < Amount)
+	{
+		return false;
+	}
+	Stats.CurrentMana -= Amount;
+	return true;
+}
+
+void AMedievalCharacter::RestoreMana(float Amount)
+{
+	Stats.CurrentMana = FMath::Min(Stats.MaxMana, Stats.CurrentMana + Amount);
 }
 
 // Expedition 33-inspired: Kynde management
@@ -267,13 +294,15 @@ void AMedievalCharacter::ExecuteCombatAction(UCombatAction* Action, AMedievalCha
 {
 	if (Action)
 	{
-		// Expedition 33-inspired: Generate Kynde from melee attacks before executing
-		// (Kynde generation is handled in CombatAction::ExecuteAction, but we can add bonus here)
-		
 		Action->ExecuteAction(this, Target);
-		
-		// Expedition 33-inspired: Apply break damage if action has it
-		// (Break damage is handled in CombatAction::ExecuteAction)
+	}
+}
+
+void AMedievalCharacter::ExecuteCombatActionWithDeferredDamage(UCombatAction* Action, AMedievalCharacter* Target)
+{
+	if (Action)
+	{
+		Action->ExecuteActionWithDeferredDamage(this, Target);
 	}
 }
 
@@ -305,6 +334,34 @@ void AMedievalCharacter::CheckDefeated()
 	if (!IsAlive())
 	{
 		OnCharacterDefeated.Broadcast(this);
+	}
+}
+
+int32 AMedievalCharacter::GetExperienceForNextLevel() const
+{
+	return Stats.Level * 100;
+}
+
+void AMedievalCharacter::AddExperience(int32 Amount)
+{
+	Stats.ExperiencePoints += Amount;
+	while (Stats.ExperiencePoints >= GetExperienceForNextLevel())
+	{
+		Stats.ExperiencePoints -= GetExperienceForNextLevel();
+		Stats.Level++;
+		// Stat increases on level up
+		Stats.MaxHealth += 10.0f;
+		Stats.CurrentHealth = Stats.MaxHealth;
+		Stats.MaxStamina += 8.0f;
+		Stats.CurrentStamina = FMath::Min(Stats.CurrentStamina + 8.0f, Stats.MaxStamina);
+		Stats.AttackPower += 1.0f;
+		Stats.Defense += 0.5f;
+		Stats.Speed += 0.3f;
+		if (Stats.MaxMana > 0.0f)
+		{
+			Stats.MaxMana += 5.0f;
+			Stats.CurrentMana = FMath::Min(Stats.CurrentMana + 5.0f, Stats.MaxMana);
+		}
 	}
 }
 

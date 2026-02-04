@@ -1,11 +1,13 @@
 #include "FalseCharacter.h"
 #include "../MedievalCharacter.h"
+#include "../../Game/CombatAIController.h"
 
 AFalseCharacter::AFalseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	CharacterClass = ECharacterClass::Rogue;
 	CharacterName = TEXT("False");
+	AIControllerClass = ACombatAIController::StaticClass();
 }
 
 void AFalseCharacter::BeginPlay()

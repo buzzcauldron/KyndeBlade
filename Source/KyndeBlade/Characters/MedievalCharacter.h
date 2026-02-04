@@ -64,6 +64,16 @@ struct FCharacterStats
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 Level = 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ExperiencePoints = 0;
+
+	// Mana for mages and other magic users (default 0 for non-casters)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxMana = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentMana = 0.0f;
+
 	FCharacterStats()
 	{
 		MaxHealth = 100.0f;
@@ -78,6 +88,9 @@ struct FCharacterStats
 		MaxBreakGauge = 100.0f;
 		CurrentBreakGauge = 100.0f;
 		Level = 1;
+		ExperiencePoints = 0;
+		MaxMana = 0.0f;
+		CurrentMana = 0.0f;
 	}
 };
 
@@ -132,6 +145,12 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	float ParryWindowRemaining = 0.0f; // Ward window
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsGuarding = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float GuardDamageReduction = 0.5f; // 50% damage reduction while guarding
 
 	// Delegates
 	UPROPERTY(BlueprintAssignable)
@@ -232,6 +251,18 @@ public:
 	float GetMaxStamina() const { return Stats.MaxStamina; }
 
 	UFUNCTION(BlueprintCallable)
+	float GetCurrentMana() const { return Stats.CurrentMana; }
+
+	UFUNCTION(BlueprintCallable)
+	float GetMaxMana() const { return Stats.MaxMana; }
+
+	UFUNCTION(BlueprintCallable)
+	virtual bool ConsumeMana(float Amount);
+
+	UFUNCTION(BlueprintCallable)
+	void RestoreMana(float Amount);
+
+	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const { return Stats.CurrentHealth > 0.0f; }
 
 	// Real-time combat mechanics (Piers Plowman: Escapade/Ward)
@@ -253,6 +284,26 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool AttemptParry(); // Attempt Ward
 
+	UFUNCTION(BlueprintCallable)
+	void SetGuarding(bool bGuarding) { bIsGuarding = bGuarding; }
+
+	UFUNCTION(BlueprintCallable)
+	bool IsGuarding() const { return bIsGuarding; }
+
+	// Progression
+	UFUNCTION(BlueprintCallable)
+	void AddExperience(int32 Amount);
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetExperience() const { return Stats.ExperiencePoints; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (DisplayName = "Character Level"))
+	int32 GetCharacterLevel() const { return Stats.Level; }
+
+	/** XP required for next level (simple curve: Level * 100). */
+	UFUNCTION(BlueprintCallable)
+	int32 GetExperienceForNextLevel() const;
+
 	// Action cooldown update
 	UFUNCTION(BlueprintCallable)
 	void UpdateActionCooldowns(float DeltaTime);
@@ -260,6 +311,10 @@ public:
 	// Turn-based functions
 	UFUNCTION(BlueprintCallable)
 	void ExecuteCombatAction(UCombatAction* Action, AMedievalCharacter* Target);
+
+	/** When true, Strike damage is deferred to TurnManager (real-time window). */
+	UFUNCTION(BlueprintCallable)
+	void ExecuteCombatActionWithDeferredDamage(UCombatAction* Action, AMedievalCharacter* Target);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnTurnStart();

@@ -1,5 +1,6 @@
 #include "LadyMedeCharacter.h"
 #include "../MedievalCharacter.h"
+#include "../../Game/CombatAIController.h"
 
 ALadyMedeCharacter::ALadyMedeCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -8,6 +9,7 @@ ALadyMedeCharacter::ALadyMedeCharacter(const FObjectInitializer& ObjectInitializ
 	CharacterName = TEXT("Lady Mede");
 	MaxCorruptionMana = 120.0f;
 	CurrentCorruptionMana = 120.0f;
+	AIControllerClass = ACombatAIController::StaticClass();
 }
 
 void ALadyMedeCharacter::BeginPlay()
