@@ -96,6 +96,13 @@ namespace KyndeBlade
 
         public bool GreenKnightWillAppearRandomly => CurrentProgress?.GreenKnightWillAppearRandomly ?? false;
 
+        public void SetPovertyLevel(int level)
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.PovertyLevel = Mathf.Clamp(level, 0, 5);
+            Save();
+        }
+
         public void SetOrfeoOtherworldTriggered(bool value)
         {
             if (CurrentProgress == null) return;
@@ -116,6 +123,14 @@ namespace KyndeBlade
         {
             if (CurrentProgress == null) return;
             CurrentProgress.OtherworldLivingCharactersAccrued++;
+            Save();
+        }
+
+        /// <summary>Every death adds a form of the body to Orfeo's Otherworld.</summary>
+        public void IncrementOtherworldBodiesFromDeath()
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.OtherworldBodiesFromDeath++;
             Save();
         }
 

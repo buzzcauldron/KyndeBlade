@@ -29,3 +29,4 @@ MonoBehaviour:
   IsInescapable: 0
   IsAlternateEnding: 0
   IsBuilding: 1
+  PovertyLevelOnArrival: 2

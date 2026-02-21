@@ -142,14 +142,55 @@ namespace KyndeBlade
             btn.onClick.AddListener(OnVictoryContinueClicked);
         }
 
+        bool _deathOfOldAge;
+
         void OnRestartClicked()
         {
+            if (_deathOfOldAge)
+            {
+                _deathOfOldAge = false;
+                StartCoroutine(RestartGameAfterDefeat());
+                return;
+            }
             var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
             if (gm != null && gm.CanRestartAtCheckpoint)
             {
                 if (DefeatPanel != null) DefeatPanel.SetActive(false);
                 gm.RestartAtCheckpoint();
             }
+        }
+
+        /// <summary>Called when player dies of old age while waiting at Field of Grace. Restart = New Game.</summary>
+        public void TriggerDeathOfOldAge()
+        {
+            var saveManager = FindObjectOfType<SaveManager>();
+            if (saveManager != null) saveManager.IncrementOtherworldBodiesFromDeath();
+            _deathOfOldAge = true;
+            if (IlluminationManager != null)
+                StartCoroutine(ShowDeathOfOldAgeAfterIllumination());
+            else
+                ShowDeathOfOldAgePanel();
+        }
+
+        IEnumerator ShowDeathOfOldAgeAfterIllumination()
+        {
+            IlluminationManager.TriggerDefeatIllumination();
+            yield return new WaitForSeconds(4.2f);
+            ShowDeathOfOldAgePanel();
+        }
+
+        void ShowDeathOfOldAgePanel()
+        {
+            if (DefeatPanel != null) DefeatPanel.SetActive(true);
+            if (DefeatText != null) DefeatText.text = "Death of old age. Wille's years have run their course. Grace did not come. A form of thee ends in Orfeo's Otherworld.";
+            var restartBtn = DefeatPanel != null ? DefeatPanel.transform.Find("RestartButton") : null;
+            if (restartBtn != null)
+            {
+                restartBtn.gameObject.SetActive(true);
+                var t = restartBtn.GetComponentInChildren<Text>();
+                if (t != null) t.text = "New Game";
+            }
+            OnDefeat?.Invoke();
         }
 
         void OnVictoryContinueClicked()
@@ -237,6 +278,8 @@ namespace KyndeBlade
 
         void Defeat()
         {
+            var saveManager = FindObjectOfType<SaveManager>();
+            if (saveManager != null) saveManager.IncrementOtherworldBodiesFromDeath();
             var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
             bool isMajorBoss = gm != null && WodeWoManager.IsMajorBossEncounter(gm.LastEncounterConfig, gm.LastEncounterLocation, gm.IsSinMinibossEncounter);
             var wodeWo = FindObjectOfType<WodeWoManager>();
@@ -296,7 +339,7 @@ namespace KyndeBlade
             if (IlluminationManager != null)
             {
                 IlluminationManager.TriggerDefeatIllumination();
-                yield return new WaitForSeconds(2.6f);
+                yield return new WaitForSeconds(4.2f);
             }
             ShowDefeatPanel();
         }
@@ -307,8 +350,12 @@ namespace KyndeBlade
             if (IlluminationManager != null)
             {
                 IlluminationManager.TriggerDefeatIllumination();
-                yield return new WaitForSeconds(2.6f);
+                yield return new WaitForSeconds(4.2f);
             }
+            if (DefeatPanel != null) DefeatPanel.SetActive(true);
+            if (DefeatText != null) DefeatText.text = "The Green Knight hath taken thy head. A form of thee ends in Orfeo's Otherworld.";
+            yield return new WaitForSeconds(2.5f);
+            if (DefeatPanel != null) DefeatPanel.SetActive(false);
             var saveManager = FindObjectOfType<SaveManager>();
             var wm = FindObjectOfType<WorldMapManager>();
             var malvern = wm != null ? wm.GetLocation("malvern") : Resources.Load<LocationNode>("Data/Vision1/Loc_malvern");
@@ -331,7 +378,7 @@ namespace KyndeBlade
             if (IlluminationManager != null)
             {
                 IlluminationManager.TriggerDefeatIllumination();
-                yield return new WaitForSeconds(2.6f);
+                yield return new WaitForSeconds(4.2f);
             }
             var wm = FindObjectOfType<WorldMapManager>();
             var otherworld = wm != null ? wm.GetLocation("otherworld") : null;
@@ -340,7 +387,7 @@ namespace KyndeBlade
             if (otherworld != null)
             {
                 if (DefeatPanel != null) DefeatPanel.SetActive(true);
-                if (DefeatText != null) DefeatText.text = "The sin has claimed thee...";
+                if (DefeatText != null) DefeatText.text = "The sin hath rent thee. A form of thy body ends in Orfeo's Otherworld.";
                 yield return new WaitForSeconds(2f);
                 if (DefeatPanel != null) DefeatPanel.SetActive(false);
                 if (wm != null)
@@ -396,7 +443,7 @@ namespace KyndeBlade
                     restartBtn.gameObject.SetActive(gm != null && gm.CanRestartAtCheckpoint);
                 }
             }
-            if (DefeatText != null) DefeatText.text = "Defeat...";
+            if (DefeatText != null) DefeatText.text = "Thy body is broken. A form of thee ends in Orfeo's Otherworld.";
             OnDefeat?.Invoke();
         }
 

@@ -22,6 +22,10 @@ namespace KyndeBlade
         public float StaminaRegenModifierPerHour = 0.98f;
         [Tooltip("Hours of play before first aging tier applies.")]
         public float HoursBeforeFirstAging = 0.5f;
+        [Tooltip("Age tier at which player dies of old age (e.g. 10 = ~10.5 hours of play, or faster when waiting at Field of Grace).")]
+        public int AgeTierDeathThreshold = 10;
+        [Tooltip("Time multiplier when waiting at Field of Grace (e.g. 60 = 1 real second = 1 minute of aging).")]
+        public float FieldOfGraceTimeMultiplier = 60f;
 
         public event Action<float> OnAgingApplied;
 
@@ -34,12 +38,31 @@ namespace KyndeBlade
         }
 
         float _saveInterval;
+        bool _deathOfOldAgeTriggered;
 
         void Update()
         {
             if (SaveManager?.CurrentProgress != null)
             {
-                SaveManager.CurrentProgress.TotalPlayTimeSeconds += Time.deltaTime;
+                float delta = Time.deltaTime;
+                var wm = FindObjectOfType<WorldMapManager>();
+                bool atFieldOfGrace = wm != null && wm.CurrentLocation != null &&
+                    string.Equals(wm.CurrentLocation.LocationId, "field_of_grace", System.StringComparison.OrdinalIgnoreCase);
+                if (!atFieldOfGrace)
+                    _deathOfOldAgeTriggered = false;
+                else
+                {
+                    if (FieldOfGraceTimeMultiplier > 1f)
+                        delta *= FieldOfGraceTimeMultiplier;
+                    if (AgeTier >= AgeTierDeathThreshold && !_deathOfOldAgeTriggered)
+                    {
+                        _deathOfOldAgeTriggered = true;
+                        var gsm = FindObjectOfType<GameStateManager>();
+                        if (gsm != null)
+                            gsm.TriggerDeathOfOldAge();
+                    }
+                }
+                SaveManager.CurrentProgress.TotalPlayTimeSeconds += delta;
                 _saveInterval += Time.deltaTime;
                 if (_saveInterval >= 300f)
                 {

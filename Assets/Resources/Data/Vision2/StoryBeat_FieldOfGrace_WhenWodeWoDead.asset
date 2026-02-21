@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adf6aa49939a744e8a385e408d054e7e, type: 3}
-  m_Name: StoryBeat_FieldOfGrace
+  m_Name: StoryBeat_FieldOfGrace_WhenWodeWoDead
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.StoryBeat
-  BeatId: field_of_grace
-  Text: "Thou hast reached the field. Wode-Wo standeth beside thee. Together ye waitest for Grace. She does not come."
+  BeatId: field_of_grace_wodewo_dead
+  Text: "Thou hast reached the field. Now thou waitest for Grace. She does not come."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5
