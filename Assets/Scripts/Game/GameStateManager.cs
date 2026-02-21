@@ -281,14 +281,6 @@ namespace KyndeBlade
             var saveManager = FindObjectOfType<SaveManager>();
             if (saveManager != null) saveManager.IncrementOtherworldBodiesFromDeath();
             var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
-            bool isMajorBoss = gm != null && WodeWoManager.IsMajorBossEncounter(gm.LastEncounterConfig, gm.LastEncounterLocation, gm.IsSinMinibossEncounter);
-            var wodeWo = FindObjectOfType<WodeWoManager>();
-
-            if (isMajorBoss && wodeWo != null && wodeWo.IsWodeWoAlive)
-            {
-                StartCoroutine(DefeatWithWodeWoDeath(gm));
-                return;
-            }
 
             if (gm != null && gm.IsSinMinibossEncounter)
             {
@@ -308,39 +300,6 @@ namespace KyndeBlade
                 StartCoroutine(ShowDefeatAfterIllumination());
             else
                 ShowDefeatPanel();
-        }
-
-        System.Collections.IEnumerator DefeatWithWodeWoDeath(KyndeBladeGameManager gm)
-        {
-            var wodeWo = FindObjectOfType<WodeWoManager>();
-            if (wodeWo != null)
-            {
-                bool done = false;
-                wodeWo.TriggerWodeWoDeath(() => done = true);
-                while (!done) yield return null;
-            }
-
-            if (gm != null && gm.IsSinMinibossEncounter)
-            {
-                yield return StartCoroutine(TransitionToOrfeoOtherworld());
-                yield break;
-            }
-            var saveManager = FindObjectOfType<SaveManager>();
-            bool atGreenChapel = gm != null && gm.LastEncounterLocation != null &&
-                string.Equals(gm.LastEncounterLocation.LocationId, "green_chapel", System.StringComparison.OrdinalIgnoreCase);
-            if (saveManager != null && atGreenChapel)
-                saveManager.IncrementGreenChapelBodies();
-            if (atGreenChapel)
-            {
-                yield return StartCoroutine(RestartGameAfterDefeat());
-                yield break;
-            }
-            if (IlluminationManager != null)
-            {
-                IlluminationManager.TriggerDefeatIllumination();
-                yield return new WaitForSeconds(4.2f);
-            }
-            ShowDefeatPanel();
         }
 
         System.Collections.IEnumerator RestartGameAfterDefeat()

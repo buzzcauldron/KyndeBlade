@@ -22,11 +22,17 @@ MonoBehaviour:
   NextLocationIds:
   - years_pass
   Encounter: {fileID: 11400000, guid: ecbb7e939ff994749b707f765ef9fccb, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: 279bc483228da4b13a6790536ac0141d, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
-  IsBuilding: 1
-  PovertyLevelOnArrival: 2
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

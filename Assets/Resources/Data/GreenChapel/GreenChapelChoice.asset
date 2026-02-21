@@ -20,8 +20,14 @@ MonoBehaviour:
   Choices:
   - Text: I accept. I will meet thee at the Green Chapel.
     IsCorrectChoice: 1
+    TransitionToLocationId: 
+    AssociatedSin: 0
   - Text: I refuse. I will not play thy game.
     IsCorrectChoice: 0
+    TransitionToLocationId: 
+    AssociatedSin: 1
   - Text: I flee. This is no place for me.
     IsCorrectChoice: 0
+    TransitionToLocationId: 
+    AssociatedSin: 4
   VisionIndex: 0

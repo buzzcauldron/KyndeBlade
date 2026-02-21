@@ -14,17 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
   LocationId: seven_sins
   DisplayName: Seven Sins
-  Description: The gathering of the deadly sins.
+  Description: 'Dream: The gathering of the deadly sins.'
   VisionIndex: 0
   PassusIndex: 6
   PassusTitle: Passus VI-VII
   SceneName: 
-  NextLocationIds:
-  - quest_do_wel
+  NextLocationIds: []
   Encounter: {fileID: 11400000, guid: d8e394ff74cd4432da962d0d7c69f5ca, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: ba3ba2abe0a004f3ab082b92d2621a17, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

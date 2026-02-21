@@ -22,9 +22,17 @@ MonoBehaviour:
   NextLocationIds:
   - fayre_felde
   Encounter: {fileID: 11400000, guid: 4b0ebad823a804eb091ea86f0b05c9f2, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 0}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 11400000, guid: 3c5857bb6470d4c40866b01bdba37521, type: 2}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

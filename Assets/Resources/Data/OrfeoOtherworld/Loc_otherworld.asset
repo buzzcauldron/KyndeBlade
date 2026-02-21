@@ -21,9 +21,17 @@ MonoBehaviour:
   SceneName: 
   NextLocationIds: []
   Encounter: {fileID: 11400000, guid: 7418b51d85ad343999323834689eb2eb, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: b187082b77cd148a491f94e0224738bc, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: orfeo
   IsInescapable: 1
   IsAlternateEnding: 1
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

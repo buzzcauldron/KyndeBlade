@@ -67,7 +67,8 @@ namespace KyndeBlade
             onComplete?.Invoke();
         }
 
-        /// <summary>Show dialogue with choices. onChoiceSelected(index, isCorrectChoice, transitionToLocationId, associatedSin).</summary>
+        /// <summary>Show dialogue with choices. onChoiceSelected(index, isCorrectChoice, transitionToLocationId, associatedSin).
+        /// Baldur's Gate–style chaining: if choice has NextDialogueBeat, shows that next; callback only when leaf choice selected.</summary>
         public void ShowChoiceBeat(DialogueChoiceBeat beat, Action<int, bool, string, SinType> onChoiceSelected)
         {
             if (beat == null)
@@ -76,7 +77,14 @@ namespace KyndeBlade
                 return;
             }
             if (DialogueSystem != null)
-                DialogueSystem.ShowChoiceBeat(beat, onChoiceSelected);
+                DialogueSystem.ShowChoiceBeat(beat, (idx, correct, transitionTo, sin) =>
+                {
+                    var choice = idx >= 0 && idx < beat.Choices.Length ? beat.Choices[idx] : null;
+                    if (choice != null && choice.NextDialogueBeat != null)
+                        ShowChoiceBeat(choice.NextDialogueBeat, onChoiceSelected);
+                    else
+                        onChoiceSelected?.Invoke(idx, correct, transitionTo, sin);
+                });
             else
                 onChoiceSelected?.Invoke(-1, false, null, SinType.None);
         }

@@ -408,8 +408,6 @@ namespace KyndeBlade
         {
             if (FindObjectOfType<SaveManager>() == null)
                 new GameObject("SaveManager").AddComponent<SaveManager>();
-            if (FindObjectOfType<WodeWoManager>() == null)
-                new GameObject("WodeWoManager").AddComponent<WodeWoManager>();
             if (FindObjectOfType<MusicManager>() == null)
                 new GameObject("MusicManager").AddComponent<MusicManager>();
             if (FindObjectOfType<AgingManager>() == null)
@@ -425,7 +423,7 @@ namespace KyndeBlade
             {
                 var canvas = new GameObject("DialogueCanvas");
                 canvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-                canvas.AddComponent<CanvasScaler>();
+                ConfigureCanvasScaler(canvas.AddComponent<CanvasScaler>());
                 canvas.AddComponent<GraphicRaycaster>();
                 canvas.AddComponent<DialogueSystem>();
             }
@@ -444,7 +442,7 @@ namespace KyndeBlade
                 {
                     var mapCanvas = new GameObject("MapCanvas");
                     mapCanvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-                    mapCanvas.AddComponent<CanvasScaler>();
+                    ConfigureCanvasScaler(mapCanvas.AddComponent<CanvasScaler>());
                     mapCanvas.AddComponent<GraphicRaycaster>();
                     mapCanvas.AddComponent<MapLevelSelectUI>();
                 }
@@ -539,17 +537,37 @@ namespace KyndeBlade
             var cam = Camera.main;
             if (cam == null)
             {
-                var go = new GameObject("Main Camera");
-                go.tag = "MainCamera";
-                cam = go.AddComponent<Camera>();
-                go.AddComponent<AudioListener>();
+                var existing = UnityEngine.Object.FindObjectOfType<Camera>();
+                if (existing != null)
+                {
+                    existing.gameObject.tag = "MainCamera";
+                    if (existing.GetComponent<AudioListener>() == null)
+                        existing.gameObject.AddComponent<AudioListener>();
+                    cam = existing;
+                }
+                else
+                {
+                    var go = new GameObject("Main Camera");
+                    go.tag = "MainCamera";
+                    cam = go.AddComponent<Camera>();
+                    go.AddComponent<AudioListener>();
+                }
             }
+            cam.enabled = true;
             cam.orthographic = true;
             cam.orthographicSize = 5f;
             cam.transform.position = new Vector3(0f, 0f, -10f);
             cam.transform.rotation = Quaternion.identity;
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(0.12f, 0.1f, 0.14f);
+            cam.depth = -1;
+        }
+
+        static void ConfigureCanvasScaler(CanvasScaler scaler)
+        {
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.matchWidthOrHeight = 0.5f;
         }
     }
 }

@@ -14,17 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
   LocationId: fayre_felde
   DisplayName: Fayre Felde
-  Description: The Fair Field.
+  Description: 'Dream: The Fair Field full of folk.'
   VisionIndex: 0
   PassusIndex: 1
   PassusTitle: Passus I
   SceneName: 
   NextLocationIds:
   - tour
+  - dongeoun
+  - green_chapel
+  - boundary_tree
   Encounter: {fileID: 11400000, guid: 0c57aba5902894619bac1139719f78a5, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: 2797aa14fa6164ddbb8247996bae8282, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

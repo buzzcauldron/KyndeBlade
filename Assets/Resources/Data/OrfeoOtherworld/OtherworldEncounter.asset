@@ -18,3 +18,4 @@ MonoBehaviour:
   BossPosition: {x: 4, y: 0, z: 0}
   EnemyFormationOffset: {x: 4, y: 0, z: 0}
   EnemySpacing: 1.5
+  Hazards: []

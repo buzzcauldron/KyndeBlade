@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
   LocationId: tour
   DisplayName: Tour on Toft
-  Description: The Tower of Truth.
+  Description: 'Dream: The Tower of Truth.'
   VisionIndex: 0
   PassusIndex: 2
   PassusTitle: Passus II
@@ -22,10 +22,17 @@ MonoBehaviour:
   NextLocationIds:
   - dongeoun
   Encounter: {fileID: 0}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: a49831e52f83a47258fc5a872f1b36aa, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
-  IsBuilding: 1
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 
