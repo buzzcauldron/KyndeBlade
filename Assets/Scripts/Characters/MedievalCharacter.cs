@@ -163,6 +163,13 @@ namespace KyndeBlade
             if (!IsAlive()) return;
 
             float actualDamage = Mathf.Max(0f, damage - Stats.Defense);
+            var pad = GetComponent<PiersAppearanceData>();
+            if (pad != null && pad.IsPlayer)
+            {
+                var saveManager = UnityEngine.Object.FindObjectOfType<SaveManager>();
+                if (saveManager != null)
+                    actualDamage *= saveManager.GetDamageTakenMultiplier();
+            }
             if (IsHungry())
             {
                 var hunger = GetStatusEffect(StatusEffectType.Hunger);

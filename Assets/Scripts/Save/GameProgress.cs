@@ -23,6 +23,7 @@ namespace KyndeBlade
         public int EldeHitsAccrued;
         public int RunAppearanceSeed;
         public bool HasEverHadHunger;
+        public int EthicalMisstepCount;
     }
 
     /// <summary>Serializable game progress. Phase 1: checkpoint per location.
@@ -54,6 +55,8 @@ namespace KyndeBlade
         public int RunAppearanceSeed;
         [Tooltip("If any player character has ever had the hunger status effect this run. Permanent scars to abilities and appearance.")]
         public bool HasEverHadHunger;
+        [Tooltip("Incremented on wrong dialogue choice (sin-aligned or Green Chapel refuse). Applies cumulative damage-taken penalty.")]
+        public int EthicalMisstepCount;
 
         public static GameProgress CreateNew(string startLocationId)
         {
@@ -89,7 +92,8 @@ namespace KyndeBlade
                 OtherworldBodiesFromDeath = OtherworldBodiesFromDeath,
                 EldeHitsAccrued = EldeHitsAccrued,
                 RunAppearanceSeed = RunAppearanceSeed,
-                HasEverHadHunger = HasEverHadHunger
+                HasEverHadHunger = HasEverHadHunger,
+                EthicalMisstepCount = EthicalMisstepCount
             };
             return JsonUtility.ToJson(d);
         }
@@ -116,6 +120,7 @@ namespace KyndeBlade
             p.EldeHitsAccrued = d.EldeHitsAccrued;
             p.RunAppearanceSeed = d.RunAppearanceSeed;
             p.HasEverHadHunger = d.HasEverHadHunger;
+            p.EthicalMisstepCount = d.EthicalMisstepCount;
             return p;
         }
     }
