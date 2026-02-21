@@ -4,15 +4,12 @@ using UnityEngine.UI;
 
 namespace KyndeBlade
 {
-    /// <summary>Progressive onboarding (Hodent: Learning - one mechanic at a time). Wode-Wo guides the dreamer.</summary>
+    /// <summary>Progressive onboarding (Hodent: Learning - one mechanic at a time).</summary>
     public class TutorialManager : MonoBehaviour
     {
         [Header("References")]
         public TurnManager TurnManager;
         public Text HintText;
-        [Tooltip("If true, show Wode-Wo story beats at each phase (when he is alive).")]
-        public bool UseWodeWoVoice = true;
-
         public enum TutorialPhase
         {
             None,
@@ -85,17 +82,6 @@ namespace KyndeBlade
             if (Phase == TutorialPhase.Complete)
             {
                 SetHint("Tutorial complete. Good luck!");
-                if (UseWodeWoVoice)
-                {
-                    var wodeWo = FindObjectOfType<WodeWoManager>();
-                    var beat = wodeWo?.GetTutorialBeat(Phase);
-                    if (beat != null)
-                    {
-                        var nm = FindObjectOfType<NarrativeManager>();
-                        if (nm != null)
-                            nm.ShowStoryBeat(beat);
-                    }
-                }
             }
         }
 

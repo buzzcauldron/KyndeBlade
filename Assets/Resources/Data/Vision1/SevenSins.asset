@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SevenSins
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.StoryBeat
   BeatId: SevenSins
-  Text: The Seven Deadly Sins gather.
+  Text: The Seven Deadly Sins gather. Wille must face them before the quest can continue.
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

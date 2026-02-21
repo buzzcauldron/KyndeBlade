@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
   LocationId: dongeoun
   DisplayName: Dongeoun
-  Description: The Dungeon in the valley.
+  Description: 'Dream: The Dungeon in the valley.'
   VisionIndex: 0
   PassusIndex: 3
   PassusTitle: Passus II-III
@@ -22,11 +22,17 @@ MonoBehaviour:
   NextLocationIds:
   - piers_field
   Encounter: {fileID: 11400000, guid: c3ebe9c50e81a41bfb6c5b96393cd550, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: a49831e52f83a47258fc5a872f1b36aa, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
-  IsBuilding: 1
-  PovertyLevelOnArrival: 1
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

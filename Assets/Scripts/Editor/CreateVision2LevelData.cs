@@ -4,12 +4,12 @@ using UnityEditor;
 
 namespace KyndeBlade
 {
-    /// <summary>Creates Vision2 level data including field_of_grace. Run via KyndeBlade > Create MVP Level Data (Linear).</summary>
+    /// <summary>Ensures field_of_grace exists and links years_pass. Run via KyndeBlade > Ensure Field of Grace (Vision II).</summary>
     public static class CreateVision2LevelData
     {
         const string Vision2Path = "Assets/Resources/Data/Vision2";
 
-        [MenuItem("KyndeBlade/Create MVP Level Data (Linear)")]
+        [MenuItem("KyndeBlade/Ensure Field of Grace (Vision II)")]
         static void CreateMVPLevelData()
         {
             EnsureFieldOfGraceExists();

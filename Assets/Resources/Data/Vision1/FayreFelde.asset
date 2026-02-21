@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: FayreFelde
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.StoryBeat
   BeatId: FayreFelde
-  Text: A fair feeld ful of folke fonde I there bitwene.
+  Text: A fair feeld ful of folke fonde I there bitwene. Wille sees a field full
+    of people from all walks of life, all working.
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

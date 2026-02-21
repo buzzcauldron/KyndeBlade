@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Loc_malvern
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
   LocationId: malvern
-  DisplayName: Malvern Hilles
-  Description: The Prologue.
+  DisplayName: Malvern Hills
+  Description: 'Real life: Worcestershire. Wille rests beneath the Beacon; the dream
+    begins here.'
   VisionIndex: 0
   PassusIndex: 0
   PassusTitle: Prologue
@@ -22,9 +23,20 @@ MonoBehaviour:
   NextLocationIds:
   - fayre_felde
   Encounter: {fileID: 11400000, guid: 99e96a32a4e2745dca9ec88ab46f54f3, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
-  StoryBeatOnArrival: {fileID: 11400000, guid: 37b3a97e388f14e3d901721861e6f343, type: 2}
+  StoryBeatOnArrival: {fileID: 0}
+  StoryBeatSequenceOnArrival:
+  - {fileID: 11400000, guid: 90a90f79968464540adc205585b9605c, type: 2}
+  - {fileID: 11400000, guid: 956b0a71f7d5e4537915ef04909645c6, type: 2}
+  - {fileID: 11400000, guid: 10db93ee22bd54acbba841ca06a21465, type: 2}
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 11400000, guid: 1b75f2b28bb42413ca89e9190fc9b083, type: 2}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 1
+  RealLifeLocationId: worcestershire_beacon

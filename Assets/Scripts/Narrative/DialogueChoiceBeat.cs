@@ -31,6 +31,8 @@ namespace KyndeBlade
             public string TransitionToLocationId;
             [Tooltip("If not None and not IsCorrectChoice: picking this choice triggers a miniboss fight with this sin. Defeat = Orfeo Otherworld.")]
             public SinType AssociatedSin = SinType.None;
+            [Tooltip("Baldur's Gate–style chaining: show this dialogue next instead of transitioning. Overrides TransitionToLocationId if set.")]
+            public DialogueChoiceBeat NextDialogueBeat;
         }
 
         [Header("Content")]

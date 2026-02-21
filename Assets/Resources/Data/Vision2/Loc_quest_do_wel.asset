@@ -22,9 +22,17 @@ MonoBehaviour:
   NextLocationIds:
   - dongeoun_depths
   Encounter: {fileID: 11400000, guid: 4f6ca5db3aa3f452fb0532a767347ce5, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: 40503daefcc65424a9b99e7a5a8ee3a9, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

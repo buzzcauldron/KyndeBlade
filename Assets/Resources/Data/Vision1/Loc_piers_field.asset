@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
   LocationId: piers_field
   DisplayName: Piers' Field
-  Description: Where Piers the Plowman works.
+  Description: 'Dream: Where Piers the Plowman works.'
   VisionIndex: 0
   PassusIndex: 4
   PassusTitle: Passus IV-V
@@ -22,9 +22,17 @@ MonoBehaviour:
   NextLocationIds:
   - seven_sins
   Encounter: {fileID: 11400000, guid: d79b0b9681b5944d7a612969400ddba9, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: ede9d7b52864241f8a15d388a235fef2, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

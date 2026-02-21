@@ -21,7 +21,9 @@ MonoBehaviour:
   - Text: The path is uncertain. I turn back.
     IsCorrectChoice: 1
     TransitionToLocationId: 
+    AssociatedSin: 0
   - Text: I follow the music into the twilight.
     IsCorrectChoice: 0
     TransitionToLocationId: otherworld
+    AssociatedSin: 0
   VisionIndex: 0

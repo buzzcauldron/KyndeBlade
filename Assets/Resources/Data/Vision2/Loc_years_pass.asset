@@ -19,12 +19,19 @@ MonoBehaviour:
   PassusIndex: 12
   PassusTitle: Passus XII-XIII
   SceneName: 
-  NextLocationIds:
-  - field_of_grace
+  NextLocationIds: []
   Encounter: {fileID: 11400000, guid: fcc2e2f99774e4258b54f716ae76cc1a, type: 2}
+  CombatHazards: []
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: 4ea2257d593ba4b3b8042055b4c8eb87, type: 2}
+  StoryBeatSequenceOnArrival: []
+  StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0
   IsAlternateEnding: 0
+  IsWaitingForGrace: 0
+  PovertyLevelOnArrival: -1
+  IsBuilding: 0
+  IsRealLife: 0
+  RealLifeLocationId: 

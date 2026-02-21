@@ -162,26 +162,12 @@ namespace KyndeBlade
             {
                 NarrativeManager.ShowChoiceBeat(loc.PreCombatChoiceBeat, (index, isCorrect, transitionToLocationId, associatedSin) =>
                 {
-                    System.Action proceed = () => OnChoiceProceed(loc, isCorrect, transitionToLocationId, associatedSin);
-                    if (!isCorrect)
-                    {
-                        var wodeWo = FindObjectOfType<WodeWoManager>();
-                        if (wodeWo != null && wodeWo.IsWodeWoAlive)
-                        {
-                            StartCoroutine(AfterWodeWoDeathCutscene(proceed));
-                            return;
-                        }
-                    }
-                    proceed();
+                    OnChoiceProceed(loc, isCorrect, transitionToLocationId, associatedSin);
                 });
             }
             else if (NarrativeManager != null)
             {
-                if (InstallState.WodeWoIsDead && loc.StoryBeatOnArrivalWhenWodeWoDead != null)
-                {
-                    NarrativeManager.ShowStoryBeat(loc.StoryBeatOnArrivalWhenWodeWoDead, () => EnterLocationCombatOrScene(loc));
-                }
-                else if (loc.StoryBeatSequenceOnArrival != null && loc.StoryBeatSequenceOnArrival.Count > 0)
+                if (loc.StoryBeatSequenceOnArrival != null && loc.StoryBeatSequenceOnArrival.Count > 0)
                 {
                     NarrativeManager.ShowStoryBeatSequence(loc.StoryBeatSequenceOnArrival, () => EnterLocationCombatOrScene(loc));
                 }
@@ -218,7 +204,7 @@ namespace KyndeBlade
                 }
                 else
                 {
-                    var beat = (InstallState.WodeWoIsDead && loc.StoryBeatOnArrivalWhenWodeWoDead != null) ? loc.StoryBeatOnArrivalWhenWodeWoDead : loc.StoryBeatOnArrival;
+                    var beat = loc.StoryBeatOnArrival;
                     if (beat != null && NarrativeManager != null)
                         NarrativeManager.ShowStoryBeat(beat, () => EnterLocationCombatOrScene(loc));
                     else
@@ -232,24 +218,12 @@ namespace KyndeBlade
             }
             else
             {
-                var beat = (InstallState.WodeWoIsDead && loc.StoryBeatOnArrivalWhenWodeWoDead != null) ? loc.StoryBeatOnArrivalWhenWodeWoDead : loc.StoryBeatOnArrival;
+                var beat = loc.StoryBeatOnArrival;
                 if (beat != null && NarrativeManager != null)
                     NarrativeManager.ShowStoryBeat(beat, () => EnterLocationCombatOrScene(loc));
                 else
                     EnterLocationCombatOrScene(loc);
             }
-        }
-
-        IEnumerator AfterWodeWoDeathCutscene(System.Action onComplete)
-        {
-            var wodeWo = FindObjectOfType<WodeWoManager>();
-            if (wodeWo != null)
-            {
-                bool done = false;
-                wodeWo.TriggerWodeWoDeath(() => done = true);
-                while (!done) yield return null;
-            }
-            onComplete?.Invoke();
         }
 
         void EnterLocationCombatOrScene(LocationNode loc)

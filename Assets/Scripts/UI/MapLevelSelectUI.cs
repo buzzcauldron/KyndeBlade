@@ -108,8 +108,6 @@ namespace KyndeBlade
                         }
                     }
                 }
-                if (InstallState.WodeWoIsDead)
-                    label += "\nWode-Wo's scattered remains lie at Malvern. The forest mourns.";
                 CurrentLocationText.text = label;
             }
 
@@ -140,9 +138,7 @@ namespace KyndeBlade
                 var rect = msg.AddComponent<RectTransform>();
                 rect.sizeDelta = new Vector2(400, 80);
                 var text = msg.AddComponent<Text>();
-                text.text = InstallState.WodeWoIsDead
-                    ? "Thou waitest for Grace. She does not come. The game runs."
-                    : "Wode-Wo standeth beside thee. Together ye waitest for Grace. She does not come. The game runs.";
+                text.text = "Thou waitest for Grace. She does not come. The game runs.";
                 text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 text.fontSize = 16;
                 text.alignment = TextAnchor.MiddleCenter;
