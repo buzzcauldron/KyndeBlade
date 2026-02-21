@@ -72,7 +72,25 @@ namespace KyndeBlade
             }
         }
 
-        /// <summary>Apply age as permanent status effect to each party member. Refreshes tier if already aged.</summary>
+        /// <summary>Apply age as permanent status effect to a single character. Used when Elde hits. Refreshes tier if already aged.</summary>
+        public void ApplyAgeToCharacter(MedievalCharacter target, int tier)
+        {
+            if (target == null || tier <= 0) return;
+
+            float speedMult = Mathf.Pow(SpeedModifierPerHour, tier);
+            float defenseMult = 1f + DefenseBonusPerHour * tier;
+            float kyndeMult = Mathf.Pow(KyndeGenModifierPerHour, tier);
+            float staminaMult = Mathf.Pow(StaminaRegenModifierPerHour, tier);
+
+            target.RemoveStatusEffect(StatusEffectType.Age);
+            var effect = StatusEffect.CreateAgeEffect(tier, speedMult, defenseMult, kyndeMult, staminaMult);
+            if (effect != null)
+                target.ApplyStatusEffect(effect);
+
+            OnAgingApplied?.Invoke(tier);
+        }
+
+        /// <summary>Apply age as permanent status effect to each party member. Refreshes tier if already aged. Only used for tests or legacy.</summary>
         public void ApplyAgeToParty(List<MedievalCharacter> party)
         {
             if (party == null) return;

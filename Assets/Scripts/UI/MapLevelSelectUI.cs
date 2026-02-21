@@ -83,6 +83,7 @@ namespace KyndeBlade
 
         public void Refresh(LocationNode current)
         {
+            var saveManager = FindObjectOfType<SaveManager>();
             if (CurrentLocationText != null && current != null)
             {
                 var label = current.DisplayName ?? current.LocationId;
@@ -90,7 +91,6 @@ namespace KyndeBlade
                     label += " — Malvern, England";
                 if (current.IsInescapable)
                     label += " — Inescapable";
-                var saveManager = FindObjectOfType<SaveManager>();
                 if (saveManager?.CurrentProgress != null)
                 {
                     if (string.Equals(current.LocationId, "green_chapel", System.StringComparison.OrdinalIgnoreCase) && saveManager.CurrentProgress.GreenChapelBodiesAccrued > 0)
@@ -151,7 +151,6 @@ namespace KyndeBlade
             }
 
             var next = WorldMap != null ? WorldMap.GetNextLocations() : new List<LocationNode>();
-            var saveManager = FindObjectOfType<SaveManager>();
 
             foreach (var loc in next)
             {
