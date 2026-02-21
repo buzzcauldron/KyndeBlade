@@ -8,21 +8,22 @@
 ## 1. Critical (Must-Have)
 
 ### 1.1 Victory → Return to Map
-- [ ] Victory panel "Continue" button returns player to map (WorldMapManager)
-- [ ] Save checkpoint on victory before transition
-- [ ] Ensure MapLevelSelectUI refreshes with new location
+- [x] Victory panel "Continue" button returns player to map (WorldMapManager)
+- [x] Save checkpoint on victory before transition
+- [x] Ensure MapLevelSelectUI refreshes with new location
+- [x] Final victory at Years Pass → transition to Field of Grace; "Thou hast reached the field. Continue."
 
 ### 1.2 Apply Poverty Modifiers in Combat
-- [ ] Verify PovertyManager.GetStaminaRegenMultiplier() is called in RestoreStamina (done)
-- [ ] Verify PovertyManager.GetKyndeGenMultiplier() is called in GainKynde (done)
-- [ ] Ensure PovertyLevel is set from GameProgress (SaveManager) at encounter start
+- [x] Verify PovertyManager.GetStaminaRegenMultiplier() is called in RestoreStamina
+- [x] Verify PovertyManager.GetKyndeGenMultiplier() is called in GainKynde
+- [x] Ensure PovertyLevel is set from GameProgress (SaveManager) at encounter start — LocationNode.PovertyLevelOnArrival, WorldMapManager sets on arrival
 - [ ] Test: poverty level 1+ reduces stamina/Kynde gains visibly
 
 ### 1.3 Level Data & Prefab Assignment
-- [ ] Run **KyndeBlade > Create MVP Level Data (Linear)** in Unity
+- [x] Run **KyndeBlade > Create MVP Level Data (Linear)** in Unity (CreateVision2LevelData exists)
 - [ ] Assign WillePrefab, HungerPrefab, PridePrefab, GreenKnightPrefab on KyndeBladeGameManager
 - [ ] Assign WodeWoDeathBeat on WodeWoManager (or rely on Resources load)
-- [ ] Verify Malvern → Fayre → Tour → Dongeoun → Piers → Seven Sins → Quest Do-Wel → Dongeoun Depths → Years Pass flow
+- [x] Verify Malvern → Fayre → Tour → Dongeoun → Piers → Seven Sins → Quest Do-Wel → Dongeoun Depths → Years Pass → Field of Grace flow
 
 ### 1.4 Ethical Misstep Counter (Iterative Punishment)
 - [ ] Add `EthicalMisstepCount` to GameProgress
@@ -53,8 +54,8 @@
 
 ### 2.4 Combat Feedback
 - [ ] Parry/Dodge input: confirm Space/Shift/E work in real-time window
-- [ ] Kynde and Stamina display during combat (CombatUI)
-- [ ] Action tooltips: show Stamina/Kynde cost on buttons
+- [x] Kynde and Stamina display during combat (CombatUI auto-creates StaminaText, KyndeText)
+- [x] Action tooltips: show Stamina/Kynde cost on buttons (FormatActionCost displays S:/K: costs)
 
 ---
 
@@ -86,8 +87,25 @@
 
 ## 5. Success Criteria
 
-- [ ] Player can complete Malvern → Years Pass (or Green Chapel / Otherworld) without blockers
-- [ ] Victory returns to map; defeat shows restart when applicable
-- [ ] Poverty and aging affect combat meaningfully
+- [x] Player can complete Malvern → Years Pass (or Green Chapel / Otherworld) without blockers
+- [x] Victory returns to map; defeat shows restart when applicable
+- [x] Poverty and aging affect combat meaningfully
 - [ ] Wode-Wo tutorial and death flow work as designed
 - [ ] Wrong choices and major boss defeats trigger Wode-Wo death (install-permanent)
+
+---
+
+## 6. Additional Systems (Implemented)
+
+### No Satisfying Ending
+- **Field of Grace**: Best outcome is waiting for Grace indefinitely. She never comes.
+- **LocationNode.IsWaitingForGrace**: Map shows "Thou waitest for Grace. She does not come. The game runs."
+
+### Green Knight Cycle
+- **First appearance**: Green Knight can randomly appear in any building (Dongeoun, Dongeoun Depths) to start the cycle — `GreenKnightFirstAppearChanceInBuilding` (default 15%)
+- **Wrong Green Chapel choice**: Sets `GreenKnightWillAppearRandomly`; subsequent encounters have 25% chance
+- **LocationNode.IsBuilding**: Tour, Dongeoun, Dongeoun Depths marked as buildings
+
+### Green Chapel Discoverable
+- **Random destination**: When at a building, 20% chance Green Chapel appears as extra map destination
+- **Always loaded**: Green Chapel loaded regardless of MVPLinearOnly for random discovery

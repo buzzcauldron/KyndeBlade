@@ -154,6 +154,8 @@ namespace KyndeBlade
                 SaveManager.SaveCheckpoint(loc.LocationId);
                 foreach (var nextId in loc.NextLocationIds ?? new List<string>())
                     SaveManager.UnlockLocation(nextId);
+                if (loc.PovertyLevelOnArrival >= 0)
+                    SaveManager.SetPovertyLevel(loc.PovertyLevelOnArrival);
             }
 
             if (loc.PreCombatChoiceBeat != null && NarrativeManager != null)

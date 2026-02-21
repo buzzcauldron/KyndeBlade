@@ -114,6 +114,42 @@ namespace KyndeBlade
                 ManuscriptUITheme.ApplyToText(t);
                 GoalText = t;
             }
+            if (StaminaText == null)
+            {
+                var go = new GameObject("StaminaText");
+                go.transform.SetParent(transform);
+                var t = go.AddComponent<Text>();
+                t.text = "Stamina: —";
+                t.font = DefaultFont;
+                t.fontSize = 14;
+                var rect = go.GetComponent<RectTransform>();
+                if (rect == null) rect = go.AddComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0, 1);
+                rect.anchorMax = new Vector2(0, 1);
+                rect.pivot = new Vector2(0, 1);
+                rect.anchoredPosition = new Vector2(10, -10);
+                rect.sizeDelta = new Vector2(150, 24);
+                ManuscriptUITheme.ApplyToText(t);
+                StaminaText = t;
+            }
+            if (KyndeText == null)
+            {
+                var go = new GameObject("KyndeText");
+                go.transform.SetParent(transform);
+                var t = go.AddComponent<Text>();
+                t.text = "Kynde: —";
+                t.font = DefaultFont;
+                t.fontSize = 14;
+                var rect = go.GetComponent<RectTransform>();
+                if (rect == null) rect = go.AddComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0, 1);
+                rect.anchorMax = new Vector2(0, 1);
+                rect.pivot = new Vector2(0, 1);
+                rect.anchoredPosition = new Vector2(10, -36);
+                rect.sizeDelta = new Vector2(150, 24);
+                ManuscriptUITheme.ApplyToText(t);
+                KyndeText = t;
+            }
         }
 
         void ApplyManuscriptTheme()

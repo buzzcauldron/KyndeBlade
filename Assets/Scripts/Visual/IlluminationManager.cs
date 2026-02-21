@@ -18,10 +18,14 @@ namespace KyndeBlade
         public float FadeInDuration = 0.5f;
         public float HoldDuration = 1.5f;
         public float FadeOutDuration = 0.5f;
+        [Tooltip("Defeat: longer, more violent hold.")]
+        public float DefeatHoldDuration = 3f;
 
         [Header("3D Illumination")]
         public float PrismScale = 2f;
         public Color IlluminationColor = new Color(0.9f, 0.85f, 0.6f, 0.8f);
+        [Tooltip("Defeat: dark red, violent.")]
+        public Color DefeatIlluminationColor = new Color(0.5f, 0.05f, 0.05f, 0.95f);
 
         Camera _illuminationCamera;
         GameObject _prism;
@@ -58,7 +62,8 @@ namespace KyndeBlade
 
             CreateIlluminationScene(type);
             _illuminationCamera.enabled = true;
-            _illuminationCamera.backgroundColor = new Color(0.05f, 0.04f, 0.08f, 1f);
+            bool isDefeat = type == IlluminationType.Defeat;
+            _illuminationCamera.backgroundColor = isDefeat ? new Color(0.12f, 0.02f, 0.02f, 1f) : new Color(0.05f, 0.04f, 0.08f, 1f);
 
             float t = 0f;
             while (t < 1f)
@@ -68,7 +73,8 @@ namespace KyndeBlade
                 yield return null;
             }
 
-            yield return new WaitForSeconds(HoldDuration);
+            float hold = isDefeat ? DefeatHoldDuration : HoldDuration;
+            yield return new WaitForSeconds(hold);
 
             t = 1f;
             while (t > 0f)
@@ -106,7 +112,7 @@ namespace KyndeBlade
             var meshRenderer = _prism.GetComponent<MeshRenderer>();
             var shader = Shader.Find("Sprites/Default") ?? Shader.Find("Unlit/Color");
             _prismMaterial = new Material(shader != null ? shader : meshRenderer.sharedMaterial.shader);
-            _prismMaterial.color = IlluminationColor;
+            _prismMaterial.color = type == IlluminationType.Defeat ? DefeatIlluminationColor : IlluminationColor;
             meshRenderer.material = _prismMaterial;
             meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             meshRenderer.receiveShadows = false;

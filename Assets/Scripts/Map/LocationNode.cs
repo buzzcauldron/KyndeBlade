@@ -55,6 +55,10 @@ namespace KyndeBlade
         [Tooltip("Best outcome: wait for Grace. No next locations. She does not come.")]
         public bool IsWaitingForGrace;
 
+        [Header("Poverty")]
+        [Tooltip("Poverty level (0-5) on arrival. -1 = no change.")]
+        public int PovertyLevelOnArrival = -1;
+
         [Header("Green Knight")]
         [Tooltip("Building location. Green Knight may randomly appear here for first appearance to start the cycle.")]
         public bool IsBuilding;

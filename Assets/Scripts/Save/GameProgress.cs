@@ -19,6 +19,7 @@ namespace KyndeBlade
         public int EncountersSinceLastGreenKnight;
         public int GreenChapelBodiesAccrued;
         public int OtherworldLivingCharactersAccrued;
+        public int OtherworldBodiesFromDeath;
         public int RunAppearanceSeed;
         public bool HasEverHadHunger;
     }
@@ -44,6 +45,8 @@ namespace KyndeBlade
         public int GreenChapelBodiesAccrued;
         [Tooltip("Living characters accrued in the fairy world (Otherworld) from those who enter.")]
         public int OtherworldLivingCharactersAccrued;
+        [Tooltip("Forms of the dead accrued in Orfeo's Otherworld—every violent death adds a body there.")]
+        public int OtherworldBodiesFromDeath;
         [Tooltip("Seed for run-specific character appearance (Piers-inspired randomization). Set at NewGame.")]
         public int RunAppearanceSeed;
         [Tooltip("If any player character has ever had the hunger status effect this run. Permanent scars to abilities and appearance.")]
@@ -80,6 +83,7 @@ namespace KyndeBlade
                 EncountersSinceLastGreenKnight = EncountersSinceLastGreenKnight,
                 GreenChapelBodiesAccrued = GreenChapelBodiesAccrued,
                 OtherworldLivingCharactersAccrued = OtherworldLivingCharactersAccrued,
+                OtherworldBodiesFromDeath = OtherworldBodiesFromDeath,
                 RunAppearanceSeed = RunAppearanceSeed,
                 HasEverHadHunger = HasEverHadHunger
             };
@@ -104,6 +108,7 @@ namespace KyndeBlade
             p.EncountersSinceLastGreenKnight = d.EncountersSinceLastGreenKnight;
             p.GreenChapelBodiesAccrued = d.GreenChapelBodiesAccrued;
             p.OtherworldLivingCharactersAccrued = d.OtherworldLivingCharactersAccrued;
+            p.OtherworldBodiesFromDeath = d.OtherworldBodiesFromDeath;
             p.RunAppearanceSeed = d.RunAppearanceSeed;
             p.HasEverHadHunger = d.HasEverHadHunger;
             return p;

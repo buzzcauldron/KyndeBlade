@@ -19,7 +19,8 @@ MonoBehaviour:
   PassusIndex: 6
   PassusTitle: Passus VI-VII
   SceneName: 
-  NextLocationIds: []
+  NextLocationIds:
+  - quest_do_wel
   Encounter: {fileID: 11400000, guid: d8e394ff74cd4432da962d0d7c69f5ca, type: 2}
   Rewards: {fileID: 0}
   StoryBeatOnArrival: {fileID: 11400000, guid: ba3ba2abe0a004f3ab082b92d2621a17, type: 2}

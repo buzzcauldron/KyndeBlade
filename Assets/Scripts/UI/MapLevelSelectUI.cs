@@ -95,8 +95,18 @@ namespace KyndeBlade
                 {
                     if (string.Equals(current.LocationId, "green_chapel", System.StringComparison.OrdinalIgnoreCase) && saveManager.CurrentProgress.GreenChapelBodiesAccrued > 0)
                         label += $" — {saveManager.CurrentProgress.GreenChapelBodiesAccrued} bod{(saveManager.CurrentProgress.GreenChapelBodiesAccrued == 1 ? "y" : "ies")} lie here";
-                    if (string.Equals(current.LocationId, "otherworld", System.StringComparison.OrdinalIgnoreCase) && saveManager.CurrentProgress.OtherworldLivingCharactersAccrued > 0)
-                        label += $" — {saveManager.CurrentProgress.OtherworldLivingCharactersAccrued} soul{(saveManager.CurrentProgress.OtherworldLivingCharactersAccrued == 1 ? "" : "s")} abide here";
+                    if (string.Equals(current.LocationId, "otherworld", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        var souls = saveManager.CurrentProgress.OtherworldLivingCharactersAccrued;
+                        var bodies = saveManager.CurrentProgress.OtherworldBodiesFromDeath;
+                        if (souls > 0 || bodies > 0)
+                        {
+                            var parts = new System.Collections.Generic.List<string>();
+                            if (souls > 0) parts.Add($"{souls} soul{(souls == 1 ? "" : "s")}");
+                            if (bodies > 0) parts.Add($"{bodies} form{(bodies == 1 ? "" : "s")} of the dead");
+                            label += " — " + string.Join(", ", parts) + " abide here";
+                        }
+                    }
                 }
                 if (InstallState.WodeWoIsDead)
                     label += "\nWode-Wo's scattered remains lie at Malvern. The forest mourns.";
@@ -130,7 +140,9 @@ namespace KyndeBlade
                 var rect = msg.AddComponent<RectTransform>();
                 rect.sizeDelta = new Vector2(400, 80);
                 var text = msg.AddComponent<Text>();
-                text.text = "Thou waitest for Grace. She does not come. The game runs.";
+                text.text = InstallState.WodeWoIsDead
+                    ? "Thou waitest for Grace. She does not come. The game runs."
+                    : "Wode-Wo standeth beside thee. Together ye waitest for Grace. She does not come. The game runs.";
                 text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
                 text.fontSize = 16;
                 text.alignment = TextAnchor.MiddleCenter;
