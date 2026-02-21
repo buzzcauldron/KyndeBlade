@@ -111,7 +111,7 @@ namespace KyndeBlade
             meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             meshRenderer.receiveShadows = false;
 
-            Object.Destroy(_prism.GetComponent<Collider>());
+            UnityEngine.Object.Destroy(_prism.GetComponent<Collider>());
         }
 
         void CleanupIlluminationScene()

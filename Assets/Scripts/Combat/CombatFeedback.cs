@@ -86,7 +86,7 @@ namespace KyndeBlade
         {
             if (ScreenShakeOnHit <= 0f) return;
             if (_mainCamera == null) _mainCamera = Camera.main;
-            _mainCamera?.transform.Translate(Random.insideUnitSphere * ScreenShakeOnHit);
+            _mainCamera?.transform.Translate(UnityEngine.Random.insideUnitSphere * ScreenShakeOnHit);
         }
     }
 }

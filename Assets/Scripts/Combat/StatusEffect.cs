@@ -7,7 +7,9 @@ namespace KyndeBlade.Combat
     public enum StatusEffectType
     {
         None,
+        Age,
         Hunger,
+        HungerScar,
         Frost,
         Burning,
         Poison,
@@ -76,12 +78,12 @@ namespace KyndeBlade.Combat
             Data.StackCount += additionalStacks;
             if (Data.EffectType == StatusEffectType.Hunger)
             {
-                Data.AttackPowerModifier = Mathf.Max(0.1f, 1f - Data.StackCount * 0.15f);
-                Data.DefenseModifier = Mathf.Max(0.1f, 1f - Data.StackCount * 0.15f);
-                Data.SpeedModifier = Mathf.Max(0.1f, 1f - Data.StackCount * 0.15f);
-                Data.StaminaRegenModifier = Mathf.Max(0f, 1f - Data.StackCount * 0.25f);
-                Data.DamagePerSecond = 2f * Data.StackCount;
-                Data.KyndeGenerationModifier = Mathf.Max(0f, 1f - Data.StackCount * 0.3f);
+                Data.AttackPowerModifier = Mathf.Max(0.1f, 1f - Data.StackCount * 0.12f);
+                Data.DefenseModifier = Mathf.Max(0.1f, 1f - Data.StackCount * 0.12f);
+                Data.SpeedModifier = Mathf.Max(0.1f, 1f - Data.StackCount * 0.12f);
+                Data.StaminaRegenModifier = Mathf.Max(0f, 1f - Data.StackCount * 0.2f);
+                Data.DamagePerSecond = 1f * Data.StackCount;
+                Data.KyndeGenerationModifier = Mathf.Max(0f, 1f - Data.StackCount * 0.25f);
             }
         }
 
@@ -109,6 +111,35 @@ namespace KyndeBlade.Combat
             }
         }
 
+        /// <summary>Permanent age effect. Duration=0 = never expires. Slower but wiser.</summary>
+        public static StatusEffect CreateAgeEffect(int tier, float speedMult, float defenseMult, float kyndeMult, float staminaMult)
+        {
+            if (tier <= 0) return null;
+            var effect = new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Age,
+                    Duration = 0f,
+                    RemainingTime = 0f,
+                    StackCount = tier,
+                    EffectName = "Age",
+                    SpeedModifier = speedMult,
+                    DefenseModifier = defenseMult,
+                    KyndeGenerationModifier = kyndeMult,
+                    StaminaRegenModifier = staminaMult
+                }
+            };
+            return effect;
+        }
+
+        /// <summary>Create age effect with default modifiers (0.97 speed, +10% defense/tier, 1.02 kynde, 0.98 stamina per tier).</summary>
+        public static StatusEffect CreateAgeEffect(int tier)
+        {
+            if (tier <= 0) return null;
+            return CreateAgeEffect(tier, Mathf.Pow(0.97f, tier), 1f + tier * 0.1f, Mathf.Pow(1.02f, tier), Mathf.Pow(0.98f, tier));
+        }
+
         public static StatusEffect CreateHungerEffect(float duration = 0f, int stacks = 1)
         {
             var effect = new StatusEffect
@@ -120,15 +151,36 @@ namespace KyndeBlade.Combat
                     RemainingTime = duration,
                     StackCount = stacks,
                     EffectName = "Hunger",
-                    AttackPowerModifier = Mathf.Max(0.1f, 1f - stacks * 0.15f),
-                    DefenseModifier = Mathf.Max(0.1f, 1f - stacks * 0.15f),
-                    SpeedModifier = Mathf.Max(0.1f, 1f - stacks * 0.15f),
-                    StaminaRegenModifier = Mathf.Max(0f, 1f - stacks * 0.25f),
-                    DamagePerSecond = 2f * stacks,
-                    KyndeGenerationModifier = Mathf.Max(0f, 1f - stacks * 0.3f)
+                    AttackPowerModifier = Mathf.Max(0.1f, 1f - stacks * 0.12f),
+                    DefenseModifier = Mathf.Max(0.1f, 1f - stacks * 0.12f),
+                    SpeedModifier = Mathf.Max(0.1f, 1f - stacks * 0.12f),
+                    StaminaRegenModifier = Mathf.Max(0f, 1f - stacks * 0.2f),
+                    DamagePerSecond = 1f * stacks,
+                    KyndeGenerationModifier = Mathf.Max(0f, 1f - stacks * 0.25f)
                 }
             };
             return effect;
+        }
+
+        /// <summary>Permanent scar from having ever had hunger. Gaunt, slightly weakened—never fully recovers.</summary>
+        public static StatusEffect CreateHungerScarEffect()
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.HungerScar,
+                    Duration = 0f,
+                    RemainingTime = 0f,
+                    StackCount = 1,
+                    EffectName = "Hunger Scar",
+                    AttackPowerModifier = 0.95f,
+                    DefenseModifier = 0.93f,
+                    SpeedModifier = 0.94f,
+                    StaminaRegenModifier = 0.96f,
+                    KyndeGenerationModifier = 1.03f
+                }
+            };
         }
     }
 }

@@ -40,6 +40,17 @@
 
 ---
 
+## Input Scheme (Keyboard Primary, Controller Add-in)
+
+| Action | Keyboard | Controller |
+|--------|----------|------------|
+| Dodge (Escapade) | Space | A / Cross |
+| Parry (Ward) | Left Shift | X / Square |
+| Counter (after parry) | E | Y / Triangle |
+| Action selection | Mouse click | D-pad + A (UI navigation) |
+
+---
+
 ## Quick Test Script
 
 1. Open project in Unity 6
@@ -57,7 +68,7 @@
 | Gap | Workaround |
 |-----|------------|
 | No sprites | Add SpriteRenderer + colored Material to character GameObjects |
-| No parry/dodge input | Wire keys in ParryDodgeZoneIndicator or CombatUI |
+| No parry/dodge input | ParryDodgeInputHandler: Space/Shift/E (keyboard), A/X/Y (controller) |
 | VictoryPanel null | GameStateManager creates no panels; assign in Inspector or add auto-create |
 | Escapade/Ward damage | Check TurnManager ProcessActionExecution flow |
 

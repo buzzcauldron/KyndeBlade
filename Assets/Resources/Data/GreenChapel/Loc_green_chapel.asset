@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c846253d82ad46f78a5946deafac2a5, type: 3}
+  m_Name: Loc_green_chapel
+  m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
+  LocationId: green_chapel
+  DisplayName: The Green Chapel
+  Description: Optional dungeon. The Knight of the Green Chapel awaits. Choose thy
+    words wisely.
+  VisionIndex: 1
+  PassusIndex: -1
+  PassusTitle: Optional - Sir Gawain
+  SceneName: 
+  NextLocationIds:
+  - fayre_felde
+  Encounter: {fileID: 11400000, guid: 286027e3e57dc4a36a9290d273ee8ed3, type: 2}
+  Rewards: {fileID: 0}
+  StoryBeatOnArrival: {fileID: 0}
+  PreCombatChoiceBeat: {fileID: 11400000, guid: 3b2cedaf7d82744e595451a138c3fb05, type: 2}

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c846253d82ad46f78a5946deafac2a5, type: 3}
+  m_Name: Loc_quest_do_wel
+  m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
+  LocationId: quest_do_wel
+  DisplayName: Quest for Do-Wel
+  Description: The search for Do-Wel begins.
+  VisionIndex: 1
+  PassusIndex: 8
+  PassusTitle: Passus VIII-IX
+  SceneName: 
+  NextLocationIds:
+  - dongeoun_depths
+  Encounter: {fileID: 11400000, guid: 4f6ca5db3aa3f452fb0532a767347ce5, type: 2}
+  Rewards: {fileID: 0}
+  StoryBeatOnArrival: {fileID: 11400000, guid: 40503daefcc65424a9b99e7a5a8ee3a9, type: 2}
+  PreCombatChoiceBeat: {fileID: 0}
+  MusicThemeOnArrival: 
+  IsInescapable: 0
+  IsAlternateEnding: 0
