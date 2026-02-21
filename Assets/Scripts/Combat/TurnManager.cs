@@ -31,6 +31,10 @@ namespace KyndeBlade
         public float ActionExecutionTimeRemaining { get; private set; }
         /// <summary>Attacker whose strike is imminent (for strike-warning sound theme).</summary>
         public MedievalCharacter CurrentAttackerDuringWindow { get; private set; }
+        /// <summary>Defender (player) who used Escapade/Ward.</summary>
+        public MedievalCharacter DefenderDuringWindow { get; private set; }
+        /// <summary>Action type that triggered the window (Escapade = dodge, Ward = parry).</summary>
+        public CombatActionType ActionTypeDuringWindow { get; private set; }
 
         CombatAction _currentAction;
         MedievalCharacter _currentTarget;
@@ -66,13 +70,13 @@ namespace KyndeBlade
             State = CombatState.WaitingForInput;
             TurnNumber = 1;
             CurrentCharacter = TurnOrder[0];
-            CurrentCharacter?.OnTurnStart?.Invoke();
+            CurrentCharacter?.InvokeTurnStart();
             OnTurnChanged?.Invoke(CurrentCharacter);
         }
 
         public void EndTurn()
         {
-            CurrentCharacter?.OnTurnEnd?.Invoke();
+            CurrentCharacter?.InvokeTurnEnd();
         }
 
         public void NextTurn()
@@ -93,7 +97,7 @@ namespace KyndeBlade
                     CurrentCharacter = next;
                     TurnNumber++;
                     State = CombatState.WaitingForInput;
-                    CurrentCharacter?.OnTurnStart?.Invoke();
+                    CurrentCharacter?.InvokeTurnStart();
                     OnTurnChanged?.Invoke(CurrentCharacter);
                     return;
                 }
@@ -137,10 +141,11 @@ namespace KyndeBlade
                 (_currentAction.ActionData.ActionType == CombatActionType.Escapade ||
                  _currentAction.ActionData.ActionType == CombatActionType.Ward))
             {
+                var defender = CurrentCharacter;
                 var attacker = _currentTarget != null && EnemyCharacters.Contains(_currentTarget)
                     ? _currentTarget
                     : GetFirstAliveEnemy();
-                StartRealTimeWindow(_currentAction.ActionData.SuccessWindow, attacker);
+                StartRealTimeWindow(_currentAction.ActionData.SuccessWindow, attacker, defender, _currentAction.ActionData.ActionType);
             }
             else
             {
@@ -154,13 +159,15 @@ namespace KyndeBlade
             ActionExecutionTimeRemaining = 0f;
         }
 
-        public void StartRealTimeWindow(float duration, MedievalCharacter attacker = null)
+        public void StartRealTimeWindow(float duration, MedievalCharacter attacker = null, MedievalCharacter defender = null, CombatActionType actionType = CombatActionType.Escapade)
         {
             if (Settings != null)
                 duration = Settings.GetAdjustedWindow(duration);
             RealTimeWindowDuration = duration;
             RealTimeWindowRemaining = duration;
             CurrentAttackerDuringWindow = attacker ?? GetFirstAliveEnemy();
+            DefenderDuringWindow = defender;
+            ActionTypeDuringWindow = actionType;
             State = CombatState.RealTimeWindow;
         }
 
@@ -199,15 +206,107 @@ namespace KyndeBlade
             return true;
         }
 
+        void ResolveDefenseWindow()
+        {
+            var defender = DefenderDuringWindow;
+            var attacker = CurrentAttackerDuringWindow;
+            var actionType = ActionTypeDuringWindow;
+            DefenderDuringWindow = null;
+            ActionTypeDuringWindow = CombatActionType.Rest;
+
+            if (defender == null || !defender.IsAlive()) return;
+            if (attacker == null || !attacker.IsAlive()) return;
+
+            bool parrySucceeded = actionType == CombatActionType.Ward && defender.IsParrying && defender.AttemptParry();
+            float damage = GetAttackerDamage(attacker);
+            defender.ApplyCustomDamage(damage, attacker);
+
+            if (parrySucceeded && defender.IsAlive() && attacker != null && attacker.IsAlive())
+                StartCounterWindow(defender, attacker);
+            else
+                State = CombatState.ProcessingResults;
+        }
+
+        float _counterWindowRemaining;
+        MedievalCharacter _counterDefender;
+        MedievalCharacter _counterAttacker;
+
+        void StartCounterWindow(MedievalCharacter defender, MedievalCharacter attacker)
+        {
+            _counterWindowRemaining = 0.5f;
+            _counterDefender = defender;
+            _counterAttacker = attacker;
+            State = CombatState.ProcessingResults;
+        }
+
+        public bool IsCounterWindowActive => _counterWindowRemaining > 0f;
+        public float CounterWindowRemaining => _counterWindowRemaining;
+
+        public void ExecuteCounter()
+        {
+            if (!IsCounterWindowActive || _counterDefender == null || _counterAttacker == null) return;
+            if (!_counterDefender.IsAlive() || !_counterAttacker.IsAlive()) { EndCounterWindow(); return; }
+
+            var counterAction = GetCounterAction(_counterDefender);
+            if (counterAction != null)
+            {
+                _counterDefender.ExecuteCombatAction(counterAction, _counterAttacker);
+                OnActionExecuted?.Invoke(_counterDefender, _counterAttacker, counterAction);
+            }
+            EndCounterWindow();
+            NextTurn();
+        }
+
+        void EndCounterWindow()
+        {
+            _counterWindowRemaining = 0f;
+            _counterDefender = null;
+            _counterAttacker = null;
+        }
+
+        CombatAction GetCounterAction(MedievalCharacter c)
+        {
+            if (c?.AvailableActions == null) return null;
+            foreach (var a in c.AvailableActions)
+                if (a != null && a.ActionData.ActionType == CombatActionType.Counter)
+                    return a;
+            return null;
+        }
+
+        float GetAttackerDamage(MedievalCharacter attacker)
+        {
+            if (attacker?.AvailableActions == null) return attacker.Stats.AttackPower * 10f;
+            foreach (var a in attacker.AvailableActions)
+            {
+                if (a == null) continue;
+                var t = a.ActionData.ActionType;
+                if (t == CombatActionType.Strike || t == CombatActionType.RangedStrike)
+                    return a.ActionData.Damage;
+            }
+            return attacker.Stats.AttackPower * 10f;
+        }
+
         void Update()
         {
+            if (IsCounterWindowActive)
+            {
+                _counterWindowRemaining -= Time.deltaTime;
+                if (_counterWindowRemaining <= 0f)
+                {
+                    EndCounterWindow();
+                    NextTurn();
+                }
+                return;
+            }
+
             if (State == CombatState.RealTimeWindow)
             {
                 RealTimeWindowRemaining -= Time.deltaTime;
                 if (RealTimeWindowRemaining <= 0f)
                 {
-                    State = CombatState.ProcessingResults;
-                    NextTurn();
+                    ResolveDefenseWindow();
+                    if (!IsCounterWindowActive)
+                        NextTurn();
                 }
                 return;
             }

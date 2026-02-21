@@ -153,7 +153,7 @@ namespace KyndeBlade
             scleraRect.offsetMin = Vector2.zero;
             scleraRect.offsetMax = Vector2.zero;
             var scleraImg = sclera.AddComponent<Image>();
-            scleraImg.color = new Color(0.95f, 0.92f, 0.88f);
+            scleraImg.color = ManuscriptUITheme.ParchmentLight;
             ScleraImage = scleraImg;
 
             var pupil = new GameObject("Pupil");
@@ -165,7 +165,7 @@ namespace KyndeBlade
             pupilRect.anchoredPosition = Vector2.zero;
             PupilRoot = pupilRect;
             var pupilImg = pupil.AddComponent<Image>();
-            pupilImg.color = Color.black;
+            pupilImg.color = ManuscriptUITheme.InkPrimary;
             PupilImage = pupilImg;
 
             var lidTop = new GameObject("EyelidTop");
@@ -177,7 +177,7 @@ namespace KyndeBlade
             lidTopRect.sizeDelta = new Vector2(0, 20);
             lidTopRect.anchoredPosition = Vector2.zero;
             var lidTopImg = lidTop.AddComponent<Image>();
-            lidTopImg.color = new Color(0.3f, 0.25f, 0.2f, 0.9f);
+            lidTopImg.color = new Color(ManuscriptUITheme.BorderDark.r, ManuscriptUITheme.BorderDark.g, ManuscriptUITheme.BorderDark.b, 0.9f);
             EyelidTop = lidTopRect;
 
             var lidBot = new GameObject("EyelidBottom");
@@ -189,7 +189,7 @@ namespace KyndeBlade
             lidBotRect.sizeDelta = new Vector2(0, 20);
             lidBotRect.anchoredPosition = Vector2.zero;
             var lidBotImg = lidBot.AddComponent<Image>();
-            lidBotImg.color = new Color(0.3f, 0.25f, 0.2f, 0.9f);
+            lidBotImg.color = new Color(ManuscriptUITheme.BorderDark.r, ManuscriptUITheme.BorderDark.g, ManuscriptUITheme.BorderDark.b, 0.9f);
             EyelidBottom = lidBotRect;
         }
     }

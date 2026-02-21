@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c846253d82ad46f78a5946deafac2a5, type: 3}
+  m_Name: Loc_otherworld
+  m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
+  LocationId: otherworld
+  DisplayName: Orfeo's Otherworld
+  Description: The Fairy Realm. Inescapable.
+  VisionIndex: 1
+  PassusIndex: -1
+  PassusTitle: Alternate Ending
+  SceneName: 
+  NextLocationIds: []
+  Encounter: {fileID: 11400000, guid: 7418b51d85ad343999323834689eb2eb, type: 2}
+  Rewards: {fileID: 0}
+  StoryBeatOnArrival: {fileID: 11400000, guid: b187082b77cd148a491f94e0224738bc, type: 2}
+  PreCombatChoiceBeat: {fileID: 0}
+  MusicThemeOnArrival: orfeo
+  IsInescapable: 1
+  IsAlternateEnding: 1

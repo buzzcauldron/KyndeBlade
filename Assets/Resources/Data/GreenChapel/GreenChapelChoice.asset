@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12908b64532fe45fe818aa1b16d9862f, type: 3}
+  m_Name: GreenChapelChoice
+  m_EditorClassIdentifier: KyndeBlade::KyndeBlade.DialogueChoiceBeat
+  BeatId: GreenChapelChallenge
+  Text: 'I am the Knight of the Green Chapel. I offer thee a game: strike me once,
+    and in a year and a day I shall return the blow. Dost thou accept the covenant?'
+  SpeakerName: The Green Knight
+  Portrait: {fileID: 0}
+  Choices:
+  - Text: I accept. I will meet thee at the Green Chapel.
+    IsCorrectChoice: 1
+  - Text: I refuse. I will not play thy game.
+    IsCorrectChoice: 0
+  - Text: I flee. This is no place for me.
+    IsCorrectChoice: 0
+  VisionIndex: 0

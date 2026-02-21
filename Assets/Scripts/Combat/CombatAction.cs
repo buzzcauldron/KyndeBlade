@@ -95,9 +95,11 @@ namespace KyndeBlade.Combat
                 case CombatActionType.Heal:
                     var healTarget = target != null ? target : executor;
                     if (ActionData.Damage > 0f) healTarget.Heal(ActionData.Damage);
+                    healTarget.RemoveHungerStack();
                     break;
                 case CombatActionType.Rest:
                     executor.RestoreStamina(20f);
+                    executor.RemoveHungerStack();
                     break;
             }
 

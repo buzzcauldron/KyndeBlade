@@ -1,0 +1,14 @@
+{
+    "name": "KyndeBlade.Editor",
+    "rootNamespace": "KyndeBlade.Editor",
+    "references": ["KyndeBlade", "UnityEditor"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -26,9 +26,12 @@ namespace KyndeBlade
         public Text GoalText;
         public Text StateText;
         public Text RealTimeWindowText;
+        public Text StaminaText;
+        public Text KyndeText;
 
         List<GameObject> _turnOrderSlots = new List<GameObject>();
         List<Button> _actionButtons = new List<Button>();
+        MedievalCharacter _subscribedCharacter;
         static Font _cachedFont;
 
         static Font DefaultFont => _cachedFont ?? (_cachedFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf"));
@@ -40,6 +43,7 @@ namespace KyndeBlade
 
             EnsureUIRoots();
             EnsureParryDodgeIndicator();
+            ApplyManuscriptTheme();
             TurnManager.OnTurnChanged += OnTurnChanged;
             TurnManager.OnCombatEnded += OnCombatEnded;
 
@@ -49,12 +53,36 @@ namespace KyndeBlade
 
         void OnDestroy()
         {
+            UnsubscribeFromCurrentCharacter();
             if (TurnManager != null)
             {
                 TurnManager.OnTurnChanged -= OnTurnChanged;
                 TurnManager.OnCombatEnded -= OnCombatEnded;
             }
         }
+
+        void UnsubscribeFromCurrentCharacter()
+        {
+            if (_subscribedCharacter != null)
+            {
+                _subscribedCharacter.OnStaminaChanged -= RefreshStaminaKynde;
+                _subscribedCharacter.OnKyndeChanged -= RefreshStaminaKynde;
+                _subscribedCharacter = null;
+            }
+        }
+
+        void SubscribeToCurrentCharacter(MedievalCharacter c)
+        {
+            UnsubscribeFromCurrentCharacter();
+            _subscribedCharacter = c;
+            if (c != null)
+            {
+                c.OnStaminaChanged += RefreshStaminaKynde;
+                c.OnKyndeChanged += RefreshStaminaKynde;
+            }
+        }
+
+        void RefreshStaminaKynde(float _, float __) { RefreshStaminaKyndeDisplay(); }
 
         void EnsureUIRoots()
         {
@@ -83,8 +111,18 @@ namespace KyndeBlade
                 t.text = "Defeat all enemies";
                 t.font = DefaultFont;
                 t.fontSize = 24;
+                ManuscriptUITheme.ApplyToText(t);
                 GoalText = t;
             }
+        }
+
+        void ApplyManuscriptTheme()
+        {
+            if (GoalText != null) ManuscriptUITheme.ApplyToText(GoalText);
+            if (StateText != null) ManuscriptUITheme.ApplyToText(StateText);
+            if (RealTimeWindowText != null) ManuscriptUITheme.ApplyToText(RealTimeWindowText);
+            if (StaminaText != null) ManuscriptUITheme.ApplyToText(StaminaText);
+            if (KyndeText != null) ManuscriptUITheme.ApplyToText(KyndeText);
         }
 
         void EnsureParryDodgeIndicator()
@@ -105,13 +143,19 @@ namespace KyndeBlade
             ParryDodgeIndicator = go.AddComponent<ParryDodgeZoneIndicator>();
             ParryDodgeIndicator.TurnManager = TurnManager;
             ParryDodgeIndicator.SoundBank = soundBank;
+
+            var inputHandler = go.GetComponent<ParryDodgeInputHandler>();
+            if (inputHandler == null) inputHandler = go.AddComponent<ParryDodgeInputHandler>();
+            inputHandler.TurnManager = TurnManager;
         }
 
         void OnTurnChanged(MedievalCharacter current)
         {
+            SubscribeToCurrentCharacter(current);
             RefreshTurnOrder();
             RefreshActionButtons();
             RefreshStateText();
+            RefreshStaminaKyndeDisplay();
             if (current != null && TurnManager.IsPlayerTurn())
                 SetGoal("Your turn — select an action");
             else if (current != null)
@@ -163,24 +207,23 @@ namespace KyndeBlade
         {
             var go = new GameObject($"Slot_{c.CharacterName}");
             var layout = go.AddComponent<HorizontalLayoutGroup>();
-            layout.spacing = 4;
+            layout.spacing = 6;
             layout.childAlignment = TextAnchor.MiddleLeft;
 
             var font = DefaultFont;
-            var nameText = new GameObject("Name").AddComponent<Text>();
-            nameText.transform.SetParent(go.transform);
+            var nameObj = new GameObject("Name");
+            nameObj.transform.SetParent(go.transform);
+            var nameText = nameObj.AddComponent<Text>();
             nameText.text = c.CharacterName;
             nameText.font = font;
             nameText.fontSize = 14;
+            ManuscriptUITheme.ApplyToText(nameText, emphasis: c == TurnManager.CurrentCharacter);
+            var nameLe = nameObj.AddComponent<LayoutElement>();
+            nameLe.preferredWidth = 90f;
 
-            var hpText = new GameObject("HP").AddComponent<Text>();
-            hpText.transform.SetParent(go.transform);
-            hpText.text = $"{c.GetCurrentHealth():0}/{c.GetMaxHealth():0}";
-            hpText.font = font;
-            hpText.fontSize = 12;
-
-            bool isCurrent = c == TurnManager.CurrentCharacter;
-            nameText.color = isCurrent ? Color.yellow : Color.white;
+            bool isPlayer = TurnManager.PlayerCharacters.Contains(c);
+            var bar = ManuscriptHealthBar.Create(go.transform, 70f, 8f, isPlayer);
+            bar.SetCharacter(c);
 
             return go;
         }
@@ -211,18 +254,50 @@ namespace KyndeBlade
         Button CreateActionButton(CombatAction action, MedievalCharacter target)
         {
             var go = new GameObject($"Btn_{action.ActionData.ActionName}");
+            var img = go.AddComponent<Image>();
+            img.color = ManuscriptUITheme.ParchmentAged;
             var btn = go.AddComponent<Button>();
-            var text = new GameObject("Text").AddComponent<Text>();
-            text.transform.SetParent(go.transform);
-            text.text = action.ActionData.ActionName;
+
+            var textObj = new GameObject("Text");
+            textObj.transform.SetParent(go.transform, false);
+            var textRect = textObj.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = textRect.offsetMax = Vector2.zero;
+            var text = textObj.AddComponent<Text>();
+            var costStr = FormatActionCost(action);
+            text.text = string.IsNullOrEmpty(costStr) ? action.ActionData.ActionName : $"{action.ActionData.ActionName} [{costStr}]";
             text.font = DefaultFont;
             text.fontSize = 16;
             text.alignment = TextAnchor.MiddleCenter;
+
+            var rect = go.GetComponent<RectTransform>();
+            if (rect != null) rect.sizeDelta = new Vector2(120, 36);
+
+            var current = TurnManager.CurrentCharacter;
+            bool canAfford = current != null && current.GetCurrentStamina() >= action.ActionData.StaminaCost &&
+                (action.ActionData.KyndeCost <= 0f || current.GetCurrentKynde() >= action.ActionData.KyndeCost);
+            btn.interactable = canAfford;
+            if (canAfford)
+                ManuscriptUITheme.ApplyToText(text);
+            else
+                text.color = ManuscriptUITheme.InkLight;
+
+            ManuscriptUITheme.ApplyToButton(btn);
 
             var a = action;
             btn.onClick.AddListener(() => TurnManager.ExecuteAction(a, target));
 
             return btn;
+        }
+
+        string FormatActionCost(CombatAction action)
+        {
+            var d = action.ActionData;
+            var parts = new List<string>();
+            if (d.StaminaCost > 0f) parts.Add($"S:{d.StaminaCost:0}");
+            if (d.KyndeCost > 0f) parts.Add($"K:{d.KyndeCost:0}");
+            return parts.Count > 0 ? string.Join("/", parts) : "";
         }
 
         MedievalCharacter GetFirstEnemy()
@@ -254,6 +329,15 @@ namespace KyndeBlade
                 case CombatState.CombatEnded: SetState("Combat ended"); break;
                 default: SetState(""); break;
             }
+        }
+
+        void RefreshStaminaKyndeDisplay()
+        {
+            var c = TurnManager?.CurrentCharacter;
+            if (StaminaText != null)
+                StaminaText.text = c != null ? $"Stamina: {c.GetCurrentStamina():0}/{c.GetMaxStamina():0}" : "Stamina: —";
+            if (KyndeText != null)
+                KyndeText.text = c != null ? $"Kynde: {c.GetCurrentKynde():0}/{c.GetMaxKynde():0}" : "Kynde: —";
         }
 
         void RefreshGoal()

@@ -1,15 +1,56 @@
-# Visual Design Guide - 16-Bit Style
+# Visual Design Guide
 ## Kynde Blade Art Direction
 
-This document outlines the visual design philosophy for Kynde Blade in a **16-bit SNES-style aesthetic**, inspired by the mood and themes of Alan Lee's artwork (illustrator of The Lord of the Rings, The Hobbit) and the landscapes of rural Maine—translated into pixel art and sprite-based graphics.
+This document outlines the visual design philosophy for Kynde Blade. **Two distinct visual systems** apply:
 
-**Primary aesthetic reference**: [Visual inspiration image](https://p.kagi.com/proxy/images?c=_m3km2RjA3G0qleowsZXHZb9NEn0fSsEYIHbKzMDyAFb4nUPIanknmQV_g0rmdCI0DidjiPdpslW_gCNurNfZBZFAQ-vjQWMQ1YRaCRUvLgu_Dx4mMC7REmhM_x9AHhTsMa7LvNStM1-FDjAiFqUmg%3D%3D) — use as primary reference for mood, palette, and composition.
-
-**Related**: See [ARTISTIC_PRINCIPLES_SOLARSKI.md](ARTISTIC_PRINCIPLES_SOLARSKI.md) for foundational principles from Chris Solarski's *Drawing Basics and Video Game Art*—visual grammar, composition, character design, and environment design applied to game art.
+| Domain | Style | Reference |
+|--------|-------|-----------|
+| **UI** | Manuscript | [UI_MANUSCRIPT_THEME.md](UI_MANUSCRIPT_THEME.md) — parchment, ink, rubrication, illumination |
+| **Game world** | Original medieval + Pre-Raphaelite | This document — characters, environments, combat |
 
 ---
 
-## 16-Bit Aesthetic Framework
+## Visual System 1: UI — Manuscript Style
+
+**All UI elements** (menus, HUD, dialogue, health bars, buttons) use the manuscript theme. See [UI_MANUSCRIPT_THEME.md](UI_MANUSCRIPT_THEME.md) for:
+- Parchment backgrounds, blackletter ink, gold illumination, red rubrication
+- Manuscript folio reference: [folio](https://p.kagi.com/proxy/ord_case_ms_035_folio_093r-edited-1.jpg?c=NzwDcXxhVe4MbIwIvqmbYe1ZjtSR5AIHe3O85QvbKJQsU74s5ADvC2hfvhdhoF0h5bpAuUbdbPVd9ye7AVyzepiKXxprc1Y0CK4dvqpOanHvWSeqInkmM4YfxcImKZna_4NHc28rpdb-KKLQ1_B0cQ%3D%3D)
+
+The UI reads as pages from an illuminated manuscript; the game world beneath follows original and Pre-Raphaelite style notes.
+
+---
+
+## Visual System 2: Game World — Original & Pre-Raphaelite Style
+
+The **game world** (characters, environments, combat, overworld) follows **original medieval sources** and **Pre-Raphaelite** aesthetic principles—not generic fantasy or modern pixel art.
+
+### Original Medieval Sources
+
+- **Piers Plowman manuscripts**: Grounded laborers, humble fields, spiritual seeking; work and poverty made visible
+- **Sir Gawain and the Green Knight**: Wild nature, the Green Chapel, cyclical quests; nature as test and threshold
+- **Sir Orfeo**: Otherworld, fairy realm, boundaries between worlds; loss and return
+- **Medieval illumination conventions**: Flatness, symbolic color, narrative in gesture and pose; figures as types, not naturalism
+
+### Pre-Raphaelite Style Notes
+
+The Pre-Raphaelite Brotherhood (1848–1860s) revived medieval and literary themes with intense observation of nature. Use these principles for the game world:
+
+- **Jewel-like color**: Rich, saturated hues; deep greens, ruby reds, lapis blues; avoid washed-out or muddy tones
+- **Truth to nature**: Observed detail in foliage, fabric, stone, water; every element legible and considered
+- **Literary and symbolic**: Arthurian, Dantean, and medieval subjects; gesture and object carry meaning
+- **Emotional intensity**: Faces and poses convey inner state; melancholy, longing, resolve
+- **Flatness and pattern**: Decorative surfaces, flattened space in places; pattern as part of composition
+- **Light and atmosphere**: Clear, often cool light; mist and haze for mood; no generic “fantasy glow”
+
+**Artists to reference**: Dante Gabriel Rossetti, Edward Burne-Jones, William Holman Hunt, John Everett Millais—especially their Arthurian and medieval subjects.
+
+**Primary aesthetic reference**: [Visual inspiration image](https://p.kagi.com/proxy/images?c=_m3km2RjA3G0qleowsZXHZb9NEn0fSsEYIHbKzMDyAFb4nUPIanknmQV_g0rmdCI0DidjiPdpslW_gCNurNfZBZFAQ-vjQWMQ1YRaCRUvLgu_Dx4mMC7REmhM_x9AHhTsMa7LvNStM1-FDjAiFqUmg%3D%3D) — mood, palette, composition.
+
+**Related**: [ARTISTIC_PRINCIPLES_SOLARSKI.md](ARTISTIC_PRINCIPLES_SOLARSKI.md) — visual grammar, composition, character design.
+
+---
+
+## 16-Bit Technical Framework (Game World)
 
 **Technical Constraints (SNES-Style):**
 - **Resolution**: 256×224 or 512×448 (HD upscale) native; pixel-perfect scaling
@@ -28,31 +69,28 @@ This document outlines the visual design philosophy for Kynde Blade in a **16-bi
 
 ---
 
-## Core Visual Philosophy
+## Core Visual Philosophy (Game World)
 
-**Alan Lee's Themes (16-Bit Interpretation):**
-- **Ethereal and Atmospheric**: Achieved through palette choice, dithering, and layered parallax
-- **Expressive Pixels**: Rich detail within sprite constraints—every pixel intentional
-- **Moody Lighting**: Darker palettes, limited color ramps, shadow tiles
-- **Medieval Authenticity**: Grounded in historical reality through costume and architecture sprites
-- **Emotional Depth**: Character sprites convey emotion through pose and limited animation
-- **Nature Integration**: Tile sets and backgrounds show strong character-environment connection
-- **Subtle Color Palettes**: Earth tones, muted colors; 16-32 color palettes per scene
+**Original + Pre-Raphaelite applied to game visuals:**
+- **Jewel-like color**: Rich, saturated hues (deep greens, ruby reds, lapis blues); avoid washed-out or muddy tones
+- **Truth to nature**: Observed detail in foliage, fabric, stone, water; every element legible and considered
+- **Literary and symbolic**: Gesture and object carry meaning; medieval and Arthurian resonance
+- **Emotional intensity**: Faces and poses convey inner state—melancholy, longing, resolve
+- **Medieval authenticity**: Grounded in Piers Plowman, Gawain, Orfeo—costume, architecture, labor visible
+- **Nature integration**: Tile sets and backgrounds show strong character-environment connection; wild and cultivated
+- **Atmosphere**: Ethereal where needed (Otherworld, boundaries); grounded for fields, labor, poverty
 
-**Rural Maine Landscape Characteristics:**
-- **Rolling Hills and Farmland**: Gentle, weathered terrain with stone walls and fences
-- **Dense Forests**: Mixed coniferous (pine, spruce) and deciduous (maple, birch, oak) trees
-- **Stone Walls**: Ancient, moss-covered fieldstone walls dividing properties
-- **Weathered Structures**: Old barns, farmhouses, and outbuildings showing age and use
-- **Misty Atmospheres**: Fog, mist, and atmospheric haze, especially in mornings and evenings
-- **Natural Stone**: Exposed bedrock, glacial erratics, and rocky outcroppings
-- **Seasonal Beauty**: Focus on late autumn and early winter for melancholic tone
-- **Rural Roads**: Winding dirt and gravel paths, often overgrown
-- **Water Features**: Ponds, streams, and small lakes reflecting the overcast sky
-- **Abandoned Places**: Structures slowly being reclaimed by nature
+**Real Life — Malvern, England (Interstitial):**
+- **Malvern Hills**: Dramatic ridge, Worcestershire Beacon (425m), Iron Age British Camp
+- **Great Malvern**: Town on eastern slopes, medieval priory, spa heritage
+- **St. Anne's Well**: Historic spring, pilgrims and walkers
+- **Stone and Earth**: Ancient earthworks, exposed Precambrian rock
+- **Misty Atmospheres**: Fog and haze common on the hills
+- **Seasonal Beauty**: Late autumn and early winter for melancholic tone
+- **Paths and Passes**: The Wyche, tracks between settlements
 
 **Integration Approach:**
-The game combines medieval English setting (Piers Plowman) with the visual character of rural Maine - creating a world that feels both timeless and grounded, where nature and human labor are deeply intertwined, and where the landscape itself tells stories of work, poverty, and the passage of time.
+Interstitial elements (hub, transitions) are grounded in real Malvern, Worcestershire. Dream levels remain allegorical (Fayre Felde, Tower, Dungeon). See [DREAM_REAL_LIFE_MALVERN.md](DREAM_REAL_LIFE_MALVERN.md).
 
 ---
 

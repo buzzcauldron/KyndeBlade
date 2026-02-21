@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c846253d82ad46f78a5946deafac2a5, type: 3}
+  m_Name: Loc_boundary_tree
+  m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
+  LocationId: boundary_tree
+  DisplayName: The Boundary Tree
+  Description: A tree at the edge of worlds. Music drifts from beyond.
+  VisionIndex: 1
+  PassusIndex: -1
+  PassusTitle: Optional - Sir Orfeo
+  SceneName: 
+  NextLocationIds:
+  - fayre_felde
+  Encounter: {fileID: 11400000, guid: 4b0ebad823a804eb091ea86f0b05c9f2, type: 2}
+  Rewards: {fileID: 0}
+  StoryBeatOnArrival: {fileID: 0}
+  PreCombatChoiceBeat: {fileID: 11400000, guid: 3c5857bb6470d4c40866b01bdba37521, type: 2}
+  MusicThemeOnArrival: 
+  IsInescapable: 0
+  IsAlternateEnding: 0
