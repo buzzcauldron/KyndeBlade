@@ -193,10 +193,12 @@ namespace KyndeBlade
             var actions = TurnManager.CurrentCharacter.AvailableActions;
             if (actions == null || actions.Count == 0) return;
 
-            var target = GetFirstEnemy();
             foreach (var action in actions)
             {
                 if (action == null) continue;
+                var target = action.ActionData.ActionType == CombatActionType.Heal
+                    ? TurnManager.CurrentCharacter
+                    : GetFirstEnemy();
                 var btn = CreateActionButton(action, target);
                 if (btn != null)
                 {

@@ -10,6 +10,7 @@ namespace KyndeBlade
         [Header("References")]
         public TurnManager TurnManager;
         public KyndeBladeGameManager GameManager;
+        public IlluminationManager IlluminationManager;
 
         [Header("UI")]
         public GameObject VictoryPanel;
@@ -27,6 +28,7 @@ namespace KyndeBlade
         void Start()
         {
             if (TurnManager == null) TurnManager = FindObjectOfType<TurnManager>();
+            if (IlluminationManager == null) IlluminationManager = FindObjectOfType<IlluminationManager>();
             if (TurnManager != null)
                 TurnManager.OnCombatEnded += OnCombatEnded;
 
@@ -64,12 +66,42 @@ namespace KyndeBlade
         void Victory()
         {
             int xp = CalculateVictoryXP();
+            if (IlluminationManager != null)
+                StartCoroutine(ShowVictoryAfterIllumination(xp));
+            else
+                ShowVictoryPanel(xp);
+        }
+
+        void Defeat()
+        {
+            if (IlluminationManager != null)
+                StartCoroutine(ShowDefeatAfterIllumination());
+            else
+                ShowDefeatPanel();
+        }
+
+        System.Collections.IEnumerator ShowVictoryAfterIllumination(int xp)
+        {
+            IlluminationManager.TriggerVictoryIllumination();
+            yield return new WaitForSeconds(2.6f);
+            ShowVictoryPanel(xp);
+        }
+
+        System.Collections.IEnumerator ShowDefeatAfterIllumination()
+        {
+            IlluminationManager.TriggerDefeatIllumination();
+            yield return new WaitForSeconds(2.6f);
+            ShowDefeatPanel();
+        }
+
+        void ShowVictoryPanel(int xp)
+        {
             if (VictoryPanel != null) VictoryPanel.SetActive(true);
             if (VictoryText != null) VictoryText.text = $"Victory! +{xp} XP";
             OnVictory?.Invoke();
         }
 
-        void Defeat()
+        void ShowDefeatPanel()
         {
             if (DefeatPanel != null) DefeatPanel.SetActive(true);
             if (DefeatText != null) DefeatText.text = "Defeat...";

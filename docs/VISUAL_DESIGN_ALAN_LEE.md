@@ -3,6 +3,8 @@
 
 This document outlines the visual design philosophy for Kynde Blade in a **16-bit SNES-style aesthetic**, inspired by the mood and themes of Alan Lee's artwork (illustrator of The Lord of the Rings, The Hobbit) and the landscapes of rural Maine—translated into pixel art and sprite-based graphics.
 
+**Primary aesthetic reference**: [Visual inspiration image](https://p.kagi.com/proxy/images?c=_m3km2RjA3G0qleowsZXHZb9NEn0fSsEYIHbKzMDyAFb4nUPIanknmQV_g0rmdCI0DidjiPdpslW_gCNurNfZBZFAQ-vjQWMQ1YRaCRUvLgu_Dx4mMC7REmhM_x9AHhTsMa7LvNStM1-FDjAiFqUmg%3D%3D) — use as primary reference for mood, palette, and composition.
+
 **Related**: See [ARTISTIC_PRINCIPLES_SOLARSKI.md](ARTISTIC_PRINCIPLES_SOLARSKI.md) for foundational principles from Chris Solarski's *Drawing Basics and Video Game Art*—visual grammar, composition, character design, and environment design applied to game art.
 
 ---

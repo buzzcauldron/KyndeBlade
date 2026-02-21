@@ -37,6 +37,8 @@ namespace KyndeBlade
 
         public event Action<MedievalCharacter> OnTurnChanged;
         public event Action OnCombatEnded;
+        /// <summary>Fired when an action is executed (executor, target, action). For AI observation.</summary>
+        public event Action<MedievalCharacter, MedievalCharacter, CombatAction> OnActionExecuted;
 
         public void InitializeCombat(List<MedievalCharacter> players, List<MedievalCharacter> enemies)
         {
@@ -121,6 +123,7 @@ namespace KyndeBlade
             if (_currentAction == null || CurrentCharacter == null) return;
 
             CurrentCharacter.ExecuteCombatAction(_currentAction, _currentTarget);
+            OnActionExecuted?.Invoke(CurrentCharacter, _currentTarget, _currentAction);
 
             if (_currentAction.GetExecutionTime() > 0f)
                 ActionExecutionTimeRemaining = _currentAction.GetExecutionTime();
