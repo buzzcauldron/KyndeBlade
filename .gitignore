@@ -1,63 +1,54 @@
-# Visual Studio 2015/2017/2019/2022 user specific files
-.vs/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
+# Kynde Blade 16 Bit - Unity + Legacy
 
-# Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
+# Unity
+[Ll]ibrary/
+[Tt]emp/
 [Oo]bj/
-[Ll]og/
+[Bb]uild/
+[Bb]uilds/
 [Ll]ogs/
-
-# Unreal Engine
-Binaries/
-DerivedDataCache/
-Intermediate/
-Saved/
-Build/
-*.opensdf
-*.sdf
+[Uu]ser[Ss]ettings/
+*.csproj
+*.unityproj
 *.sln
 *.suo
-*.xcodeproj
-*.xcworkspace
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+.vs/
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
+*.app
 
-# Visual Studio Code
+# Legacy Unreal Engine
+legacy/Binaries/
+legacy/DerivedDataCache/
+legacy/Intermediate/
+legacy/Saved/
+legacy/Build/
+
+# IDE
 .vscode/
-
-# Rider
 .idea/
 
 # macOS
 .DS_Store
 
-# Compiled Dynamic libraries
+# Compiled
 *.so
 *.dylib
 *.dll
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
 *.exe
 *.out
-*.app
-
-# Content
-Content/StarterContent/
-Content/Maps/Templates/
