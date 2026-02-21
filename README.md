@@ -4,7 +4,7 @@ A **16-bit style** turn-based RPG with real-time combat mechanics, built in **Un
 
 ## Quick Start
 
-1. **Open in Unity** — Unity 2022.3 LTS or Unity 6
+1. **Open in Unity** — Unity 6.3 LTS (6000.3) or Unity 2022.3 LTS
    - File → Open Project → Select this folder (the repo root)
 2. **Create a scene** — File → New Scene
 3. **Add GameManager** — Create empty GameObject, add `KyndeBladeGameManager` component

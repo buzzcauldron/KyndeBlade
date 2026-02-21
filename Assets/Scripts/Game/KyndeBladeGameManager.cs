@@ -20,6 +20,8 @@ namespace KyndeBlade
 
         [Header("Auto Setup")]
         public bool AutoSpawnTestCharacters = true;
+        [Tooltip("Use Expedition 33 moveset (melee/ranged/skills) instead of basic defaults.")]
+        public bool UseExpedition33Moveset = true;
 
         List<MedievalCharacter> _playerChars = new List<MedievalCharacter>();
         List<MedievalCharacter> _enemyChars = new List<MedievalCharacter>();
@@ -54,14 +56,13 @@ namespace KyndeBlade
             _playerChars.Clear();
             _enemyChars.Clear();
 
-            // Spawn players (use prefabs or create from base)
-            SpawnCharacter(KnightPrefab, new Vector3(-5f, 0f, 0f), CharacterClass.Knight, "Player Knight", true);
-            SpawnCharacter(MagePrefab, new Vector3(-5f, 2f, 0f), CharacterClass.Mage, "Player Mage", true);
+            // 16-bit side-view: players left, enemies right (FF/DQ/Chrono Trigger style)
+            SpawnCharacter(KnightPrefab, new Vector3(-4f, -1f, 0f), CharacterClass.Knight, "Player Knight", true);
+            SpawnCharacter(MagePrefab, new Vector3(-4f, 1f, 0f), CharacterClass.Mage, "Player Mage", true);
 
-            // Spawn enemies
-            SpawnEnemy(FalsePrefab, new Vector3(5f, -3f, 0f), typeof(FalseCharacter));
-            SpawnEnemy(LadyMedePrefab, new Vector3(5f, 0f, 0f), typeof(LadyMedeCharacter));
-            SpawnEnemy(WrathPrefab, new Vector3(5f, 3f, 0f), typeof(WrathCharacter));
+            SpawnEnemy(FalsePrefab, new Vector3(4f, -1.5f, 0f), typeof(FalseCharacter));
+            SpawnEnemy(LadyMedePrefab, new Vector3(4f, 0f, 0f), typeof(LadyMedeCharacter));
+            SpawnEnemy(WrathPrefab, new Vector3(4f, 1.5f, 0f), typeof(WrathCharacter));
 
             if (_playerChars.Count > 0 && _enemyChars.Count > 0)
                 StartCoroutine(DelayedStartCombat());
@@ -71,16 +72,23 @@ namespace KyndeBlade
         {
             MedievalCharacter c;
             if (prefab != null)
+            {
                 c = Instantiate(prefab, pos, Quaternion.identity);
+                EnsureCharacterVisual(c.gameObject, isPlayer);
+            }
             else
             {
                 var go = new GameObject(name);
                 go.transform.position = pos;
                 c = go.AddComponent<MedievalCharacter>();
+                EnsureCharacterVisual(go, isPlayer);
             }
             c.CharacterClassType = cls;
             c.CharacterName = name;
-            DefaultCombatActions.AddDefaultsTo(c);
+            if (UseExpedition33Moveset)
+                Expedition33Moveset.ApplyToCharacter(c, false);
+            else
+                DefaultCombatActions.AddDefaultsTo(c);
             if (isPlayer) _playerChars.Add(c);
             else _enemyChars.Add(c);
         }
@@ -89,16 +97,23 @@ namespace KyndeBlade
         {
             MedievalCharacter c;
             if (prefab != null)
+            {
                 c = Instantiate(prefab, pos, Quaternion.identity);
+                EnsureCharacterVisual(c.gameObject, false);
+            }
             else
             {
                 var go = new GameObject(enemyType.Name);
                 go.transform.position = pos;
                 c = (MedievalCharacter)go.AddComponent(enemyType);
+                EnsureCharacterVisual(go, false);
             }
-            DefaultCombatActions.AddDefaultsTo(c);
-            if (c.GetComponent<SimpleEnemyAI>() == null)
-                c.gameObject.AddComponent<SimpleEnemyAI>();
+            if (UseExpedition33Moveset)
+                Expedition33Moveset.ApplyToCharacter(c, true);
+            else
+                DefaultCombatActions.AddDefaultsTo(c);
+            if (c.GetComponent<SimpleEnemyAI>() == null && c.GetComponent<AdaptiveEnemyAI>() == null)
+                c.gameObject.AddComponent(UseExpedition33Moveset ? typeof(AdaptiveEnemyAI) : typeof(SimpleEnemyAI));
             _enemyChars.Add(c);
         }
 
@@ -117,9 +132,10 @@ namespace KyndeBlade
             }
         }
 
-        /// <summary>Ensures CombatUI, CombatFeedback, GameStateManager exist (Hodent: Usability).</summary>
+        /// <summary>Ensures combat camera (16-bit side-view), CombatUI, CombatFeedback, GameStateManager exist.</summary>
         void EnsureCombatPipeline()
         {
+            EnsureCombatCamera();
             if (FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
             {
                 var es = new GameObject("EventSystem");
@@ -144,6 +160,36 @@ namespace KyndeBlade
                 new GameObject("CombatFeedbackManager").AddComponent<CombatFeedbackManager>();
             if (FindObjectOfType<GameStateManager>() == null)
                 new GameObject("GameStateManager").AddComponent<GameStateManager>();
+            if (FindObjectOfType<IlluminationManager>() == null)
+                new GameObject("IlluminationManager").AddComponent<IlluminationManager>();
+        }
+
+        void EnsureCharacterVisual(GameObject go, bool isPlayer)
+        {
+            if (go.GetComponent<SpriteRenderer>() != null) return;
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = UnityEngine.Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.one * 0.5f);
+            sr.color = isPlayer ? new Color(0.3f, 0.5f, 0.8f) : new Color(0.8f, 0.3f, 0.3f);
+            sr.drawMode = SpriteDrawMode.Simple;
+            go.transform.localScale = new Vector3(0.8f, 1.2f, 1f);
+        }
+
+        void EnsureCombatCamera()
+        {
+            var cam = Camera.main;
+            if (cam == null)
+            {
+                var go = new GameObject("Main Camera");
+                go.tag = "MainCamera";
+                cam = go.AddComponent<Camera>();
+                go.AddComponent<AudioListener>();
+            }
+            cam.orthographic = true;
+            cam.orthographicSize = 5f;
+            cam.transform.position = new Vector3(0f, 0f, -10f);
+            cam.transform.rotation = Quaternion.identity;
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.12f, 0.1f, 0.14f);
         }
     }
 }

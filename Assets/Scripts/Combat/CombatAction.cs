@@ -11,7 +11,9 @@ namespace KyndeBlade.Combat
         Ward,
         Counter,
         Special,
-        Rest
+        Rest,
+        RangedStrike,
+        Heal
     }
 
     public enum KyndeElementType
@@ -72,7 +74,27 @@ namespace KyndeBlade.Combat
                     break;
                 case CombatActionType.Counter:
                     if (target != null)
-                        target.ApplyCustomDamage(ActionData.Damage * 1.5f, executor);
+                    {
+                        float counterDmg = ActionData.Damage * 1.5f;
+                        if (target.IsBroken()) counterDmg *= 1.5f;
+                        target.ApplyCustomDamage(counterDmg, executor);
+                        if (ActionData.BreakDamage > 0f)
+                            target.TakeBreakDamage(ActionData.BreakDamage);
+                    }
+                    break;
+                case CombatActionType.RangedStrike:
+                    if (target != null)
+                    {
+                        float rangedDmg = ActionData.Damage;
+                        if (target.IsBroken()) rangedDmg *= 1.5f;
+                        target.ApplyCustomDamage(rangedDmg, executor);
+                        if (ActionData.BreakDamage > 0f)
+                            target.TakeBreakDamage(ActionData.BreakDamage);
+                    }
+                    break;
+                case CombatActionType.Heal:
+                    var healTarget = target != null ? target : executor;
+                    if (ActionData.Damage > 0f) healTarget.Heal(ActionData.Damage);
                     break;
                 case CombatActionType.Rest:
                     executor.RestoreStamina(20f);
@@ -86,7 +108,10 @@ namespace KyndeBlade.Combat
 
         protected virtual bool CanExecute(MedievalCharacter executor)
         {
-            return executor != null && executor.GetCurrentStamina() >= ActionData.StaminaCost;
+            if (executor == null) return false;
+            if (executor.GetCurrentStamina() < ActionData.StaminaCost) return false;
+            if (ActionData.KyndeCost > 0f && executor.GetCurrentKynde() < ActionData.KyndeCost) return false;
+            return true;
         }
 
         public float GetCastTime() => ActionData.CastTime;
