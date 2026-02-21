@@ -189,7 +189,11 @@ namespace KyndeBlade
         void OnChoiceProceed(LocationNode loc, bool isCorrect, string transitionToLocationId, SinType associatedSin)
         {
             if (SaveManager != null)
+            {
                 SaveManager.SetGreenKnightWillAppearRandomly(!isCorrect);
+                if (!isCorrect)
+                    SaveManager.IncrementEthicalMisstep();
+            }
             if (!string.IsNullOrEmpty(transitionToLocationId))
             {
                 var targetLoc = GetLocation(transitionToLocationId);

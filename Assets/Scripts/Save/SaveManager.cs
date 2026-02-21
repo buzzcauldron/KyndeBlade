@@ -150,5 +150,21 @@ namespace KyndeBlade
             CurrentProgress.HasEverHadHunger = true;
             Save();
         }
+
+        /// <summary>Increment ethical misstep count (wrong dialogue choice). Applies cumulative damage-taken penalty in combat.</summary>
+        public void IncrementEthicalMisstep()
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.EthicalMisstepCount++;
+            Save();
+        }
+
+        /// <summary>Damage taken multiplier from ethical missteps. 1f + (count * DamageTakenPerMisstep).</summary>
+        public float GetDamageTakenMultiplier()
+        {
+            int n = CurrentProgress?.EthicalMisstepCount ?? 0;
+            if (n <= 0) return 1f;
+            return 1f + n * 0.1f; // 10% more damage per misstep (1–5 scale: 10%–50%)
+        }
     }
 }

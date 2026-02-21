@@ -26,10 +26,10 @@
 - [x] Verify Malvern → Fayre → Tour → Dongeoun → Piers → Seven Sins → Quest Do-Wel → Dongeoun Depths → Years Pass → Field of Grace flow
 
 ### 1.4 Ethical Misstep Counter (Iterative Punishment)
-- [ ] Add `EthicalMisstepCount` to GameProgress
-- [ ] Increment on wrong dialogue choice (sin-aligned or Green Chapel refuse)
-- [ ] Apply cumulative modifiers: e.g. +X% damage taken per misstep, or harder encounters
-- [ ] Design: how many missteps before noticeable punishment? (e.g. 1–5 scale)
+- [x] Add `EthicalMisstepCount` to GameProgress
+- [x] Increment on wrong dialogue choice (sin-aligned or Green Chapel refuse)
+- [x] Apply cumulative modifiers: e.g. +X% damage taken per misstep, or harder encounters
+- [x] Design: how many missteps before noticeable punishment? (e.g. 1–5 scale) — 10% damage taken per misstep, no cap
 
 ---
 

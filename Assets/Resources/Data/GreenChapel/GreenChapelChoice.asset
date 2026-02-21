@@ -22,12 +22,15 @@ MonoBehaviour:
     IsCorrectChoice: 1
     TransitionToLocationId: 
     AssociatedSin: 0
+    NextDialogueBeat: {fileID: 0}
   - Text: I refuse. I will not play thy game.
     IsCorrectChoice: 0
     TransitionToLocationId: 
     AssociatedSin: 1
+    NextDialogueBeat: {fileID: 0}
   - Text: I flee. This is no place for me.
     IsCorrectChoice: 0
     TransitionToLocationId: 
     AssociatedSin: 4
+    NextDialogueBeat: {fileID: 0}
   VisionIndex: 0
