@@ -16,3 +16,4 @@ The active project is now **Kynde Blade 16 Bit** in Unity (see repo root). This 
 - `Config/` — Engine config
 - `Content/` — Unreal assets
 - `KyndeBlade.uproject` — Project file
+- `unreal-5.7/` — Merged kyndeblade-5.7 content (Archer, Rogue, CombatPlayerController, CombatAIController, etc.)
