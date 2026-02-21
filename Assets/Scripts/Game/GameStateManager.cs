@@ -295,7 +295,6 @@ namespace KyndeBlade
                 StartCoroutine(TransitionToOrfeoOtherworld());
                 return;
             }
-            var saveManager = FindObjectOfType<SaveManager>();
             bool atGreenChapel = gm != null && gm.LastEncounterLocation != null &&
                 string.Equals(gm.LastEncounterLocation.LocationId, "green_chapel", System.StringComparison.OrdinalIgnoreCase);
             if (saveManager != null && atGreenChapel)

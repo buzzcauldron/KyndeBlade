@@ -179,16 +179,35 @@ namespace KyndeBlade
             }
             if (IsDodging) { OnDodgeAttempted?.Invoke(this, false); }
 
-            if (IsParrying && AttemptParry())
+            if (IsParrying)
             {
-                GainKynde(ParryWindowRemaining < 0.25f ? 4f : 2f); // Perfect in last 25%
                 actualDamage *= 0.3f;
-                OnParryAttempted?.Invoke(this, true);
+                if (AttemptParry())
+                {
+                    GainKynde(ParryWindowRemaining < 0.25f ? 4f : 2f); // Perfect in last 25%
+                    OnParryAttempted?.Invoke(this, true);
+                }
+                else
+                {
+                    OnParryAttempted?.Invoke(this, false);
+                }
             }
-            else if (IsParrying) { OnParryAttempted?.Invoke(this, false); }
 
             Stats.CurrentHealth = Mathf.Max(0f, Stats.CurrentHealth - actualDamage);
             OnHealthChanged?.Invoke(Stats.CurrentHealth, Stats.MaxHealth);
+
+            if (attacker is EldeCharacter)
+            {
+                var saveManager = UnityEngine.Object.FindObjectOfType<SaveManager>();
+                var agingManager = UnityEngine.Object.FindObjectOfType<AgingManager>();
+                if (saveManager != null && agingManager != null)
+                {
+                    saveManager.IncrementEldeHitsAccrued();
+                    int tier = saveManager.CurrentProgress.EldeHitsAccrued;
+                    agingManager.ApplyAgeToCharacter(this, tier);
+                }
+            }
+
             OnDamageDealt?.Invoke(attacker, this, actualDamage);
             if (!IsAlive()) OnCharacterDefeated?.Invoke(this);
         }

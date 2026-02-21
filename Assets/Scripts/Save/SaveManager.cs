@@ -134,6 +134,14 @@ namespace KyndeBlade
             Save();
         }
 
+        /// <summary>Elde (Old Age) hit a character. Used as age tier when applying age.</summary>
+        public void IncrementEldeHitsAccrued()
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.EldeHitsAccrued++;
+            Save();
+        }
+
         /// <summary>Mark that a player character has had hunger this run. Permanent scars apply.</summary>
         public void MarkHasEverHadHunger()
         {

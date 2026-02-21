@@ -22,6 +22,12 @@ namespace KyndeBlade
         public MedievalCharacter HungerPrefab;
         public MedievalCharacter PridePrefab;
         public MedievalCharacter GreenKnightPrefab;
+        [Tooltip("Elde - Old Age. When Elde hits a character, they age.")]
+        public MedievalCharacter EldePrefab;
+        [Tooltip("Piers the Plowman - joins at Passus IV-V (piers location). Honest work.")]
+        public MedievalCharacter PiersPrefab;
+        [Tooltip("Conscience - joins at Passus XVII-XVIII (quest_do_wel or later). Moral awareness.")]
+        public MedievalCharacter ConsciencePrefab;
 
         [Header("Auto Setup")]
         public bool AutoSpawnTestCharacters = true;
@@ -77,9 +83,7 @@ namespace KyndeBlade
             _playerChars.Clear();
             _enemyChars.Clear();
 
-            // Always Wille (Dreamer class). 16-bit side-view.
-            var willePrefab = WillePrefab != null ? WillePrefab : KnightPrefab;
-            SpawnCharacter(willePrefab, new Vector3(-4f, 0f, 0f), CharacterClass.Dreamer, "Wille", true);
+            SpawnPartyInPoemOrder(null);
 
             SpawnEnemy(FalsePrefab, new Vector3(4f, -1.5f, 0f), typeof(FalseCharacter));
             SpawnEnemy(LadyMedePrefab, new Vector3(4f, 0f, 0f), typeof(LadyMedeCharacter));
@@ -87,7 +91,7 @@ namespace KyndeBlade
 
             if (_playerChars.Count > 0 && _enemyChars.Count > 0)
             {
-                ApplyAgeToParty();
+                ApplyHungerScarToParty();
                 StartCoroutine(DelayedStartCombat());
             }
         }
@@ -172,8 +176,7 @@ namespace KyndeBlade
             _playerChars.Clear();
             _enemyChars.Clear();
 
-            var willePrefab = WillePrefab != null ? WillePrefab : KnightPrefab;
-            SpawnCharacter(willePrefab, new Vector3(-4f, 0f, 0f), CharacterClass.Dreamer, "Wille", true);
+            SpawnPartyInPoemOrder(location);
 
             var offset = config.EnemyFormationOffset;
             var spacing = config.EnemySpacing;
@@ -235,9 +238,34 @@ namespace KyndeBlade
 
             if (_playerChars.Count > 0 && _enemyChars.Count > 0)
             {
-                ApplyAgeToParty();
+                ApplyHungerScarToParty();
                 EnsureFaeAppearanceManager();
                 StartCoroutine(DelayedStartCombat());
+            }
+        }
+
+        /// <summary>Spawn party in poem order: Wille (always), Piers (after piers), Conscience (after quest_do_wel).</summary>
+        void SpawnPartyInPoemOrder(LocationNode location)
+        {
+            var saveManager = FindObjectOfType<SaveManager>();
+            bool hasPiers = saveManager != null && saveManager.HasVisited("piers");
+            bool hasConscience = saveManager != null && (
+                saveManager.HasVisited("quest_do_wel") ||
+                saveManager.HasVisited("years_pass") ||
+                saveManager.HasVisited("field_of_grace"));
+
+            var willePrefab = WillePrefab != null ? WillePrefab : KnightPrefab;
+            SpawnCharacter(willePrefab, new Vector3(-4f, 0f, 0f), CharacterClass.Dreamer, "Wille", true);
+
+            if (hasPiers)
+            {
+                var piersPrefab = PiersPrefab != null ? PiersPrefab : KnightPrefab;
+                SpawnCharacter(piersPrefab, new Vector3(-3.5f, -1f, 0f), CharacterClass.Knight, "Piers", true);
+            }
+            if (hasConscience)
+            {
+                var consciencePrefab = ConsciencePrefab != null ? ConsciencePrefab : MagePrefab;
+                SpawnCharacter(consciencePrefab, new Vector3(-3.5f, 1f, 0f), CharacterClass.Mage, "Conscience", true);
             }
         }
 
@@ -292,8 +320,7 @@ namespace KyndeBlade
             _playerChars.Clear();
             _enemyChars.Clear();
 
-            var willePrefab = WillePrefab != null ? WillePrefab : KnightPrefab;
-            SpawnCharacter(willePrefab, new Vector3(-4f, 0f, 0f), CharacterClass.Dreamer, "Wille", true);
+            SpawnPartyInPoemOrder(location);
 
             var prefab = GetEnemyPrefabBySin(sin);
             if (prefab != null)
@@ -305,7 +332,7 @@ namespace KyndeBlade
 
             if (_playerChars.Count > 0 && _enemyChars.Count > 0)
             {
-                ApplyAgeToParty();
+                ApplyHungerScarToParty();
                 EnsureFaeAppearanceManager();
                 StartCoroutine(DelayedStartCombat());
             }
@@ -336,6 +363,7 @@ namespace KyndeBlade
             if (t.Contains("hunger")) return HungerPrefab;
             if (t.Contains("pride")) return PridePrefab;
             if (t.Contains("green") || t.Contains("knight")) return GreenKnightPrefab;
+            if (t.Contains("elde")) return EldePrefab;
             return null;
         }
 
@@ -360,6 +388,12 @@ namespace KyndeBlade
                 GreenKnightMoveset.ApplyToCharacter(c);
                 if (c.GetComponent<GreenKnightBossAI>() == null)
                     c.gameObject.AddComponent<GreenKnightBossAI>();
+            }
+            else if (c.GetComponent<EldeCharacter>() != null)
+            {
+                EldeMoveset.ApplyToCharacter(c);
+                if (c.GetComponent<SimpleEnemyAI>() == null && c.GetComponent<AdaptiveEnemyAI>() == null)
+                    c.gameObject.AddComponent(UseExpedition33Moveset ? typeof(AdaptiveEnemyAI) : typeof(SimpleEnemyAI));
             }
             else if (UseExpedition33Moveset)
                 Expedition33Moveset.ApplyToCharacter(c, true);

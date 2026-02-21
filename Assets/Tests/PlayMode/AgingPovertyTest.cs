@@ -43,7 +43,7 @@ namespace KyndeBlade.Tests
         [UnityTest]
         public IEnumerator AgingManager_AppliesStatModifiers_WhenVisionGreaterThanZero()
         {
-            _saveManager.CurrentProgress.VisionIndex = 2;
+            _saveManager.CurrentProgress.TotalPlayTimeSeconds = 7200f;
 
             _agingManager = TestGameBootstrap.CreateAgingManager(_saveManager);
 
@@ -57,7 +57,7 @@ namespace KyndeBlade.Tests
             float knightSpeedBefore = _party[0].Stats.Speed;
             float knightDefenseBefore = _party[0].Stats.Defense;
 
-            _agingManager.ApplyAgingToParty(_party);
+            _agingManager.ApplyAgeToParty(_party);
 
             Assert.Less(_party[0].Stats.Speed, knightSpeedBefore, "Aging should reduce speed");
             Assert.Greater(_party[0].Stats.Defense, knightDefenseBefore, "Aging should increase defense");
@@ -70,11 +70,11 @@ namespace KyndeBlade.Tests
         {
             _agingManager = TestGameBootstrap.CreateAgingManager(_saveManager);
 
-            Assert.AreEqual(1f, _agingManager.GetSpeedMultiplier(), "Vision 0 should have 1x speed");
+            Assert.AreEqual(1f, _agingManager.GetSpeedMultiplier(), "No play time should have 1x speed");
 
-            _saveManager.CurrentProgress.VisionIndex = 1;
+            _saveManager.CurrentProgress.TotalPlayTimeSeconds = 7200f;
             float mult = _agingManager.GetSpeedMultiplier();
-            Assert.Less(mult, 1f, "Vision 1 should reduce speed");
+            Assert.Less(mult, 1f, "2 hours play time should reduce speed");
 
             yield return null;
         }
