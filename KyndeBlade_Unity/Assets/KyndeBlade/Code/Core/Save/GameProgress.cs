@@ -24,6 +24,8 @@ namespace KyndeBlade
         public int RunAppearanceSeed;
         public bool HasEverHadHunger;
         public int EthicalMisstepCount;
+        public int WodeWoArcStage;
+        public bool WodeWoUnlocked;
     }
 
     /// <summary>Serializable game progress. Phase 1: checkpoint per location.
@@ -79,28 +81,26 @@ namespace KyndeBlade
 
         public string ToJson()
         {
-            var d = new GameProgressData
-            {
-                CurrentLocationId = CurrentLocationId,
-                VisitedLocationIds = VisitedLocationIds?.ToArray() ?? Array.Empty<string>(),
-                UnlockedLocationIds = UnlockedLocationIds?.ToArray() ?? Array.Empty<string>(),
-                VisionIndex = VisionIndex,
-                TotalPlayTimeSeconds = TotalPlayTimeSeconds,
-                SaveTimestamp = SaveTimestamp,
-                GreenKnightWillAppearRandomly = GreenKnightWillAppearRandomly,
-                OrfeoOtherworldTriggered = OrfeoOtherworldTriggered,
-                PovertyLevel = PovertyLevel,
-                EncountersSinceLastGreenKnight = EncountersSinceLastGreenKnight,
-                GreenChapelBodiesAccrued = GreenChapelBodiesAccrued,
-                OtherworldLivingCharactersAccrued = OtherworldLivingCharactersAccrued,
-                OtherworldBodiesFromDeath = OtherworldBodiesFromDeath,
-                EldeHitsAccrued = EldeHitsAccrued,
-                RunAppearanceSeed = RunAppearanceSeed,
-                HasEverHadHunger = HasEverHadHunger,
-                EthicalMisstepCount = EthicalMisstepCount,
-                WodeWoArcStage = WodeWoArcStage,
-                WodeWoUnlocked = WodeWoUnlocked
-            };
+            var d = new GameProgressData();
+            d.CurrentLocationId = CurrentLocationId;
+            d.VisitedLocationIds = VisitedLocationIds?.ToArray() ?? Array.Empty<string>();
+            d.UnlockedLocationIds = UnlockedLocationIds?.ToArray() ?? Array.Empty<string>();
+            d.VisionIndex = VisionIndex;
+            d.TotalPlayTimeSeconds = TotalPlayTimeSeconds;
+            d.SaveTimestamp = SaveTimestamp;
+            d.GreenKnightWillAppearRandomly = GreenKnightWillAppearRandomly;
+            d.OrfeoOtherworldTriggered = OrfeoOtherworldTriggered;
+            d.PovertyLevel = PovertyLevel;
+            d.EncountersSinceLastGreenKnight = EncountersSinceLastGreenKnight;
+            d.GreenChapelBodiesAccrued = GreenChapelBodiesAccrued;
+            d.OtherworldLivingCharactersAccrued = OtherworldLivingCharactersAccrued;
+            d.OtherworldBodiesFromDeath = OtherworldBodiesFromDeath;
+            d.EldeHitsAccrued = EldeHitsAccrued;
+            d.RunAppearanceSeed = RunAppearanceSeed;
+            d.HasEverHadHunger = HasEverHadHunger;
+            d.EthicalMisstepCount = EthicalMisstepCount;
+            d.WodeWoArcStage = WodeWoArcStage;
+            d.WodeWoUnlocked = WodeWoUnlocked;
             return JsonUtility.ToJson(d);
         }
 
