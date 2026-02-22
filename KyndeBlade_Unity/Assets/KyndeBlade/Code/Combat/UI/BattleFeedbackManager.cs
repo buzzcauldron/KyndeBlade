@@ -164,7 +164,10 @@ namespace KyndeBlade
             TriggerCameraShake(ShakeIntensityOnDamage, ShakeDurationOnDamage);
             Vector3 pos = target != null ? target.transform.position + Vector3.up * FloatTextHeightOffset : Vector3.zero;
             string text = Mathf.Approximately(amount, Mathf.Floor(amount)) ? ((int)amount).ToString() : amount.ToString("F0");
-            ShowFloatingText(pos, "-" + text, FloatTextDamageColor);
+            Color color = (TurnManager != null && TurnManager.LastDamageWasCrit) ? new Color(1f, 0.85f, 0.2f) : FloatTextDamageColor;
+            ShowFloatingText(pos, "-" + text, color);
+            if (TurnManager != null && TurnManager.LastDamageWasCrit)
+                ShowFloatingText(pos + Vector3.up * 0.5f, "Critical!", color);
         }
 
         /// <summary>Call from anywhere to trigger a screen shake.</summary>

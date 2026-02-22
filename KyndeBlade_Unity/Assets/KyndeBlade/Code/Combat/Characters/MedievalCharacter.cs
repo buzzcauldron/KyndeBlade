@@ -271,6 +271,9 @@ namespace KyndeBlade
             Stats.CurrentHealth = Mathf.Max(0f, Stats.CurrentHealth - actualDamage);
             OnHealthChanged?.Invoke(Stats.CurrentHealth, Stats.MaxHealth);
 
+            if (actualDamage > 0f)
+                GameRuntime.TurnManager?.RecordDamageDealt();
+
             if (attacker is EldeCharacter)
             {
                 if (_cachedSaveManager == null) _cachedSaveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();

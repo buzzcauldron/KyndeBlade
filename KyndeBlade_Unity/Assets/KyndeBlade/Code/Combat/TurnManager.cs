@@ -46,6 +46,18 @@ namespace KyndeBlade
         /// <summary>Fired when an action is executed (executor, target, action). For AI observation.</summary>
         public event Action<MedievalCharacter, MedievalCharacter, CombatAction> OnActionExecuted;
 
+        [Header("Critical hit (builds across hits)")]
+        [Tooltip("Added to crit pressure each time damage is dealt. Pressure resets on crit.")]
+        public float CritBuildPerDeal = 0.08f;
+        [Tooltip("Cap for crit pressure (0–1). Higher = sooner guaranteed crit.")]
+        public float CritPressureCap = 0.4f;
+        [Tooltip("Damage multiplier when a crit triggers.")]
+        public float CritDamageMultiplier = 1.5f;
+
+        float _critPressure;
+        /// <summary>True for the last damage instance that was a crit (for UI/feedback).</summary>
+        public bool LastDamageWasCrit { get; private set; }
+
         public void InitializeCombat(List<MedievalCharacter> players, List<MedievalCharacter> enemies)
         {
             PlayerCharacters = new List<MedievalCharacter>(players);
@@ -71,9 +83,34 @@ namespace KyndeBlade
             if (TurnOrder.Count == 0) return;
             State = CombatState.WaitingForInput;
             TurnNumber = 1;
+            _critPressure = 0f;
+            LastDamageWasCrit = false;
             CurrentCharacter = TurnOrder[0];
             CurrentCharacter?.InvokeTurnStart();
             OnTurnChanged?.Invoke(CurrentCharacter);
+        }
+
+        /// <summary>Roll for crit using building pressure; if crit, multiply damage and reset pressure. Call before ApplyCustomDamage.</summary>
+        public float ApplyCritToDamage(float damage, out bool isCrit)
+        {
+            isCrit = false;
+            if (State == CombatState.CombatEnded) return damage;
+            if (Random.value < _critPressure)
+            {
+                isCrit = true;
+                _critPressure = 0f;
+                LastDamageWasCrit = true;
+                return damage * CritDamageMultiplier;
+            }
+            LastDamageWasCrit = false;
+            return damage;
+        }
+
+        /// <summary>Call after damage is actually dealt (e.g. from ApplyCustomDamage) to build crit pressure for next time.</summary>
+        public void RecordDamageDealt()
+        {
+            if (State == CombatState.CombatEnded) return;
+            _critPressure = Mathf.Min(CritPressureCap, _critPressure + CritBuildPerDeal);
         }
 
         public void EndTurn()

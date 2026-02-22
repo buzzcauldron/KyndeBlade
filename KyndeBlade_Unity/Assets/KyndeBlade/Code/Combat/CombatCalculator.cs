@@ -67,6 +67,8 @@ namespace KyndeBlade
             if (defender == null || !defender.IsAlive() || attacker == null) return;
             var strikeAction = GetPrimaryStrikeAction(attacker);
             float damage = CalculateDamage(attacker, defender, strikeAction);
+            var tm = GameRuntime.TurnManager;
+            if (tm != null) damage = tm.ApplyCritToDamage(damage, out _);
             defender.ApplyCustomDamage(damage, attacker, damageAlreadyFinal: true);
         }
     }
