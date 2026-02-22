@@ -42,7 +42,7 @@ namespace KyndeBlade
             public ConditionType Type = ConditionType.None;
             public string StringParam;   // e.g. location id, "piers"
             public int IntParam;        // e.g. poverty level, elde hits
-            public bool BoolParam;      // e.g. WodeWo dead
+            public bool BoolParam;      // e.g. flag for conditional branch
         }
 
         public enum ConditionType

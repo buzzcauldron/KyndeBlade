@@ -36,10 +36,12 @@ namespace KyndeBlade
         [Header("Narrative")]
         [Tooltip("Story beat to show on arrival.")]
         public StoryBeat StoryBeatOnArrival;
-        [Tooltip("If non-empty, show these beats in sequence instead of StoryBeatOnArrival (e.g. baby Wode-Wo → care → grown).")]
+        [Tooltip("If non-empty, show these beats in sequence instead of StoryBeatOnArrival (e.g. Wode-Wo: Baby → Care → Grown).")]
         public List<StoryBeat> StoryBeatSequenceOnArrival = new List<StoryBeat>();
-        [Tooltip("If set and Wode-Wo is dead (install-level), show this instead of StoryBeatOnArrival. His body persists.")]
-        public StoryBeat StoryBeatOnArrivalWhenWodeWoDead;
+        [Tooltip("If true, after showing StoryBeatSequenceOnArrival we set Wode-Wo arc to Grown (stage 3). Use for the Baby/Care/Grown sequence.")]
+        public bool AdvancesWodeWoArcOnSequenceComplete;
+        [Tooltip("When Wode-Wo arc is complete (stage 4), show this positive beat on arrival instead of StoryBeatOnArrival. First time at stage 3 shows it and completes the arc.")]
+        public StoryBeat StoryBeatOnArrivalWhenWodeWoComplete;
         [Tooltip("Dialogue with choices before combat (e.g. Green Chapel). Wrong choice = Green Knight appears randomly later.")]
         public DialogueChoiceBeat PreCombatChoiceBeat;
 

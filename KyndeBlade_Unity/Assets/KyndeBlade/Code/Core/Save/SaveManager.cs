@@ -166,5 +166,33 @@ namespace KyndeBlade
             if (n <= 0) return 1f;
             return 1f + n * 0.1f; // 10% more damage per misstep (1–5 scale: 10%–50%)
         }
+
+        /// <summary>Wode-Wo positive arc stage: 0=none, 1=Baby, 2=Care, 3=Grown, 4=Complete.</summary>
+        public int WodeWoArcStage => CurrentProgress?.WodeWoArcStage ?? 0;
+
+        public bool IsWodeWoArcComplete => WodeWoArcStage >= 4;
+
+        public void SetWodeWoArcStage(int stage)
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.WodeWoArcStage = Mathf.Clamp(stage, 0, 4);
+            Save();
+        }
+
+        /// <summary>Advance Wode-Wo arc by one stage (e.g. after Baby→Care→Grown sequence).</summary>
+        public void AdvanceWodeWoArc()
+        {
+            SetWodeWoArcStage(WodeWoArcStage + 1);
+        }
+
+        /// <summary>True when the W O D E passcode has been entered; Wode-Wo line is then active.</summary>
+        public bool IsWodeWoUnlocked => CurrentProgress?.WodeWoUnlocked ?? false;
+
+        public void SetWodeWoUnlocked(bool unlocked)
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.WodeWoUnlocked = unlocked;
+            Save();
+        }
     }
 }

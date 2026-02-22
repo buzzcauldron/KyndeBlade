@@ -46,6 +46,7 @@ namespace KyndeBlade
         void ResolveRefs()
         {
             if (TurnManager == null) TurnManager = GameRuntime.TurnManager ?? UnityEngine.Object.FindFirstObjectByType<TurnManager>();
+            if (GameManager == null) GameManager = GameRuntime.GameManager ?? UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
             if (IlluminationManager == null) IlluminationManager = UnityEngine.Object.FindFirstObjectByType<IlluminationManager>();
             if (AgingManager == null) AgingManager = UnityEngine.Object.FindFirstObjectByType<AgingManager>();
         }
@@ -250,18 +251,21 @@ namespace KyndeBlade
 
         void ReturnToMap(LocationNode loc)
         {
-            if (loc == null) return;
-            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
-            if (saveManager != null) saveManager.SaveCheckpoint(loc.LocationId);
-            if (wm != null) wm.SetCurrentLocation(loc);
+            if (loc != null)
+            {
+                var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+                if (saveManager != null) saveManager.SaveCheckpoint(loc.LocationId);
+                if (wm != null) wm.SetCurrentLocation(loc);
+            }
             var mapCanvas = GameObject.Find("MapCanvas");
             var combatCanvas = GameObject.Find("CombatCanvas");
             if (mapCanvas != null) mapCanvas.SetActive(true);
             if (combatCanvas != null) combatCanvas.SetActive(false);
             var mapUI = UnityEngine.Object.FindFirstObjectByType<MapLevelSelectUI>();
-            if (mapUI != null && loc != null)
-                mapUI.Refresh(loc);
+            var currentLoc = loc ?? wm?.CurrentLocation;
+            if (mapUI != null && currentLoc != null)
+                mapUI.Refresh(currentLoc);
         }
 
         void OnDestroy()
