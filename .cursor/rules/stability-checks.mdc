@@ -1,0 +1,28 @@
+---
+description: Require stability checks before and after implementing code changes in this project
+alwaysApply: true
+---
+
+# Stability checks required
+
+Do **not** implement code changes in this project without stability checks.
+
+## Before implementing
+
+1. **Read and understand** the code you are about to change; confirm the change scope.
+2. **Check current state**: run linter (e.g. ReadLints) on the files or area you will touch so you know existing errors and avoid adding new ones.
+
+## After implementing
+
+1. **Linter**: Run ReadLints on all modified files (and any files that reference them if relevant). Fix any new linter/compiler errors before considering the change done.
+2. **Unity**: If the change affects Unity scripts (C# in `KyndeBlade_Unity`), treat a clean compile in the Unity Editor as the stability check when possible; if you cannot run the Editor, at least ensure no new CSxxxx errors are introduced (linter and any available build/compile step). When feasible, **enter Play mode in the main scene** briefly to confirm no runtime errors (bootstrap, UI, combat).
+3. **Tests**: If the project has runnable tests (e.g. PlayMode or EditMode tests under `Assets/Tests`), run them after changes that could affect covered behaviour. If tests fail, fix the code or the tests before finishing.
+4. **Input**: Do not change Project Settings → Player → Active Input from **Both** to "Input System package only" unless EventSystem has been migrated to InputSystemUIInputModule; see ARCHITECTURE.md → Input.
+
+## Summary
+
+- **Always** run linter on modified code after edits.
+- **Always** fix new compilation or linter errors before marking the task complete.
+- When changing Unity scripts, **play the main scene** briefly if possible to catch bootstrap/UI/input issues.
+- **Do not** switch Active Input to "Input System package only" without migrating EventSystem (see ARCHITECTURE.md).
+- **Do not** leave the codebase in a broken or untested state; run the above checks and address failures.

@@ -28,16 +28,36 @@ namespace KyndeBlade
         public event Action OnVictory;
         public event Action OnDefeat;
 
+        bool _lazyInitDone;
+
         void Start()
         {
-            if (TurnManager == null) TurnManager = FindObjectOfType<TurnManager>();
-            if (IlluminationManager == null) IlluminationManager = FindObjectOfType<IlluminationManager>();
-            if (AgingManager == null) AgingManager = FindObjectOfType<AgingManager>();
-            if (TurnManager != null)
-                TurnManager.OnCombatEnded += OnCombatEnded;
+            ResolveRefs();
+            TryLazyInit();
+        }
+
+        void Update()
+        {
+            if (_lazyInitDone) return;
+            ResolveRefs();
+            TryLazyInit();
+        }
+
+        void ResolveRefs()
+        {
+            if (TurnManager == null) TurnManager = GameRuntime.TurnManager ?? UnityEngine.Object.FindFirstObjectByType<TurnManager>();
+            if (IlluminationManager == null) IlluminationManager = UnityEngine.Object.FindFirstObjectByType<IlluminationManager>();
+            if (AgingManager == null) AgingManager = UnityEngine.Object.FindFirstObjectByType<AgingManager>();
+        }
+
+        void TryLazyInit()
+        {
+            if (_lazyInitDone) return;
+            if (TurnManager == null) return;
+            _lazyInitDone = true;
+            TurnManager.OnCombatEnded += OnCombatEnded;
             if (AgingManager != null)
                 AgingManager.OnDeathOfOldAgeRequested += TriggerDeathOfOldAge;
-
             EnsureVictoryDefeatPanels();
             if (VictoryPanel != null) VictoryPanel.SetActive(false);
             if (DefeatPanel != null) DefeatPanel.SetActive(false);
@@ -45,7 +65,8 @@ namespace KyndeBlade
 
         void EnsureVictoryDefeatPanels()
         {
-            var canvas = FindObjectOfType<Canvas>();
+            var combatUI = GameRuntime.CombatUI ?? UnityEngine.Object.FindFirstObjectByType<CombatUI>();
+            var canvas = combatUI != null ? combatUI.GetComponent<Canvas>() : UnityEngine.Object.FindFirstObjectByType<Canvas>();
             if (canvas == null) return;
 
             if (VictoryPanel == null)
@@ -157,7 +178,7 @@ namespace KyndeBlade
                 StartCoroutine(RestartGameAfterDefeat());
                 return;
             }
-            var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
+            var gm = GameManager != null ? GameManager : UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
             if (gm != null && gm.CanRestartAtCheckpoint)
             {
                 if (DefeatPanel != null) DefeatPanel.SetActive(false);
@@ -168,7 +189,7 @@ namespace KyndeBlade
         /// <summary>Called when player dies of old age while waiting at Field of Grace. Restart = New Game.</summary>
         public void TriggerDeathOfOldAge()
         {
-            var saveManager = FindObjectOfType<SaveManager>();
+            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             if (saveManager != null) saveManager.IncrementOtherworldBodiesFromDeath();
             _deathOfOldAge = true;
             if (IlluminationManager != null)
@@ -201,13 +222,13 @@ namespace KyndeBlade
         void OnVictoryContinueClicked()
         {
             if (VictoryPanel != null) VictoryPanel.SetActive(false);
-            var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
+            var gm = GameManager != null ? GameManager : UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
             var loc = gm?.LastEncounterLocation;
             var locId = loc?.LocationId ?? "";
 
             if (IsFinalCombatLocation(locId))
             {
-                var wm = FindObjectOfType<WorldMapManager>();
+                var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
                 var fieldOfGrace = wm?.GetLocation("field_of_grace") ?? Resources.Load<LocationNode>("Data/Vision2/Loc_field_of_grace");
                 if (fieldOfGrace != null && wm != null)
                     wm.TransitionTo(fieldOfGrace);
@@ -230,15 +251,15 @@ namespace KyndeBlade
         void ReturnToMap(LocationNode loc)
         {
             if (loc == null) return;
-            var saveManager = FindObjectOfType<SaveManager>();
-            var wm = FindObjectOfType<WorldMapManager>();
+            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+            var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
             if (saveManager != null) saveManager.SaveCheckpoint(loc.LocationId);
             if (wm != null) wm.SetCurrentLocation(loc);
             var mapCanvas = GameObject.Find("MapCanvas");
             var combatCanvas = GameObject.Find("CombatCanvas");
             if (mapCanvas != null) mapCanvas.SetActive(true);
             if (combatCanvas != null) combatCanvas.SetActive(false);
-            var mapUI = FindObjectOfType<MapLevelSelectUI>();
+            var mapUI = UnityEngine.Object.FindFirstObjectByType<MapLevelSelectUI>();
             if (mapUI != null && loc != null)
                 mapUI.Refresh(loc);
         }
@@ -274,7 +295,7 @@ namespace KyndeBlade
         void Victory()
         {
             int xp = CalculateVictoryXP();
-            var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
+            var gm = GameManager != null ? GameManager : UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
             bool isFinal = gm != null && IsFinalCombatLocation(gm.LastEncounterLocation?.LocationId ?? "");
             if (IlluminationManager != null)
                 StartCoroutine(ShowVictoryAfterIllumination(xp, isFinal));
@@ -284,9 +305,9 @@ namespace KyndeBlade
 
         void Defeat()
         {
-            var saveManager = FindObjectOfType<SaveManager>();
+            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             if (saveManager != null) saveManager.IncrementOtherworldBodiesFromDeath();
-            var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
+            var gm = GameManager != null ? GameManager : UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
 
             if (gm != null && gm.IsSinMinibossEncounter)
             {
@@ -320,8 +341,8 @@ namespace KyndeBlade
             if (DefeatText != null) DefeatText.text = "The Green Knight hath taken thy head. A form of thee ends in Orfeo's Otherworld.";
             yield return new WaitForSeconds(2.5f);
             if (DefeatPanel != null) DefeatPanel.SetActive(false);
-            var saveManager = FindObjectOfType<SaveManager>();
-            var wm = FindObjectOfType<WorldMapManager>();
+            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+            var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
             var malvern = wm != null ? wm.GetLocation("malvern") : Resources.Load<LocationNode>("Data/Vision1/Loc_malvern");
             if (malvern == null)
             {
@@ -344,7 +365,7 @@ namespace KyndeBlade
                 IlluminationManager.TriggerDefeatIllumination();
                 yield return new WaitForSeconds(4.2f);
             }
-            var wm = FindObjectOfType<WorldMapManager>();
+            var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
             var otherworld = wm != null ? wm.GetLocation("otherworld") : null;
             if (otherworld == null)
                 otherworld = Resources.Load<LocationNode>("Data/OrfeoOtherworld/Loc_otherworld");
@@ -358,9 +379,9 @@ namespace KyndeBlade
                     wm.TransitionTo(otherworld);
                 else
                 {
-                    var saveMgr = FindObjectOfType<SaveManager>();
+                    var saveMgr = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
                     if (saveMgr != null) saveMgr.IncrementOtherworldLivingCharacters();
-                    var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
+                    var gm = GameManager != null ? GameManager : UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
                     if (gm != null && otherworld.Encounter != null)
                         gm.StartEncounterFromConfig(otherworld.Encounter, otherworld);
                 }
@@ -403,7 +424,7 @@ namespace KyndeBlade
                 var restartBtn = DefeatPanel.transform.Find("RestartButton");
                 if (restartBtn != null)
                 {
-                    var gm = GameManager != null ? GameManager : FindObjectOfType<KyndeBladeGameManager>();
+                    var gm = GameManager != null ? GameManager : UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
                     restartBtn.gameObject.SetActive(gm != null && gm.CanRestartAtCheckpoint);
                 }
             }
