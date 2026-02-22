@@ -15,7 +15,7 @@ namespace KyndeBlade
         void Start()
         {
             _self = GetComponent<MedievalCharacter>();
-            if (TurnManager == null) TurnManager = FindObjectOfType<TurnManager>();
+            if (TurnManager == null) TurnManager = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (TurnManager != null)
                 TurnManager.OnTurnChanged += OnTurnChanged;
         }

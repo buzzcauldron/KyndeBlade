@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c846253d82ad46f78a5946deafac2a5, type: 3}
   m_Name: Loc_tour
-  m_EditorClassIdentifier: KyndeBlade::KyndeBlade.LocationNode
+  m_EditorClassIdentifier: KyndeBlade.Combat::KyndeBlade.LocationNode
   LocationId: tour
   DisplayName: Tour on Toft
   Description: 'Dream: The Tower of Truth.'

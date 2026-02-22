@@ -36,7 +36,7 @@ namespace KyndeBlade
         /// <summary>Run the full sequence. TurnManager should call this from ExecuteAction when this controller is assigned.</summary>
         public void RunSequence(MedievalCharacter actor, CombatAction action, MedievalCharacter target)
         {
-            if (TurnManager == null) TurnManager = FindObjectOfType<TurnManager>();
+            if (TurnManager == null) TurnManager = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (TurnManager == null) return;
             StartCoroutine(SequenceRoutine(actor, action, target));
         }

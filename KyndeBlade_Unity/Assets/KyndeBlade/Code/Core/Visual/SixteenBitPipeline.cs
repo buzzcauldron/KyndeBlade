@@ -24,6 +24,7 @@ namespace KyndeBlade
         Material _pointMat;
         Material _manuscriptMat;
         RenderTexture _tempRT;
+        RenderTexture _blitTempSameSize;
         static readonly int LowResRTId = Shader.PropertyToID("_SixteenBitLowRes");
 
         void OnEnable()
@@ -32,7 +33,9 @@ namespace KyndeBlade
             if (_cam == null) return;
 
             EnsureLowResRT();
-            _cam.targetTexture = _lowResRT;
+            // Only redirect to RT when it's ready; otherwise camera renders to screen (avoids black screen if RT fails)
+            if (_lowResRT != null && _lowResRT.IsCreated())
+                _cam.targetTexture = _lowResRT;
 
             var pointShader = Shader.Find("KyndeBlade/Point Upscale (16-Bit)");
             if (pointShader != null) _pointMat = new Material(pointShader);
@@ -44,6 +47,13 @@ namespace KyndeBlade
             }
         }
 
+        void LateUpdate()
+        {
+            // Apply targetTexture once RT is ready (e.g. if Create() was deferred)
+            if (_cam != null && _cam.targetTexture == null && _lowResRT != null && _lowResRT.IsCreated())
+                _cam.targetTexture = _lowResRT;
+        }
+
         void OnDisable()
         {
             if (_cam != null) _cam.targetTexture = null;
@@ -53,21 +63,35 @@ namespace KyndeBlade
                 _lowResRT = null;
             }
             if (_tempRT != null) { _tempRT.Release(); _tempRT = null; }
-            if (_pointMat != null) DestroyImmediate(_pointMat);
-            if (_manuscriptMat != null) DestroyImmediate(_manuscriptMat);
+            if (_blitTempSameSize != null) { _blitTempSameSize.Release(); _blitTempSameSize = null; }
+            if (_pointMat != null) { Destroy(_pointMat); _pointMat = null; }
+            if (_manuscriptMat != null) { Destroy(_manuscriptMat); _manuscriptMat = null; }
         }
 
-        void OnPostRender()
+        void OnRenderImage(RenderTexture src, RenderTexture dest)
         {
-            if (_lowResRT == null || !_lowResRT.IsCreated()) return;
+            if (_lowResRT == null || !_lowResRT.IsCreated())
+            {
+                Graphics.Blit(src, dest);
+                return;
+            }
 
-            // Point upscale: low-res RT -> backbuffer
-            if (_pointMat != null)
-                Graphics.Blit(_lowResRT, (RenderTexture)null, _pointMat);
+            // Avoid Blit(source, dest) when source and dest are the same RT (undefined behaviour).
+            bool destIsLowRes = dest != null && dest == _lowResRT;
+            if (destIsLowRes)
+            {
+                EnsureBlitTempSameSize();
+                Graphics.Blit(_lowResRT, _blitTempSameSize);
+                Graphics.Blit(_blitTempSameSize, dest);
+            }
             else
-                Graphics.Blit(_lowResRT, (RenderTexture)null);
+            {
+                if (_pointMat != null)
+                    Graphics.Blit(_lowResRT, dest, _pointMat);
+                else
+                    Graphics.Blit(_lowResRT, dest);
+            }
 
-            // Manuscript overlay on top (reuse earlier full-screen params)
             if (ApplyManuscriptOverlay && _manuscriptMat != null)
             {
                 int w = Screen.width, h = Screen.height;
@@ -77,8 +101,8 @@ namespace KyndeBlade
                     _tempRT = new RenderTexture(w, h, 0);
                 }
                 ManuscriptOverlayParams.ApplyToMaterial(_manuscriptMat, ParchmentTexture, ParchmentStrength, SepiaTint, SepiaStrength, Grain);
-                Graphics.Blit((RenderTexture)null, _tempRT, _manuscriptMat);
-                Graphics.Blit(_tempRT, (RenderTexture)null);
+                Graphics.Blit(dest != null ? dest : (RenderTexture)null, _tempRT, _manuscriptMat);
+                Graphics.Blit(_tempRT, dest);
             }
         }
 
@@ -91,6 +115,16 @@ namespace KyndeBlade
             _lowResRT = new RenderTexture(w, h, 24);
             _lowResRT.filterMode = FilterMode.Point;
             _lowResRT.Create();
+        }
+
+        void EnsureBlitTempSameSize()
+        {
+            if (_lowResRT == null || !_lowResRT.IsCreated()) return;
+            int w = _lowResRT.width, h = _lowResRT.height;
+            if (_blitTempSameSize != null && _blitTempSameSize.width == w && _blitTempSameSize.height == h) return;
+            if (_blitTempSameSize != null) _blitTempSameSize.Release();
+            _blitTempSameSize = new RenderTexture(w, h, 0);
+            _blitTempSameSize.Create();
         }
     }
 }

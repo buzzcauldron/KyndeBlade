@@ -30,7 +30,7 @@ namespace KyndeBlade
 
         void Start()
         {
-            if (SequenceController == null) SequenceController = FindObjectOfType<TurnSequenceController>();
+            if (SequenceController == null) SequenceController = UnityEngine.Object.FindFirstObjectByType<TurnSequenceController>();
             if (SequenceController != null)
                 SequenceController.OnTelegraphStarted += OnTelegraphStarted;
         }

@@ -1,0 +1,13 @@
+---
+description: Keep Unity code simple; use patterns only when they fit (from Unity scaling guide)
+globs: KyndeBlade_Unity/**/*.cs
+---
+
+# KISS for Unity (scaling guide)
+
+Follow **KISS** (“Keep it simple, stupid”) so the project scales without unnecessary complexity.
+
+- Use design patterns (singleton, observer, factory, etc.) **only when they naturally fit the problem**, not because they are trendy or “best practice.”
+- **Do not over-engineer**: before adding a pattern or abstraction, assess whether its benefits justify the extra maintenance and cognitive load.
+- Prefer the simplest implementation that meets requirements; refactor toward patterns when real pain (duplication, coupling, testing) appears.
+- This aligns with [Unity’s guide on architecting code as your project scales](https://unity.com/how-to/how-architect-code-your-project-scales).

@@ -3,7 +3,8 @@
     "rootNamespace": "KyndeBlade",
     "references": [
         "KyndeBlade.Core",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

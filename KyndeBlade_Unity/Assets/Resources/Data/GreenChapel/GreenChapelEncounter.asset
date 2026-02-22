@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1227b07dc383b4bae842af9e5e0199e8, type: 3}
   m_Name: GreenChapelEncounter
-  m_EditorClassIdentifier: KyndeBlade::KyndeBlade.EncounterConfig
+  m_EditorClassIdentifier: KyndeBlade.Combat::KyndeBlade.EncounterConfig
   Enemies: []
   BossPrefab: {fileID: 0}
   BossCharacterType: GreenKnight

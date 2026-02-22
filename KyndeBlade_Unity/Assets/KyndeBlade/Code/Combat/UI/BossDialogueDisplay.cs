@@ -16,7 +16,7 @@ namespace KyndeBlade
         {
             if (BossDialogueManager.Instance == null) return;
             BossDialogueManager.Instance.OnBossLineRequested += OnBossLineRequested;
-            if (DialogueSystem == null) DialogueSystem = FindObjectOfType<DialogueSystem>();
+            if (DialogueSystem == null) DialogueSystem = UnityEngine.Object.FindFirstObjectByType<DialogueSystem>();
         }
 
         void OnDestroy()

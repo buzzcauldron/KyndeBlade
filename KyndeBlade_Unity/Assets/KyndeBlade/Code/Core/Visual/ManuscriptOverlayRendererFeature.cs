@@ -1,6 +1,7 @@
 // Requires: Universal RP package (com.unity.render-pipelines.universal).
+// When URP is installed, add Scripting Define "KYNDEBLADE_URP" (Project Settings > Player > Script Compilation) so this file compiles.
 // Add to URP Renderer: Renderer Features -> Add -> Manuscript Overlay.
-#if UNITY_2020_1_OR_NEWER
+#if UNITY_2020_1_OR_NEWER && KYNDEBLADE_URP
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;

@@ -41,7 +41,7 @@ namespace KyndeBlade
             if (_subscribed) return;
             _subscribed = true;
 
-            var tm = FindObjectOfType<TurnManager>();
+            var tm = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (tm == null) return;
 
             foreach (var p in tm.PlayerCharacters)
@@ -56,7 +56,7 @@ namespace KyndeBlade
             if (!_subscribed) return;
             _subscribed = false;
 
-            var tm = FindObjectOfType<TurnManager>();
+            var tm = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (tm == null) return;
 
             foreach (var p in tm.PlayerCharacters)

@@ -37,7 +37,7 @@ namespace KyndeBlade
         /// <summary>Trigger hit-stop for the default duration. Call from OnDamageDealt, OnAnimationHit, or VFX.</summary>
         public static void Trigger()
         {
-            if (_instance == null) _instance = FindObjectOfType<HitStop>();
+            if (_instance == null) _instance = UnityEngine.Object.FindFirstObjectByType<HitStop>();
             if (_instance != null) _instance.TriggerInstance(_instance.DefaultDuration, _instance.FreezeTimeScale);
         }
 
@@ -45,7 +45,7 @@ namespace KyndeBlade
         public static void Trigger(float durationInRealSeconds)
         {
             if (durationInRealSeconds <= 0f) return;
-            if (_instance == null) _instance = FindObjectOfType<HitStop>();
+            if (_instance == null) _instance = UnityEngine.Object.FindFirstObjectByType<HitStop>();
             if (_instance != null) _instance.TriggerInstance(durationInRealSeconds, _instance.FreezeTimeScale);
         }
 
@@ -53,7 +53,7 @@ namespace KyndeBlade
         public static void Trigger(float durationInRealSeconds, float timeScaleDuringFreeze)
         {
             if (durationInRealSeconds <= 0f) return;
-            if (_instance == null) _instance = FindObjectOfType<HitStop>();
+            if (_instance == null) _instance = UnityEngine.Object.FindFirstObjectByType<HitStop>();
             if (_instance != null) _instance.TriggerInstance(durationInRealSeconds, timeScaleDuringFreeze);
         }
 

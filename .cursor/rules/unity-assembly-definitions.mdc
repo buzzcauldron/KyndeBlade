@@ -1,0 +1,14 @@
+---
+description: Use Assembly Definitions to scale the Unity project and avoid full recompiles
+globs: KyndeBlade_Unity/**/*.asmdef, KyndeBlade_Unity/**/Code/**/*.cs
+---
+
+# Assembly Definitions (scaling guide)
+
+Organize scripts with **Assembly Definition files** (.asmdef) so the project scales and compiles faster.
+
+- **Modular assemblies**: Group related scripts into assemblies (e.g. `KyndeBlade.Core`, `KyndeBlade.Combat`, `KyndeBlade.Editor`, test assemblies). This limits recompilation to the changed assembly and its dependents.
+- **One-way dependencies**: Keep dependency flow clear and hierarchical. Example: Combat → Core; Core must not reference Combat or other feature assemblies. Avoid circular or criss-cross dependencies.
+- **Refactoring**: When adding or moving scripts, update .asmdef `references` so dependencies stay explicit and one-directional. New feature folders should get an asmdef if they form a coherent module.
+- **Existing layout**: This project already uses `KyndeBlade.Core`, `KyndeBlade.Combat`, `KyndeBlade.Editor`, and test asmdefs; follow that structure for new code.
+- Reference: [Unity – How to architect code as your project scales](https://unity.com/how-to/how-architect-code-your-project-scales), [Assembly definitions](https://docs.unity3d.com/Manual/ScriptCompilationAssemblyDefinitionFiles.html).

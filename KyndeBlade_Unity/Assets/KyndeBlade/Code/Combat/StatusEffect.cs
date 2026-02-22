@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using UnityEngine;
 using KyndeBlade;
 
@@ -97,6 +98,9 @@ namespace KyndeBlade.Combat
         void ApplyStatModifiers(MedievalCharacter target, bool apply)
         {
             if (target == null) return;
+            // #region agent log
+            try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"StatusEffect.cs:ApplyStatModifiers\",\"message\":\"modifiers\",\"data\":{\"apply\":" + (apply ? "true" : "false") + ",\"target\":" + (target != null ? "\"" + target.name + "\"" : "null") + ",\"effectType\":\"" + Data.EffectType + "\"},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H3\"}\n"); } catch { }
+            // #endregion
             if (apply)
             {
                 target.Stats.AttackPower *= Data.AttackPowerModifier;

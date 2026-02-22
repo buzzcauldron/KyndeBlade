@@ -37,7 +37,7 @@ Assets/
 - **KyndeBlade.Core** — `KyndeBlade/Code/Core/`
 - **KyndeBlade.Combat** — `KyndeBlade/Code/Combat/`
 - **KyndeBlade.UI** — `KyndeBlade/Code/UI/`
-- **KyndeBlade.Editor** — `Assets/Editor/`
+- **KyndeBlade.EditorTools** — `Assets/Editor/` (Editor-only; name avoids Burst resolver issues)
 - **KyndeBlade.Tests.PlayMode** — `Assets/Tests/PlayMode/`
 
 ## Conventions

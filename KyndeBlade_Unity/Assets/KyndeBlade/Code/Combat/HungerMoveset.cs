@@ -57,7 +57,7 @@ namespace KyndeBlade.Combat
             if (!CanExecute(executor)) return;
             executor.ConsumeStamina(ActionData.StaminaCost);
 
-            var tm = Object.FindObjectOfType<TurnManager>();
+            var tm = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (tm != null)
             {
                 foreach (var p in tm.PlayerCharacters)
@@ -76,7 +76,7 @@ namespace KyndeBlade.Combat
             if (!CanExecute(executor)) return;
             executor.ConsumeStamina(ActionData.StaminaCost);
 
-            var tm = Object.FindObjectOfType<TurnManager>();
+            var tm = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (tm != null)
             {
                 foreach (var p in tm.PlayerCharacters)
@@ -98,7 +98,7 @@ namespace KyndeBlade.Combat
             if (!CanExecute(executor)) return;
             executor.ConsumeStamina(ActionData.StaminaCost);
 
-            var tm = Object.FindObjectOfType<TurnManager>();
+            var tm = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             int hungryCount = 0;
             if (tm != null)
             {
@@ -118,7 +118,7 @@ namespace KyndeBlade.Combat
             if (!CanExecute(executor)) return;
             executor.ConsumeStamina(ActionData.StaminaCost);
 
-            var tm = Object.FindObjectOfType<TurnManager>();
+            var tm = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (tm != null)
             {
                 foreach (var p in tm.PlayerCharacters)

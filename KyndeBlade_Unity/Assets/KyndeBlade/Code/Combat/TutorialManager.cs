@@ -24,7 +24,7 @@ namespace KyndeBlade
 
         void Start()
         {
-            if (TurnManager == null) TurnManager = FindObjectOfType<TurnManager>();
+            if (TurnManager == null) TurnManager = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             Phase = TutorialPhase.BasicAttack;
             SetHint("Select Strike to attack. Defeat all enemies.");
         }

@@ -19,7 +19,7 @@ namespace KyndeBlade
 
         void Start()
         {
-            if (WorldMap == null) WorldMap = FindObjectOfType<WorldMapManager>();
+            if (WorldMap == null) WorldMap = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
             EnsureUIRoots();
             if (WorldMap != null)
             {
@@ -83,7 +83,7 @@ namespace KyndeBlade
 
         public void Refresh(LocationNode current)
         {
-            var saveManager = FindObjectOfType<SaveManager>();
+            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             if (CurrentLocationText != null && current != null)
             {
                 var label = current.DisplayName ?? current.LocationId;
@@ -193,7 +193,7 @@ namespace KyndeBlade
                 var label = loc.DisplayName ?? loc.LocationId;
                 if (loc.IsRealLife)
                     label += " (Malvern)";
-                var sm = saveManager != null ? saveManager : FindObjectOfType<SaveManager>();
+                var sm = saveManager != null ? saveManager : UnityEngine.Object.FindFirstObjectByType<SaveManager>();
                 if (sm?.CurrentProgress != null)
                 {
                     if (string.Equals(loc.LocationId, "green_chapel", System.StringComparison.OrdinalIgnoreCase) && sm.CurrentProgress.GreenChapelBodiesAccrued > 0)

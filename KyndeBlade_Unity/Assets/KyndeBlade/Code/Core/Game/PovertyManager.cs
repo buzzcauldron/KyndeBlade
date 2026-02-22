@@ -25,7 +25,7 @@ namespace KyndeBlade
 
         void Start()
         {
-            if (SaveManager == null) SaveManager = FindObjectOfType<SaveManager>();
+            if (SaveManager == null) SaveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
         }
 
         public void SetPovertyLevel(int level)

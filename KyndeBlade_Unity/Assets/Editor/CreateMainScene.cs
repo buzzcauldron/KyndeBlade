@@ -58,7 +58,7 @@ namespace KyndeBlade
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
 
-            var cam = UnityEngine.Object.FindObjectOfType<Camera>();
+            var cam = UnityEngine.Object.FindFirstObjectByType<Camera>();
             if (cam != null)
             {
                 cam.gameObject.tag = "MainCamera";

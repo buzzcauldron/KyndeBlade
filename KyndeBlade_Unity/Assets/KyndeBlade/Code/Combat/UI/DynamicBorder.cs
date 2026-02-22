@@ -47,7 +47,7 @@ namespace KyndeBlade
 
         void Start()
         {
-            if (TurnManager == null) TurnManager = FindObjectOfType<TurnManager>();
+            if (TurnManager == null) TurnManager = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (TurnManager != null) TurnManager.OnTurnChanged += OnTurnChanged;
             if (BorderRoot != null) RefreshBorder();
         }

@@ -5,8 +5,7 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "KyndeBlade.Core",
-        "KyndeBlade.Combat",
-        "KyndeBlade.UI"
+        "KyndeBlade.Combat"
     ],
     "includePlatforms": [
         "Editor"

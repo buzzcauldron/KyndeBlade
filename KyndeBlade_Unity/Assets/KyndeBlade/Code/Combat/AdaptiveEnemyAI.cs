@@ -15,7 +15,7 @@ namespace KyndeBlade
     public class AdaptiveEnemyAI : MonoBehaviour
     {
         [Header("Timing")]
-        [Tooltip("Assign in Inspector to avoid FindObjectOfType; otherwise cached once in Start().")]
+        [Tooltip("Assign in Inspector to avoid FindFirstObjectByType; otherwise cached once in Start().")]
         public TurnManager TurnManager;
         public float DecisionDelay = 0.5f;
 
@@ -38,7 +38,7 @@ namespace KyndeBlade
         void Start()
         {
             _self = GetComponent<MedievalCharacter>();
-            if (TurnManager == null) TurnManager = FindObjectOfType<TurnManager>();
+            if (TurnManager == null) TurnManager = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (TurnManager == null)
                 LogMissingTurnManagerOnce();
             else
@@ -207,7 +207,7 @@ namespace KyndeBlade
             bool targetBroken = target != null && target.IsBroken();
             bool targetLowHp = target != null && target.GetCurrentHealth() < target.GetMaxHealth() * 0.3f;
 
-            foreach (var a in affordable)
+            foreach (var a in _affordableBuffer)
             {
                 float score = 1f;
 
