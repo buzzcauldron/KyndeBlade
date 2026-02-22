@@ -51,6 +51,8 @@ namespace KyndeBlade.Combat
             if (target != null)
             {
                 float damage = CombatCalculator.CalculateDamage(executor, target, this);
+                var tm = GameRuntime.TurnManager;
+                if (tm != null) damage = tm.ApplyCritToDamage(damage, out _);
                 target.ApplyCustomDamage(damage, executor, damageAlreadyFinal: true);
                 if (ActionData.BreakDamage > 0f) target.TakeBreakDamage(ActionData.BreakDamage);
             }
@@ -83,6 +85,7 @@ namespace KyndeBlade.Combat
                     if (p != null && p.IsAlive())
                     {
                         float damage = CombatCalculator.CalculateDamage(executor, p, this);
+                        damage = tm.ApplyCritToDamage(damage, out _);
                         p.ApplyCustomDamage(damage, executor, damageAlreadyFinal: true);
                     }
                 }
