@@ -1,6 +1,6 @@
-# Kynde Blade 16 Bit - Unity + Legacy
+# Kynde Blade 16 Bit - Unity-First (see KyndeBlade_Unity/)
 
-# Unity
+# Unity - keeps repo thin; never commit generated/cache (Git Flow)
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -32,12 +32,12 @@ sysinfo.txt
 *.unitypackage
 *.app
 
-# Legacy Unreal Engine
-legacy/Binaries/
-legacy/DerivedDataCache/
-legacy/Intermediate/
-legacy/Saved/
-legacy/Build/
+# ProjectArchive: Unreal Engine (ProjectArchive/legacy) — Unity Hub sees only KyndeBlade_Unity
+ProjectArchive/legacy/Binaries/
+ProjectArchive/legacy/DerivedDataCache/
+ProjectArchive/legacy/Intermediate/
+ProjectArchive/legacy/Saved/
+ProjectArchive/legacy/Build/
 
 # IDE
 .vscode/

@@ -5,7 +5,7 @@ A **16-bit style** turn-based RPG with real-time combat mechanics, built in **Un
 ## Quick Start
 
 1. **Open in Unity** — Unity 6.3 LTS (6000.3) or Unity 2022.3 LTS
-   - File → Open Project → Select this folder (the repo root)
+   - File → Open Project → Select the **KyndeBlade_Unity** folder (the Unity project root, inside this repo)
 2. **Create a scene** — File → New Scene
 3. **Add GameManager** — Create empty GameObject, add `KyndeBladeGameManager` component
 4. **Press Play** — Characters auto-spawn, combat starts, UI and feedback auto-create
@@ -15,26 +15,20 @@ A **16-bit style** turn-based RPG with real-time combat mechanics, built in **Un
 ## Project Structure
 
 ```
-Kynde Blade 16 Bit/
-├── Assets/                    # Unity project (primary)
-│   ├── Scripts/
-│   │   ├── Characters/        # MedievalCharacter, enemies
-│   │   ├── Combat/            # TurnManager, CombatAction, StatusEffect
-│   │   ├── Game/              # KyndeBladeGameManager
-│   │   └── Editor/
-│   └── Scenes/
-├── ProjectSettings/
-├── packages/
-├── docs/                      # Design documents
-│   ├── VISUAL_DESIGN_ALAN_LEE.md
-│   ├── GAMEPLAY_DESIGN.md
-│   ├── CAMPAIGN_LEVEL_DESIGN.md
-│   ├── UX_AND_GAME_DESIGN_BASICS.md
-│   └── ...
-├── legacy/                    # Unreal Engine 5.7 (archived)
-│   ├── Source/
-│   ├── Config/
-│   └── KyndeBlade.uproject
+Kynde Blade 16 Bit/             # Repo root
+├── KyndeBlade_Unity/          # Unity project root (open this in Unity Hub)
+│   ├── Assets/
+│   │   ├── _Project/          # Feature-based layout
+│   │   │   ├── Code/          # Core, Combat, UI assemblies
+│   │   │   ├── Art/           # Sprites, animations
+│   │   │   └── Data/          # ScriptableObjects (enemy stats, etc.)
+│   │   └── Scenes/
+│   ├── ProjectSettings/
+│   └── Packages/
+├── ProjectArchive/            # Docs + non-Unity (keeps root clean for Unity Hub)
+│   ├── docs/                  # Design documents
+│   ├── legacy/                # Unreal Engine 5.7
+│   └── GodotPrototype/        # Godot prototype
 └── README.md
 ```
 
@@ -48,21 +42,21 @@ Kynde Blade 16 Bit/
 
 ## Design Docs
 
+Design docs live in **ProjectArchive/docs/** so the repo root stays clean (Unity Hub sees only KyndeBlade_Unity).
+
 | Doc | Description |
 |-----|-------------|
-| `docs/VISUAL_DESIGN_ALAN_LEE.md` | 16-bit art direction, palettes, sprites |
-| `docs/GAMEPLAY_DESIGN.md` | Combat mechanics, Haunting Actions |
-| `docs/CAMPAIGN_LEVEL_DESIGN.md` | Piers Plowman campaign structure |
-| `docs/UX_AND_GAME_DESIGN_BASICS.md` | Hodent + beginner guide principles |
+| `ProjectArchive/docs/VISUAL_DESIGN_ALAN_LEE.md` | 16-bit art direction, palettes, sprites |
+| `ProjectArchive/docs/GAMEPLAY_DESIGN.md` | Combat mechanics, Haunting Actions |
+| `ProjectArchive/docs/CODE_ARCHITECTURE.md` | One-script-one-job, refactor plan |
 
-## Legacy (Unreal Engine)
+## ProjectArchive (Unreal, Godot, Docs)
 
-The original Unreal Engine 5.7 C++ project is in `legacy/`. To build:
+Non-Unity work and docs live in **ProjectArchive/** so Unity Hub recognizes the project from **KyndeBlade_Unity/** only.
 
-```bash
-cd legacy
-./build_5.7.sh [path/to/UnrealEngine]
-```
+- **ProjectArchive/legacy/** — Unreal Engine 5.7 C++. To build: `cd ProjectArchive/legacy && ./build_5.7.sh [path/to/UnrealEngine]`
+- **ProjectArchive/GodotPrototype/** — Godot prototype
+- **ProjectArchive/docs/** — Design and architecture docs
 
 ## License
 
