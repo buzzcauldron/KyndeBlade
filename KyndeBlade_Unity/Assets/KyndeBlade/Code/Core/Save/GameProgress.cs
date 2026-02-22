@@ -57,6 +57,10 @@ namespace KyndeBlade
         public bool HasEverHadHunger;
         [Tooltip("Incremented on wrong dialogue choice (sin-aligned or Green Chapel refuse). Applies cumulative damage-taken penalty.")]
         public int EthicalMisstepCount;
+        [Tooltip("Wode-Wo positive arc: 0=none, 1=Baby, 2=Care, 3=Grown, 4=Complete.")]
+        public int WodeWoArcStage;
+        [Tooltip("True when player has entered the W O D E passcode; enables the full Wode-Wo line.")]
+        public bool WodeWoUnlocked;
 
         public static GameProgress CreateNew(string startLocationId)
         {
@@ -93,7 +97,9 @@ namespace KyndeBlade
                 EldeHitsAccrued = EldeHitsAccrued,
                 RunAppearanceSeed = RunAppearanceSeed,
                 HasEverHadHunger = HasEverHadHunger,
-                EthicalMisstepCount = EthicalMisstepCount
+                EthicalMisstepCount = EthicalMisstepCount,
+                WodeWoArcStage = WodeWoArcStage,
+                WodeWoUnlocked = WodeWoUnlocked
             };
             return JsonUtility.ToJson(d);
         }
@@ -121,6 +127,8 @@ namespace KyndeBlade
             p.RunAppearanceSeed = d.RunAppearanceSeed;
             p.HasEverHadHunger = d.HasEverHadHunger;
             p.EthicalMisstepCount = d.EthicalMisstepCount;
+            p.WodeWoArcStage = d.WodeWoArcStage;
+            p.WodeWoUnlocked = d.WodeWoUnlocked;
             return p;
         }
     }

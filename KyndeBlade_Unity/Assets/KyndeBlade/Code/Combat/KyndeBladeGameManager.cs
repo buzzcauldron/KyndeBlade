@@ -361,6 +361,7 @@ namespace KyndeBlade
             _isSinMinibossEncounter = true;
             _lastEncounterConfig = null;
             _lastEncounterLocation = location;
+            _lastEncounterHadGreenKnight = false;
             _playerChars.Clear();
             _enemyChars.Clear();
 
@@ -456,6 +457,8 @@ namespace KyndeBlade
         {
             if (UnityEngine.Object.FindFirstObjectByType<SaveManager>() == null)
                 new GameObject("SaveManager").AddComponent<SaveManager>();
+            if (UnityEngine.Object.FindFirstObjectByType<SecretCodeListener>() == null)
+                new GameObject("SecretCodeListener").AddComponent<SecretCodeListener>();
             if (UnityEngine.Object.FindFirstObjectByType<MusicManager>() == null)
                 new GameObject("MusicManager").AddComponent<MusicManager>();
             if (UnityEngine.Object.FindFirstObjectByType<AgingManager>() == null)

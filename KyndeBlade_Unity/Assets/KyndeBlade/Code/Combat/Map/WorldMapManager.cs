@@ -185,7 +185,32 @@ namespace KyndeBlade
             }
             else if (NarrativeManager != null)
             {
-                if (loc.StoryBeatSequenceOnArrival != null && loc.StoryBeatSequenceOnArrival.Count > 0)
+                bool wodeUnlocked = SaveManager != null && SaveManager.IsWodeWoUnlocked;
+                int wodeStage = SaveManager != null ? SaveManager.WodeWoArcStage : 0;
+                bool hasWodeCompleteBeat = loc.StoryBeatOnArrivalWhenWodeWoComplete != null;
+
+                // Wode-Wo positive arc (only when passcode entered): complete beat, capstone, or sequence advance
+                if (wodeUnlocked && hasWodeCompleteBeat && wodeStage >= 4)
+                {
+                    NarrativeManager.ShowStoryBeat(loc.StoryBeatOnArrivalWhenWodeWoComplete, () => EnterLocationCombatOrScene(loc));
+                }
+                else if (wodeUnlocked && hasWodeCompleteBeat && wodeStage == 3)
+                {
+                    NarrativeManager.ShowStoryBeat(loc.StoryBeatOnArrivalWhenWodeWoComplete, () =>
+                    {
+                        if (SaveManager != null) SaveManager.SetWodeWoArcStage(4);
+                        EnterLocationCombatOrScene(loc);
+                    });
+                }
+                else if (wodeUnlocked && loc.AdvancesWodeWoArcOnSequenceComplete && loc.StoryBeatSequenceOnArrival != null && loc.StoryBeatSequenceOnArrival.Count > 0 && wodeStage < 3)
+                {
+                    NarrativeManager.ShowStoryBeatSequence(loc.StoryBeatSequenceOnArrival, () =>
+                    {
+                        if (SaveManager != null) SaveManager.SetWodeWoArcStage(3);
+                        EnterLocationCombatOrScene(loc);
+                    });
+                }
+                else if (loc.StoryBeatSequenceOnArrival != null && loc.StoryBeatSequenceOnArrival.Count > 0)
                 {
                     NarrativeManager.ShowStoryBeatSequence(loc.StoryBeatSequenceOnArrival, () => EnterLocationCombatOrScene(loc));
                 }
@@ -212,6 +237,11 @@ namespace KyndeBlade
                 if (!isCorrect)
                     SaveManager.IncrementEthicalMisstep();
             }
+            ContinueAfterChoice(loc, transitionToLocationId, associatedSin, isCorrect);
+        }
+
+        void ContinueAfterChoice(LocationNode loc, string transitionToLocationId, SinType associatedSin, bool isCorrect)
+        {
             if (!string.IsNullOrEmpty(transitionToLocationId))
             {
                 var targetLoc = GetLocation(transitionToLocationId);
