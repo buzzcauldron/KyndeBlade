@@ -1,0 +1,18 @@
+{
+    "name": "KyndeBlade.UI",
+    "rootNamespace": "KyndeBlade",
+    "references": [
+        "KyndeBlade.Core",
+        "KyndeBlade.Combat",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
