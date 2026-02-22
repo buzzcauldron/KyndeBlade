@@ -17,7 +17,7 @@ namespace KyndeBlade
         void Awake()
         {
             if (DialogueSystem == null)
-                DialogueSystem = FindObjectOfType<DialogueSystem>();
+                DialogueSystem = UnityEngine.Object.FindFirstObjectByType<DialogueSystem>();
         }
 
         public void ShowStoryBeat(StoryBeat beat)

@@ -9,13 +9,19 @@ namespace KyndeBlade
     {
         const string Vision2Path = "Assets/Resources/Data/Vision2";
 
-        [MenuItem("KyndeBlade/Ensure Field of Grace (Vision II)")]
-        static void CreateMVPLevelData()
+        /// <summary>Called from CreateVision1LevelData when creating MVP or full level data.</summary>
+        public static void Create()
         {
             EnsureFieldOfGraceExists();
             LinkYearsPassToFieldOfGrace();
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+
+        [MenuItem("KyndeBlade/Ensure Field of Grace (Vision II)")]
+        static void CreateMVPLevelData()
+        {
+            Create();
         }
 
         static void EnsureFieldOfGraceExists()

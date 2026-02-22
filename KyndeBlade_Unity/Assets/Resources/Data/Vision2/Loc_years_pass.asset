@@ -19,7 +19,8 @@ MonoBehaviour:
   PassusIndex: 12
   PassusTitle: Passus XII-XIII
   SceneName: 
-  NextLocationIds: []
+  NextLocationIds:
+  - field_of_grace
   Encounter: {fileID: 11400000, guid: fcc2e2f99774e4258b54f716ae76cc1a, type: 2}
   CombatHazards: []
   Rewards: {fileID: 0}

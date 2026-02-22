@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,6 +27,7 @@ namespace KyndeBlade
         public event Action<LocationNode> OnLocationEntered;
 
         Dictionary<string, LocationNode> _locationById;
+        bool _lazyInitDone;
 
         void Awake()
         {
@@ -65,28 +67,44 @@ namespace KyndeBlade
 
         void Start()
         {
-            if (GameManager == null) GameManager = FindObjectOfType<KyndeBladeGameManager>();
-            if (NarrativeManager == null) NarrativeManager = FindObjectOfType<NarrativeManager>();
-            if (SaveManager == null) SaveManager = FindObjectOfType<SaveManager>();
-            if (MusicManager == null) MusicManager = FindObjectOfType<MusicManager>();
-            if (CurrentLocation == null)
+            ResolveRefs();
+            TryLazyInit();
+        }
+
+        void Update()
+        {
+            if (_lazyInitDone) return;
+            ResolveRefs();
+            TryLazyInit();
+        }
+
+        void ResolveRefs()
+        {
+            if (GameManager == null) GameManager = UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
+            if (NarrativeManager == null) NarrativeManager = UnityEngine.Object.FindFirstObjectByType<NarrativeManager>();
+            if (SaveManager == null) SaveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+            if (MusicManager == null) MusicManager = UnityEngine.Object.FindFirstObjectByType<MusicManager>();
+        }
+
+        void TryLazyInit()
+        {
+            if (_lazyInitDone || CurrentLocation != null) return;
+            LocationNode toSet = StartLocation;
+            if (SaveManager != null && !string.IsNullOrEmpty(SaveManager.CurrentProgress?.CurrentLocationId))
             {
-                LocationNode toSet = StartLocation;
-                if (SaveManager != null && !string.IsNullOrEmpty(SaveManager.CurrentProgress?.CurrentLocationId))
+                var saved = GetLocation(SaveManager.CurrentProgress.CurrentLocationId);
+                if (saved != null) toSet = saved;
+            }
+            if (toSet != null)
+            {
+                SetCurrentLocation(toSet);
+                if (SaveManager != null && toSet.NextLocationIds != null)
                 {
-                    var saved = GetLocation(SaveManager.CurrentProgress.CurrentLocationId);
-                    if (saved != null) toSet = saved;
-                }
-                if (toSet != null)
-                {
-                    SetCurrentLocation(toSet);
-                    if (SaveManager != null)
-                    {
-                        foreach (var nextId in toSet.NextLocationIds ?? new List<string>())
-                            SaveManager.UnlockLocation(nextId);
-                    }
+                    foreach (var nextId in toSet.NextLocationIds)
+                        SaveManager.UnlockLocation(nextId);
                 }
             }
+            _lazyInitDone = true;
         }
 
         public void SetCurrentLocation(LocationNode loc)
@@ -145,7 +163,7 @@ namespace KyndeBlade
             SetCurrentLocation(loc);
             OnLocationEntered?.Invoke(loc);
 
-            var music = MusicManager != null ? MusicManager : FindObjectOfType<MusicManager>();
+            var music = MusicManager != null ? MusicManager : UnityEngine.Object.FindFirstObjectByType<MusicManager>();
             if (music != null && !string.IsNullOrEmpty(loc.MusicThemeOnArrival))
                 music.PlayTheme(loc.MusicThemeOnArrival);
 
@@ -200,7 +218,7 @@ namespace KyndeBlade
                 if (targetLoc != null)
                 {
                     if (SaveManager != null) SaveManager.SetOrfeoOtherworldTriggered(true);
-                    var music = MusicManager != null ? MusicManager : FindObjectOfType<MusicManager>();
+                    var music = MusicManager != null ? MusicManager : UnityEngine.Object.FindFirstObjectByType<MusicManager>();
                     if (music != null)
                         music.PlayOmenThenOrfeo(() => TransitionTo(targetLoc));
                     else
@@ -252,9 +270,12 @@ namespace KyndeBlade
         {
             var mapCanvas = GameObject.Find("MapCanvas");
             var combatCanvas = GameObject.Find("CombatCanvas");
+            // #region agent log
+            try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"WorldMapManager.cs:ShowMapHideCombat\",\"message\":\"show map\",\"data\":{\"mapFound\":" + (mapCanvas != null ? "true" : "false") + ",\"combatFound\":" + (combatCanvas != null ? "true" : "false") + ",\"locId\":" + (CurrentLocation != null ? "\"" + CurrentLocation.LocationId + "\"" : "null") + "},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H2\"}\n"); } catch { }
+            // #endregion
             if (mapCanvas != null) mapCanvas.SetActive(true);
             if (combatCanvas != null) combatCanvas.SetActive(false);
-            var mapUI = FindObjectOfType<MapLevelSelectUI>();
+            var mapUI = UnityEngine.Object.FindFirstObjectByType<MapLevelSelectUI>();
             if (mapUI != null && CurrentLocation != null)
                 mapUI.Refresh(CurrentLocation);
         }

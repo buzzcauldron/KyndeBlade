@@ -1,0 +1,22 @@
+---
+description: Organizing Unity game architecture – separation of concerns, modularity, readability (DEV.to guide)
+globs: KyndeBlade_Unity/**/*.cs
+---
+
+# Organizing architecture (Unity games)
+
+When adding or refactoring Unity code, follow these principles from [Organizing architecture for games on Unity](https://dev.to/devsdaddy/organizing-architecture-for-games-on-unity-laying-out-the-important-things-that-matter-4d4p):
+
+1. **Separation of concerns**  
+   Each component or class should have one clear responsibility. Avoid mixing data, input handling, and presentation in the same type when it hurts readability or reuse.
+
+2. **Modularity**  
+   Design so parts are independent and replaceable. Prefer interfaces or small contracts where it reduces coupling without over-engineering.
+
+3. **Readability**  
+   Use clear names, keep methods and files focused, add brief comments where intent isn’t obvious. Code should be easy to understand and change.
+
+4. **Don’t over-complicate**  
+   Use the simplest approach that meets the requirement. Introduce patterns (Observer, Command, DI, Pub/Sub) when they solve real duplication or coupling problems, not by default.
+
+**Reducing coupling:** Prefer **Observer** or **Pub/Sub** (event channels) when multiple listeners need to react to one source. Use **Command** when you need undo/redo or queued actions. Consider **Dependency Injection** (or explicit constructor/setter injection) to make dependencies visible and testable. Unity is component-oriented; adapt these patterns to the engine instead of forcing a single global architecture (e.g. full MVC/MVVM everywhere).

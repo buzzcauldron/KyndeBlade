@@ -33,7 +33,13 @@ namespace KyndeBlade
         void OnDisable()
         {
             if (_mat != null)
-                DestroyImmediate(_mat);
+            {
+                if (Application.isPlaying)
+                    Destroy(_mat);
+                else
+                    DestroyImmediate(_mat);
+                _mat = null;
+            }
         }
 
         void OnRenderImage(RenderTexture src, RenderTexture dest)

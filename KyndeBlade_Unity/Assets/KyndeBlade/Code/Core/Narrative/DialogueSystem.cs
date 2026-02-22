@@ -93,14 +93,14 @@ namespace KyndeBlade
 
             var btnGo = new GameObject("ContinueButton");
             btnGo.transform.SetParent(rect, false);
+            var btnImgForRect = btnGo.AddComponent<Image>();
             var btn = btnGo.AddComponent<Button>();
-            var btnRect = btn.GetComponent<RectTransform>();
+            var btnRect = btnGo.GetComponent<RectTransform>();
             btnRect.anchorMin = new Vector2(0.8f, 0.02f);
             btnRect.anchorMax = new Vector2(0.98f, 0.12f);
             btnRect.offsetMin = Vector2.zero;
             btnRect.offsetMax = Vector2.zero;
-            var btnImg = btnGo.AddComponent<Image>();
-            btnImg.color = ManuscriptUITheme.ParchmentAged;
+            btnImgForRect.color = ManuscriptUITheme.ParchmentAged;
             var btnTextGo = new GameObject("Text");
             btnTextGo.transform.SetParent(btnGo.transform, false);
             var btnText = btnTextGo.AddComponent<Text>();

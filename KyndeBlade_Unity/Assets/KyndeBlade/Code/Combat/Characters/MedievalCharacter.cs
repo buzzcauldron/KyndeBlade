@@ -159,7 +159,7 @@ namespace KyndeBlade
                 }
                 else
                 {
-                    var tm = UnityEngine.Object.FindObjectOfType<TurnManager>();
+                    var tm = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
                     bool isPlayer = tm != null && tm.PlayerCharacters != null && tm.PlayerCharacters.Contains(this);
                     sr.color = isPlayer ? new Color(0.35f, 0.45f, 0.55f) : new Color(0.55f, 0.35f, 0.3f);
                 }
@@ -234,7 +234,7 @@ namespace KyndeBlade
                 : Mathf.Max(0f, damage - Stats.Defense);
             if (_cachedPad != null && _cachedPad.IsPlayer)
             {
-                if (_cachedSaveManager == null) _cachedSaveManager = UnityEngine.Object.FindObjectOfType<SaveManager>();
+                if (_cachedSaveManager == null) _cachedSaveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
                 if (_cachedSaveManager != null)
                     actualDamage *= _cachedSaveManager.GetDamageTakenMultiplier();
             }
@@ -273,8 +273,8 @@ namespace KyndeBlade
 
             if (attacker is EldeCharacter)
             {
-                if (_cachedSaveManager == null) _cachedSaveManager = UnityEngine.Object.FindObjectOfType<SaveManager>();
-                if (_cachedAgingManager == null) _cachedAgingManager = UnityEngine.Object.FindObjectOfType<AgingManager>();
+                if (_cachedSaveManager == null) _cachedSaveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+                if (_cachedAgingManager == null) _cachedAgingManager = UnityEngine.Object.FindFirstObjectByType<AgingManager>();
                 if (_cachedSaveManager != null && _cachedAgingManager != null)
                 {
                     _cachedSaveManager.IncrementEldeHitsAccrued();
@@ -313,7 +313,7 @@ namespace KyndeBlade
             if (age != null) amount *= age.Data.StaminaRegenModifier;
             var scar = GetStatusEffect(StatusEffectType.HungerScar);
             if (scar != null) amount *= scar.Data.StaminaRegenModifier;
-            if (_cachedPoverty == null) _cachedPoverty = UnityEngine.Object.FindObjectOfType<PovertyManager>();
+            if (_cachedPoverty == null) _cachedPoverty = UnityEngine.Object.FindFirstObjectByType<PovertyManager>();
             if (_cachedPoverty != null) amount *= _cachedPoverty.GetStaminaRegenMultiplier();
             Stats.CurrentStamina = Mathf.Min(Stats.MaxStamina, Stats.CurrentStamina + amount);
             OnStaminaChanged?.Invoke(Stats.CurrentStamina, Stats.MaxStamina);
@@ -331,7 +331,7 @@ namespace KyndeBlade
             if (age != null) amount *= age.Data.KyndeGenerationModifier;
             var scar = GetStatusEffect(StatusEffectType.HungerScar);
             if (scar != null) amount *= scar.Data.KyndeGenerationModifier;
-            if (_cachedPoverty == null) _cachedPoverty = UnityEngine.Object.FindObjectOfType<PovertyManager>();
+            if (_cachedPoverty == null) _cachedPoverty = UnityEngine.Object.FindFirstObjectByType<PovertyManager>();
             if (_cachedPoverty != null) amount *= _cachedPoverty.GetKyndeGenMultiplier();
             Stats.CurrentKynde = Mathf.Min(Stats.MaxKynde, Stats.CurrentKynde + amount);
             OnKyndeChanged?.Invoke(Stats.CurrentKynde, Stats.MaxKynde);
@@ -433,10 +433,10 @@ namespace KyndeBlade
         public void ApplyHunger(int stacks = 1, float duration = 0f)
         {
             ApplyStatusEffect(StatusEffect.CreateHungerEffect(duration, stacks));
-            var tm = UnityEngine.Object.FindObjectOfType<TurnManager>();
+            var tm = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (tm != null && tm.PlayerCharacters != null && tm.PlayerCharacters.Contains(this))
             {
-                var save = UnityEngine.Object.FindObjectOfType<SaveManager>();
+                var save = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
                 save?.MarkHasEverHadHunger();
             }
         }
