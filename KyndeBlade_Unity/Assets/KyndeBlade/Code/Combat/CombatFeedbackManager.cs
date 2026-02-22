@@ -11,23 +11,39 @@ namespace KyndeBlade
         public CombatFeedback Feedback;
 
         Dictionary<MedievalCharacter, (Action<MedievalCharacter, bool>, Action<MedievalCharacter, bool>, Action<MedievalCharacter, MedievalCharacter, float>)> _handlers = new Dictionary<MedievalCharacter, (Action<MedievalCharacter, bool>, Action<MedievalCharacter, bool>, Action<MedievalCharacter, MedievalCharacter, float>)>();
+        bool _subscribed;
 
         void Start()
         {
-            if (TurnManager == null) TurnManager = FindObjectOfType<TurnManager>();
-            if (Feedback == null) Feedback = FindObjectOfType<CombatFeedback>();
+            ResolveRefs();
+            TrySubscribe();
+        }
 
-            if (TurnManager != null)
-            {
-                TurnManager.OnTurnChanged += OnTurnChanged;
-                TurnManager.OnCombatEnded += UnsubscribeAll;
-            }
+        void Update()
+        {
+            if (_subscribed) return;
+            ResolveRefs();
+            TrySubscribe();
+        }
+
+        void ResolveRefs()
+        {
+            if (TurnManager == null) TurnManager = GameRuntime.TurnManager ?? UnityEngine.Object.FindFirstObjectByType<TurnManager>();
+            if (Feedback == null) Feedback = UnityEngine.Object.FindFirstObjectByType<CombatFeedback>();
+        }
+
+        void TrySubscribe()
+        {
+            if (TurnManager == null || _subscribed) return;
+            _subscribed = true;
+            TurnManager.OnTurnChanged += OnTurnChanged;
+            TurnManager.OnCombatEnded += UnsubscribeAll;
         }
 
         void OnDestroy()
         {
             UnsubscribeAll();
-            if (TurnManager != null) { TurnManager.OnTurnChanged -= OnTurnChanged; TurnManager.OnCombatEnded -= UnsubscribeAll; }
+            if (TurnManager != null && _subscribed) { TurnManager.OnTurnChanged -= OnTurnChanged; TurnManager.OnCombatEnded -= UnsubscribeAll; _subscribed = false; }
         }
 
         void OnTurnChanged(MedievalCharacter _)

@@ -6,7 +6,8 @@ using KyndeBlade.Combat;
 
 namespace KyndeBlade
 {
-    /// <summary>Main game bootstrap. Wires systems per Hodent + Beginner guide.</summary>
+    /// <summary>Main game bootstrap. Wires systems per Hodent + Beginner guide. Runs first so all pipeline objects exist before other Start()s. The main play scene must contain one KyndeBladeGameManager and be the first scene in Build Settings.</summary>
+    [DefaultExecutionOrder(-1000)]
     public class KyndeBladeGameManager : MonoBehaviour
     {
         [Header("References")]
@@ -36,6 +37,18 @@ namespace KyndeBlade
         [Tooltip("Start with map/level select instead of auto-spawning combat. Phase 1: hub mode.")]
         public bool StartWithMap = true;
 
+        /// <summary>Built-in shader that draws a single color (works with SpriteRenderer). Tries Unity 6 and legacy names.</summary>
+        static Shader GetFallbackColorShader()
+        {
+            var names = new[] { "Unlit/Color", "Unlit/SingleColor", "Sprites/Default", "Legacy Shaders/VertexLit" };
+            foreach (var name in names)
+            {
+                var s = Shader.Find(name);
+                if (s != null) return s;
+            }
+            return null;
+        }
+
         List<MedievalCharacter> _playerChars = new List<MedievalCharacter>();
         List<MedievalCharacter> _enemyChars = new List<MedievalCharacter>();
         EncounterConfig _lastEncounterConfig;
@@ -43,26 +56,47 @@ namespace KyndeBlade
         bool _isSinMinibossEncounter;
         bool _lastEncounterHadGreenKnight;
 
-        /// <summary>Finds or creates TurnManager, ensures combat/map pipelines, then either starts map or auto-spawns test party.</summary>
-        void Start()
+        /// <summary>Creates TurnManager and all pipeline objects so they exist before any other script's Start() runs.</summary>
+        void Awake()
         {
             if (TurnManager == null)
-                TurnManager = FindObjectOfType<TurnManager>();
-
+                TurnManager = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (TurnManager == null)
             {
                 var go = new GameObject("TurnManager");
                 TurnManager = go.AddComponent<TurnManager>();
             }
-
-            if (Settings != null) TurnManager.Settings = Settings;
-
             EnsureCombatPipeline();
             EnsureMapPipeline();
+            RegisterGameRuntime();
+        }
+
+        void RegisterGameRuntime()
+        {
+            GameRuntime.TurnManager = TurnManager;
+            GameRuntime.GameManager = this;
+            GameRuntime.SaveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+            GameRuntime.CombatUI = UnityEngine.Object.FindFirstObjectByType<CombatUI>();
+            GameRuntime.GameStateManager = UnityEngine.Object.FindFirstObjectByType<GameStateManager>();
+            GameRuntime.WorldMapManager = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
+            GameRuntime.NarrativeManager = UnityEngine.Object.FindFirstObjectByType<NarrativeManager>();
+            GameRuntime.MusicManager = UnityEngine.Object.FindFirstObjectByType<MusicManager>();
+            GameRuntime.DialogueSystem = UnityEngine.Object.FindFirstObjectByType<DialogueSystem>();
+        }
+
+        void OnDestroy()
+        {
+            GameRuntime.Clear();
+        }
+
+        /// <summary>Assigns settings, applies StartWithMap, and optionally starts delayed auto-spawn.</summary>
+        void Start()
+        {
+            if (Settings != null && TurnManager != null) TurnManager.Settings = Settings;
 
             if (StartWithMap)
             {
-                var wm = FindObjectOfType<WorldMapManager>();
+                var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
                 if (wm != null && wm.StartLocation != null)
                 {
                     wm.SetCurrentLocation(wm.StartLocation);
@@ -200,7 +234,7 @@ namespace KyndeBlade
             if (bossPrefab != null)
                 SpawnEnemyFromPrefab(bossPrefab, config.BossPosition);
 
-            var saveManager = FindObjectOfType<SaveManager>();
+            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             bool atGreenChapel = location != null && string.Equals(location.LocationId, "green_chapel", System.StringComparison.OrdinalIgnoreCase);
             _lastEncounterHadGreenKnight = false;
 
@@ -232,9 +266,9 @@ namespace KyndeBlade
             if (saveManager?.CurrentProgress != null && !_lastEncounterHadGreenKnight)
                 saveManager.CurrentProgress.EncountersSinceLastGreenKnight++;
 
-            var hazardMgr = FindObjectOfType<CombatHazardManager>();
-            if (hazardMgr == null) new GameObject("CombatHazardManager").AddComponent<CombatHazardManager>();
-            hazardMgr = FindObjectOfType<CombatHazardManager>();
+            var hazardMgr = UnityEngine.Object.FindFirstObjectByType<CombatHazardManager>();
+            if (hazardMgr == null)
+                hazardMgr = new GameObject("CombatHazardManager").AddComponent<CombatHazardManager>();
             var hazards = config.Hazards != null && config.Hazards.Count > 0
                 ? config.Hazards
                 : (location?.CombatHazards);
@@ -254,7 +288,7 @@ namespace KyndeBlade
         /// <summary>Spawn party in poem order: Wille (always), Piers (after piers), Conscience (after quest_do_wel).</summary>
         void SpawnPartyInPoemOrder(LocationNode location)
         {
-            var saveManager = FindObjectOfType<SaveManager>();
+            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             bool hasPiers = saveManager != null && saveManager.HasVisited("piers");
             bool hasConscience = saveManager != null && (
                 saveManager.HasVisited("quest_do_wel") ||
@@ -279,7 +313,7 @@ namespace KyndeBlade
         /// <summary>Applies aging stat modifiers to party and re-applies hunger scar.</summary>
         void ApplyAgeToParty()
         {
-            var aging = FindObjectOfType<AgingManager>();
+            var aging = UnityEngine.Object.FindFirstObjectByType<AgingManager>();
             if (aging != null && _playerChars != null && _playerChars.Count > 0)
                 aging.ApplyAgeToParty(_playerChars);
             ApplyHungerScarToParty();
@@ -288,7 +322,7 @@ namespace KyndeBlade
         /// <summary>If the run has ever had hunger, applies HungerScar status to all party members.</summary>
         void ApplyHungerScarToParty()
         {
-            var save = FindObjectOfType<SaveManager>();
+            var save = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             if (save?.CurrentProgress?.HasEverHadHunger != true || _playerChars == null) return;
             foreach (var c in _playerChars)
             {
@@ -301,7 +335,7 @@ namespace KyndeBlade
         /// <summary>Creates FaeAppearanceManager if missing (fairy transformation visuals).</summary>
         void EnsureFaeAppearanceManager()
         {
-            var fae = FindObjectOfType<FaeAppearanceManager>();
+            var fae = UnityEngine.Object.FindFirstObjectByType<FaeAppearanceManager>();
             if (fae == null)
             {
                 var go = new GameObject("FaeAppearanceManager");
@@ -336,7 +370,7 @@ namespace KyndeBlade
             if (prefab != null)
                 SpawnEnemyFromPrefab(prefab, new Vector3(4f, 0f, 0f));
 
-            var hazardMgr = FindObjectOfType<CombatHazardManager>();
+            var hazardMgr = UnityEngine.Object.FindFirstObjectByType<CombatHazardManager>();
             if (hazardMgr != null && location?.CombatHazards != null && location.CombatHazards.Count > 0)
                 hazardMgr.SetHazards(location.CombatHazards);
 
@@ -420,20 +454,20 @@ namespace KyndeBlade
         /// <summary>Creates SaveManager, MusicManager, Aging, Poverty, Narrative, Dialogue, and optionally WorldMap + MapLevelSelectUI.</summary>
         void EnsureMapPipeline()
         {
-            if (FindObjectOfType<SaveManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<SaveManager>() == null)
                 new GameObject("SaveManager").AddComponent<SaveManager>();
-            if (FindObjectOfType<MusicManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<MusicManager>() == null)
                 new GameObject("MusicManager").AddComponent<MusicManager>();
-            if (FindObjectOfType<AgingManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<AgingManager>() == null)
                 new GameObject("AgingManager").AddComponent<AgingManager>();
-            if (FindObjectOfType<PovertyManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<PovertyManager>() == null)
                 new GameObject("PovertyManager").AddComponent<PovertyManager>();
-            if (FindObjectOfType<NarrativeManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<NarrativeManager>() == null)
             {
                 var go = new GameObject("NarrativeManager");
                 go.AddComponent<NarrativeManager>();
             }
-            if (FindObjectOfType<DialogueSystem>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<DialogueSystem>() == null)
             {
                 var canvas = new GameObject("DialogueCanvas");
                 canvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
@@ -441,18 +475,18 @@ namespace KyndeBlade
                 canvas.AddComponent<GraphicRaycaster>();
                 canvas.AddComponent<DialogueSystem>();
             }
-            var nm = FindObjectOfType<NarrativeManager>();
-            var ds = FindObjectOfType<DialogueSystem>();
+            var nm = UnityEngine.Object.FindFirstObjectByType<NarrativeManager>();
+            var ds = UnityEngine.Object.FindFirstObjectByType<DialogueSystem>();
             if (nm != null && ds != null && nm.DialogueSystem == null)
                 nm.DialogueSystem = ds;
             if (StartWithMap)
             {
-                if (FindObjectOfType<WorldMapManager>() == null)
+                if (UnityEngine.Object.FindFirstObjectByType<WorldMapManager>() == null)
                 {
                     var wmGo = new GameObject("WorldMapManager");
                     wmGo.AddComponent<WorldMapManager>();
                 }
-                if (FindObjectOfType<MapLevelSelectUI>() == null)
+                if (UnityEngine.Object.FindFirstObjectByType<MapLevelSelectUI>() == null)
                 {
                     var mapCanvas = new GameObject("MapCanvas");
                     mapCanvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
@@ -468,13 +502,13 @@ namespace KyndeBlade
         {
             EnsureCombatCamera();
             EnsureCombatBackground();
-            if (FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
             {
                 var es = new GameObject("EventSystem");
                 es.AddComponent<UnityEngine.EventSystems.EventSystem>();
                 es.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
             }
-            if (FindObjectOfType<CombatUI>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<CombatUI>() == null)
             {
                 var canvas = new GameObject("CombatCanvas");
                 canvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
@@ -482,17 +516,17 @@ namespace KyndeBlade
                 canvas.AddComponent<GraphicRaycaster>();
                 canvas.AddComponent<CombatUI>();
             }
-            if (FindObjectOfType<CombatFeedback>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<CombatFeedback>() == null)
             {
                 var go = new GameObject("CombatFeedback");
                 go.AddComponent<AudioSource>();
                 go.AddComponent<CombatFeedback>();
             }
-            if (FindObjectOfType<CombatFeedbackManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<CombatFeedbackManager>() == null)
                 new GameObject("CombatFeedbackManager").AddComponent<CombatFeedbackManager>();
-            if (FindObjectOfType<GameStateManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<GameStateManager>() == null)
                 new GameObject("GameStateManager").AddComponent<GameStateManager>();
-            if (FindObjectOfType<IlluminationManager>() == null)
+            if (UnityEngine.Object.FindFirstObjectByType<IlluminationManager>() == null)
                 new GameObject("IlluminationManager").AddComponent<IlluminationManager>();
         }
 
@@ -505,9 +539,12 @@ namespace KyndeBlade
                 sr = go.AddComponent<SpriteRenderer>();
                 sr.sprite = UnityEngine.Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.one * 0.5f);
                 sr.drawMode = SpriteDrawMode.Simple;
+                var shader = GetFallbackColorShader();
+                if (shader != null)
+                    sr.material = new Material(shader);
             }
 
-            var saveManager = FindObjectOfType<SaveManager>();
+            var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             int seed = saveManager?.CurrentProgress?.RunAppearanceSeed ?? UnityEngine.Random.Range(1, int.MaxValue);
             bool hasHungerScar = saveManager?.CurrentProgress?.HasEverHadHunger ?? false;
             var key = characterKey ?? go.name;
@@ -534,6 +571,9 @@ namespace KyndeBlade
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = UnityEngine.Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.one * 0.5f);
             sr.color = new Color(ManuscriptUITheme.ParchmentAged.r, ManuscriptUITheme.ParchmentAged.g, ManuscriptUITheme.ParchmentAged.b, 0.9f);
+            var shader = GetFallbackColorShader();
+            if (shader != null)
+                sr.material = new Material(shader);
             sr.sortingOrder = -100;
             var cam = Camera.main;
             if (cam != null && cam.orthographic)
@@ -554,7 +594,7 @@ namespace KyndeBlade
             var cam = Camera.main;
             if (cam == null)
             {
-                var existing = UnityEngine.Object.FindObjectOfType<Camera>();
+                var existing = UnityEngine.Object.FindFirstObjectByType<Camera>();
                 if (existing != null)
                 {
                     existing.gameObject.tag = "MainCamera";
@@ -570,6 +610,7 @@ namespace KyndeBlade
                     go.AddComponent<AudioListener>();
                 }
             }
+            cam.gameObject.SetActive(true);
             cam.enabled = true;
             cam.orthographic = true;
             cam.orthographicSize = 5f;
@@ -577,7 +618,18 @@ namespace KyndeBlade
             cam.transform.rotation = Quaternion.identity;
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(0.12f, 0.1f, 0.14f);
-            cam.depth = -1;
+            cam.depth = 100;
+
+            var manuscriptOverlay = cam.GetComponent<ManuscriptOverlayEffect>();
+            if (manuscriptOverlay != null)
+                manuscriptOverlay.enabled = false;
+
+            var pipeline = cam.GetComponent<SixteenBitPipeline>();
+            if (pipeline == null)
+            {
+                pipeline = cam.gameObject.AddComponent<SixteenBitPipeline>();
+                pipeline.ApplyManuscriptOverlay = false;
+            }
         }
 
         /// <summary>Sets UI scale mode and reference resolution for manuscript-style UI.</summary>
