@@ -134,7 +134,7 @@ namespace KyndeBlade
                 var go = new GameObject("GoalText");
                 go.transform.SetParent(transform);
                 var t = go.AddComponent<Text>();
-                t.text = "Defeat all enemies";
+                t.text = GameWorldConstants.GoalDefeatAllEnemies;
                 t.font = DefaultFont;
                 t.fontSize = 24;
                 ManuscriptUITheme.ApplyToText(t);
@@ -234,16 +234,16 @@ namespace KyndeBlade
             RefreshStateText();
             RefreshStaminaKyndeDisplay();
             if (current != null && TurnManager.IsPlayerTurn())
-                SetGoal("Your turn — select an action");
+                SetGoal(GameWorldConstants.GoalYourTurnSelectAction);
             else if (current != null)
-                SetGoal("Enemy turn — prepare to dodge or parry");
+                SetGoal(GameWorldConstants.GoalEnemyTurnPrepare);
         }
 
         void OnCombatEnded()
         {
             RefreshAll();
             bool victory = TurnManager != null && AreAllDefeated(TurnManager.EnemyCharacters);
-            SetGoal(victory ? "Victory!" : "Defeat...");
+            SetGoal(victory ? GameWorldConstants.GoalVictory : GameWorldConstants.GoalDefeat);
             SetState("");
             ClearActionButtons();
         }
@@ -397,13 +397,13 @@ namespace KyndeBlade
             if (StateText == null) return;
             switch (TurnManager?.State)
             {
-                case CombatState.WaitingForInput: SetState("Select action"); break;
-                case CombatState.ExecutingAction: SetState("Executing..."); break;
+                case CombatState.WaitingForInput: SetState(GameWorldConstants.StateSelectAction); break;
+                case CombatState.ExecutingAction: SetState(GameWorldConstants.StateExecuting); break;
                 case CombatState.RealTimeWindow:
                     SetState($"Dodge/Parry! {TurnManager.RealTimeWindowRemaining:F1}s");
                     break;
-                case CombatState.ProcessingResults: SetState("Resolving..."); break;
-                case CombatState.CombatEnded: SetState("Combat ended"); break;
+                case CombatState.ProcessingResults: SetState(GameWorldConstants.StateResolving); break;
+                case CombatState.CombatEnded: SetState(GameWorldConstants.StateCombatEnded); break;
                 default: SetState(""); break;
             }
         }
@@ -423,11 +423,11 @@ namespace KyndeBlade
             if (TurnManager.State == CombatState.CombatEnded)
             {
                 bool victory = AreAllDefeated(TurnManager.EnemyCharacters);
-                SetGoal(victory ? "Victory!" : "Defeat...");
+                SetGoal(victory ? GameWorldConstants.GoalVictory : GameWorldConstants.GoalDefeat);
             }
             else
             {
-                SetGoal("Defeat all enemies");
+                SetGoal(GameWorldConstants.GoalDefeatAllEnemies);
             }
         }
 

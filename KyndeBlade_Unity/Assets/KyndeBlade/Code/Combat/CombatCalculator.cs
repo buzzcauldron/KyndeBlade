@@ -10,7 +10,7 @@ namespace KyndeBlade
     /// </summary>
     public static class CombatCalculator
     {
-        /// <summary>Full damage formula: base power (action or attacker), aging mod, defense mitigation, min 1, 5–10% variance.</summary>
+        /// <summary>Full damage formula: base power, aging mod, defense mitigation, elemental modifier, min damage, variance. See GameWorldConstants.</summary>
         public static float CalculateDamage(MedievalCharacter attacker, MedievalCharacter target, CombatAction action)
         {
             if (attacker == null || target == null) return 0f;
@@ -19,10 +19,24 @@ namespace KyndeBlade
             float agingMod = 1.0f; // In a full refactor, AgingManager feeds into character stats.
 
             float defense = target.Stats.Defense;
-            float finalDamage = Mathf.Max(1f, (basePower * agingMod) - (defense * 0.5f));
+            float raw = (basePower * agingMod) - (defense * GameWorldConstants.DefenseMitigationFactor);
+            float finalDamage = Mathf.Max(GameWorldConstants.MinimumDamage, raw);
 
-            finalDamage *= Random.Range(0.95f, 1.05f);
+            float elementMult = action != null ? GetElementalMultiplier(target, action.ActionData.ElementType) : 1f;
+            finalDamage *= elementMult;
+
+            float v = GameWorldConstants.DamageVarianceHalfRange;
+            finalDamage *= Random.Range(1f - v, 1f + v);
             return finalDamage;
+        }
+
+        /// <summary>Elemental affinity (Expedition 33: weakness 2x, resistance 0.5x). Override per character type via optional IElementAffinity or data. Default 1f.</summary>
+        public static float GetElementalMultiplier(MedievalCharacter target, KyndeElementType element)
+        {
+            if (target == null || element == KyndeElementType.None) return 1f;
+            // Future: target.ElementWeaknesses.Contains(element) -> GameWorldConstants.ElementalWeaknessMultiplier;
+            // target.ElementResistances.Contains(element) -> GameWorldConstants.ElementalResistanceMultiplier;
+            return 1f;
         }
 
         /// <summary>Kynde gained from performing an action (e.g. Strike 10, others 5). Wisdom/age multipliers can be applied here.</summary>

@@ -26,7 +26,7 @@ namespace KyndeBlade
         {
             if (TurnManager == null) TurnManager = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             Phase = TutorialPhase.BasicAttack;
-            SetHint("Select Strike to attack. Defeat all enemies.");
+            SetHint("Select Strike to attack. " + GameWorldConstants.GoalDefeatAllEnemies);
         }
 
         void OnEnable()

@@ -8,7 +8,7 @@ namespace KyndeBlade
     {
         void Start()
         {
-            SetIdentity(CharacterClass.Knight, "The Green Knight", CharacterSoundTheme.Default);
+            SetIdentity(CharacterClass.Knight, GameWorldConstants.GreenKnightDisplayName, CharacterSoundTheme.Default);
             SetStats(600f, 280f, 26f, 14f, 8f);
             Phase2HealthThreshold = 0.5f;
             Phase3HealthThreshold = 0f; // 2-phase only

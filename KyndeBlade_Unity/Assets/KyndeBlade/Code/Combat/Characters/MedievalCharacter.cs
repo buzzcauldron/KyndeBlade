@@ -362,7 +362,7 @@ namespace KyndeBlade
         {
             if (Stats.IsBroken) return;
             Stats.IsBroken = true;
-            Stats.BrokenStunRemaining = 2f;
+            Stats.BrokenStunRemaining = GameWorldConstants.BreakStunDurationSeconds;
             OnCharacterBroken?.Invoke(this);
         }
 
