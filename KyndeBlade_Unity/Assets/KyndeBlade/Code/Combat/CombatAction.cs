@@ -97,7 +97,7 @@ namespace KyndeBlade.Combat
             if (target == null) return;
             float dmg = CombatCalculator.CalculateDamage(executor, target, this);
             if (ActionData.ActionType == CombatActionType.Counter) dmg *= 1.5f;
-            if (target.IsBroken()) dmg *= 1.5f;
+            if (target.IsBroken()) dmg *= GameWorldConstants.BrokenDamageMultiplier;
             var tm = GameRuntime.TurnManager;
             if (tm != null) dmg = tm.ApplyCritToDamage(dmg, out _);
             target.ApplyCustomDamage(dmg, executor, damageAlreadyFinal: true);

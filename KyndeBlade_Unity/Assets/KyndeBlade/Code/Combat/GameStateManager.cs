@@ -209,7 +209,7 @@ namespace KyndeBlade
         void ShowDeathOfOldAgePanel()
         {
             if (DefeatPanel != null) DefeatPanel.SetActive(true);
-            if (DefeatText != null) DefeatText.text = "Death of old age. Wille's years have run their course. Grace did not come. A form of thee ends in Orfeo's Otherworld.";
+            if (DefeatText != null) DefeatText.text = GameWorldConstants.DefeatDeathOfOldAgeMessage;
             var restartBtn = DefeatPanel != null ? DefeatPanel.transform.Find("RestartButton") : null;
             if (restartBtn != null)
             {
@@ -230,7 +230,7 @@ namespace KyndeBlade
             if (IsFinalCombatLocation(locId))
             {
                 var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
-                var fieldOfGrace = wm?.GetLocation("field_of_grace") ?? Resources.Load<LocationNode>("Data/Vision2/Loc_field_of_grace");
+                var fieldOfGrace = wm?.GetLocation(GameWorldConstants.LocationFieldOfGrace) ?? Resources.Load<LocationNode>("Data/Vision2/Loc_field_of_grace");
                 if (fieldOfGrace != null && wm != null)
                     wm.TransitionTo(fieldOfGrace);
                 else
@@ -245,8 +245,7 @@ namespace KyndeBlade
         static bool IsFinalCombatLocation(string locationId)
         {
             if (string.IsNullOrEmpty(locationId)) return false;
-            var id = locationId.ToLowerInvariant();
-            return id == "years_pass";
+            return string.Equals(locationId, GameWorldConstants.LocationYearsPass, System.StringComparison.OrdinalIgnoreCase);
         }
 
         void ReturnToMap(LocationNode loc)
@@ -342,12 +341,12 @@ namespace KyndeBlade
                 yield return new WaitForSeconds(4.2f);
             }
             if (DefeatPanel != null) DefeatPanel.SetActive(true);
-            if (DefeatText != null) DefeatText.text = "The Green Knight hath taken thy head. A form of thee ends in Orfeo's Otherworld.";
+            if (DefeatText != null) DefeatText.text = GameWorldConstants.DefeatGreenChapelMessage;
             yield return new WaitForSeconds(2.5f);
             if (DefeatPanel != null) DefeatPanel.SetActive(false);
             var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
-            var malvern = wm != null ? wm.GetLocation("malvern") : Resources.Load<LocationNode>("Data/Vision1/Loc_malvern");
+            var malvern = wm != null ? wm.GetLocation(GameWorldConstants.LocationMalvern) : Resources.Load<LocationNode>("Data/Vision1/Loc_malvern");
             if (malvern == null)
             {
                 var all = Resources.LoadAll<LocationNode>("Data/Vision1");
@@ -355,7 +354,7 @@ namespace KyndeBlade
                     malvern = all[0];
             }
             if (saveManager != null)
-                saveManager.NewGame("malvern");
+                saveManager.NewGame(GameWorldConstants.LocationMalvern);
             if (wm != null && malvern != null)
                 wm.TransitionTo(malvern);
             else
@@ -376,7 +375,7 @@ namespace KyndeBlade
             if (otherworld != null)
             {
                 if (DefeatPanel != null) DefeatPanel.SetActive(true);
-                if (DefeatText != null) DefeatText.text = "The sin hath rent thee. A form of thy body ends in Orfeo's Otherworld.";
+                if (DefeatText != null) DefeatText.text = GameWorldConstants.DefeatSinOrfeoMessage;
                 yield return new WaitForSeconds(2f);
                 if (DefeatPanel != null) DefeatPanel.SetActive(false);
                 if (wm != null)
