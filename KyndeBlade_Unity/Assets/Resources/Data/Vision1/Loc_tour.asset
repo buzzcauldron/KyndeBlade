@@ -21,10 +21,11 @@ MonoBehaviour:
   SceneName: 
   NextLocationIds:
   - dongeoun
+  - fayre_felde
   Encounter: {fileID: 0}
   CombatHazards: []
   Rewards: {fileID: 0}
-  StoryBeatOnArrival: {fileID: 11400000, guid: a49831e52f83a47258fc5a872f1b36aa, type: 2}
+  StoryBeatOnArrival: {fileID: 11400000, guid: b5c92f61e83a47258fc5a872f1b36bb, type: 2}
   StoryBeatSequenceOnArrival: []
   StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
   PreCombatChoiceBeat: {fileID: 0}
@@ -36,3 +37,4 @@ MonoBehaviour:
   IsBuilding: 0
   IsRealLife: 0
   RealLifeLocationId: 
+  SuppressCombatHazards: 1

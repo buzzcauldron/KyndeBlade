@@ -318,7 +318,7 @@ namespace KyndeBlade
                 return;
             }
             bool atGreenChapel = gm != null && gm.LastEncounterLocation != null &&
-                string.Equals(gm.LastEncounterLocation.LocationId, "green_chapel", System.StringComparison.OrdinalIgnoreCase);
+                string.Equals(gm.LastEncounterLocation.LocationId, GameWorldConstants.LocationGreenChapel, System.StringComparison.OrdinalIgnoreCase);
             if (saveManager != null && atGreenChapel)
                 saveManager.IncrementGreenChapelBodies();
             if (atGreenChapel)
@@ -411,6 +411,9 @@ namespace KyndeBlade
 
         void ShowVictoryPanel(int xp, bool isFinal)
         {
+#if UNITY_EDITOR
+            Debug.Log("[Demo] Combat outcome: Victory");
+#endif
             if (VictoryPanel != null) VictoryPanel.SetActive(true);
             if (VictoryText != null)
                 VictoryText.text = isFinal ? "Thou hast reached the field. Continue." : $"Victory! +{xp} XP";
@@ -421,6 +424,9 @@ namespace KyndeBlade
 
         void ShowDefeatPanel()
         {
+#if UNITY_EDITOR
+            Debug.Log("[Demo] Combat outcome: Defeat");
+#endif
             if (DefeatPanel != null)
             {
                 DefeatPanel.SetActive(true);

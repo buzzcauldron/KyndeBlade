@@ -30,6 +30,7 @@ MonoBehaviour:
   StoryBeatOnArrival: {fileID: 11400000, guid: 2797aa14fa6164ddbb8247996bae8282, type: 2}
   StoryBeatSequenceOnArrival: []
   StoryBeatOnArrivalWhenWodeWoDead: {fileID: 0}
+  StoryBeatOnArrivalWhenHasEverHadHunger: {fileID: 11400000, guid: c7d83e72f94b58369bd04a882f2c47cc, type: 2}
   PreCombatChoiceBeat: {fileID: 0}
   MusicThemeOnArrival: 
   IsInescapable: 0

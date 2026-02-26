@@ -10,6 +10,11 @@ namespace KyndeBlade
 
         // ─── Location IDs (save, transitions, narrative) ───────────────────────
         public const string LocationMalvern = "malvern";
+        /// <summary>Tower on the Toft — first view for demo; confined, lovely, spooky, overlooking the Fair Field.</summary>
+        public const string LocationTowerOnToft = "tour";
+        public const string LocationFairField = "fayre_felde";
+        /// <summary>Default start location for new game (demo: Tower on the Toft).</summary>
+        public const string DefaultStartLocationId = "tour";
         public const string LocationGreenChapel = "green_chapel";
         public const string LocationOtherworld = "otherworld";
         public const string LocationFieldOfGrace = "field_of_grace";
@@ -29,6 +34,11 @@ namespace KyndeBlade
         /// <summary>Minimum damage after formula (never 0).</summary>
         public const float MinimumDamage = 1f;
 
+        /// <summary>Default parry (Ward) window in seconds. Human-oriented; GameSettings can scale for difficulty.</summary>
+        public const float DefaultParryWindowSeconds = 2f;
+        /// <summary>Default dodge (Escapade) window in seconds. Human-oriented; GameSettings can scale for difficulty.</summary>
+        public const float DefaultDodgeWindowSeconds = 2f;
+
         // ─── Elemental (Expedition 33: weakness 2x, resistance 0.5x). Used by CombatCalculator when affinity is wired. ────────────────────────────────────────────────────────────────
         public const float ElementalWeaknessMultiplier = 2f;
         public const float ElementalResistanceMultiplier = 0.5f;
@@ -43,8 +53,8 @@ namespace KyndeBlade
         public const string StateExecuting = "Executing...";
         public const string StateResolving = "Resolving...";
         public const string StateCombatEnded = "Combat ended";
-        public const string DefeatGreenChapelMessage = "The Green Knight hath taken thy head. A form of thee ends in Orfeo's Otherworld.";
-        public const string DefeatSinOrfeoMessage = "The sin hath rent thee. A form of thy body ends in Orfeo's Otherworld.";
-        public const string DefeatDeathOfOldAgeMessage = "Death of old age. Wille's years have run their course. Grace did not come. A form of thee ends in Orfeo's Otherworld.";
+        public const string DefeatGreenChapelMessage = "The Grene Knyght hath taken thy hede. A forme of thee endeth in Orfeo's Othirworld.";
+        public const string DefeatSinOrfeoMessage = "The synne hath rent thee. A forme of thy body endeth in Orfeo's Othirworld.";
+        public const string DefeatDeathOfOldAgeMessage = "Deth of elde. Wille's yeris han runne her cours. Grace cometh not. A forme of thee endeth in Orfeo's Othirworld.";
     }
 }

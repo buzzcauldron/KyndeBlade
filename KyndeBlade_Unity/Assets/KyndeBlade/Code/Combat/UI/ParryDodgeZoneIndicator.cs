@@ -19,16 +19,21 @@ namespace KyndeBlade
         public RectTransform EyelidTop;
         public RectTransform EyelidBottom;
 
-        [Header("Animation")]
+        [Header("Animation (phased: open → steady → strike imminent)")]
         [Range(0.2f, 1f)]
         public float PupilScaleAtStart = 1f;
         [Range(0.1f, 0.5f)]
         public float PupilScaleAtStrike = 0.25f;
         [Range(0f, 0.5f)]
         public float EyelidCloseAmount = 0.35f;
+        [Tooltip("First 15% of window: eye open, pupil at start scale.")]
+        public float OpenPhaseEnd = 0.15f;
+        [Tooltip("Last 25% of window: strike imminent, pupil contracts, eyelids close.")]
+        public float ImminentPhaseStart = 0.75f;
 
         CanvasGroup _canvasGroup;
         bool _soundPlayed;
+        bool _imminentSoundPlayed;
         bool _isVisible;
 
         void Awake()
@@ -62,12 +67,17 @@ namespace KyndeBlade
             float remaining = TurnManager.RealTimeWindowRemaining;
             float t = 1f - Mathf.Clamp01(remaining / (duration > 0.001f ? duration : 0.001f));
 
-            UpdateEyeAnimation(t);
+            UpdateEyeAnimationPhased(t);
 
             if (!_soundPlayed && SoundBank != null)
             {
                 SoundBank.PlayStrikeWarning(TurnManager.CurrentAttackerDuringWindow);
                 _soundPlayed = true;
+            }
+            if (SoundBank != null && remaining <= SoundBank.ImminentThresholdSeconds && !_imminentSoundPlayed)
+            {
+                SoundBank.PlayImminent();
+                _imminentSoundPlayed = true;
             }
         }
 
@@ -104,17 +114,28 @@ namespace KyndeBlade
         public void Hide()
         {
             _soundPlayed = false;
+            _imminentSoundPlayed = false;
             _isVisible = false;
             if (_canvasGroup != null) _canvasGroup.alpha = 0f;
             if (EyeRoot != null) EyeRoot.gameObject.SetActive(false);
         }
 
-        void UpdateEyeAnimation(float t)
+        /// <summary>Phase-based: open (0–15%) → steady → strike imminent (last 25%). Skill-focused: clear “input now” moment.</summary>
+        void UpdateEyeAnimationPhased(float t)
         {
-            if (PupilRoot != null)
-                PupilRoot.localScale = Vector3.one * Mathf.Lerp(PupilScaleAtStart, PupilScaleAtStrike, t);
+            float pupilScale = PupilScaleAtStart;
+            float closeNorm = 0f;
+            if (t >= ImminentPhaseStart)
+            {
+                float imminentT = (t - ImminentPhaseStart) / (1f - ImminentPhaseStart);
+                imminentT = Mathf.SmoothStep(0f, 1f, imminentT);
+                pupilScale = Mathf.Lerp(PupilScaleAtStart, PupilScaleAtStrike, imminentT);
+                closeNorm = imminentT;
+            }
+            float close = closeNorm * EyelidCloseAmount;
 
-            float close = Mathf.SmoothStep(0f, 1f, t) * EyelidCloseAmount;
+            if (PupilRoot != null)
+                PupilRoot.localScale = Vector3.one * pupilScale;
             if (EyelidTop != null)
             {
                 EyelidTop.anchorMin = new Vector2(0f, 1f - close);

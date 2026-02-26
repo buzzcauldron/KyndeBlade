@@ -1,4 +1,5 @@
 using UnityEngine;
+using KyndeBlade;
 
 namespace KyndeBlade.Combat
 {
@@ -40,7 +41,7 @@ namespace KyndeBlade.Combat
                 ActionType = CombatActionType.Escapade,
                 ActionName = "Escapade",
                 StaminaCost = 20f,
-                SuccessWindow = 1.5f
+                SuccessWindow = GameWorldConstants.DefaultDodgeWindowSeconds
             };
             return a;
         }
@@ -53,7 +54,7 @@ namespace KyndeBlade.Combat
                 ActionType = CombatActionType.Ward,
                 ActionName = "Ward",
                 StaminaCost = 25f,
-                SuccessWindow = 1f
+                SuccessWindow = GameWorldConstants.DefaultParryWindowSeconds
             };
             return a;
         }

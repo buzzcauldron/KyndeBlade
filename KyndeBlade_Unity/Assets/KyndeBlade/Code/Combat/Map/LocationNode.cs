@@ -42,8 +42,14 @@ namespace KyndeBlade
         public bool AdvancesWodeWoArcOnSequenceComplete;
         [Tooltip("When Wode-Wo arc is complete (stage 4), show this positive beat on arrival instead of StoryBeatOnArrival. First time at stage 3 shows it and completes the arc.")]
         public StoryBeat StoryBeatOnArrivalWhenWodeWoComplete;
+        [Tooltip("When the run has ever had hunger, show this beat on arrival instead of StoryBeatOnArrival (permanent effect discernable in narrative).")]
+        public StoryBeat StoryBeatOnArrivalWhenHasEverHadHunger;
         [Tooltip("Dialogue with choices before combat (e.g. Green Chapel). Wrong choice = Green Knight appears randomly later.")]
         public DialogueChoiceBeat PreCombatChoiceBeat;
+
+        [Header("Hidden / Environmental")]
+        [Tooltip("If true, combat at this location has no hazards (e.g. tower peace). Hint in StoryBeat text so observant players can infer.")]
+        public bool SuppressCombatHazards;
 
         [Header("Music")]
         [Tooltip("Theme to play on arrival (e.g. orfeo, green_knight).")]

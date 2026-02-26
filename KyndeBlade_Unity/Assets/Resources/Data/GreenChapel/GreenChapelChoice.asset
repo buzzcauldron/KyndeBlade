@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: GreenChapelChoice
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.DialogueChoiceBeat
   BeatId: GreenChapelChallenge
-  Text: 'I am the Knight of the Green Chapel. I offer thee a game: strike me once,
-    and in a year and a day I shall return the blow. Dost thou accept the covenant?'
+  Text: "I am the Knyght of the Grene Chapel. I offre thee a pley: smyte me ones,
+    and in a yeer and a day I shal quyte the stroke. Woltow holden the covenant?"
   SpeakerName: The Green Knight
   Portrait: {fileID: 0}
   Choices:
-  - Text: I accept. I will meet thee at the Green Chapel.
+  - Text: I acorde. I shal meten thee at the Grene Chapel.
     IsCorrectChoice: 1
     TransitionToLocationId: 
     AssociatedSin: 0
     NextDialogueBeat: {fileID: 0}
-  - Text: I refuse. I will not play thy game.
+  - Text: I refusen. I nil pleyen thy game.
     IsCorrectChoice: 0
     TransitionToLocationId: 
     AssociatedSin: 1
     NextDialogueBeat: {fileID: 0}
-  - Text: I flee. This is no place for me.
+  - Text: I fleen. Hier is no stede for me.
     IsCorrectChoice: 0
     TransitionToLocationId: 
     AssociatedSin: 4

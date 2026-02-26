@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StoryBeat_FieldOfGrace_WhenWodeWoDead
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.StoryBeat
   BeatId: field_of_grace_wodewo_dead
-  Text: "Thou hast reached the field. Now thou waitest for Grace. She does not come."
+  Text: "Thou hast reached the feeld. Now thou abydest Grace. She cometh not."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

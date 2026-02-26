@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: WodeWoCare
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: WodeWoCare
-  Text: Thou shelterest it beneath the oak. Thou givest it water from St Anne's well.
-    Thou tendest it as dream-days pass. It grows. Roots deepen. Bark hardens. A soft
-    voice begins to form.
+  Text: "Thou helest it bynethe the ook. Thou yevest it watir fro Seint Anne's welle.
+    Thou tendest it as drem-dayes passen. It wexeth. Rotes deopnen. Bark hardneth. A softe
+    stevene bygynneth to forme."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 6

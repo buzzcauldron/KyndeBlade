@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: YearsPass
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.StoryBeat
   BeatId: YearsPass
-  Text: Years pass. The party ages. The quest remains unresolved. Work continues.
-    Poverty persists.
+  Text: "Yeris passen. The compaignye eldeth. The quest abydeth unresoolved. Werk
+    endureth. Poverte lasteth."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

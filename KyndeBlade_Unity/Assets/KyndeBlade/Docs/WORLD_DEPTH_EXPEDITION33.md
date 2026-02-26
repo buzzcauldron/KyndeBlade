@@ -52,7 +52,7 @@ Use **GameWorldConstants.LocationX** in code instead of string literals.
 - **Escapade** — Dodge window; success avoids damage and can grant Kynde.
 - **Ward** — Parry window; success reduces damage, grants Kynde, enables **Counter** (150% damage + break, no Kynde cost).
 
-Timing and multipliers are in **GameSettings** (e.g. `TimingWindowMultiplier`) and action **SuccessWindow** / **CastTime**.
+**Default windows:** 2 s for both (`GameWorldConstants.DefaultParryWindowSeconds`, `DefaultDodgeWindowSeconds`). Timing and multipliers are in **GameSettings** (e.g. `TimingWindowMultiplier`) and action **SuccessWindow** / **CastTime**. Eye phases and imminent sound cue: see **TIMING_AND_SIGNALS.md**.
 
 ---
 

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: DongeounDepths
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.StoryBeat
   BeatId: DongeounDepths
-  Text: Descending into the depths of poverty and despair. The spiritual quest seems
-    impossible when you're struggling to survive.
+  Text: "Descendynge into the deopnesse of poverte and wanhope. The goostly quest
+    semeth unpossible whan thou strivest to lyven."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

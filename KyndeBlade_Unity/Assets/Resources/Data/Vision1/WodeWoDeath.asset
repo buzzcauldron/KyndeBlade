@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: WodeWoDeath
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: WodeWoDeath
-  Text: "Pale hands reach from the gloaming. The fae take him\u2014not gently. They
-    pull him apart, root from branch from breath, as if he were nothing. His voice
-    breaks. \"Dreamer... I tried my best... to...\" Cold fingers close. What remains
-    is scattered. The forest weeps. He does not rise again."
+  Text: "Bleyke hondes recchen fro the glomerynge. The fayerye taken him\u2014noght
+    myldeliche. Thei pullen him asondre, rote fro braunche fro breth, as he were nouht.
+    His stevene breketh. \"Dremere... I triede my beste... to...\" Cold fyngres shetten.
+    What remayneth is scatered. The wode wepeth. He arist noght ayen."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 10

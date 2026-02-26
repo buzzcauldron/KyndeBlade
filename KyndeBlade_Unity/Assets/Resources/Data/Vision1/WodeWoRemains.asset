@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: WodeWoRemains
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: WodeWoRemains
-  Text: "A soft summer morning on the Malvern Hills. Wille rests beneath the Worcestershire
-    Beacon. In the shade of the ancient oak, Wode-Wo's scattered remains lie where
-    the fae left them. The seedling thou once raised\u2014root and branch and breath\u2014never
-    to rise again. The forest mourns. The dream begins."
+  Text: "A softe somer morwen on Malvern Hilles. Wille resteth bynethe the Worcestershire
+    Beacon. In the schade of the elde ook, Wode-Wo's scatered remenauntes lien ther
+    the fayerye leften hem. The sed thou ones reised\u2014rote and braunche and breth\u2014
+    nevere to arisen ayen. The wode morneth. The drem bygynneth."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 8
