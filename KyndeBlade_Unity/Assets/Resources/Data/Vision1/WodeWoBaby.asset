@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: WodeWoBaby
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: WodeWoBaby
-  Text: "A soft summer morning on the Malvern Hills. Wille rests beneath the Worcestershire
-    Beacon. \"In a somer seson, whan softe was the sonne...\" Sleep comes. The dream
-    begins.\n\nIn the shade of an ancient oak, Wille finds a tiny thing\u2014moss
-    and leaf, root and bark, no bigger than a fist. A seedling. A child of the forest.
-    It stirs, reaching for warmth. Its breath is faint, like wind through young leaves."
+  Text: "A softe somer morwen on Malvern Hilles. Wille resteth bynethe the Worcestershire
+    Beacon. \"In a somer seson, whan softe was the sonne...\" Slep cometh. The drem
+    bygynneth.\n\nIn the schade of an elde ook, Wille findeth a litel thyng\u2014mos
+    and leef, rote and bark, no grettere than a fust. A sedlyng. A child of the wode.
+    It stireth, rechyng after warmth. His breth is feynt, as wynd thurgh yonge leves."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 8

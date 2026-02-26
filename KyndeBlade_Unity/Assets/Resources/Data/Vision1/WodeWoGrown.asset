@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: WodeWoGrown
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: WodeWoGrown
-  Text: One morning it speaks. "Wode-Wo," it says, its voice like wind through branches.
-    "I am the keeper of this threshold. I shall walk with thee, dreamer. Fear not."
-    The dream begins.
+  Text: "On morwen it speketh. \"Wode-Wo,\" it seith, his stevene as wynd thurgh bowes.
+    \"I am the kepere of this thresshewold. I shal gon with thee, dremere. Drede thee nought.\"
+    The drem bygynneth."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 6

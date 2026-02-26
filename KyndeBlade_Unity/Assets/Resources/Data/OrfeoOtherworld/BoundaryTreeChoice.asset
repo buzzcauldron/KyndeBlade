@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: BoundaryTreeChoice
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.DialogueChoiceBeat
   BeatId: BoundaryTree
-  Text: "At the boundary between worlds, a tree stands. Music drifts from beyond\u2014melancholic,
-    otherworldly. Dost thou follow?"
+  Text: "At the bounde bitwene worldes, a tre stondeth. Musyk drifteth fro byonde\u2014
+    drery, unerthlich. Woltow folwen?"
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   Choices:
-  - Text: The path is uncertain. I turn back.
+  - Text: The path is uncertein. I torne ayen.
     IsCorrectChoice: 1
     TransitionToLocationId: 
     AssociatedSin: 0
     NextDialogueBeat: {fileID: 0}
-  - Text: I follow the music into the twilight.
+  - Text: I folwe the musyk into the twylyght.
     IsCorrectChoice: 0
     TransitionToLocationId: otherworld
     AssociatedSin: 0

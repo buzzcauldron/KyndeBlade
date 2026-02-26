@@ -61,7 +61,9 @@ namespace KyndeBlade
                 if (loc != null && !string.IsNullOrEmpty(loc.LocationId))
                     _locationById[loc.LocationId] = loc;
             }
-            if (StartLocation == null && _locationById.TryGetValue("malvern", out var malvern))
+            if (StartLocation == null && !string.IsNullOrEmpty(GameWorldConstants.DefaultStartLocationId) && _locationById.TryGetValue(GameWorldConstants.DefaultStartLocationId, out var defaultLoc))
+                StartLocation = defaultLoc;
+            if (StartLocation == null && _locationById.TryGetValue(GameWorldConstants.LocationMalvern, out var malvern))
                 StartLocation = malvern;
         }
 
@@ -90,7 +92,12 @@ namespace KyndeBlade
         {
             if (_lazyInitDone || CurrentLocation != null) return;
             LocationNode toSet = StartLocation;
-            if (SaveManager != null && !string.IsNullOrEmpty(SaveManager.CurrentProgress?.CurrentLocationId))
+            if (!string.IsNullOrEmpty(DemoTestHelper.OverrideStartLocationId))
+            {
+                var force = GetLocation(DemoTestHelper.OverrideStartLocationId);
+                if (force != null) toSet = force;
+            }
+            else if (SaveManager != null && !string.IsNullOrEmpty(SaveManager.CurrentProgress?.CurrentLocationId))
             {
                 var saved = GetLocation(SaveManager.CurrentProgress.CurrentLocationId);
                 if (saved != null) toSet = saved;
@@ -103,7 +110,19 @@ namespace KyndeBlade
                     foreach (var nextId in toSet.NextLocationIds)
                         SaveManager.UnlockLocation(nextId);
                 }
+                // First view at tower: show vista story beat then map (demo: confined, lovely, spooky, overlooking fair field)
+                if (string.Equals(toSet.LocationId, GameWorldConstants.LocationTowerOnToft, StringComparison.OrdinalIgnoreCase)
+                    && toSet.StoryBeatOnArrival != null && NarrativeManager != null)
+                {
+                    var mapCanvas = GameObject.Find("MapCanvas");
+                    if (mapCanvas != null) mapCanvas.SetActive(false);
+                    NarrativeManager.ShowStoryBeat(toSet.StoryBeatOnArrival, () => ShowMapHideCombat());
+                }
+                else
+                    ShowMapHideCombat();
             }
+            else
+                ShowMapHideCombat();
             _lazyInitDone = true;
         }
 
@@ -156,7 +175,9 @@ namespace KyndeBlade
         public void TransitionTo(LocationNode loc)
         {
             if (loc == null) return;
-
+#if UNITY_EDITOR
+            Debug.Log($"[Demo] TransitionTo location={loc.LocationId}");
+#endif
             if (string.Equals(loc.LocationId, "otherworld", System.StringComparison.OrdinalIgnoreCase) && SaveManager != null)
                 SaveManager.IncrementOtherworldLivingCharacters();
 
@@ -214,9 +235,9 @@ namespace KyndeBlade
                 {
                     NarrativeManager.ShowStoryBeatSequence(loc.StoryBeatSequenceOnArrival, () => EnterLocationCombatOrScene(loc));
                 }
-                else if (loc.StoryBeatOnArrival != null)
+                else if (GetArrivalBeat(loc) != null)
                 {
-                    NarrativeManager.ShowStoryBeat(loc.StoryBeatOnArrival, () => EnterLocationCombatOrScene(loc));
+                    NarrativeManager.ShowStoryBeat(GetArrivalBeat(loc), () => EnterLocationCombatOrScene(loc));
                 }
                 else
                 {
@@ -227,6 +248,15 @@ namespace KyndeBlade
             {
                 EnterLocationCombatOrScene(loc);
             }
+        }
+
+        /// <summary>Arrival beat for location; uses permanent-flag override when set (e.g. HasEverHadHunger).</summary>
+        StoryBeat GetArrivalBeat(LocationNode loc)
+        {
+            if (loc == null) return null;
+            if (SaveManager != null && SaveManager.HasEverHadHunger && loc.StoryBeatOnArrivalWhenHasEverHadHunger != null)
+                return loc.StoryBeatOnArrivalWhenHasEverHadHunger;
+            return loc.StoryBeatOnArrival;
         }
 
         void OnChoiceProceed(LocationNode loc, bool isCorrect, string transitionToLocationId, SinType associatedSin)
@@ -270,7 +300,7 @@ namespace KyndeBlade
             }
             else
             {
-                var beat = loc.StoryBeatOnArrival;
+                var beat = GetArrivalBeat(loc);
                 if (beat != null && NarrativeManager != null)
                     NarrativeManager.ShowStoryBeat(beat, () => EnterLocationCombatOrScene(loc));
                 else
@@ -282,16 +312,25 @@ namespace KyndeBlade
         {
             if (!string.IsNullOrEmpty(loc.SceneName))
             {
+#if UNITY_EDITOR
+                Debug.Log($"[Demo] EnterLocationCombatOrScene scene={loc.SceneName}");
+#endif
                 SceneManager.LoadScene(loc.SceneName);
                 return;
             }
 
             if (loc.Encounter != null && GameManager != null)
             {
+#if UNITY_EDITOR
+                Debug.Log($"[Demo] EnterLocationCombatOrScene combat loc={loc.LocationId}");
+#endif
                 GameManager.StartEncounterFromConfig(loc.Encounter, loc);
             }
             else
             {
+#if UNITY_EDITOR
+                Debug.Log($"[Demo] EnterLocationCombatOrScene map loc={loc.LocationId}");
+#endif
                 ShowMapHideCombat();
             }
         }

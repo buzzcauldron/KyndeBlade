@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PiersField
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: PiersField
-  Text: Piers the Plowman appears in his humble field, guiding Wille toward the path
-    of Do-Wel.
+  Text: "Piers the Plowman apereth in his lowely feeld, gydynge Wille toward the path
+    of Do-Wel."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

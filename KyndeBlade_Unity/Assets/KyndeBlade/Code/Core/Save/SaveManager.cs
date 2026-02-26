@@ -23,7 +23,7 @@ namespace KyndeBlade
             var json = PlayerPrefs.GetString(SaveKey, null);
             if (string.IsNullOrEmpty(json))
             {
-                CurrentProgress = GameProgress.CreateNew("malvern");
+                CurrentProgress = GameProgress.CreateNew(GameWorldConstants.DefaultStartLocationId);
                 OnProgressLoaded?.Invoke(CurrentProgress);
                 return;
             }
@@ -35,7 +35,7 @@ namespace KyndeBlade
             catch (Exception e)
             {
                 Debug.LogWarning($"SaveManager: Failed to load save: {e.Message}");
-                CurrentProgress = GameProgress.CreateNew("malvern");
+                CurrentProgress = GameProgress.CreateNew(GameWorldConstants.DefaultStartLocationId);
             }
         }
 
@@ -81,9 +81,10 @@ namespace KyndeBlade
             return CurrentProgress?.UnlockedLocationIds?.Contains(locationId) ?? false;
         }
 
-        public void NewGame(string startLocationId = "malvern")
+        public void NewGame(string startLocationId = null)
         {
-            CurrentProgress = GameProgress.CreateNew(startLocationId);
+            var id = !string.IsNullOrEmpty(startLocationId) ? startLocationId : GameWorldConstants.DefaultStartLocationId;
+            CurrentProgress = GameProgress.CreateNew(id);
             Save();
         }
 
@@ -95,6 +96,9 @@ namespace KyndeBlade
         }
 
         public bool GreenKnightWillAppearRandomly => CurrentProgress?.GreenKnightWillAppearRandomly ?? false;
+
+        /// <summary>True if the run has ever had hunger (scar applied; narrative branch available).</summary>
+        public bool HasEverHadHunger => CurrentProgress?.HasEverHadHunger ?? false;
 
         public void SetPovertyLevel(int level)
         {

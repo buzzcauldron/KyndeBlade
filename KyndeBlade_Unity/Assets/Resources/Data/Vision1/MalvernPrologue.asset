@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: MalvernPrologue
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.StoryBeat
   BeatId: MalvernPrologue
-  Text: In a somer seson, whan softe was the sonne... Wille falls asleep on Malvern
-    Hilles and begins his first vision.
+  Text: "In a somer seson, whan softe was the sonne... Wille falleth aslepe on Malvern
+    Hilles and bygynneth his firste visioun."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

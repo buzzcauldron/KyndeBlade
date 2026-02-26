@@ -7,6 +7,10 @@ namespace KyndeBlade
     {
         [Header("Strike Warning Clips (assign in Inspector)")]
         public AudioClip DefaultClip;
+        [Tooltip("Played when remaining time is below ImminentThresholdSeconds to signal 'input now'.")]
+        public AudioClip ImminentClip;
+        [Range(0.1f, 1f)]
+        public float ImminentThresholdSeconds = 0.4f;
         public AudioClip ChurchBellClip;
         public AudioClip CreakingClip;
         public AudioClip SloppyClip;
@@ -29,6 +33,13 @@ namespace KyndeBlade
             var clip = GetClipForCharacter(attacker);
             if (clip != null && _audio != null)
                 _audio.PlayOneShot(clip);
+        }
+
+        /// <summary>Play the imminent cue (e.g. rising tone or tick) when remaining time is below threshold. Call once per window.</summary>
+        public void PlayImminent()
+        {
+            if (ImminentClip != null && _audio != null)
+                _audio.PlayOneShot(ImminentClip);
         }
 
         public AudioClip GetClipForCharacter(MedievalCharacter c)

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StoryBeat_FieldOfGrace
   m_EditorClassIdentifier: KyndeBlade::KyndeBlade.StoryBeat
   BeatId: field_of_grace
-  Text: "Thou hast reached the field. Wode-Wo standeth beside thee. Together ye waitest for Grace. She does not come."
+  Text: "Thou hast reached the feeld. Wode-Wo stondeth biside thee. Togidres ye abyden Grace. She cometh not."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

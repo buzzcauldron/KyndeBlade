@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TourDongeoun
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: TourDongeoun
-  Text: A tour on a toft, trieliche ymaked. Wille sees the Tower of Trewthe and the
-    Dungeon representing Hell.
+  Text: "A tour on a toft, trieliche ymaked. Wille seeth the Tour of Trewthe and the
+    Dongeoun that bitokeneth Helle."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

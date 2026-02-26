@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SevenSins
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: SevenSins
-  Text: The Seven Deadly Sins gather. Wille must face them before the quest can continue.
+  Text: "The Sevene Deedly Synnes gadren. Wille moot meten hem er the quest may forthgon."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 5

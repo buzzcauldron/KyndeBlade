@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: OtherworldArrival
   m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.StoryBeat
   BeatId: OtherworldArrival
-  Text: The boundary between worlds dissolves. Thou hast followed the music into
-    the Fairy Realm. There is no return.
+  Text: "The bounde bitwene worldes dissolveth. Thou hast folwed the musyk into
+    the Fayerye Reame. Ther is no turnynge ayen."
   SpeakerName: Narrator
   Portrait: {fileID: 0}
   DisplayDuration: 6

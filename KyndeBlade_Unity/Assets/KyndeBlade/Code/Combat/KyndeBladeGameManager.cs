@@ -96,12 +96,8 @@ namespace KyndeBlade
 
             if (StartWithMap)
             {
-                var wm = UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
-                if (wm != null && wm.StartLocation != null)
-                {
-                    wm.SetCurrentLocation(wm.StartLocation);
-                    AutoSpawnTestCharacters = false;
-                }
+                // Let WorldMapManager.TryLazyInit set CurrentLocation (DefaultStartLocationId, save, or DemoTestHelper override)
+                AutoSpawnTestCharacters = false;
             }
             if (AutoSpawnTestCharacters)
                 StartCoroutine(DelayedAutoSpawn());
@@ -269,9 +265,8 @@ namespace KyndeBlade
             var hazardMgr = UnityEngine.Object.FindFirstObjectByType<CombatHazardManager>();
             if (hazardMgr == null)
                 hazardMgr = new GameObject("CombatHazardManager").AddComponent<CombatHazardManager>();
-            var hazards = config.Hazards != null && config.Hazards.Count > 0
-                ? config.Hazards
-                : (location?.CombatHazards);
+            var hazards = (location != null && location.SuppressCombatHazards) ? null
+                : (config.Hazards != null && config.Hazards.Count > 0 ? config.Hazards : location?.CombatHazards);
             if (hazardMgr != null && hazards != null && hazards.Count > 0)
                 hazardMgr.SetHazards(hazards);
             else if (hazardMgr != null)
@@ -372,7 +367,7 @@ namespace KyndeBlade
                 SpawnEnemyFromPrefab(prefab, new Vector3(4f, 0f, 0f));
 
             var hazardMgr = UnityEngine.Object.FindFirstObjectByType<CombatHazardManager>();
-            if (hazardMgr != null && location?.CombatHazards != null && location.CombatHazards.Count > 0)
+            if (hazardMgr != null && location != null && !location.SuppressCombatHazards && location.CombatHazards != null && location.CombatHazards.Count > 0)
                 hazardMgr.SetHazards(location.CombatHazards);
 
             if (_playerChars.Count > 0 && _enemyChars.Count > 0)
