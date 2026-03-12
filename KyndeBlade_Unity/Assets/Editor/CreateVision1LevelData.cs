@@ -53,6 +53,10 @@ namespace KyndeBlade.Editor
             var piersEnc = CreateEncounter("PiersFieldEncounter", "False", null);
             var sinsEnc = CreateEncounter("SevenSinsEncounter", "False", "LadyMede", "Wrath");
 
+            AssignHazards(dongeounEnc, "Exhaustion");
+            AssignHazards(piersEnc, "Labor");
+            AssignHazards(sinsEnc, "Hunger");
+
             var malvern = CreateLocation("malvern", "Malvern Hills", "Real life: Worcestershire. Wille rests beneath the Beacon; the dream begins here.", 0, 0, "Prologue", null, tutorialEnc, "fayre_felde");
             malvern.IsRealLife = true;
             malvern.RealLifeLocationId = "worcestershire_beacon";
@@ -82,9 +86,31 @@ namespace KyndeBlade.Editor
             sins.NextLocationIds.Clear();
             sins.NextLocationIds.Add("quest_do_wel");
 
+            WireDialogueTrees(fayre, tour, dongeoun, piers, sins);
+
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("Vision I level data created at " + DataPath);
+        }
+
+        static void WireDialogueTrees(LocationNode fayre, LocationNode tour, LocationNode dongeoun, LocationNode piers, LocationNode sins)
+        {
+            const string treePath = "Assets/Resources/Data/DialogueTrees";
+
+            var fayreTree = AssetDatabase.LoadAssetAtPath<DialogueTreeDefinition>($"{treePath}/FayreFeldeDialogue.asset");
+            if (fayreTree != null) { fayre.DialogueTreeOnArrival = fayreTree; EditorUtility.SetDirty(fayre); }
+
+            var tourTree = AssetDatabase.LoadAssetAtPath<DialogueTreeDefinition>($"{treePath}/TourDialogue.asset");
+            if (tourTree != null) { tour.DialogueTreeOnArrival = tourTree; EditorUtility.SetDirty(tour); }
+
+            var dongTree = AssetDatabase.LoadAssetAtPath<DialogueTreeDefinition>($"{treePath}/DongeounDialogue.asset");
+            if (dongTree != null) { dongeoun.DialogueTreeOnArrival = dongTree; EditorUtility.SetDirty(dongeoun); }
+
+            var piersTree = AssetDatabase.LoadAssetAtPath<DialogueTreeDefinition>($"{treePath}/PiersFieldDialogue.asset");
+            if (piersTree != null) { piers.DialogueTreeOnArrival = piersTree; EditorUtility.SetDirty(piers); }
+
+            var sinsTree = AssetDatabase.LoadAssetAtPath<DialogueTreeDefinition>($"{treePath}/SevenSinsDialogue.asset");
+            if (sinsTree != null) { sins.DialogueTreeOnArrival = sinsTree; EditorUtility.SetDirty(sins); }
         }
 
         [MenuItem("KyndeBlade/Create Vision I Level Data (Linear)")]
@@ -113,6 +139,10 @@ namespace KyndeBlade.Editor
             var piersEnc = CreateEncounter("PiersFieldEncounter", "False", null);
             var sinsEnc = CreateEncounter("SevenSinsEncounter", "False", "LadyMede", "Wrath");
 
+            AssignHazards(dongeounEnc, "Exhaustion");
+            AssignHazards(piersEnc, "Labor");
+            AssignHazards(sinsEnc, "Hunger");
+
             var malvern = CreateLocation("malvern", "Malvern Hills", "Real life: Worcestershire. Wille rests beneath the Beacon; the dream begins here.", 0, 0, "Prologue", null, tutorialEnc, "fayre_felde");
             malvern.IsRealLife = true;
             malvern.RealLifeLocationId = "worcestershire_beacon";
@@ -140,6 +170,8 @@ namespace KyndeBlade.Editor
             piers.NextLocationIds.Add("seven_sins");
             sins.NextLocationIds.Clear();
             sins.NextLocationIds.Add("quest_do_wel");
+
+            WireDialogueTrees(fayre, tour, dongeoun, piers, sins);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -176,6 +208,29 @@ namespace KyndeBlade.Editor
             }
             AssetDatabase.CreateAsset(enc, $"{DataPath}/{id}.asset");
             return enc;
+        }
+
+        static void AssignHazards(EncounterConfig enc, params string[] hazardNames)
+        {
+            if (enc == null) return;
+            foreach (var name in hazardNames)
+            {
+                PiersHazardType type;
+                switch (name)
+                {
+                    case "Exhaustion": type = PiersHazardType.Exhaustion; break;
+                    case "Poverty": type = PiersHazardType.Poverty; break;
+                    case "Labor": type = PiersHazardType.Labor; break;
+                    case "Hunger": type = PiersHazardType.Hunger; break;
+                    default: continue;
+                }
+                var hazard = CreateHazardConfigs.LoadOrCreate(name, type, type == PiersHazardType.Labor ? 8f : 5f, type == PiersHazardType.Poverty ? 1 : 2);
+                if (hazard != null && !enc.Hazards.Contains(hazard))
+                {
+                    enc.Hazards.Add(hazard);
+                    EditorUtility.SetDirty(enc);
+                }
+            }
         }
 
         static LocationNode CreateLocation(string locId, string displayName, string desc, int vision, int passus, string passusTitle, StoryBeat beat, EncounterConfig enc, params string[] nextIds)

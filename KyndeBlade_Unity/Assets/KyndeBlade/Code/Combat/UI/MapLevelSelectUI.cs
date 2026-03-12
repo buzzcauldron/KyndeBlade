@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace KyndeBlade
 {
-    /// <summary>Hub/level select UI for map. Shows current location and next locations as buttons.</summary>
+    /// <summary>Hub/level select UI for map. Uses VisualWorldMap when available, falls back to flat buttons.</summary>
     [RequireComponent(typeof(Canvas))]
     public class MapLevelSelectUI : MonoBehaviour
     {
@@ -12,6 +12,10 @@ namespace KyndeBlade
         public WorldMapManager WorldMap;
         public RectTransform LocationButtonsRoot;
         public GameObject LocationButtonPrefab;
+
+        [Header("Visual Map (optional)")]
+        [Tooltip("Assign a VisualWorldMap to use the node-based map instead of flat buttons.")]
+        public VisualWorldMap VisualMap;
 
         [Header("Labels")]
         public Text CurrentLocationText;
@@ -84,6 +88,13 @@ namespace KyndeBlade
         public void Refresh(LocationNode current)
         {
             var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+
+            if (VisualMap != null && WorldMap != null)
+            {
+                VisualMap.Build(WorldMap.GetAllLocations(), current, saveManager);
+                if (LocationButtonsRoot != null) LocationButtonsRoot.gameObject.SetActive(false);
+            }
+
             if (CurrentLocationText != null && current != null)
             {
                 var label = current.DisplayName ?? current.LocationId;

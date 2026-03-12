@@ -19,12 +19,23 @@ namespace KyndeBlade
         [Header("Timing")]
         [Tooltip("Duration to show telegraph (e.g. target indicator, boss intent) before animation starts.")]
         [Min(0f)]
-        public float TelegraphDuration = 0.5f;
+        public float TelegraphDuration = 0.6f;
         [Tooltip("If true, wait TelegraphDuration and fire OnTelegraphStarted. If false, skip telegraph phase.")]
         public bool UseTelegraph = true;
         [Tooltip("Minimum time after animation starts before sequence is considered complete (lets impact frame play).")]
         [Min(0f)]
-        public float MinExecutionTime = 0.2f;
+        public float MinExecutionTime = 0.3f;
+        [Tooltip("Brief pause before attack animation for anticipation feel.")]
+        [Min(0f)]
+        public float AnticipationPause = 0.15f;
+        [Tooltip("Camera zoom factor during critical hits and boss phases.")]
+        public float CriticalZoomFactor = 1.15f;
+        [Tooltip("Duration of camera zoom effect.")]
+        public float ZoomDuration = 0.4f;
+        [Tooltip("Screen flash color for status effect application.")]
+        public Color StatusFlashColor = new Color(1f, 1f, 1f, 0.3f);
+        [Tooltip("Duration of screen flash.")]
+        public float FlashDuration = 0.1f;
 
         /// <summary>Fired at start of telegraph phase. Use for "Boss targets X" UI, boss shout, VFX.</summary>
         public event Action<MedievalCharacter, CombatAction, MedievalCharacter> OnTelegraphStarted;
@@ -45,30 +56,73 @@ namespace KyndeBlade
         {
             if (actor == null || action == null) { TurnManager.DoActionExecution(); yield break; }
 
-            // Phase 1: Cast time (from action data, e.g. wind-up)
             float castTime = action.GetCastTime();
             if (castTime > 0f)
                 yield return new WaitForSeconds(castTime);
 
-            // Phase 2: Telegraph – show intent before animation
             if (UseTelegraph && TelegraphDuration > 0f)
             {
                 OnTelegraphStarted?.Invoke(actor, action, target);
                 yield return new WaitForSeconds(TelegraphDuration);
             }
 
-            // Phase 3: Animation + apply (damage may be deferred to animation event)
+            if (AnticipationPause > 0f)
+                yield return new WaitForSeconds(AnticipationPause);
+
+            bool isCritical = action.ActionData != null && action.ActionData.BaseDamage > 15f;
+            if (isCritical)
+                StartCoroutine(CameraZoomPulse());
+
             OnAnimationStarting?.Invoke(actor, action, target);
             TurnManager.DoActionCast();
 
-            // Phase 4: Execution time – wait so impact frame / animation event can fire
             float execTime = Mathf.Max(MinExecutionTime, action.GetExecutionTime());
             if (execTime > 0f)
                 yield return new WaitForSeconds(execTime);
 
-            // Phase 5: Complete – run defense window or next turn
             OnSequenceComplete?.Invoke();
             TurnManager.DoActionExecution();
+        }
+
+        IEnumerator CameraZoomPulse()
+        {
+            var cam = Camera.main;
+            if (cam == null || !cam.orthographic) yield break;
+            float originalSize = cam.orthographicSize;
+            float targetSize = originalSize / CriticalZoomFactor;
+            float half = ZoomDuration * 0.5f;
+
+            float t = 0f;
+            while (t < half)
+            {
+                t += Time.deltaTime;
+                cam.orthographicSize = Mathf.Lerp(originalSize, targetSize, t / half);
+                yield return null;
+            }
+            t = 0f;
+            while (t < half)
+            {
+                t += Time.deltaTime;
+                cam.orthographicSize = Mathf.Lerp(targetSize, originalSize, t / half);
+                yield return null;
+            }
+            cam.orthographicSize = originalSize;
+        }
+
+        /// <summary>Call from combat feedback to flash the screen when a status effect is applied.</summary>
+        public void TriggerStatusFlash()
+        {
+            StartCoroutine(ScreenFlash());
+        }
+
+        IEnumerator ScreenFlash()
+        {
+            var cam = Camera.main;
+            if (cam == null) yield break;
+            var bg = cam.backgroundColor;
+            cam.backgroundColor = StatusFlashColor;
+            yield return new WaitForSeconds(FlashDuration);
+            cam.backgroundColor = bg;
         }
     }
 }

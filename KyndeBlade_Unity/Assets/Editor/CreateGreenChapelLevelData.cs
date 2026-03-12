@@ -66,6 +66,11 @@ namespace KyndeBlade.Editor
             loc.Encounter = enc;
             loc.NextLocationIds.Clear();
             loc.NextLocationIds.Add("fayre_felde");
+
+            var gcTree = AssetDatabase.LoadAssetAtPath<DialogueTreeDefinition>(
+                "Assets/Resources/Data/DialogueTrees/GreenChapelDialogue.asset");
+            if (gcTree != null) loc.DialogueTreeOnArrival = gcTree;
+
             AssetDatabase.CreateAsset(loc, $"{DataPath}/Loc_green_chapel.asset");
 
             var fayre = AssetDatabase.LoadAssetAtPath<LocationNode>("Assets/Resources/Data/Vision1/Loc_fayre_felde.asset");

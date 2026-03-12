@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -68,6 +68,7 @@ namespace KyndeBlade
         void Start()
         {
             ResolveRefs();
+            ValidateLocationGraph();
             TryLazyInit();
         }
 
@@ -76,6 +77,26 @@ namespace KyndeBlade
             if (_lazyInitDone) return;
             ResolveRefs();
             TryLazyInit();
+        }
+
+        void ValidateLocationGraph()
+        {
+            PatchNextLocation("seven_sins", "quest_do_wel");
+            PatchNextLocation("dongeoun_depths", "years_pass");
+            PatchNextLocation("years_pass", "field_of_grace");
+        }
+
+        void PatchNextLocation(string fromId, string toId)
+        {
+            if (_locationById == null) return;
+            if (!_locationById.TryGetValue(fromId, out var from)) return;
+            if (!_locationById.ContainsKey(toId)) return;
+            if (from.NextLocationIds == null) from.NextLocationIds = new List<string>();
+            if (!from.NextLocationIds.Contains(toId))
+            {
+                from.NextLocationIds.Add(toId);
+                Debug.Log($"[KyndeBlade] Patched {fromId} → {toId} transition at runtime.");
+            }
         }
 
         void ResolveRefs()
@@ -152,6 +173,14 @@ namespace KyndeBlade
             return _locationById != null && _locationById.TryGetValue(id, out var loc) ? loc : null;
         }
 
+        /// <summary>Returns all registered locations for the visual world map.</summary>
+        public List<LocationNode> GetAllLocations()
+        {
+            if (AllLocations != null) return new List<LocationNode>(AllLocations);
+            if (_locationById != null) return new List<LocationNode>(_locationById.Values);
+            return new List<LocationNode>();
+        }
+
         /// <summary>Transition to a location. Loads scene if set, or triggers encounter in current scene.</summary>
         public void TransitionTo(LocationNode loc)
         {
@@ -159,6 +188,9 @@ namespace KyndeBlade
 
             if (string.Equals(loc.LocationId, "otherworld", System.StringComparison.OrdinalIgnoreCase) && SaveManager != null)
                 SaveManager.IncrementOtherworldLivingCharacters();
+
+            if (string.Equals(loc.LocationId, "field_of_grace", System.StringComparison.OrdinalIgnoreCase) && SaveManager != null)
+                SaveManager.SetReachedFieldOfGrace();
 
             SetCurrentLocation(loc);
             OnLocationEntered?.Invoke(loc);
@@ -176,7 +208,17 @@ namespace KyndeBlade
                     SaveManager.SetPovertyLevel(loc.PovertyLevelOnArrival);
             }
 
-            if (loc.PreCombatChoiceBeat != null && NarrativeManager != null)
+            if (SaveManager != null && SaveManager.IsWodeWoDead && loc.StoryBeatOnArrivalWhenWodeWoDead != null && NarrativeManager != null)
+            {
+                NarrativeManager.ShowStoryBeat(loc.StoryBeatOnArrivalWhenWodeWoDead, () => EnterLocationCombatOrScene(loc));
+                return;
+            }
+
+            if (loc.DialogueTreeOnArrival != null && NarrativeManager != null)
+            {
+                NarrativeManager.RunDialogueTree(loc.DialogueTreeOnArrival, () => EnterLocationCombatOrScene(loc));
+            }
+            else if (loc.PreCombatChoiceBeat != null && NarrativeManager != null)
             {
                 NarrativeManager.ShowChoiceBeat(loc.PreCombatChoiceBeat, (index, isCorrect, transitionToLocationId, associatedSin) =>
                 {
@@ -235,7 +277,14 @@ namespace KyndeBlade
             {
                 SaveManager.SetGreenKnightWillAppearRandomly(!isCorrect);
                 if (!isCorrect)
+                {
                     SaveManager.IncrementEthicalMisstep();
+                    if (SaveManager.IsWodeWoUnlocked && !SaveManager.IsWodeWoDead &&
+                        SaveManager.CurrentProgress != null && SaveManager.CurrentProgress.EthicalMisstepCount >= 3)
+                    {
+                        SaveManager.SetWodeWoDead();
+                    }
+                }
             }
             ContinueAfterChoice(loc, transitionToLocationId, associatedSin, isCorrect);
         }
@@ -300,9 +349,6 @@ namespace KyndeBlade
         {
             var mapCanvas = GameObject.Find("MapCanvas");
             var combatCanvas = GameObject.Find("CombatCanvas");
-            // #region agent log
-            try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"WorldMapManager.cs:ShowMapHideCombat\",\"message\":\"show map\",\"data\":{\"mapFound\":" + (mapCanvas != null ? "true" : "false") + ",\"combatFound\":" + (combatCanvas != null ? "true" : "false") + ",\"locId\":" + (CurrentLocation != null ? "\"" + CurrentLocation.LocationId + "\"" : "null") + "},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H2\"}\n"); } catch { }
-            // #endregion
             if (mapCanvas != null) mapCanvas.SetActive(true);
             if (combatCanvas != null) combatCanvas.SetActive(false);
             var mapUI = UnityEngine.Object.FindFirstObjectByType<MapLevelSelectUI>();

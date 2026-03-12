@@ -291,7 +291,9 @@ namespace KyndeBlade
             var nameObj = new GameObject("Name");
             nameObj.transform.SetParent(go.transform);
             var nameText = nameObj.AddComponent<Text>();
-            nameText.text = c.CharacterName;
+            nameText.text = c.Stats.BlessingCount > 0
+                ? $"{c.CharacterName} ✦{c.Stats.BlessingCount}"
+                : c.CharacterName;
             nameText.font = font;
             nameText.fontSize = 14;
             ManuscriptUITheme.ApplyToText(nameText, emphasis: c == TurnManager.CurrentCharacter);

@@ -18,19 +18,17 @@ A **16-bit style** turn-based RPG with real-time combat mechanics, built in **Un
 Kynde Blade 16 Bit/             # Repo root
 ├── KyndeBlade_Unity/          # Unity project root (open this in Unity Hub)
 │   ├── Assets/
-│   │   ├── _Project/          # Feature-based layout
-│   │   │   ├── Code/          # Core, Combat, UI assemblies
-│   │   │   ├── Art/           # Sprites, animations
-│   │   │   └── Data/          # ScriptableObjects (enemy stats, etc.)
+│   │   ├── KyndeBlade/        # Code, Art, Resources
 │   │   └── Scenes/
-│   ├── ProjectSettings/
+│   ├── ProjectSettings/      # Canonical Unity settings (root ProjectSettings merged here)
 │   └── Packages/
-├── ProjectArchive/            # Docs + non-Unity (keeps root clean for Unity Hub)
-│   ├── docs/                  # Design documents
-│   ├── legacy/                # Unreal Engine 5.7
-│   └── GodotPrototype/        # Godot prototype
+├── Content/                   # Unreal-style (empty); use KyndeBlade_Unity/Assets for content
+├── ProjectSettings/           # Legacy at root; merged into KyndeBlade_Unity/ProjectSettings
+├── ProjectArchive/            # Docs + non-Unity (if present)
 └── README.md
 ```
+
+**Merge note:** Root-level `ProjectSettings` (e.g. EditorBuildSettings, app-ui config) have been merged into `KyndeBlade_Unity/ProjectSettings`. The Unity project is the single source of truth.
 
 ## Game Overview
 

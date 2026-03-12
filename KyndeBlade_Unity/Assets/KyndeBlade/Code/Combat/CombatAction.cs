@@ -99,7 +99,18 @@ namespace KyndeBlade.Combat
             if (ActionData.ActionType == CombatActionType.Counter) dmg *= 1.5f;
             if (target.IsBroken()) dmg *= 1.5f;
             target.ApplyCustomDamage(dmg, executor, damageAlreadyFinal: true);
-            if (ActionData.BreakDamage > 0f) target.TakeBreakDamage(ActionData.BreakDamage);
+            if (ActionData.BreakDamage > 0f)
+            {
+                float breakDmg = ActionData.BreakDamage;
+                var mods = BlessingSystem.GetModifiers(executor);
+                breakDmg *= mods.BreakDamageMultiplier;
+                target.TakeBreakDamage(breakDmg);
+            }
+            if (ActionData.ElementType != KyndeElementType.None && target != null)
+            {
+                var elementTarget = (ActionData.ElementType == KyndeElementType.Kynde) ? executor : target;
+                StatusEffectPipeline.TryApplyElement(ActionData.ElementType, elementTarget);
+            }
         }
 
         /// <summary>Called after hit is applied (e.g. from animation event). Fires OnActionExecuted for observers.</summary>

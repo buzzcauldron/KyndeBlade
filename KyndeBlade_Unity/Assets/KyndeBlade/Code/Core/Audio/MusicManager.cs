@@ -55,6 +55,19 @@ namespace KyndeBlade
             _reverb = gameObject.AddComponent<AudioReverbFilter>();
             _reverb.reverbPreset = AudioReverbPreset.Cave;
             _reverb.enabled = false;
+
+            EnsureProceduralThemes();
+        }
+
+        void EnsureProceduralThemes()
+        {
+            var lib = AudioLibrary.LoadFromResources();
+            if (DefaultTheme == null) DefaultTheme = lib != null ? lib.DefaultTheme : null;
+            if (GreenKnightTheme == null) GreenKnightTheme = lib != null ? lib.GreenKnightTheme : null;
+            if (OrfeoTheme == null) OrfeoTheme = lib != null ? lib.OrfeoTheme : null;
+            if (DefaultTheme == null) DefaultTheme = ProceduralAudioFactory.AmbientDrone();
+            if (GreenKnightTheme == null) GreenKnightTheme = ProceduralAudioFactory.GreenKnightTheme();
+            if (OrfeoTheme == null) OrfeoTheme = ProceduralAudioFactory.OrfeoTheme();
         }
 
         void OnDestroy()
@@ -89,10 +102,20 @@ namespace KyndeBlade
             onOmenComplete?.Invoke();
         }
 
+        float MusicVol
+        {
+            get
+            {
+                var vm = VolumeManager.Instance;
+                return vm != null ? vm.EffectiveMusicVolume : 1f;
+            }
+        }
+
         IEnumerator CrossfadeTo(AudioClip toClip, string themeId)
         {
             var from = _sourceA.isPlaying ? _sourceA : _sourceB;
             var to = _sourceA.isPlaying ? _sourceB : _sourceA;
+            float vol = MusicVol;
 
             bool isOrfeo = IsOrfeoTheme(themeId);
             to.clip = toClip;
@@ -112,13 +135,13 @@ namespace KyndeBlade
             {
                 t += Time.deltaTime;
                 float x = t / CrossfadeDuration;
-                from.volume = Mathf.Lerp(1f, 0f, x);
-                to.volume = Mathf.Lerp(0f, 1f, x);
+                from.volume = Mathf.Lerp(vol, 0f, x);
+                to.volume = Mathf.Lerp(0f, vol, x);
                 yield return null;
             }
             from.Stop();
-            from.volume = 1f;
-            to.volume = 1f;
+            from.volume = vol;
+            to.volume = vol;
         }
 
         bool IsOrfeoTheme(string themeId)

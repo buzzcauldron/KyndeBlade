@@ -27,6 +27,8 @@ namespace KyndeBlade
 
         bool GetDodgePressed()
         {
+            var ia = KyndeBladeInputActions.Instance;
+            if (ia != null && ia.Dodge != null && ia.Dodge.WasPressedThisFrame()) return true;
             if (Keyboard.current != null && Keyboard.current[DodgeKey].wasPressedThisFrame) return true;
             if (Gamepad.current != null && Gamepad.current[DodgeButton].wasPressedThisFrame) return true;
             return false;
@@ -34,6 +36,8 @@ namespace KyndeBlade
 
         bool GetParryPressed()
         {
+            var ia = KyndeBladeInputActions.Instance;
+            if (ia != null && ia.Parry != null && ia.Parry.WasPressedThisFrame()) return true;
             if (Keyboard.current != null && Keyboard.current[ParryKey].wasPressedThisFrame) return true;
             if (Gamepad.current != null && Gamepad.current[ParryButton].wasPressedThisFrame) return true;
             return false;
@@ -41,6 +45,8 @@ namespace KyndeBlade
 
         bool GetCounterPressed()
         {
+            var ia = KyndeBladeInputActions.Instance;
+            if (ia != null && ia.Counter != null && ia.Counter.WasPressedThisFrame()) return true;
             if (Keyboard.current != null && Keyboard.current[CounterKey].wasPressedThisFrame) return true;
             if (Gamepad.current != null && Gamepad.current[CounterButton].wasPressedThisFrame) return true;
             return false;

@@ -25,6 +25,9 @@ namespace KyndeBlade
         public MedievalCharacter GreenKnightPrefab;
         [Tooltip("Elde - Old Age. When Elde hits a character, they age.")]
         public MedievalCharacter EldePrefab;
+        public MedievalCharacter EnvyPrefab;
+        public MedievalCharacter SlothPrefab;
+        public MedievalCharacter LustPrefab;
         [Tooltip("Piers the Plowman - joins at Passus IV-V (piers location). Honest work.")]
         public MedievalCharacter PiersPrefab;
         [Tooltip("Conscience - joins at Passus XVII-XVIII (quest_do_wel or later). Moral awareness.")]
@@ -280,9 +283,21 @@ namespace KyndeBlade
             if (_playerChars.Count > 0 && _enemyChars.Count > 0)
             {
                 ApplyHungerScarToParty();
+                ApplyAgeFromSave();
                 EnsureFaeAppearanceManager();
                 StartCoroutine(DelayedStartCombat());
             }
+        }
+
+        void ApplyAgeFromSave()
+        {
+            var save = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+            var aging = UnityEngine.Object.FindFirstObjectByType<AgingManager>();
+            if (save?.CurrentProgress == null || aging == null) return;
+            int eldeHits = save.CurrentProgress.EldeHitsAccrued;
+            if (eldeHits <= 0) return;
+            foreach (var c in _playerChars)
+                if (c != null) aging.ApplyAgeToCharacter(c, eldeHits);
         }
 
         /// <summary>Spawn party in poem order: Wille (always), Piers (after piers), Conscience (after quest_do_wel).</summary>
@@ -307,6 +322,17 @@ namespace KyndeBlade
             {
                 var consciencePrefab = ConsciencePrefab != null ? ConsciencePrefab : MagePrefab;
                 SpawnCharacter(consciencePrefab, new Vector3(-3.5f, 1f, 0f), CharacterClass.Mage, "Conscience", true);
+            }
+
+            if (saveManager?.CurrentProgress != null)
+            {
+                foreach (var c in _playerChars)
+                {
+                    if (c == null) continue;
+                    var entry = saveManager.CurrentProgress.GetOrCreateCharacterProgress(c.CharacterName);
+                    BlessingSystem.RestoreFromSave(c, entry);
+                    c.Stats.FirstHitUsed = false;
+                }
             }
         }
 
@@ -389,12 +415,12 @@ namespace KyndeBlade
             switch (sin)
             {
                 case SinType.Pride: return PridePrefab;
-                case SinType.Envy: return PridePrefab; // placeholder
+                case SinType.Envy: return EnvyPrefab ?? PridePrefab;
                 case SinType.Wrath: return WrathPrefab;
-                case SinType.Sloth: return HungerPrefab; // placeholder
+                case SinType.Sloth: return SlothPrefab ?? HungerPrefab;
                 case SinType.Greed: return LadyMedePrefab;
                 case SinType.Gluttony: return HungerPrefab;
-                case SinType.Lust: return LadyMedePrefab; // placeholder
+                case SinType.Lust: return LustPrefab ?? LadyMedePrefab;
                 default: return PridePrefab;
             }
         }
@@ -411,6 +437,9 @@ namespace KyndeBlade
             if (t.Contains("pride")) return PridePrefab;
             if (t.Contains("green") || t.Contains("knight")) return GreenKnightPrefab;
             if (t.Contains("elde")) return EldePrefab;
+            if (t.Contains("envy")) return EnvyPrefab;
+            if (t.Contains("sloth")) return SlothPrefab;
+            if (t.Contains("lust")) return LustPrefab;
             return null;
         }
 
@@ -437,17 +466,58 @@ namespace KyndeBlade
                 if (c.GetComponent<GreenKnightBossAI>() == null)
                     c.gameObject.AddComponent<GreenKnightBossAI>();
             }
+            else if (c.GetComponent<WrathCharacter>() != null)
+            {
+                WrathMoveset.ApplyToCharacter(c);
+                if (c.GetComponent<WrathBossAI>() == null)
+                    c.gameObject.AddComponent<WrathBossAI>();
+            }
+            else if (c.GetComponent<FalseCharacter>() != null)
+            {
+                FalseMoveset.ApplyToCharacter(c);
+                if (c.GetComponent<FalseBossAI>() == null)
+                    c.gameObject.AddComponent<FalseBossAI>();
+            }
+            else if (c.GetComponent<LadyMedeCharacter>() != null)
+            {
+                LadyMedeMoveset.ApplyToCharacter(c);
+                if (c.GetComponent<LadyMedeBossAI>() == null)
+                    c.gameObject.AddComponent<LadyMedeBossAI>();
+            }
             else if (c.GetComponent<EldeCharacter>() != null)
             {
                 EldeMoveset.ApplyToCharacter(c);
-                if (c.GetComponent<SimpleEnemyAI>() == null && c.GetComponent<AdaptiveEnemyAI>() == null)
-                    c.gameObject.AddComponent(UseExpedition33Moveset ? typeof(AdaptiveEnemyAI) : typeof(SimpleEnemyAI));
+                if (c.GetComponent<EldeBossAI>() == null)
+                    c.gameObject.AddComponent<EldeBossAI>();
+            }
+            else if (c.GetComponent<EnvyCharacter>() != null)
+            {
+                EnvyMoveset.ApplyToCharacter(c);
+                if (c.GetComponent<EnvyBossAI>() == null)
+                    c.gameObject.AddComponent<EnvyBossAI>();
+            }
+            else if (c.GetComponent<SlothCharacter>() != null)
+            {
+                SlothMoveset.ApplyToCharacter(c);
+                if (c.GetComponent<SlothBossAI>() == null)
+                    c.gameObject.AddComponent<SlothBossAI>();
+            }
+            else if (c.GetComponent<LustCharacter>() != null)
+            {
+                LustMoveset.ApplyToCharacter(c);
+                if (c.GetComponent<LustBossAI>() == null)
+                    c.gameObject.AddComponent<LustBossAI>();
             }
             else if (UseExpedition33Moveset)
                 Expedition33Moveset.ApplyToCharacter(c, true);
             else
                 DefaultCombatActions.AddDefaultsTo(c);
-            if (c.GetComponent<HungerBossAI>() == null && c.GetComponent<PrideBossAI>() == null && c.GetComponent<GreenKnightBossAI>() == null && c.GetComponent<SimpleEnemyAI>() == null && c.GetComponent<AdaptiveEnemyAI>() == null)
+            if (c.GetComponent<HungerBossAI>() == null && c.GetComponent<PrideBossAI>() == null &&
+                c.GetComponent<GreenKnightBossAI>() == null && c.GetComponent<WrathBossAI>() == null &&
+                c.GetComponent<FalseBossAI>() == null && c.GetComponent<LadyMedeBossAI>() == null &&
+                c.GetComponent<EldeBossAI>() == null && c.GetComponent<EnvyBossAI>() == null &&
+                c.GetComponent<SlothBossAI>() == null && c.GetComponent<LustBossAI>() == null &&
+                c.GetComponent<SimpleEnemyAI>() == null && c.GetComponent<AdaptiveEnemyAI>() == null)
                 c.gameObject.AddComponent(UseExpedition33Moveset ? typeof(AdaptiveEnemyAI) : typeof(SimpleEnemyAI));
             _enemyChars.Add(c);
         }
@@ -459,6 +529,14 @@ namespace KyndeBlade
                 new GameObject("SaveManager").AddComponent<SaveManager>();
             if (UnityEngine.Object.FindFirstObjectByType<SecretCodeListener>() == null)
                 new GameObject("SecretCodeListener").AddComponent<SecretCodeListener>();
+            if (UnityEngine.Object.FindFirstObjectByType<VolumeManager>() == null)
+                new GameObject("VolumeManager").AddComponent<VolumeManager>();
+            if (UnityEngine.Object.FindFirstObjectByType<AccessibilityManager>() == null)
+                new GameObject("AccessibilityManager").AddComponent<AccessibilityManager>();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (UnityEngine.Object.FindFirstObjectByType<DebugOverlay>() == null)
+                new GameObject("DebugOverlay").AddComponent<DebugOverlay>();
+#endif
             if (UnityEngine.Object.FindFirstObjectByType<MusicManager>() == null)
                 new GameObject("MusicManager").AddComponent<MusicManager>();
             if (UnityEngine.Object.FindFirstObjectByType<AgingManager>() == null)
@@ -509,7 +587,12 @@ namespace KyndeBlade
             {
                 var es = new GameObject("EventSystem");
                 es.AddComponent<UnityEngine.EventSystems.EventSystem>();
-                es.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+                es.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+            }
+            if (UnityEngine.Object.FindFirstObjectByType<KyndeBladeInputActions>() == null)
+            {
+                var inputGo = new GameObject("InputActions");
+                inputGo.AddComponent<KyndeBladeInputActions>();
             }
             if (UnityEngine.Object.FindFirstObjectByType<CombatUI>() == null)
             {
@@ -531,31 +614,65 @@ namespace KyndeBlade
                 new GameObject("GameStateManager").AddComponent<GameStateManager>();
             if (UnityEngine.Object.FindFirstObjectByType<IlluminationManager>() == null)
                 new GameObject("IlluminationManager").AddComponent<IlluminationManager>();
+            if (UnityEngine.Object.FindFirstObjectByType<ScreenEffects>() == null)
+                new GameObject("ScreenEffects").AddComponent<ScreenEffects>();
         }
 
-        /// <summary>Adds or configures SpriteRenderer and PiersAppearanceData (color, scale) for a character.</summary>
+        [Header("Visual Config")]
+        [Tooltip("Assign a CharacterVisualConfig asset to override placeholder sprites with real art.")]
+        public CharacterVisualConfig VisualConfig;
+
+        /// <summary>Adds or configures SpriteRenderer, SimpleAnimator, and PiersAppearanceData for a character.</summary>
         void EnsureCharacterVisual(GameObject go, bool isPlayer, string characterKey = null)
         {
+            var key = characterKey ?? go.name;
             var sr = go.GetComponent<SpriteRenderer>();
             if (sr == null)
             {
                 sr = go.AddComponent<SpriteRenderer>();
-                sr.sprite = UnityEngine.Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.one * 0.5f);
                 sr.drawMode = SpriteDrawMode.Simple;
                 var shader = GetFallbackColorShader();
                 if (shader != null)
                     sr.material = new Material(shader);
             }
 
+            var configEntry = VisualConfig != null ? VisualConfig.Find(key) : null;
+            if (configEntry != null && configEntry.Sprite != null)
+                sr.sprite = configEntry.Sprite;
+            else
+                sr.sprite = PlaceholderSpriteFactory.GetSpriteForCharacter(key, isPlayer);
+
             var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             int seed = saveManager?.CurrentProgress?.RunAppearanceSeed ?? UnityEngine.Random.Range(1, int.MaxValue);
             bool hasHungerScar = saveManager?.CurrentProgress?.HasEverHadHunger ?? false;
-            var key = characterKey ?? go.name;
+
             Color color;
-            Vector3 scale;
-            PiersAppearanceRandomizer.GetAppearance(seed, key, isPlayer, out color, out scale, hasHungerScar);
+            if (configEntry != null && configEntry.ColorOverride.a > 0f)
+                color = configEntry.ColorOverride;
+            else
+                color = PlaceholderSpriteFactory.GetColorForCharacter(key, isPlayer);
+
+            if (hasHungerScar)
+            {
+                Color.RGBToHSV(color, out float h, out float s, out float v);
+                color = Color.HSVToRGB(h, s * 0.6f, v * 0.85f);
+            }
             sr.color = color;
+
+            Vector3 scale = (configEntry != null && configEntry.ScaleOverride != Vector3.zero)
+                ? configEntry.ScaleOverride
+                : PlaceholderSpriteFactory.GetScaleForCharacter(key);
             go.transform.localScale = scale;
+
+            if (go.GetComponent<SimpleAnimator>() == null)
+            {
+                var anim = go.AddComponent<SimpleAnimator>();
+                if (configEntry != null)
+                {
+                    anim.IdleBobSpeed *= configEntry.AnimationSpeed;
+                    anim.AttackDuration /= Mathf.Max(0.1f, configEntry.AnimationSpeed);
+                }
+            }
 
             var pad = go.GetComponent<PiersAppearanceData>();
             if (pad == null) pad = go.AddComponent<PiersAppearanceData>();

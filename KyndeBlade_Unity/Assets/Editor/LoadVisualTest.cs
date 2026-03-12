@@ -25,6 +25,20 @@ namespace KyndeBlade.Editor
             CreateVisualTestScene();
         }
 
+        [MenuItem("KyndeBlade/Add Visual Test Bootstrap to Scene")]
+        public static void AddVisualTestBootstrapToScene()
+        {
+            if (GameObject.Find("VisualTestBootstrap") != null)
+            {
+                Debug.Log("Scene already has VisualTestBootstrap.");
+                return;
+            }
+            var go = new GameObject("VisualTestBootstrap");
+            go.AddComponent<VisualTestBootstrap>();
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            Debug.Log("Added VisualTestBootstrap. Save scene to keep it.");
+        }
+
         [MenuItem("KyndeBlade/Add Character to Visual Test")]
         public static void AddCharacterToVisualTest()
         {
@@ -99,6 +113,9 @@ namespace KyndeBlade.Editor
                 mat.color = new Color(0.4f, 0.25f, 0.5f);
                 renderer.sharedMaterial = mat;
             }
+
+            var bootstrapGo = new GameObject("VisualTestBootstrap");
+            bootstrapGo.AddComponent<VisualTestBootstrap>();
 
             EditorSceneManager.SaveScene(scene, VisualTestScenePath);
 

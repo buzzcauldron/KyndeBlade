@@ -67,6 +67,23 @@ namespace KyndeBlade
             onComplete?.Invoke();
         }
 
+        /// <summary>Run a full dialogue tree with conditions and consequences.</summary>
+        public void RunDialogueTree(DialogueTreeDefinition tree, Action onComplete)
+        {
+            if (tree == null || tree.Nodes == null || tree.Nodes.Length == 0)
+            {
+                onComplete?.Invoke();
+                return;
+            }
+            var executor = UnityEngine.Object.FindFirstObjectByType<DialogueTreeExecutor>();
+            if (executor == null)
+            {
+                var go = new GameObject("DialogueTreeExecutor");
+                executor = go.AddComponent<DialogueTreeExecutor>();
+            }
+            executor.RunTree(tree, onComplete);
+        }
+
         /// <summary>Show dialogue with choices. onChoiceSelected(index, isCorrectChoice, transitionToLocationId, associatedSin).
         /// Baldur's Gate–style chaining: if choice has NextDialogueBeat, shows that next; callback only when leaf choice selected.</summary>
         public void ShowChoiceBeat(DialogueChoiceBeat beat, Action<int, bool, string, SinType> onChoiceSelected)
