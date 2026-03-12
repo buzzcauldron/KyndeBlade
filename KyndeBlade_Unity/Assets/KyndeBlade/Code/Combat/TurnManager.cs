@@ -184,6 +184,11 @@ namespace KyndeBlade
         {
             if (Settings != null)
                 duration = Settings.GetAdjustedWindow(duration);
+            if (defender != null)
+            {
+                var bm = BlessingSystem.GetModifiers(defender);
+                duration *= bm.TimingWindowMultiplier;
+            }
             RealTimeWindowDuration = duration;
             RealTimeWindowRemaining = duration;
             CurrentAttackerDuringWindow = attacker ?? GetFirstAliveEnemy();

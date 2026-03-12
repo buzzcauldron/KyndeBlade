@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+
 using UnityEngine;
 using KyndeBlade.Combat;
 
@@ -91,9 +91,6 @@ namespace KyndeBlade
                 if (_logSkipInterval >= 10f)
                 {
                     _logSkipInterval = 0f;
-                    // #region agent log
-                    try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"AgingManager.cs:Update\",\"message\":\"skip\",\"data\":{\"saveNull\":" + (SaveManager == null ? "true" : "false") + ",\"progressNull\":" + (SaveManager != null && SaveManager.CurrentProgress == null ? "true" : "false") + "},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H5\"}\n"); } catch { }
-                    // #endregion
                 }
             }
         }

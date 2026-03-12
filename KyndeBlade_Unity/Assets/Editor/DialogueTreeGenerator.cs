@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEditor;
+using KyndeBlade;
 
-namespace KyndeBlade
+namespace KyndeBlade.Editor
 {
     /// <summary>
     /// Autogenerates DialogueChoiceBeat and StoryBeat assets from DialogueTreeDefinition.

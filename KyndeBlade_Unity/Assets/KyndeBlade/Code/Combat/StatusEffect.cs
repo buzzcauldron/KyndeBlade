@@ -1,5 +1,5 @@
 using System;
-using System.IO;
+
 using UnityEngine;
 using KyndeBlade;
 
@@ -98,9 +98,6 @@ namespace KyndeBlade.Combat
         void ApplyStatModifiers(MedievalCharacter target, bool apply)
         {
             if (target == null) return;
-            // #region agent log
-            try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"StatusEffect.cs:ApplyStatModifiers\",\"message\":\"modifiers\",\"data\":{\"apply\":" + (apply ? "true" : "false") + ",\"target\":" + (target != null ? "\"" + target.name + "\"" : "null") + ",\"effectType\":\"" + Data.EffectType + "\"},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H3\"}\n"); } catch { }
-            // #endregion
             if (apply)
             {
                 target.Stats.AttackPower *= Data.AttackPowerModifier;
@@ -185,6 +182,168 @@ namespace KyndeBlade.Combat
                     KyndeGenerationModifier = 1.03f
                 }
             };
+        }
+
+        public static StatusEffect CreateFrostEffect(float duration = 3f)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Frost,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = 1,
+                    EffectName = "Frost",
+                    SpeedModifier = 0.7f,
+                    DamagePerSecond = 5f
+                }
+            };
+        }
+
+        public static StatusEffect CreateBurningEffect(float duration = 3f, float tickDamage = 3f)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Burning,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = 1,
+                    EffectName = "Burning",
+                    DamagePerSecond = tickDamage
+                }
+            };
+        }
+
+        public static StatusEffect CreatePoisonEffect(float duration = 3f, int stacks = 1)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Poison,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = stacks,
+                    EffectName = "Poison",
+                    DamagePerSecond = 2f * stacks,
+                    StaminaRegenModifier = Mathf.Max(0.25f, 1f - stacks * 0.25f)
+                }
+            };
+        }
+
+        public static StatusEffect CreateStunEffect(float duration = 1f)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Stun,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = 1,
+                    EffectName = "Stun",
+                    SpeedModifier = 0f
+                }
+            };
+        }
+
+        public static StatusEffect CreateSlowEffect(float duration = 2f, float speedMult = 0.5f)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Slow,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = 1,
+                    EffectName = "Slow",
+                    SpeedModifier = speedMult
+                }
+            };
+        }
+
+        public static StatusEffect CreateWeakEffect(float duration = 2f)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Weak,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = 1,
+                    EffectName = "Weak",
+                    AttackPowerModifier = 0.75f
+                }
+            };
+        }
+
+        public static StatusEffect CreateVulnerableEffect(float duration = 2f)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Vulnerable,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = 1,
+                    EffectName = "Vulnerable",
+                    DefenseModifier = 0.75f
+                }
+            };
+        }
+
+        public static StatusEffect CreateBlessedEffect(float duration = 3f)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.Blessed,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = 1,
+                    EffectName = "Blessed",
+                    AttackPowerModifier = 1.15f,
+                    DefenseModifier = 1.15f,
+                    SpeedModifier = 1.15f
+                }
+            };
+        }
+
+        public static StatusEffect CreateKyndeBoostEffect(float duration = 2f, float mult = 2f)
+        {
+            return new StatusEffect
+            {
+                Data = new StatusEffectData
+                {
+                    EffectType = StatusEffectType.KyndeBoost,
+                    Duration = duration,
+                    RemainingTime = duration,
+                    StackCount = 1,
+                    EffectName = "Kynde Boost",
+                    KyndeGenerationModifier = mult
+                }
+            };
+        }
+
+        /// <summary>Per-turn tick: applies DoT damage and decrements duration by 1 turn.
+        /// Call from MedievalCharacter.InvokeTurnStart.</summary>
+        public void TickEffect(MedievalCharacter target)
+        {
+            if (target == null) return;
+            if (Data.DamagePerSecond > 0f)
+                target.ApplyCustomDamage(Data.DamagePerSecond, null, damageAlreadyFinal: true);
+            if (Data.Duration > 0f)
+            {
+                Data.RemainingTime -= 1f;
+                Data.RemainingTime = Mathf.Max(0f, Data.RemainingTime);
+            }
         }
     }
 }

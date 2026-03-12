@@ -26,6 +26,9 @@ namespace KyndeBlade
         public int EthicalMisstepCount;
         public int WodeWoArcStage;
         public bool WodeWoUnlocked;
+        public bool WodeWoDead;
+        public bool HasReachedFieldOfGrace;
+        public CharacterProgressEntry[] CharacterProgress;
     }
 
     /// <summary>Serializable game progress. Phase 1: checkpoint per location.
@@ -63,6 +66,22 @@ namespace KyndeBlade
         public int WodeWoArcStage;
         [Tooltip("True when player has entered the W O D E passcode; enables the full Wode-Wo line.")]
         public bool WodeWoUnlocked;
+        [Tooltip("True when Wode-Wo has died (fae took him). Alters arrival beats at relevant locations.")]
+        public bool WodeWoDead;
+        [Tooltip("True once the player has reached the Field of Grace (game complete).")]
+        public bool HasReachedFieldOfGrace;
+
+        public List<CharacterProgressEntry> CharacterProgress = new List<CharacterProgressEntry>();
+
+        /// <summary>Get or create a character progress entry by name.</summary>
+        public CharacterProgressEntry GetOrCreateCharacterProgress(string characterName)
+        {
+            foreach (var e in CharacterProgress)
+                if (e.CharacterName == characterName) return e;
+            var entry = new CharacterProgressEntry { CharacterName = characterName };
+            CharacterProgress.Add(entry);
+            return entry;
+        }
 
         public static GameProgress CreateNew(string startLocationId)
         {
@@ -101,6 +120,9 @@ namespace KyndeBlade
             d.EthicalMisstepCount = EthicalMisstepCount;
             d.WodeWoArcStage = WodeWoArcStage;
             d.WodeWoUnlocked = WodeWoUnlocked;
+            d.WodeWoDead = WodeWoDead;
+            d.HasReachedFieldOfGrace = HasReachedFieldOfGrace;
+            d.CharacterProgress = CharacterProgress?.ToArray() ?? Array.Empty<CharacterProgressEntry>();
             return JsonUtility.ToJson(d);
         }
 
@@ -129,6 +151,11 @@ namespace KyndeBlade
             p.EthicalMisstepCount = d.EthicalMisstepCount;
             p.WodeWoArcStage = d.WodeWoArcStage;
             p.WodeWoUnlocked = d.WodeWoUnlocked;
+            p.WodeWoDead = d.WodeWoDead;
+            p.HasReachedFieldOfGrace = d.HasReachedFieldOfGrace;
+            p.CharacterProgress = d.CharacterProgress != null
+                ? new List<CharacterProgressEntry>(d.CharacterProgress)
+                : new List<CharacterProgressEntry>();
             return p;
         }
     }

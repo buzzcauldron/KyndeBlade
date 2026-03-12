@@ -61,7 +61,30 @@ namespace KyndeBlade
         public event Action OnTurnStart;
         public event Action OnTurnEnd;
 
-        public void InvokeTurnStart() => OnTurnStart?.Invoke();
+        public void InvokeTurnStart()
+        {
+            if (HasStatusEffect(StatusEffectType.Stun))
+            {
+                TickStatusEffects();
+                OnTurnStart?.Invoke();
+                return;
+            }
+            var bm = BlessingSystem.GetModifiers(this);
+            if (bm.HealPerTurn > 0f) Heal(bm.HealPerTurn);
+            if (bm.StaminaPerTurn > 0f) RestoreStamina(bm.StaminaPerTurn);
+            TickStatusEffects();
+            OnTurnStart?.Invoke();
+        }
+
+        void TickStatusEffects()
+        {
+            for (int i = ActiveStatusEffects.Count - 1; i >= 0; i--)
+            {
+                var e = ActiveStatusEffects[i];
+                e.TickEffect(this);
+                if (e.IsExpired()) { e.RemoveEffect(this); ActiveStatusEffects.RemoveAt(i); }
+            }
+        }
         public void InvokeTurnEnd() => OnTurnEnd?.Invoke();
         /// <summary>Hodent: Clear feedback. (target, success)</summary>
         public event Action<MedievalCharacter, bool> OnDodgeAttempted;
@@ -229,6 +252,22 @@ namespace KyndeBlade
         {
             if (!IsAlive()) return;
 
+            if (IsDodging && AttemptDodge())
+            {
+                float kynde = DodgeWindowRemaining < 0.3f ? 2f : 1f;
+                GainKynde(kynde);
+                OnDodgeAttempted?.Invoke(this, true);
+                return;
+            }
+            if (IsDodging) { OnDodgeAttempted?.Invoke(this, false); }
+
+            var blessMods = BlessingSystem.GetModifiers(this);
+            if (blessMods.FirstHitImmunity && !Stats.FirstHitUsed)
+            {
+                Stats.FirstHitUsed = true;
+                return;
+            }
+
             float actualDamage = damageAlreadyFinal
                 ? Mathf.Max(0f, damage)
                 : Mathf.Max(0f, damage - Stats.Defense);
@@ -245,21 +284,12 @@ namespace KyndeBlade
                     actualDamage *= 1f + hunger.Data.StackCount * 0.2f;
             }
 
-            if (IsDodging && AttemptDodge())
-            {
-                float kynde = DodgeWindowRemaining < 0.3f ? 2f : 1f; // Perfect in last 30%
-                GainKynde(kynde);
-                OnDodgeAttempted?.Invoke(this, true);
-                return;
-            }
-            if (IsDodging) { OnDodgeAttempted?.Invoke(this, false); }
-
             if (IsParrying)
             {
                 actualDamage *= 0.3f;
                 if (AttemptParry())
                 {
-                    GainKynde(ParryWindowRemaining < 0.25f ? 4f : 2f); // Perfect in last 25%
+                    GainKynde(ParryWindowRemaining < 0.25f ? 4f : 2f);
                     OnParryAttempted?.Invoke(this, true);
                 }
                 else
@@ -294,9 +324,11 @@ namespace KyndeBlade
             OnHealthChanged?.Invoke(Stats.CurrentHealth, Stats.MaxHealth);
         }
 
-        /// <summary>Spends stamina for actions; clamps to zero and fires OnStaminaChanged.</summary>
+        /// <summary>Spends stamina for actions; blessing modifier applied. Clamps to zero.</summary>
         public void ConsumeStamina(float amount)
         {
+            var blessMods = BlessingSystem.GetModifiers(this);
+            amount = Mathf.Max(0f, amount * blessMods.StaminaCostMultiplier);
             Stats.CurrentStamina = Mathf.Max(0f, Stats.CurrentStamina - amount);
             OnStaminaChanged?.Invoke(Stats.CurrentStamina, Stats.MaxStamina);
         }
@@ -333,6 +365,8 @@ namespace KyndeBlade
             if (scar != null) amount *= scar.Data.KyndeGenerationModifier;
             if (_cachedPoverty == null) _cachedPoverty = UnityEngine.Object.FindFirstObjectByType<PovertyManager>();
             if (_cachedPoverty != null) amount *= _cachedPoverty.GetKyndeGenMultiplier();
+            var blessMods = BlessingSystem.GetModifiers(this);
+            amount *= blessMods.KyndeGenerationMultiplier;
             Stats.CurrentKynde = Mathf.Min(Stats.MaxKynde, Stats.CurrentKynde + amount);
             OnKyndeChanged?.Invoke(Stats.CurrentKynde, Stats.MaxKynde);
         }

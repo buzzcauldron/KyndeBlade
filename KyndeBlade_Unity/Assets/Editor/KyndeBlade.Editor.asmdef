@@ -4,7 +4,8 @@
     "references": [
         "KyndeBlade.Core",
         "KyndeBlade.Combat",
-        "UnityEditor"
+        "UnityEditor",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [
         "Editor"

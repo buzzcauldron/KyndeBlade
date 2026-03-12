@@ -1,13 +1,18 @@
 using System;
+using System.IO;
 using UnityEngine;
 
 namespace KyndeBlade
 {
-    /// <summary>Save/load game progress. Phase 1: checkpoint per location.</summary>
+    /// <summary>Save/load game progress using file-based JSON.
+    /// Supports 3 save slots stored at Application.persistentDataPath/saves/.</summary>
     public class SaveManager : MonoBehaviour
     {
-        const string SaveKey = "KyndeBlade_Save";
+        const string SaveDir = "saves";
+        const string LegacyKey = "KyndeBlade_Save";
+        const int MaxSlots = 3;
 
+        public int ActiveSlot { get; private set; }
         public GameProgress CurrentProgress { get; private set; }
 
         public event Action<GameProgress> OnProgressLoaded;
@@ -15,13 +20,59 @@ namespace KyndeBlade
 
         void Awake()
         {
+            MigrateLegacySave();
             Load();
         }
 
-        public void Load()
+        string GetSavePath(int slot) =>
+            Path.Combine(Application.persistentDataPath, SaveDir, $"slot_{slot}.json");
+
+        string GetBackupPath(int slot) =>
+            Path.Combine(Application.persistentDataPath, SaveDir, $"slot_{slot}.bak");
+
+        void EnsureSaveDir()
         {
-            var json = PlayerPrefs.GetString(SaveKey, null);
-            if (string.IsNullOrEmpty(json))
+            var dir = Path.Combine(Application.persistentDataPath, SaveDir);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+        }
+
+        void MigrateLegacySave()
+        {
+            if (!PlayerPrefs.HasKey(LegacyKey)) return;
+            var json = PlayerPrefs.GetString(LegacyKey, "");
+            if (string.IsNullOrEmpty(json)) return;
+            EnsureSaveDir();
+            var path = GetSavePath(0);
+            if (!File.Exists(path))
+            {
+                try
+                {
+                    File.WriteAllText(path, json);
+                    Debug.Log("[SaveManager] Migrated PlayerPrefs save to file slot 0.");
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"[SaveManager] Migration failed: {e.Message}");
+                }
+            }
+            PlayerPrefs.DeleteKey(LegacyKey);
+            PlayerPrefs.Save();
+        }
+
+        public void SetActiveSlot(int slot)
+        {
+            ActiveSlot = Mathf.Clamp(slot, 0, MaxSlots - 1);
+        }
+
+        public void Load() => Load(ActiveSlot);
+
+        public void Load(int slot)
+        {
+            ActiveSlot = Mathf.Clamp(slot, 0, MaxSlots - 1);
+            var path = GetSavePath(ActiveSlot);
+
+            if (!File.Exists(path))
             {
                 CurrentProgress = GameProgress.CreateNew("malvern");
                 OnProgressLoaded?.Invoke(CurrentProgress);
@@ -29,13 +80,35 @@ namespace KyndeBlade
             }
             try
             {
+                var json = File.ReadAllText(path);
                 CurrentProgress = GameProgress.FromJson(json);
                 OnProgressLoaded?.Invoke(CurrentProgress);
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"SaveManager: Failed to load save: {e.Message}");
+                Debug.LogWarning($"[SaveManager] Failed to load slot {ActiveSlot}: {e.Message}");
+                if (TryRecoverFromBackup(ActiveSlot)) return;
                 CurrentProgress = GameProgress.CreateNew("malvern");
+            }
+        }
+
+        bool TryRecoverFromBackup(int slot)
+        {
+            var backupPath = GetBackupPath(slot);
+            if (!File.Exists(backupPath)) return false;
+            try
+            {
+                var json = File.ReadAllText(backupPath);
+                CurrentProgress = GameProgress.FromJson(json);
+                Debug.Log($"[SaveManager] Recovered slot {slot} from backup.");
+                Save();
+                OnProgressLoaded?.Invoke(CurrentProgress);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[SaveManager] Backup recovery failed: {e.Message}");
+                return false;
             }
         }
 
@@ -44,8 +117,18 @@ namespace KyndeBlade
             if (CurrentProgress == null) return;
             CurrentProgress.SaveTimestamp = DateTime.UtcNow.ToString("o");
             var json = CurrentProgress.ToJson();
-            PlayerPrefs.SetString(SaveKey, json);
-            PlayerPrefs.Save();
+            EnsureSaveDir();
+            var path = GetSavePath(ActiveSlot);
+            try
+            {
+                if (File.Exists(path))
+                    File.Copy(path, GetBackupPath(ActiveSlot), overwrite: true);
+                File.WriteAllText(path, json);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[SaveManager] Save failed: {e.Message}");
+            }
             OnProgressSaved?.Invoke(CurrentProgress);
         }
 
@@ -71,21 +154,67 @@ namespace KyndeBlade
                 CurrentProgress.UnlockedLocationIds.Add(locationId);
         }
 
-        public bool HasVisited(string locationId)
-        {
-            return CurrentProgress?.VisitedLocationIds?.Contains(locationId) ?? false;
-        }
+        public bool HasVisited(string locationId) =>
+            CurrentProgress?.VisitedLocationIds?.Contains(locationId) ?? false;
 
-        public bool IsUnlocked(string locationId)
-        {
-            return CurrentProgress?.UnlockedLocationIds?.Contains(locationId) ?? false;
-        }
+        public bool IsUnlocked(string locationId) =>
+            CurrentProgress?.UnlockedLocationIds?.Contains(locationId) ?? false;
 
         public void NewGame(string startLocationId = "malvern")
         {
             CurrentProgress = GameProgress.CreateNew(startLocationId);
             Save();
         }
+
+        public void DeleteSlot(int slot)
+        {
+            slot = Mathf.Clamp(slot, 0, MaxSlots - 1);
+            var path = GetSavePath(slot);
+            var backup = GetBackupPath(slot);
+            try
+            {
+                if (File.Exists(path)) File.Delete(path);
+                if (File.Exists(backup)) File.Delete(backup);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[SaveManager] Delete slot {slot} failed: {e.Message}");
+            }
+        }
+
+        public bool SlotExists(int slot)
+        {
+            slot = Mathf.Clamp(slot, 0, MaxSlots - 1);
+            return File.Exists(GetSavePath(slot));
+        }
+
+        /// <summary>Returns a summary for the save slot UI, or null if empty.</summary>
+        public SaveSlotSummary GetSlotSummary(int slot)
+        {
+            slot = Mathf.Clamp(slot, 0, MaxSlots - 1);
+            var path = GetSavePath(slot);
+            if (!File.Exists(path)) return null;
+            try
+            {
+                var json = File.ReadAllText(path);
+                var p = GameProgress.FromJson(json);
+                return new SaveSlotSummary
+                {
+                    Slot = slot,
+                    LocationId = p.CurrentLocationId,
+                    VisionIndex = p.VisionIndex,
+                    PlayTimeSeconds = p.TotalPlayTimeSeconds,
+                    Timestamp = p.SaveTimestamp,
+                    HasReachedFieldOfGrace = p.HasReachedFieldOfGrace
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        // --- Convenience properties (unchanged API) ---
 
         public void SetGreenKnightWillAppearRandomly(bool value)
         {
@@ -126,7 +255,6 @@ namespace KyndeBlade
             Save();
         }
 
-        /// <summary>Every death adds a form of the body to Orfeo's Otherworld.</summary>
         public void IncrementOtherworldBodiesFromDeath()
         {
             if (CurrentProgress == null) return;
@@ -134,7 +262,6 @@ namespace KyndeBlade
             Save();
         }
 
-        /// <summary>Elde (Old Age) hit a character. Used as age tier when applying age.</summary>
         public void IncrementEldeHitsAccrued()
         {
             if (CurrentProgress == null) return;
@@ -142,7 +269,6 @@ namespace KyndeBlade
             Save();
         }
 
-        /// <summary>Mark that a player character has had hunger this run. Permanent scars apply.</summary>
         public void MarkHasEverHadHunger()
         {
             if (CurrentProgress == null) return;
@@ -151,7 +277,6 @@ namespace KyndeBlade
             Save();
         }
 
-        /// <summary>Increment ethical misstep count (wrong dialogue choice). Applies cumulative damage-taken penalty in combat.</summary>
         public void IncrementEthicalMisstep()
         {
             if (CurrentProgress == null) return;
@@ -159,17 +284,14 @@ namespace KyndeBlade
             Save();
         }
 
-        /// <summary>Damage taken multiplier from ethical missteps. 1f + (count * DamageTakenPerMisstep).</summary>
         public float GetDamageTakenMultiplier()
         {
             int n = CurrentProgress?.EthicalMisstepCount ?? 0;
             if (n <= 0) return 1f;
-            return 1f + n * 0.1f; // 10% more damage per misstep (1–5 scale: 10%–50%)
+            return 1f + n * 0.1f;
         }
 
-        /// <summary>Wode-Wo positive arc stage: 0=none, 1=Baby, 2=Care, 3=Grown, 4=Complete.</summary>
         public int WodeWoArcStage => CurrentProgress?.WodeWoArcStage ?? 0;
-
         public bool IsWodeWoArcComplete => WodeWoArcStage >= 4;
 
         public void SetWodeWoArcStage(int stage)
@@ -179,13 +301,8 @@ namespace KyndeBlade
             Save();
         }
 
-        /// <summary>Advance Wode-Wo arc by one stage (e.g. after Baby→Care→Grown sequence).</summary>
-        public void AdvanceWodeWoArc()
-        {
-            SetWodeWoArcStage(WodeWoArcStage + 1);
-        }
+        public void AdvanceWodeWoArc() => SetWodeWoArcStage(WodeWoArcStage + 1);
 
-        /// <summary>True when the W O D E passcode has been entered; Wode-Wo line is then active.</summary>
         public bool IsWodeWoUnlocked => CurrentProgress?.WodeWoUnlocked ?? false;
 
         public void SetWodeWoUnlocked(bool unlocked)
@@ -194,5 +311,34 @@ namespace KyndeBlade
             CurrentProgress.WodeWoUnlocked = unlocked;
             Save();
         }
+
+        public bool IsWodeWoDead => CurrentProgress?.WodeWoDead ?? false;
+
+        public void SetWodeWoDead()
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.WodeWoDead = true;
+            Save();
+        }
+
+        public bool HasReachedFieldOfGrace => CurrentProgress?.HasReachedFieldOfGrace ?? false;
+
+        public void SetReachedFieldOfGrace()
+        {
+            if (CurrentProgress == null) return;
+            if (CurrentProgress.HasReachedFieldOfGrace) return;
+            CurrentProgress.HasReachedFieldOfGrace = true;
+            Save();
+        }
+    }
+
+    public class SaveSlotSummary
+    {
+        public int Slot;
+        public string LocationId;
+        public int VisionIndex;
+        public float PlayTimeSeconds;
+        public string Timestamp;
+        public bool HasReachedFieldOfGrace;
     }
 }

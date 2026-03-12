@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using KyndeBlade;
 
 namespace KyndeBlade.Combat
 {
@@ -19,7 +21,16 @@ namespace KyndeBlade.Combat
         public float CurrentBreakGauge = 100f;
         public bool IsBroken;
         public float BrokenStunRemaining;
-        public int Level = 1;
+
+        [Tooltip("Number of blessings received this run (display only, replaces traditional level).")]
+        public int BlessingCount;
+
+        [NonSerialized]
+        public List<ActiveBlessing> ActiveBlessings = new List<ActiveBlessing>();
+
+        [Tooltip("Tracks first-hit immunity consumed this combat.")]
+        [NonSerialized]
+        public bool FirstHitUsed;
 
         public CharacterStats() { }
     }

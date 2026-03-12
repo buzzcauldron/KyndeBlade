@@ -10,19 +10,48 @@ namespace KyndeBlade
     /// </summary>
     public static class CombatCalculator
     {
-        /// <summary>Full damage formula: base power (action or attacker), aging mod, defense mitigation, min 1, 5–10% variance.</summary>
+        /// <summary>Full damage formula: base power, aging mod, blessing mods, defense, variance.</summary>
         public static float CalculateDamage(MedievalCharacter attacker, MedievalCharacter target, CombatAction action)
         {
             if (attacker == null || target == null) return 0f;
 
             float basePower = action != null ? action.ActionData.Damage : attacker.Stats.AttackPower;
-            float agingMod = 1.0f; // In a full refactor, AgingManager feeds into character stats.
+            float agingMod = GetAgingModifier(attacker);
+
+            var atkMods = BlessingSystem.GetModifiers(attacker);
+            var defMods = BlessingSystem.GetModifiers(target);
 
             float defense = target.Stats.Defense;
-            float finalDamage = Mathf.Max(1f, (basePower * agingMod) - (defense * 0.5f));
+            float finalDamage = Mathf.Max(1f, (basePower * agingMod * atkMods.DamageMultiplier) - (defense * 0.5f));
+            finalDamage *= defMods.DamageTakenMultiplier;
 
             finalDamage *= Random.Range(0.95f, 1.05f);
             return finalDamage;
+        }
+
+        /// <summary>Simplified damage calculation from raw values (used by custom moveset actions).</summary>
+        public static float CalculateDamage(float baseDamage, float attackPower, float defense)
+        {
+            float power = baseDamage + attackPower * 0.3f;
+            float finalDamage = Mathf.Max(1f, power - defense * 0.5f);
+            finalDamage *= Random.Range(0.95f, 1.05f);
+            return finalDamage;
+        }
+
+        /// <summary>
+        /// Returns the aging modifier for damage output. Each Elde hit reduces
+        /// output by 5%, capped at 50% reduction (10 hits).
+        /// Returns 1.0f for enemies or when no aging data is available.
+        /// </summary>
+        public static float GetAgingModifier(MedievalCharacter character)
+        {
+            if (character == null) return 1f;
+            var pad = character.GetComponent<PiersAppearanceData>();
+            if (pad == null || !pad.IsPlayer) return 1f;
+            var saveManager = Object.FindFirstObjectByType<SaveManager>();
+            if (saveManager?.CurrentProgress == null) return 1f;
+            int eldeHits = saveManager.CurrentProgress.EldeHitsAccrued;
+            return Mathf.Max(0.5f, 1f - eldeHits * 0.05f);
         }
 
         /// <summary>Kynde gained from performing an action (e.g. Strike 10, others 5). Wisdom/age multipliers can be applied here.</summary>

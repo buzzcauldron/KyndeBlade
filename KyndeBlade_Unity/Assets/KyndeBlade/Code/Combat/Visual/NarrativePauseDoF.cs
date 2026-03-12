@@ -1,5 +1,5 @@
 using System;
-using System.IO;
+
 using UnityEngine;
 using KyndeBlade.Combat;
 
@@ -23,9 +23,6 @@ namespace KyndeBlade
 
         void OnDisable()
         {
-            // #region agent log
-            try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"NarrativePauseDoF.cs:OnDisable\",\"message\":\"disabled\",\"data\":{\"hadFocusTarget\":" + (FocusTarget != null ? "true" : "false") + "},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H1\"}\n"); } catch { }
-            // #endregion
             BaseBossAI.OnNarrativePauseStarted -= OnPauseStarted;
             BaseBossAI.OnNarrativePauseEnded -= OnPauseEnded;
             FocusTarget = null;
@@ -35,9 +32,6 @@ namespace KyndeBlade
 
         void OnPauseStarted(MedievalCharacter boss, float duration)
         {
-            // #region agent log
-            try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"NarrativePauseDoF.cs:OnPauseStarted\",\"message\":\"pause started\",\"data\":{\"bossName\":" + (boss != null ? "\"" + boss.name + "\"" : "null") + ",\"hasDoF\":" + (DoFVolume != null ? "true" : "false") + "},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H1\"}\n"); } catch { }
-            // #endregion
             FocusTarget = boss != null ? boss.transform : null;
             if (DoFVolume == null) return;
             _volumeWasEnabled = DoFVolume.enabled;

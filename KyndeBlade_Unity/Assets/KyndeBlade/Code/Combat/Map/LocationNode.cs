@@ -42,8 +42,12 @@ namespace KyndeBlade
         public bool AdvancesWodeWoArcOnSequenceComplete;
         [Tooltip("When Wode-Wo arc is complete (stage 4), show this positive beat on arrival instead of StoryBeatOnArrival. First time at stage 3 shows it and completes the arc.")]
         public StoryBeat StoryBeatOnArrivalWhenWodeWoComplete;
+        [Tooltip("When Wode-Wo has died (fae took him), show this beat on arrival instead of the Baby/Care/Grown sequence (e.g. Malvern remains).")]
+        public StoryBeat StoryBeatOnArrivalWhenWodeWoDead;
         [Tooltip("Dialogue with choices before combat (e.g. Green Chapel). Wrong choice = Green Knight appears randomly later.")]
         public DialogueChoiceBeat PreCombatChoiceBeat;
+        [Tooltip("Full dialogue tree to run on arrival (overrides flat beats if set). Uses DialogueTreeExecutor.")]
+        public DialogueTreeDefinition DialogueTreeOnArrival;
 
         [Header("Music")]
         [Tooltip("Theme to play on arrival (e.g. orfeo, green_knight).")]

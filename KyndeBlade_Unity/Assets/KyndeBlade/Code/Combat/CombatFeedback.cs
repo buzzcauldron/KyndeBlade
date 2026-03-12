@@ -23,11 +23,33 @@ namespace KyndeBlade
         Camera _mainCamera;
         WaitForSeconds _flashWait;
 
+        AudioClip _proceduralHit;
+        AudioClip _proceduralDodge;
+        AudioClip _proceduralParry;
+        AudioClip _proceduralFail;
+
         void Awake()
         {
             _audio = GetComponent<AudioSource>();
             if (_audio == null) _audio = gameObject.AddComponent<AudioSource>();
             _flashWait = new WaitForSeconds(SuccessFlashDuration);
+            EnsureProceduralClips();
+        }
+
+        void EnsureProceduralClips()
+        {
+            var lib = AudioLibrary.LoadFromResources();
+            if (HitClip == null) HitClip = lib != null ? lib.Hit : null;
+            if (DodgeSuccessClip == null) DodgeSuccessClip = lib != null ? lib.DodgeSuccess : null;
+            if (ParrySuccessClip == null) ParrySuccessClip = lib != null ? lib.ParrySuccess : null;
+            if (DodgeFailClip == null) DodgeFailClip = lib != null ? lib.Fail : null;
+            if (ParryFailClip == null) ParryFailClip = lib != null ? lib.Fail : null;
+
+            if (HitClip == null) { _proceduralHit = ProceduralAudioFactory.Hit(); HitClip = _proceduralHit; }
+            if (DodgeSuccessClip == null) { _proceduralDodge = ProceduralAudioFactory.DodgeSuccess(); DodgeSuccessClip = _proceduralDodge; }
+            if (ParrySuccessClip == null) { _proceduralParry = ProceduralAudioFactory.ParrySuccess(); ParrySuccessClip = _proceduralParry; }
+            if (DodgeFailClip == null) { _proceduralFail = ProceduralAudioFactory.Fail(); DodgeFailClip = _proceduralFail; }
+            if (ParryFailClip == null) ParryFailClip = _proceduralFail != null ? _proceduralFail : ProceduralAudioFactory.Fail();
         }
 
         public void OnDodgeSuccess(MedievalCharacter character)

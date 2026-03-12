@@ -37,7 +37,7 @@ Unity is component-oriented; adapt patterns (MVC/MVVM, Observer, Command, DI, Pu
 
 ## Input
 
-- **Project setting**: **Active Input** must stay **Both** (legacy + new Input System) until the EventSystem is migrated. The built-in UI (EventSystem, StandaloneInputModule) uses the legacy `UnityEngine.Input` API; switching to "Input System package only" without replacing StandaloneInputModule with InputSystemUIInputModule causes runtime errors. Combat input (e.g. ParryDodgeInputHandler) uses the new Input System; UI continues to use legacy for now.
+- **Project setting**: **Active Input** is set to **Both** for backward compatibility. The EventSystem now uses `InputSystemUIInputModule` (migrated from `StandaloneInputModule`). Combat input uses `KyndeBladeInputActions` (centralized action maps) and falls back to direct `Keyboard`/`Gamepad` polling in `ParryDodgeInputHandler`. Action maps: Combat (Dodge, Parry, Counter), UI (Navigate, Submit, Cancel), Menu (Pause). Rebinding support via `KyndeBladeInputActions.SaveRebindings()`/`LoadRebindings()`.
 
 ## Design
 

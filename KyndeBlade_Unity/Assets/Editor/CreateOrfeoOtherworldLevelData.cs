@@ -108,6 +108,11 @@ namespace KyndeBlade.Editor
             loc.Encounter = enc;
             loc.NextLocationIds.Clear();
             loc.NextLocationIds.Add("fayre_felde");
+
+            var btTree = AssetDatabase.LoadAssetAtPath<DialogueTreeDefinition>(
+                "Assets/Resources/Data/DialogueTrees/BoundaryTreeDialogue.asset");
+            if (btTree != null) loc.DialogueTreeOnArrival = btTree;
+
             AssetDatabase.CreateAsset(loc, $"{DataPath}/Loc_boundary_tree.asset");
             return loc;
         }
@@ -127,6 +132,11 @@ namespace KyndeBlade.Editor
             loc.IsInescapable = true;
             loc.IsAlternateEnding = true;
             loc.NextLocationIds.Clear();
+
+            var owTree = AssetDatabase.LoadAssetAtPath<DialogueTreeDefinition>(
+                "Assets/Resources/Data/DialogueTrees/OtherworldDialogue.asset");
+            if (owTree != null) loc.DialogueTreeOnArrival = owTree;
+
             AssetDatabase.CreateAsset(loc, $"{DataPath}/Loc_otherworld.asset");
             return loc;
         }
