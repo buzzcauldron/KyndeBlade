@@ -48,14 +48,19 @@ namespace KyndeBlade
             _combatMap = new InputActionMap("Combat");
             Dodge = _combatMap.AddAction("Dodge", InputActionType.Button);
             Dodge.AddBinding("<Keyboard>/space");
+            Dodge.AddBinding("<Keyboard>/leftAlt");
+            Dodge.AddBinding("<Mouse>/rightButton");
             Dodge.AddBinding("<Gamepad>/buttonSouth");
 
             Parry = _combatMap.AddAction("Parry", InputActionType.Button);
             Parry.AddBinding("<Keyboard>/leftShift");
+            Parry.AddBinding("<Keyboard>/f");
+            Parry.AddBinding("<Mouse>/leftButton");
             Parry.AddBinding("<Gamepad>/buttonWest");
 
             Counter = _combatMap.AddAction("Counter", InputActionType.Button);
             Counter.AddBinding("<Keyboard>/e");
+            Counter.AddBinding("<Keyboard>/r");
             Counter.AddBinding("<Gamepad>/buttonNorth");
 
             _uiMap = new InputActionMap("UI");
