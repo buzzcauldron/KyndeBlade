@@ -160,13 +160,23 @@ MonoBehaviour:
   PridePrefab: {fileID: 0}
   GreenKnightPrefab: {fileID: 0}
   EldePrefab: {fileID: 0}
+  EnvyPrefab: {fileID: 0}
+  SlothPrefab: {fileID: 0}
+  LustPrefab: {fileID: 0}
   PiersPrefab: {fileID: 0}
   ConsciencePrefab: {fileID: 0}
-  AutoSpawnTestCharacters: 1
-  UseExpedition33Moveset: 1
-  StartWithMap: 1
+  AutoSpawnTestCharacters: 0
+  UseExpedition33Moveset: 0
+  StartWithMap: 0
+  StartWithSandboxEncounter: 0
+  SandboxTwoWaveSequence: 1
+  EnableRetroRenderPipelineInGameplay: 0
+  EncounterSpawnBudget: 4
+  SpawnLaneCooldownSlots: 1
+  MinEnemyVerticalSpacing: 1
   GreenKnightFirstAppearChanceInBuilding: 0.15
   GreenKnightRandomAppearChance: 0.25
+  VisualConfig: {fileID: 0}
 --- !u!4 &469701928
 Transform:
   m_ObjectHideFlags: 0

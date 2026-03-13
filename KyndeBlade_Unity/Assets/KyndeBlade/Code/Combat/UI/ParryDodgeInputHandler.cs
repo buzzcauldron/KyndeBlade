@@ -79,25 +79,19 @@ namespace KyndeBlade
             }
 
             float remaining = TurnManager.RealTimeWindowRemaining;
-            var actionType = TurnManager.ActionTypeDuringWindow;
             bool enteredWindow = !_wasInWindow;
             _wasInWindow = true;
             float graceSeconds = EarlyInputGraceSeconds;
             if (TurnManager.Settings != null)
                 graceSeconds = Mathf.Max(graceSeconds, TurnManager.Settings.DefenseCoyoteSeconds);
 
-            if (actionType == CombatActionType.Escapade)
-            {
-                bool buffered = enteredWindow && (Time.time - _lastDodgePressedTime) <= graceSeconds;
-                if (dodgePressed || buffered)
-                    OnDodgePressed?.Invoke(remaining);
-            }
-            else if (actionType == CombatActionType.Ward)
-            {
-                bool buffered = enteredWindow && (Time.time - _lastParryPressedTime) <= graceSeconds;
-                if (parryPressed || buffered)
-                    OnParryPressed?.Invoke(remaining);
-            }
+            bool dodgeBuffered = enteredWindow && (Time.time - _lastDodgePressedTime) <= graceSeconds;
+            if (dodgePressed || dodgeBuffered)
+                OnDodgePressed?.Invoke(remaining);
+
+            bool parryBuffered = enteredWindow && (Time.time - _lastParryPressedTime) <= graceSeconds;
+            if (parryPressed || parryBuffered)
+                OnParryPressed?.Invoke(remaining);
         }
     }
 }

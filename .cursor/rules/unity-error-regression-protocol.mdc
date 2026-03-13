@@ -1,0 +1,29 @@
+---
+description: Standard protocol for triaging Unity compile/runtime errors and preventing regressions
+alwaysApply: true
+---
+
+# Unity Error Regression Protocol
+
+When the user reports a Unity error, follow this exact flow:
+
+1. Fix the **first concrete compiler/runtime error** reported before touching secondary issues.
+2. Read the target file(s), implement the smallest safe fix, then run `ReadLints` on all modified files.
+3. Run a focused regression scan (`rg`) for the same error pattern across the workspace.
+4. If the fix is an assembly-boundary issue, verify no Core->Combat compile-time coupling is reintroduced.
+5. Report what was fixed, what was checked for recurrence, and the next validation step in Unity.
+
+## Known high-risk regressions in this project
+
+- **Assembly coupling**: `KyndeBlade.Core` must not directly depend on Combat-only types (`TurnManager`, `KyndeBladeGameManager`, `WorldMapManager`, `CombatActionType`, `MedievalCharacter`).
+- **Runtime manager access in Core**: avoid direct `GameRuntime` compile-time references in Core unless assembly-safe; prefer reflection/interface boundaries where required.
+- **Ambiguous Object**: when both `System` and `UnityEngine` are used, fully qualify `UnityEngine.Object` in constraints/calls.
+- **API rename drift**: do not reintroduce stale members like `BaseDamage` or `StatusEffectData.Type`; use current members.
+- **Scene loading safety**: menu return paths must guard scene availability and provide fallback/error logging.
+- **asmdef dependencies**: keep required references present (`UnityEngine.ParticleSystemModule`, `Unity.2D.Sprite.Editor` where applicable).
+
+## Output discipline
+
+- Do not claim "all errors fixed" unless checks support it.
+- Distinguish confirmed fixes vs. likely/stale errors from old logs.
+- Keep changes minimal and reversible; avoid broad refactors during error firefighting.

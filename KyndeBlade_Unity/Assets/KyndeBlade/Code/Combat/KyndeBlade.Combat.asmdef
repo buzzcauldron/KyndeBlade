@@ -4,7 +4,8 @@
     "references": [
         "KyndeBlade.Core",
         "UnityEngine.UI",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "UnityEngine.ParticleSystemModule"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

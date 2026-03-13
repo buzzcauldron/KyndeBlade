@@ -41,6 +41,8 @@ namespace KyndeBlade
         {
             if (TurnManager == null) TurnManager = GameRuntime.TurnManager ?? UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (SoundBank == null) SoundBank = UnityEngine.Object.FindFirstObjectByType<ParryDodgeZoneSoundBank>();
+            if (TurnManager != null)
+                TurnManager.OnCombatEnded += OnCombatEnded;
             EnsureEyeElements();
             Hide();
         }
@@ -80,6 +82,12 @@ namespace KyndeBlade
         }
 
         void OnDisable()
+        {
+            if (TurnManager != null)
+                TurnManager.OnCombatEnded -= OnCombatEnded;
+        }
+
+        void OnDestroy()
         {
             if (TurnManager != null)
                 TurnManager.OnCombatEnded -= OnCombatEnded;

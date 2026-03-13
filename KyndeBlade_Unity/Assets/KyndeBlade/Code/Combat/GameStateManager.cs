@@ -456,7 +456,7 @@ namespace KyndeBlade
             if (VictoryPanel != null) VictoryPanel.SetActive(true);
             if (isFinal)
             {
-                if (VictoryText != null) VictoryText.text = "Thou hast reached the field. Continue.";
+                if (VictoryText != null) VictoryText.text = "Thou hast reached the field. Continue to return to map and progress.";
                 var continueBtn = VictoryPanel != null ? VictoryPanel.transform.Find("ContinueButton") : null;
                 if (continueBtn != null) continueBtn.gameObject.SetActive(true);
                 OnVictory?.Invoke();
@@ -464,7 +464,7 @@ namespace KyndeBlade
             }
 
             if (VictoryText != null)
-                VictoryText.text = "Victory! Choose a Blessing.";
+                VictoryText.text = "Victory! Choose a Blessing, then press Continue to leave combat.";
 
             float totalKynde = 0f;
             if (TurnManager != null)

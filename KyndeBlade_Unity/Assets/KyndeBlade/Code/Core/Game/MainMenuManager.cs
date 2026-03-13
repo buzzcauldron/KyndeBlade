@@ -95,7 +95,20 @@ namespace KyndeBlade
         /// <summary>Called from gameplay to return to menu.</summary>
         public static void ReturnToMainMenu()
         {
-            SceneManager.LoadScene("MainMenu");
+            if (Application.CanStreamedLevelBeLoaded("MainMenu"))
+            {
+                SceneManager.LoadScene("MainMenu");
+                return;
+            }
+
+            if (Application.CanStreamedLevelBeLoaded("Main"))
+            {
+                Debug.LogWarning("[KyndeBlade] MainMenu scene not loadable; falling back to Main.");
+                SceneManager.LoadScene("Main");
+                return;
+            }
+
+            Debug.LogError("[KyndeBlade] Neither MainMenu nor Main scene is loadable. Add scenes to Build Profiles.");
         }
 
         // --- Auto-build UI if no panels assigned ---

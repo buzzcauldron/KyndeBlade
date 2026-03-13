@@ -153,11 +153,21 @@ namespace KyndeBlade
         {
             if (ShowActionNameOnTelegraph && target != null)
                 ShowFloatingText(target.transform.position + Vector3.up * FloatTextHeightOffset, action?.ActionData.ActionName ?? "?", FloatTextActionColor);
+
+            // Telegraph readability: attacker flashes "commit", target flashes "incoming".
+            float cueDuration = Mathf.Max(0.2f, action != null ? action.GetCastTime() : 0.35f);
+            var actorAnim = actor != null ? actor.GetComponent<SimpleAnimator>() : null;
+            actorAnim?.ShowAttackCue(incoming: false, duration: cueDuration);
+
+            var targetAnim = target != null ? target.GetComponent<SimpleAnimator>() : null;
+            targetAnim?.ShowAttackCue(incoming: true, duration: cueDuration);
         }
 
         void OnAnimationStarting(MedievalCharacter actor, CombatAction action, MedievalCharacter target)
         {
             TriggerCameraShake(ShakeIntensityOnAction, ShakeDurationOnAction);
+            var actorAnim = actor != null ? actor.GetComponent<SimpleAnimator>() : null;
+            actorAnim?.ShowAttackCue(incoming: false, duration: 0.2f);
         }
 
         void OnActionExecuted(MedievalCharacter executor, MedievalCharacter target, CombatAction action)

@@ -69,7 +69,7 @@ namespace KyndeBlade
             if (AnticipationPause > 0f)
                 yield return new WaitForSeconds(AnticipationPause);
 
-            bool isCritical = action.ActionData != null && action.ActionData.BaseDamage > 15f;
+            bool isCritical = action.ActionData != null && action.ActionData.Damage > 15f;
             if (isCritical)
                 StartCoroutine(CameraZoomPulse());
 
