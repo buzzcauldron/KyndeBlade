@@ -40,6 +40,14 @@ namespace KyndeBlade
 
         CombatAction _currentAction;
         MedievalCharacter _currentTarget;
+        BufferedAction _bufferedAction;
+
+        struct BufferedAction
+        {
+            public CombatAction Action;
+            public MedievalCharacter Target;
+            public float ExpiresAt;
+        }
 
         public event Action<MedievalCharacter> OnTurnChanged;
         public event Action OnCombatEnded;
@@ -101,6 +109,7 @@ namespace KyndeBlade
                     State = CombatState.WaitingForInput;
                     CurrentCharacter?.InvokeTurnStart();
                     OnTurnChanged?.Invoke(CurrentCharacter);
+                    TryExecuteBufferedAction();
                     return;
                 }
                 i = (i + 1) % TurnOrder.Count;
@@ -112,7 +121,18 @@ namespace KyndeBlade
 
         public void ExecuteAction(CombatAction action, MedievalCharacter target)
         {
-            if (action == null || CurrentCharacter == null || State != CombatState.WaitingForInput) return;
+            if (action == null || CurrentCharacter == null) return;
+            if (!CanCurrentCharacterAct())
+            {
+                NextTurn();
+                return;
+            }
+
+            if (State != CombatState.WaitingForInput)
+            {
+                BufferAction(action, target);
+                return;
+            }
 
             State = CombatState.ExecutingAction;
             _currentAction = action;
@@ -145,6 +165,14 @@ namespace KyndeBlade
         void ProcessActionCast()
         {
             if (_currentAction == null || CurrentCharacter == null) return;
+            if (!CanCurrentCharacterAct())
+            {
+                _currentAction = null;
+                _currentTarget = null;
+                State = CombatState.ProcessingResults;
+                StartCoroutine(TransitionToNextTurn());
+                return;
+            }
 
             CurrentCharacter.PlayActionAnimation(_currentAction);
             CurrentCharacter.ExecuteCombatAction(_currentAction, _currentTarget);
@@ -158,6 +186,14 @@ namespace KyndeBlade
 
         void ProcessActionExecution()
         {
+            if (CurrentCharacter != null && _currentAction != null)
+            {
+                float recovery = Mathf.Max(0f, _currentAction.GetExecutionTime() * 0.5f);
+                if (Settings != null)
+                    recovery *= Settings.PlayerActionTimingMultiplier;
+                CurrentCharacter.BeginActionRecovery(recovery);
+            }
+
             if (_currentAction != null &&
                 (_currentAction.ActionData.ActionType == CombatActionType.Escapade ||
                  _currentAction.ActionData.ActionType == CombatActionType.Ward))
@@ -195,6 +231,41 @@ namespace KyndeBlade
             DefenderDuringWindow = defender;
             ActionTypeDuringWindow = actionType;
             State = CombatState.RealTimeWindow;
+        }
+
+        void BufferAction(CombatAction action, MedievalCharacter target)
+        {
+            float bufferSeconds = Settings != null ? Settings.InputBufferSeconds : 0.12f;
+            if (bufferSeconds <= 0f) return;
+            _bufferedAction.Action = action;
+            _bufferedAction.Target = target;
+            _bufferedAction.ExpiresAt = Time.time + bufferSeconds;
+        }
+
+        void TryExecuteBufferedAction()
+        {
+            if (_bufferedAction.Action == null) return;
+            if (Time.time > _bufferedAction.ExpiresAt)
+            {
+                _bufferedAction = default;
+                return;
+            }
+            if (State != CombatState.WaitingForInput || CurrentCharacter == null || !CanCurrentCharacterAct())
+                return;
+
+            var action = _bufferedAction.Action;
+            var target = _bufferedAction.Target;
+            _bufferedAction = default;
+            ExecuteAction(action, target);
+        }
+
+        bool CanCurrentCharacterAct()
+        {
+            if (CurrentCharacter == null || !CurrentCharacter.IsAlive()) return false;
+            if (CurrentCharacter.IsBroken()) return false;
+            if (CurrentCharacter.HasStatusEffect(StatusEffectType.Stun)) return false;
+            if (CurrentCharacter.ActionRecoveryRemaining > 0f) return false;
+            return true;
         }
 
         MedievalCharacter GetFirstAliveEnemy()
@@ -353,6 +424,9 @@ namespace KyndeBlade
                     if (ActionExecutionTimeRemaining <= 0f) ProcessActionExecution();
                 }
             }
+
+            if (State == CombatState.WaitingForInput)
+                TryExecuteBufferedAction();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace KyndeBlade
     {
         [Header("References")]
         public TurnManager TurnManager;
+        [Tooltip("Accept dodge/parry input slightly before the defense window opens.")]
+        public float EarlyInputGraceSeconds = 0.08f;
 
         public event Action<float> OnDodgePressed;
         public event Action<float> OnParryPressed;
@@ -24,6 +26,9 @@ namespace KyndeBlade
         public GamepadButton DodgeButton = GamepadButton.South;
         public GamepadButton ParryButton = GamepadButton.West;
         public GamepadButton CounterButton = GamepadButton.North;
+        float _lastDodgePressedTime = -10f;
+        float _lastParryPressedTime = -10f;
+        bool _wasInWindow;
 
         bool GetDodgePressed()
         {
@@ -55,20 +60,44 @@ namespace KyndeBlade
         void Update()
         {
             if (TurnManager == null) return;
+
+            bool dodgePressed = GetDodgePressed();
+            bool parryPressed = GetParryPressed();
+            if (dodgePressed) _lastDodgePressedTime = Time.time;
+            if (parryPressed) _lastParryPressedTime = Time.time;
+
             if (TurnManager.IsCounterWindowActive)
             {
                 if (GetCounterPressed())
                     TurnManager.ExecuteCounter();
                 return;
             }
-            if (TurnManager.State != CombatState.RealTimeWindow) return;
+            if (TurnManager.State != CombatState.RealTimeWindow)
+            {
+                _wasInWindow = false;
+                return;
+            }
 
             float remaining = TurnManager.RealTimeWindowRemaining;
             var actionType = TurnManager.ActionTypeDuringWindow;
-            if (actionType == CombatActionType.Escapade && GetDodgePressed())
-                OnDodgePressed?.Invoke(remaining);
-            else if (actionType == CombatActionType.Ward && GetParryPressed())
-                OnParryPressed?.Invoke(remaining);
+            bool enteredWindow = !_wasInWindow;
+            _wasInWindow = true;
+            float graceSeconds = EarlyInputGraceSeconds;
+            if (TurnManager.Settings != null)
+                graceSeconds = Mathf.Max(graceSeconds, TurnManager.Settings.DefenseCoyoteSeconds);
+
+            if (actionType == CombatActionType.Escapade)
+            {
+                bool buffered = enteredWindow && (Time.time - _lastDodgePressedTime) <= graceSeconds;
+                if (dodgePressed || buffered)
+                    OnDodgePressed?.Invoke(remaining);
+            }
+            else if (actionType == CombatActionType.Ward)
+            {
+                bool buffered = enteredWindow && (Time.time - _lastParryPressedTime) <= graceSeconds;
+                if (parryPressed || buffered)
+                    OnParryPressed?.Invoke(remaining);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-using KyndeBlade.Combat;
 
 namespace KyndeBlade
 {
@@ -12,19 +11,22 @@ namespace KyndeBlade
         const int Size = 32;
         const float PPU = 32f;
 
-        public static Sprite GetIcon(CombatActionType type)
+        public static Sprite GetIcon(string actionTypeName)
         {
-            switch (type)
+            var normalized = string.IsNullOrWhiteSpace(actionTypeName)
+                ? string.Empty
+                : actionTypeName.Trim();
+            switch (normalized)
             {
-                case CombatActionType.Strike:       return SwordIcon();
-                case CombatActionType.RangedStrike: return ArrowIcon();
-                case CombatActionType.Escapade:     return BootIcon();
-                case CombatActionType.Ward:         return ShieldIcon();
-                case CombatActionType.Counter:      return CounterIcon();
-                case CombatActionType.Special:      return StarIcon();
-                case CombatActionType.Heal:         return CrossIcon();
-                case CombatActionType.Rest:         return RestIcon();
-                default:                            return StarIcon();
+                case "Strike":       return SwordIcon();
+                case "RangedStrike": return ArrowIcon();
+                case "Escapade":     return BootIcon();
+                case "Ward":         return ShieldIcon();
+                case "Counter":      return CounterIcon();
+                case "Special":      return StarIcon();
+                case "Heal":         return CrossIcon();
+                case "Rest":         return RestIcon();
+                default:             return StarIcon();
             }
         }
 

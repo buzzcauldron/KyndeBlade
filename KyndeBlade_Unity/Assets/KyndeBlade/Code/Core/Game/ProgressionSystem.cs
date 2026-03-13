@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using KyndeBlade.Combat;
 
 namespace KyndeBlade
 {
@@ -12,7 +11,7 @@ namespace KyndeBlade
     /// </summary>
     public static class BlessingSystem
     {
-        public static event Action<MedievalCharacter, Blessing> OnBlessingApplied;
+        public static event Action<IBlessingCharacter, Blessing> OnBlessingApplied;
 
         static List<Blessing> _pool;
 
@@ -92,44 +91,47 @@ namespace KyndeBlade
         }
 
         /// <summary>Apply a chosen blessing to a character and persist it.</summary>
-        public static void ApplyBlessing(MedievalCharacter c, Blessing b, SaveManager save)
+        public static void ApplyBlessing(IBlessingCharacter c, Blessing b, SaveManager save)
         {
             if (c == null || b == null) return;
+            var stats = c.GetBlessingStats();
+            if (stats == null) return;
 
-            c.Stats.MaxHealth += b.BonusMaxHealth + b.DrawbackMaxHealth;
-            c.Stats.MaxStamina += b.BonusMaxStamina;
-            c.Stats.AttackPower += b.BonusAttackPower;
-            c.Stats.Defense += b.BonusDefense + b.DrawbackDefense;
-            c.Stats.Speed += b.BonusSpeed + b.DrawbackSpeed;
-            c.Stats.MaxKynde += b.BonusMaxKynde;
+            stats.MaxHealth += b.BonusMaxHealth + b.DrawbackMaxHealth;
+            stats.MaxStamina += b.BonusMaxStamina;
+            stats.AttackPower += b.BonusAttackPower;
+            stats.Defense += b.BonusDefense + b.DrawbackDefense;
+            stats.Speed += b.BonusSpeed + b.DrawbackSpeed;
+            stats.MaxKynde += b.BonusMaxKynde;
 
-            c.Stats.CurrentHealth = c.Stats.MaxHealth;
-            c.Stats.CurrentStamina = Mathf.Min(c.Stats.CurrentStamina, c.Stats.MaxStamina);
+            stats.CurrentHealth = stats.MaxHealth;
+            stats.CurrentStamina = Mathf.Min(stats.CurrentStamina, stats.MaxStamina);
 
-            var existing = c.Stats.ActiveBlessings.Find(ab => ab.BlessingId == b.BlessingId);
+            var existing = stats.ActiveBlessings.Find(ab => ab.BlessingId == b.BlessingId);
             if (existing != null && b.Stackable)
                 existing.StackCount++;
             else if (existing == null)
-                c.Stats.ActiveBlessings.Add(new ActiveBlessing { BlessingId = b.BlessingId, StackCount = 1 });
+                stats.ActiveBlessings.Add(new ActiveBlessing { BlessingId = b.BlessingId, StackCount = 1 });
 
             if (b.CuresHungerOnPickup)
                 c.RemoveHungerStack();
 
             if (save?.CurrentProgress != null)
             {
-                var entry = save.CurrentProgress.GetOrCreateCharacterProgress(c.CharacterName);
-                entry.Blessings = new List<ActiveBlessing>(c.Stats.ActiveBlessings);
+                var entry = save.CurrentProgress.GetOrCreateCharacterProgress(c.GetBlessingCharacterName());
+                entry.Blessings = new List<ActiveBlessing>(stats.ActiveBlessings);
             }
 
             OnBlessingApplied?.Invoke(c, b);
         }
 
         /// <summary>Compute aggregate multipliers across all active blessings.</summary>
-        public static BlessingModifiers GetModifiers(MedievalCharacter c)
+        public static BlessingModifiers GetModifiers(IBlessingCharacter c)
         {
-            var mods = new BlessingModifiers();
-            if (c?.Stats?.ActiveBlessings == null) return mods;
-            foreach (var ab in c.Stats.ActiveBlessings)
+            var mods = BlessingModifiers.Default();
+            var stats = c?.GetBlessingStats();
+            if (stats?.ActiveBlessings == null) return mods;
+            foreach (var ab in stats.ActiveBlessings)
             {
                 var b = FindBlessing(ab.BlessingId);
                 if (b == null) continue;
@@ -156,11 +158,13 @@ namespace KyndeBlade
         }
 
         /// <summary>Restore blessings from saved data onto a character's stats.</summary>
-        public static void RestoreFromSave(MedievalCharacter c, CharacterProgressEntry entry)
+        public static void RestoreFromSave(IBlessingCharacter c, CharacterProgressEntry entry)
         {
             if (c == null || entry == null) return;
-            c.Stats.ActiveBlessings.Clear();
-            c.Stats.BlessingCount = 0;
+            var stats = c.GetBlessingStats();
+            if (stats == null) return;
+            stats.ActiveBlessings.Clear();
+            stats.BlessingCount = 0;
             if (entry.Blessings == null || entry.Blessings.Count == 0) return;
             foreach (var ab in entry.Blessings)
             {
@@ -169,19 +173,19 @@ namespace KyndeBlade
                 if (b == null) continue;
                 for (int i = 0; i < ab.StackCount; i++)
                 {
-                    c.Stats.MaxHealth += b.BonusMaxHealth + b.DrawbackMaxHealth;
-                    c.Stats.MaxStamina += b.BonusMaxStamina;
-                    c.Stats.AttackPower += b.BonusAttackPower;
-                    c.Stats.Defense += b.BonusDefense + b.DrawbackDefense;
-                    c.Stats.Speed += b.BonusSpeed + b.DrawbackSpeed;
-                    c.Stats.MaxKynde += b.BonusMaxKynde;
+                    stats.MaxHealth += b.BonusMaxHealth + b.DrawbackMaxHealth;
+                    stats.MaxStamina += b.BonusMaxStamina;
+                    stats.AttackPower += b.BonusAttackPower;
+                    stats.Defense += b.BonusDefense + b.DrawbackDefense;
+                    stats.Speed += b.BonusSpeed + b.DrawbackSpeed;
+                    stats.MaxKynde += b.BonusMaxKynde;
                 }
-                c.Stats.ActiveBlessings.Add(new ActiveBlessing
+                stats.ActiveBlessings.Add(new ActiveBlessing
                     { BlessingId = ab.BlessingId, StackCount = ab.StackCount });
-                c.Stats.BlessingCount += ab.StackCount;
+                stats.BlessingCount += ab.StackCount;
             }
-            c.Stats.CurrentHealth = c.Stats.MaxHealth;
-            c.Stats.CurrentStamina = c.Stats.MaxStamina;
+            stats.CurrentHealth = stats.MaxHealth;
+            stats.CurrentStamina = stats.MaxStamina;
         }
     }
 
@@ -198,17 +202,20 @@ namespace KyndeBlade
         public float StaminaPerTurn;
         public bool FirstHitImmunity;
 
-        public BlessingModifiers()
+        public static BlessingModifiers Default()
         {
-            DamageMultiplier = 1f;
-            DamageTakenMultiplier = 1f;
-            StaminaCostMultiplier = 1f;
-            KyndeGenerationMultiplier = 1f;
-            TimingWindowMultiplier = 1f;
-            BreakDamageMultiplier = 1f;
-            HealPerTurn = 0f;
-            StaminaPerTurn = 0f;
-            FirstHitImmunity = false;
+            return new BlessingModifiers
+            {
+                DamageMultiplier = 1f,
+                DamageTakenMultiplier = 1f,
+                StaminaCostMultiplier = 1f,
+                KyndeGenerationMultiplier = 1f,
+                TimingWindowMultiplier = 1f,
+                BreakDamageMultiplier = 1f,
+                HealPerTurn = 0f,
+                StaminaPerTurn = 0f,
+                FirstHitImmunity = false
+            };
         }
     }
 

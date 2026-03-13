@@ -52,6 +52,15 @@ namespace KyndeBlade
             if (TurnManager == null) TurnManager = GameRuntime.TurnManager ?? UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             if (SequenceController == null) SequenceController = UnityEngine.Object.FindFirstObjectByType<TurnSequenceController>();
             if (ShakeCamera == null) ShakeCamera = Camera.main;
+            ShowActionNameOnTelegraph = true;
+
+            var settings = GameRuntime.GameManager != null ? GameRuntime.GameManager.Settings : null;
+            if (settings != null)
+            {
+                // Keep readability high by limiting excessive shake on lower performance.
+                ShakeIntensityOnAction = Mathf.Min(ShakeIntensityOnAction, 0.04f);
+                ShakeIntensityOnDamage = Mathf.Min(ShakeIntensityOnDamage, 0.08f);
+            }
 
             Subscribe();
         }

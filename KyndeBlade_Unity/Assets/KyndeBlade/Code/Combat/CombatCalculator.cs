@@ -24,6 +24,7 @@ namespace KyndeBlade
             float defense = target.Stats.Defense;
             float finalDamage = Mathf.Max(1f, (basePower * agingMod * atkMods.DamageMultiplier) - (defense * 0.5f));
             finalDamage *= defMods.DamageTakenMultiplier;
+            finalDamage *= GetDifficultyDamageMultiplier(attacker);
 
             finalDamage *= Random.Range(0.95f, 1.05f);
             return finalDamage;
@@ -66,6 +67,20 @@ namespace KyndeBlade
         {
             if (totalDuration <= 0f) return false;
             return (remainingTime / totalDuration) <= 0.15f;
+        }
+
+        static float GetDifficultyDamageMultiplier(MedievalCharacter attacker)
+        {
+            if (attacker == null) return 1f;
+            var gm = GameRuntime.GameManager;
+            var settings = gm != null ? gm.Settings : null;
+            if (settings == null) return 1f;
+
+            var tm = GameRuntime.TurnManager;
+            if (tm == null || tm.PlayerCharacters == null) return 1f;
+
+            bool attackerIsPlayer = tm.PlayerCharacters.Contains(attacker);
+            return attackerIsPlayer ? 1f : settings.GetEnemyDamageMultiplier();
         }
 
         /// <summary>Returns the attacker's first Strike or RangedStrike action for defense-window damage.</summary>
