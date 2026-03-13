@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
 using KyndeBlade.Combat;
 
 namespace KyndeBlade
@@ -42,7 +43,11 @@ namespace KyndeBlade
         [Tooltip("Start directly in a fixed-wave sandbox encounter for balancing.")]
         public bool StartWithSandboxEncounter = false;
         [Tooltip("If true, runs two fixed waves in sequence for repeatable tuning.")]
-        public bool SandboxTwoWaveSequence = true;
+        public bool SandboxTwoWaveSequence = false;
+        [Tooltip("Auto-start the next sandbox wave immediately after victory. Keep off for clearer win states.")]
+        public bool SandboxAutoAdvanceOnVictory = false;
+        [Tooltip("Enable only in built-in render pipeline. Disabled automatically for URP/HDRP to prevent black-screen camera output.")]
+        public bool EnableRetroRenderPipelineInGameplay = false;
 
         [Header("Encounter Director Guardrails")]
         [Tooltip("Maximum number of non-boss enemies spawned from EncounterConfig entries.")]
@@ -138,6 +143,13 @@ namespace KyndeBlade
             }
             if (AutoSpawnTestCharacters)
                 StartCoroutine(DelayedAutoSpawn());
+            StartCoroutine(SpawnSafetyFallback());
+        }
+
+        void LateUpdate()
+        {
+            // Keep camera recoverable if runtime scripts disable/tag-switch cameras.
+            EnsureCombatCamera();
         }
 
         /// <summary>Waits briefly then spawns test party + default enemies (False, Lady Mede, Wrath) and starts combat.</summary>
@@ -176,17 +188,25 @@ namespace KyndeBlade
         /// <summary>Instantiates one character (or creates placeholder), applies moveset and visual; adds to party or enemy list.</summary>
         void SpawnCharacter(MedievalCharacter prefab, Vector3 pos, CharacterClass cls, string name, bool isPlayer)
         {
-            MedievalCharacter c;
+            MedievalCharacter c = null;
             if (prefab != null)
             {
                 c = Instantiate(prefab, pos, Quaternion.identity);
-                EnsureCharacterVisual(c.gameObject, isPlayer, prefab.CharacterName ?? name ?? "Wille");
+                if (c != null)
+                    EnsureCharacterVisual(c.gameObject, isPlayer, prefab.CharacterName ?? name ?? "Wille");
             }
-            else
+
+            if (c == null)
             {
                 var go = new GameObject(name);
                 go.transform.position = pos;
                 c = go.AddComponent<MedievalCharacter>();
+                if (c == null)
+                {
+                    Debug.LogError($"[KyndeBlade] Failed to create character '{name}'. Skipping spawn.");
+                    Destroy(go);
+                    return;
+                }
                 EnsureCharacterVisual(go, isPlayer, name ?? "Wille");
             }
             c.CharacterClassType = cls;
@@ -204,17 +224,25 @@ namespace KyndeBlade
         /// <summary>Instantiates one enemy (prefab or type), applies moveset and AI; adds to enemy list.</summary>
         void SpawnEnemy(MedievalCharacter prefab, Vector3 pos, System.Type enemyType)
         {
-            MedievalCharacter c;
+            MedievalCharacter c = null;
             if (prefab != null)
             {
                 c = Instantiate(prefab, pos, Quaternion.identity);
-                EnsureCharacterVisual(c.gameObject, false, prefab.CharacterName ?? prefab.name);
+                if (c != null)
+                    EnsureCharacterVisual(c.gameObject, false, prefab.CharacterName ?? prefab.name);
             }
-            else
+
+            if (c == null)
             {
                 var go = new GameObject(enemyType.Name);
                 go.transform.position = pos;
                 c = (MedievalCharacter)go.AddComponent(enemyType);
+                if (c == null)
+                {
+                    Debug.LogError($"[KyndeBlade] Failed to create enemy '{enemyType.Name}'. Skipping spawn.");
+                    Destroy(go);
+                    return;
+                }
                 EnsureCharacterVisual(go, false, enemyType.Name);
             }
             if (UseExpedition33Moveset)
@@ -233,6 +261,19 @@ namespace KyndeBlade
         {
             yield return new WaitForSeconds(1f);
             StartCombatSequence(_playerChars, _enemyChars);
+        }
+
+        IEnumerator SpawnSafetyFallback()
+        {
+            // Stability-first guard: recover if startup wiring produces no characters.
+            yield return new WaitForSeconds(1.5f);
+            if (_playerChars.Count > 0 || _enemyChars.Count > 0)
+                yield break;
+            if (StartWithMap)
+                yield break;
+
+            Debug.LogWarning("[KyndeBlade] No characters spawned at startup. Recovering with test encounter.");
+            SpawnTestCharacters();
         }
 
         /// <summary>Initializes TurnManager with given party and enemies and starts combat.</summary>
@@ -604,8 +645,20 @@ namespace KyndeBlade
         /// <summary>Instantiates enemy from prefab, applies boss movesets/AI by type, adds to enemy list.</summary>
         void SpawnEnemyFromPrefab(MedievalCharacter prefab, Vector3 pos)
         {
+            if (prefab == null)
+            {
+                Debug.LogWarning("[KyndeBlade] SpawnEnemyFromPrefab called with null prefab.");
+                return;
+            }
+
             var c = Instantiate(prefab, pos, Quaternion.identity);
-            EnsureCharacterVisual(c.gameObject, false, prefab != null ? prefab.CharacterName ?? prefab.name : "Enemy");
+            if (c == null)
+            {
+                Debug.LogError($"[KyndeBlade] Failed to instantiate enemy prefab '{prefab.name}'.");
+                return;
+            }
+
+            EnsureCharacterVisual(c.gameObject, false, prefab.CharacterName ?? prefab.name);
             if (c.GetComponent<HungerCharacter>() != null)
             {
                 HungerMoveset.ApplyToCharacter(c);
@@ -880,15 +933,26 @@ namespace KyndeBlade
             var cam = Camera.main;
             if (cam == null)
             {
+                var mainCameraObject = GameObject.Find("Main Camera");
+                if (mainCameraObject != null)
+                {
+                    if (mainCameraObject.GetComponent<Camera>() == null)
+                        mainCameraObject.AddComponent<Camera>();
+                    mainCameraObject.tag = "MainCamera";
+                    if (mainCameraObject.GetComponent<AudioListener>() == null)
+                        mainCameraObject.AddComponent<AudioListener>();
+                    cam = mainCameraObject.GetComponent<Camera>();
+                }
+
                 var existing = UnityEngine.Object.FindFirstObjectByType<Camera>();
-                if (existing != null)
+                if (cam == null && existing != null)
                 {
                     existing.gameObject.tag = "MainCamera";
                     if (existing.GetComponent<AudioListener>() == null)
                         existing.gameObject.AddComponent<AudioListener>();
                     cam = existing;
                 }
-                else
+                else if (cam == null)
                 {
                     var go = new GameObject("Main Camera");
                     go.tag = "MainCamera";
@@ -905,17 +969,36 @@ namespace KyndeBlade
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(0.12f, 0.1f, 0.14f);
             cam.depth = 100;
+            cam.targetDisplay = 0;
+            cam.cullingMask = ~0;
+            cam.nearClipPlane = 0.1f;
+            cam.farClipPlane = 1000f;
+            cam.targetTexture = null;
+            cam.forceIntoRenderTexture = false;
 
             var manuscriptOverlay = cam.GetComponent<ManuscriptOverlayEffect>();
             if (manuscriptOverlay != null)
                 manuscriptOverlay.enabled = false;
 
             var pipeline = cam.GetComponent<SixteenBitPipeline>();
-            if (pipeline == null)
+            bool useRetroPipeline = EnableRetroRenderPipelineInGameplay && !IsUsingScriptableRenderPipeline();
+            if (useRetroPipeline)
             {
-                pipeline = cam.gameObject.AddComponent<SixteenBitPipeline>();
+                if (pipeline == null)
+                    pipeline = cam.gameObject.AddComponent<SixteenBitPipeline>();
                 pipeline.ApplyManuscriptOverlay = false;
+                pipeline.enabled = true;
             }
+            else if (pipeline != null)
+            {
+                pipeline.enabled = false;
+                cam.targetTexture = null;
+            }
+        }
+
+        static bool IsUsingScriptableRenderPipeline()
+        {
+            return GraphicsSettings.currentRenderPipeline != null || QualitySettings.renderPipeline != null;
         }
 
         /// <summary>Sets UI scale mode and reference resolution for manuscript-style UI.</summary>
@@ -937,6 +1020,13 @@ namespace KyndeBlade
 
             if (!SandboxTwoWaveSequence)
                 return;
+            if (!SandboxAutoAdvanceOnVictory)
+                return;
+            if (TurnManager == null || !AreAllDefeated(TurnManager.EnemyCharacters))
+            {
+                _sandboxWaveIndex = 0;
+                return;
+            }
 
             if (_sandboxWaveIndex == 0)
             {
@@ -947,6 +1037,14 @@ namespace KyndeBlade
             {
                 _sandboxWaveIndex = 0;
             }
+        }
+
+        static bool AreAllDefeated(List<MedievalCharacter> list)
+        {
+            if (list == null || list.Count == 0) return true;
+            foreach (var c in list)
+                if (c != null && c.IsAlive()) return false;
+            return true;
         }
 
         IEnumerator StartNextSandboxWaveAfterDelay()

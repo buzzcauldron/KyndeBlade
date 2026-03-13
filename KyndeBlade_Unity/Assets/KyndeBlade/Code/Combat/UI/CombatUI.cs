@@ -124,9 +124,20 @@ namespace KyndeBlade
             if (ActionButtonsRoot == null)
             {
                 var go = new GameObject("ActionButtons");
-                go.transform.SetParent(transform);
+                go.transform.SetParent(transform, false);
+                var rect = go.AddComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0.5f, 0f);
+                rect.anchorMax = new Vector2(0.5f, 0f);
+                rect.pivot = new Vector2(0.5f, 0f);
+                rect.anchoredPosition = new Vector2(0f, 28f);
+                rect.sizeDelta = new Vector2(900f, 56f);
                 var hlg = go.AddComponent<HorizontalLayoutGroup>();
                 hlg.spacing = 8;
+                hlg.childAlignment = TextAnchor.LowerCenter;
+                hlg.childControlWidth = false;
+                hlg.childControlHeight = false;
+                hlg.childForceExpandWidth = false;
+                hlg.childForceExpandHeight = false;
                 ActionButtonsRoot = go.transform;
             }
             if (GoalText == null)
@@ -189,26 +200,36 @@ namespace KyndeBlade
 
         void EnsureParryDodgeIndicator()
         {
-            if (ParryDodgeIndicator != null) return;
             var soundBank = UnityEngine.Object.FindFirstObjectByType<ParryDodgeZoneSoundBank>();
             if (soundBank == null && Feedback != null)
             {
                 soundBank = Feedback.gameObject.AddComponent<ParryDodgeZoneSoundBank>();
             }
-            var go = new GameObject("ParryDodgeZoneIndicator");
-            go.transform.SetParent(transform, false);
-            var rect = go.AddComponent<RectTransform>();
-            rect.anchorMin = new Vector2(0.5f, 0.5f);
-            rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.sizeDelta = new Vector2(200, 100);
-            rect.anchoredPosition = Vector2.zero;
-            ParryDodgeIndicator = go.AddComponent<ParryDodgeZoneIndicator>();
+            if (ParryDodgeIndicator == null)
+            {
+                var go = new GameObject("ParryDodgeZoneIndicator");
+                go.transform.SetParent(transform, false);
+                var rect = go.AddComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0.5f, 0.5f);
+                rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.sizeDelta = new Vector2(200, 100);
+                rect.anchoredPosition = Vector2.zero;
+                ParryDodgeIndicator = go.AddComponent<ParryDodgeZoneIndicator>();
+            }
+
             ParryDodgeIndicator.TurnManager = TurnManager;
             ParryDodgeIndicator.SoundBank = soundBank;
+            if (!ParryDodgeIndicator.gameObject.activeSelf)
+                ParryDodgeIndicator.gameObject.SetActive(true);
 
-            var inputHandler = go.GetComponent<ParryDodgeInputHandler>();
-            if (inputHandler == null) inputHandler = go.AddComponent<ParryDodgeInputHandler>();
+            var inputHandler = ParryDodgeIndicator.GetComponent<ParryDodgeInputHandler>();
+            if (inputHandler == null) inputHandler = ParryDodgeIndicator.gameObject.AddComponent<ParryDodgeInputHandler>();
             inputHandler.TurnManager = TurnManager;
+            if (_parryDodgeInputHandler != null)
+            {
+                _parryDodgeInputHandler.OnDodgePressed -= OnDodgePressedReceived;
+                _parryDodgeInputHandler.OnParryPressed -= OnParryPressedReceived;
+            }
             _parryDodgeInputHandler = inputHandler;
             inputHandler.OnDodgePressed += OnDodgePressedReceived;
             inputHandler.OnParryPressed += OnParryPressedReceived;
@@ -324,7 +345,7 @@ namespace KyndeBlade
                 var btn = CreateActionButton(action, target);
                 if (btn != null)
                 {
-                    btn.transform.SetParent(ActionButtonsRoot);
+                    btn.transform.SetParent(ActionButtonsRoot, false);
                     _actionButtons.Add(btn);
                 }
             }
@@ -352,6 +373,11 @@ namespace KyndeBlade
 
             var rect = go.GetComponent<RectTransform>();
             if (rect != null) rect.sizeDelta = new Vector2(120, 36);
+            var le = go.AddComponent<LayoutElement>();
+            le.preferredWidth = 120f;
+            le.preferredHeight = 36f;
+            le.flexibleWidth = 0f;
+            le.flexibleHeight = 0f;
 
             var current = TurnManager.CurrentCharacter;
             bool canAfford = current != null && current.GetCurrentStamina() >= action.ActionData.StaminaCost &&
@@ -402,7 +428,7 @@ namespace KyndeBlade
                 case CombatState.WaitingForInput: SetState("Select action"); break;
                 case CombatState.ExecutingAction: SetState("Executing..."); break;
                 case CombatState.RealTimeWindow:
-                    SetState($"Dodge/Parry! {TurnManager.RealTimeWindowRemaining:F1}s");
+                    SetState($"React! Dodge: Space/Alt/RMB | Parry: Shift/F/LMB | {TurnManager.RealTimeWindowRemaining:F1}s");
                     break;
                 case CombatState.ProcessingResults: SetState("Resolving..."); break;
                 case CombatState.CombatEnded: SetState("Combat ended"); break;

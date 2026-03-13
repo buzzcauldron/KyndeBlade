@@ -37,18 +37,31 @@ namespace KyndeBlade
             if (TurnManager == null || _subscribed) return;
             _subscribed = true;
             TurnManager.OnTurnChanged += OnTurnChanged;
+            TurnManager.OnActionExecuted += OnActionExecuted;
             TurnManager.OnCombatEnded += UnsubscribeAll;
         }
 
         void OnDestroy()
         {
             UnsubscribeAll();
-            if (TurnManager != null && _subscribed) { TurnManager.OnTurnChanged -= OnTurnChanged; TurnManager.OnCombatEnded -= UnsubscribeAll; _subscribed = false; }
+            if (TurnManager != null && _subscribed)
+            {
+                TurnManager.OnTurnChanged -= OnTurnChanged;
+                TurnManager.OnActionExecuted -= OnActionExecuted;
+                TurnManager.OnCombatEnded -= UnsubscribeAll;
+                _subscribed = false;
+            }
         }
 
         void OnTurnChanged(MedievalCharacter _)
         {
             SubscribeToAllInCombat();
+        }
+
+        void OnActionExecuted(MedievalCharacter executor, MedievalCharacter target, Combat.CombatAction action)
+        {
+            if (Feedback == null) return;
+            Feedback.OnActionCommitted(action);
         }
 
         void SubscribeToAllInCombat()

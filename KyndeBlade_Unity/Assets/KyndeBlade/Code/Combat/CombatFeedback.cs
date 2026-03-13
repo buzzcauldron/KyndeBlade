@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using KyndeBlade.Combat;
 
 namespace KyndeBlade
 {
@@ -18,6 +19,10 @@ namespace KyndeBlade
         public AudioClip ParrySuccessClip;
         public AudioClip ParryFailClip;
         public AudioClip HitClip;
+        public AudioClip RangedHitClip;
+        public AudioClip CounterHitClip;
+        public AudioClip SpecialClip;
+        public AudioClip HealClip;
 
         AudioSource _audio;
         Camera _mainCamera;
@@ -27,6 +32,8 @@ namespace KyndeBlade
         AudioClip _proceduralDodge;
         AudioClip _proceduralParry;
         AudioClip _proceduralFail;
+        CombatActionType _pendingDamageAudioType = CombatActionType.Rest;
+        bool _hasPendingDamageAudioType;
 
         void Awake()
         {
@@ -40,12 +47,20 @@ namespace KyndeBlade
         {
             var lib = AudioLibrary.LoadFromResources();
             if (HitClip == null) HitClip = lib != null ? lib.Hit : null;
+            if (RangedHitClip == null) RangedHitClip = lib != null ? lib.Hit : null;
+            if (CounterHitClip == null) CounterHitClip = lib != null ? lib.Hit : null;
+            if (SpecialClip == null) SpecialClip = lib != null ? lib.ParrySuccess : null;
+            if (HealClip == null) HealClip = lib != null ? lib.Heal : null;
             if (DodgeSuccessClip == null) DodgeSuccessClip = lib != null ? lib.DodgeSuccess : null;
             if (ParrySuccessClip == null) ParrySuccessClip = lib != null ? lib.ParrySuccess : null;
             if (DodgeFailClip == null) DodgeFailClip = lib != null ? lib.Fail : null;
             if (ParryFailClip == null) ParryFailClip = lib != null ? lib.Fail : null;
 
             if (HitClip == null) { _proceduralHit = ProceduralAudioFactory.Hit(); HitClip = _proceduralHit; }
+            if (RangedHitClip == null) RangedHitClip = ProceduralAudioFactory.DodgeSuccess();
+            if (CounterHitClip == null) CounterHitClip = _proceduralHit != null ? _proceduralHit : ProceduralAudioFactory.Hit();
+            if (SpecialClip == null) SpecialClip = _proceduralParry != null ? _proceduralParry : ProceduralAudioFactory.ParrySuccess();
+            if (HealClip == null) HealClip = ProceduralAudioFactory.Heal();
             if (DodgeSuccessClip == null) { _proceduralDodge = ProceduralAudioFactory.DodgeSuccess(); DodgeSuccessClip = _proceduralDodge; }
             if (ParrySuccessClip == null) { _proceduralParry = ProceduralAudioFactory.ParrySuccess(); ParrySuccessClip = _proceduralParry; }
             if (DodgeFailClip == null) { _proceduralFail = ProceduralAudioFactory.Fail(); DodgeFailClip = _proceduralFail; }
@@ -78,9 +93,43 @@ namespace KyndeBlade
 
         public void OnDamageDealt(MedievalCharacter target)
         {
-            PlayClip(HitClip);
+            PlayClip(GetDamageClip());
             FlashCharacter(target, FailureColor);
             if (ScreenShakeOnHit > 0f) ShakeScreen();
+        }
+
+        public void OnActionCommitted(CombatAction action)
+        {
+            if (action == null || action.ActionData == null) return;
+            var actionType = action.ActionData.ActionType;
+            switch (actionType)
+            {
+                case CombatActionType.Strike:
+                case CombatActionType.RangedStrike:
+                case CombatActionType.Counter:
+                case CombatActionType.Special:
+                    _pendingDamageAudioType = actionType;
+                    _hasPendingDamageAudioType = true;
+                    break;
+                case CombatActionType.Heal:
+                    PlayClip(HealClip);
+                    break;
+            }
+        }
+
+        AudioClip GetDamageClip()
+        {
+            if (!_hasPendingDamageAudioType)
+                return HitClip;
+
+            _hasPendingDamageAudioType = false;
+            switch (_pendingDamageAudioType)
+            {
+                case CombatActionType.RangedStrike: return RangedHitClip != null ? RangedHitClip : HitClip;
+                case CombatActionType.Counter: return CounterHitClip != null ? CounterHitClip : HitClip;
+                case CombatActionType.Special: return SpecialClip != null ? SpecialClip : HitClip;
+                default: return HitClip;
+            }
         }
 
         void PlayClip(AudioClip clip)

@@ -33,7 +33,7 @@ namespace KyndeBlade
             if (TurnManager == null) TurnManager = UnityEngine.Object.FindFirstObjectByType<TurnManager>();
             Phase = TutorialPhase.BasicAttack;
             _phaseActionPerformed = false;
-            SetHint("Select Strike to attack. Defeat all enemies.");
+            SetHint("Pick Strike and attack. Controls: arrows/WASD to select, Enter/Space to confirm.");
         }
 
         void OnEnable()
@@ -108,16 +108,16 @@ namespace KyndeBlade
             switch (Phase)
             {
                 case TutorialPhase.BasicAttack:
-                    SetHint("Your turn. Attack an enemy with Strike.");
+                    SetHint("Your turn: use Strike. Confirm with Enter/Space.");
                     break;
                 case TutorialPhase.Dodge:
-                    SetHint("When enemies attack, try Dodge (Escapade) to avoid damage.");
+                    SetHint("When the eye appears, Dodge with Space / Left Alt / Right Mouse.");
                     break;
                 case TutorialPhase.Parry:
-                    SetHint("Parry (Ward) reduces damage and gives Kynde. Time it carefully!");
+                    SetHint("Parry with Left Shift / F / Left Mouse for better reward.");
                     break;
                 case TutorialPhase.Counter:
-                    SetHint("After a successful Parry, you can Counter for bonus damage.");
+                    SetHint("After a successful parry, Counter with E or R.");
                     break;
             }
         }
@@ -141,11 +141,11 @@ namespace KyndeBlade
             switch (Phase)
             {
                 case TutorialPhase.Dodge:
-                    return "You didn't dodge successfully. Try again — use Escapade when enemies attack!";
+                    return "Dodge missed. Try again when the eye appears: Space / Left Alt / Right Mouse.";
                 case TutorialPhase.Parry:
-                    return "You didn't parry successfully. Try again — use Ward to block an attack!";
+                    return "Parry missed. Try again: Left Shift / F / Left Mouse during the eye.";
                 case TutorialPhase.Counter:
-                    return "You didn't counter successfully. Try again — Counter after a Parry!";
+                    return "Counter missed. Try again after parry: press E or R.";
                 default:
                     return "Try again!";
             }
