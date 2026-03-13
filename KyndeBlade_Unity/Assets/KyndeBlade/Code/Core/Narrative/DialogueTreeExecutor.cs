@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace KyndeBlade
@@ -12,8 +13,8 @@ namespace KyndeBlade
     {
         DialogueSystem _dialogueSystem;
         SaveManager _saveManager;
-        WorldMapManager _worldMapManager;
-        KyndeBladeGameManager _gameManager;
+        UnityEngine.Object _worldMapManager;
+        UnityEngine.Object _gameManager;
         DialogueTreeDefinition _currentTree;
         Action _onComplete;
 
@@ -41,9 +42,13 @@ namespace KyndeBlade
             if (_saveManager == null)
                 _saveManager = GameRuntime.SaveManager ?? UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             if (_worldMapManager == null)
-                _worldMapManager = GameRuntime.WorldMapManager ?? UnityEngine.Object.FindFirstObjectByType<WorldMapManager>();
+                _worldMapManager = GameRuntime.WorldMapManager != null
+                    ? GameRuntime.WorldMapManager
+                    : FindRuntimeObject("KyndeBlade.WorldMapManager");
             if (_gameManager == null)
-                _gameManager = GameRuntime.GameManager ?? UnityEngine.Object.FindFirstObjectByType<KyndeBladeGameManager>();
+                _gameManager = GameRuntime.GameManager != null
+                    ? GameRuntime.GameManager
+                    : FindRuntimeObject("KyndeBlade.KyndeBladeGameManager");
         }
 
         void BuildNodeIndex()
@@ -183,12 +188,13 @@ namespace KyndeBlade
                 case DialogueTreeDefinition.ConsequenceType.TransitionToLocation:
                     if (_worldMapManager != null && !string.IsNullOrEmpty(cons.StringParam))
                     {
-                        var loc = _worldMapManager.GetLocation(cons.StringParam);
-                        if (loc != null) _worldMapManager.TransitionTo(loc);
+                        var loc = InvokeInstanceMethod(_worldMapManager, "GetLocation", cons.StringParam);
+                        if (loc != null) InvokeInstanceMethod(_worldMapManager, "TransitionTo", loc);
                     }
                     break;
                 case DialogueTreeDefinition.ConsequenceType.StartSinMiniboss:
-                    _gameManager?.StartSinMinibossEncounter(cons.SinParam);
+                    if (_gameManager != null)
+                        InvokeInstanceMethod(_gameManager, "StartSinMinibossEncounter", cons.SinParam);
                     break;
                 case DialogueTreeDefinition.ConsequenceType.SaveCheckpoint:
                     if (!string.IsNullOrEmpty(cons.StringParam))
@@ -204,6 +210,36 @@ namespace KyndeBlade
             var cb = _onComplete;
             _onComplete = null;
             cb?.Invoke();
+        }
+
+        static UnityEngine.Object FindRuntimeObject(string fullTypeName)
+        {
+            if (string.IsNullOrEmpty(fullTypeName)) return null;
+            Type targetType = null;
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                targetType = assemblies[i].GetType(fullTypeName, false);
+                if (targetType != null) break;
+            }
+            if (targetType == null) return null;
+            return UnityEngine.Object.FindFirstObjectByType(targetType);
+        }
+
+        static object InvokeInstanceMethod(object instance, string methodName, params object[] args)
+        {
+            if (instance == null || string.IsNullOrEmpty(methodName)) return null;
+            var type = instance.GetType();
+            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            for (int i = 0; i < methods.Length; i++)
+            {
+                var m = methods[i];
+                if (m.Name != methodName) continue;
+                var p = m.GetParameters();
+                if (p.Length != (args?.Length ?? 0)) continue;
+                return m.Invoke(instance, args);
+            }
+            return null;
         }
     }
 }

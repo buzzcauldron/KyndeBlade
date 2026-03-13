@@ -29,6 +29,11 @@ namespace KyndeBlade
         public bool WodeWoDead;
         public bool HasReachedFieldOfGrace;
         public CharacterProgressEntry[] CharacterProgress;
+        public bool CombatSnapshotActive;
+        public string CombatEncounterId;
+        public int CombatWaveIndex;
+        public int CombatAliveEnemies;
+        public float CombatRecoveryRemaining;
     }
 
     /// <summary>Serializable game progress. Phase 1: checkpoint per location.
@@ -70,6 +75,12 @@ namespace KyndeBlade
         public bool WodeWoDead;
         [Tooltip("True once the player has reached the Field of Grace (game complete).")]
         public bool HasReachedFieldOfGrace;
+        [Tooltip("Saved combat snapshot for recovery checks while tuning core loop.")]
+        public bool CombatSnapshotActive;
+        public string CombatEncounterId;
+        public int CombatWaveIndex;
+        public int CombatAliveEnemies;
+        public float CombatRecoveryRemaining;
 
         public List<CharacterProgressEntry> CharacterProgress = new List<CharacterProgressEntry>();
 
@@ -123,6 +134,11 @@ namespace KyndeBlade
             d.WodeWoDead = WodeWoDead;
             d.HasReachedFieldOfGrace = HasReachedFieldOfGrace;
             d.CharacterProgress = CharacterProgress?.ToArray() ?? Array.Empty<CharacterProgressEntry>();
+            d.CombatSnapshotActive = CombatSnapshotActive;
+            d.CombatEncounterId = CombatEncounterId;
+            d.CombatWaveIndex = CombatWaveIndex;
+            d.CombatAliveEnemies = CombatAliveEnemies;
+            d.CombatRecoveryRemaining = CombatRecoveryRemaining;
             return JsonUtility.ToJson(d);
         }
 
@@ -156,6 +172,11 @@ namespace KyndeBlade
             p.CharacterProgress = d.CharacterProgress != null
                 ? new List<CharacterProgressEntry>(d.CharacterProgress)
                 : new List<CharacterProgressEntry>();
+            p.CombatSnapshotActive = d.CombatSnapshotActive;
+            p.CombatEncounterId = d.CombatEncounterId;
+            p.CombatWaveIndex = d.CombatWaveIndex;
+            p.CombatAliveEnemies = d.CombatAliveEnemies;
+            p.CombatRecoveryRemaining = d.CombatRecoveryRemaining;
             return p;
         }
     }

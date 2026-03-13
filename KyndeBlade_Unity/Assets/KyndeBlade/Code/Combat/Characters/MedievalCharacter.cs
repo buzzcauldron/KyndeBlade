@@ -29,7 +29,7 @@ namespace KyndeBlade
     }
 
     [RequireComponent(typeof(Collider))]
-    public class MedievalCharacter : MonoBehaviour, IKyndeUser
+    public class MedievalCharacter : MonoBehaviour, IKyndeUser, IBlessingCharacter
     {
         [Header("Character")]
         public CharacterClass CharacterClassType;
@@ -47,6 +47,7 @@ namespace KyndeBlade
         public bool IsParrying;
         public float DodgeWindowRemaining;
         public float ParryWindowRemaining;
+        public float ActionRecoveryRemaining;
         [Tooltip("Fairy transformation (fae appearance). Visual tint for short periods.")]
         public float FairyFormRemaining;
 
@@ -149,6 +150,8 @@ namespace KyndeBlade
                 Stats.BrokenStunRemaining -= dt;
                 if (Stats.BrokenStunRemaining <= 0f) RecoverFromBreak();
             }
+            if (ActionRecoveryRemaining > 0f)
+                ActionRecoveryRemaining = Mathf.Max(0f, ActionRecoveryRemaining - dt);
             if (FairyFormRemaining > 0f)
             {
                 FairyFormRemaining -= dt;
@@ -409,6 +412,8 @@ namespace KyndeBlade
         public void StartParry(float windowDuration) { IsParrying = true; ParryWindowRemaining = windowDuration; }
         public void EndDodge() { IsDodging = false; DodgeWindowRemaining = 0f; }
         public void EndParry() { IsParrying = false; ParryWindowRemaining = 0f; }
+        public void BeginActionRecovery(float duration) { ActionRecoveryRemaining = Mathf.Max(ActionRecoveryRemaining, duration); }
+        public void ClearActionRecovery() { ActionRecoveryRemaining = 0f; }
         public bool AttemptDodge() => DodgeWindowRemaining > 0f;
         public bool AttemptParry() => ParryWindowRemaining > 0f;
 
@@ -502,6 +507,8 @@ namespace KyndeBlade
         public float GetMaxKynde() => Stats.MaxKynde;
         public bool IsAlive() => Stats.CurrentHealth > 0f;
         public bool IsBroken() => Stats.IsBroken;
+        public CharacterStats GetBlessingStats() => Stats;
+        public string GetBlessingCharacterName() => CharacterName;
 
         /// <summary>Damage from this character's first Strike or RangedStrike action. Delegates to CombatCalculator so damage logic lives in one place.</summary>
         public float GetPrimaryStrikeDamage() => CombatCalculator.ComputePrimaryStrikeDamage(this);

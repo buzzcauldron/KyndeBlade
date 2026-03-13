@@ -188,6 +188,28 @@ namespace KyndeBlade
             return File.Exists(GetSavePath(slot));
         }
 
+        public void SaveCombatSnapshot(string encounterId, int waveIndex, int aliveEnemies, float recoveryRemaining)
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.CombatSnapshotActive = true;
+            CurrentProgress.CombatEncounterId = encounterId;
+            CurrentProgress.CombatWaveIndex = Mathf.Max(0, waveIndex);
+            CurrentProgress.CombatAliveEnemies = Mathf.Max(0, aliveEnemies);
+            CurrentProgress.CombatRecoveryRemaining = Mathf.Max(0f, recoveryRemaining);
+            Save();
+        }
+
+        public void ClearCombatSnapshot()
+        {
+            if (CurrentProgress == null) return;
+            CurrentProgress.CombatSnapshotActive = false;
+            CurrentProgress.CombatEncounterId = string.Empty;
+            CurrentProgress.CombatWaveIndex = 0;
+            CurrentProgress.CombatAliveEnemies = 0;
+            CurrentProgress.CombatRecoveryRemaining = 0f;
+            Save();
+        }
+
         /// <summary>Returns a summary for the save slot UI, or null if empty.</summary>
         public SaveSlotSummary GetSlotSummary(int slot)
         {

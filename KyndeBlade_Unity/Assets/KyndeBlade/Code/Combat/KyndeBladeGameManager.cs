@@ -39,6 +39,18 @@ namespace KyndeBlade
         public bool UseExpedition33Moveset = true;
         [Tooltip("Start with map/level select instead of auto-spawning combat. Phase 1: hub mode.")]
         public bool StartWithMap = true;
+        [Tooltip("Start directly in a fixed-wave sandbox encounter for balancing.")]
+        public bool StartWithSandboxEncounter = false;
+        [Tooltip("If true, runs two fixed waves in sequence for repeatable tuning.")]
+        public bool SandboxTwoWaveSequence = true;
+
+        [Header("Encounter Director Guardrails")]
+        [Tooltip("Maximum number of non-boss enemies spawned from EncounterConfig entries.")]
+        public int EncounterSpawnBudget = 4;
+        [Tooltip("Minimum lane cooldown in spawn order. Prevents repeated same-lane pressure.")]
+        public int SpawnLaneCooldownSlots = 1;
+        [Tooltip("Minimum vertical spacing between enemy spawns.")]
+        public float MinEnemyVerticalSpacing = 1.0f;
 
         /// <summary>Built-in shader that draws a single color (works with SpriteRenderer). Tries Unity 6 and legacy names.</summary>
         static Shader GetFallbackColorShader()
@@ -58,6 +70,13 @@ namespace KyndeBlade
         LocationNode _lastEncounterLocation;
         bool _isSinMinibossEncounter;
         bool _lastEncounterHadGreenKnight;
+        string _pendingEncounterMetricsId = "manual_test";
+        int _sandboxWaveIndex;
+        struct GuardedEnemySpawn
+        {
+            public EncounterConfig.EnemySpawnEntry Entry;
+            public Vector3 Position;
+        }
 
         /// <summary>Creates TurnManager and all pipeline objects so they exist before any other script's Start() runs.</summary>
         void Awake()
@@ -72,6 +91,8 @@ namespace KyndeBlade
             EnsureCombatPipeline();
             EnsureMapPipeline();
             RegisterGameRuntime();
+            if (TurnManager != null)
+                TurnManager.OnCombatEnded += OnCombatEnded;
         }
 
         void RegisterGameRuntime()
@@ -89,6 +110,8 @@ namespace KyndeBlade
 
         void OnDestroy()
         {
+            if (TurnManager != null)
+                TurnManager.OnCombatEnded -= OnCombatEnded;
             GameRuntime.Clear();
         }
 
@@ -96,6 +119,13 @@ namespace KyndeBlade
         void Start()
         {
             if (Settings != null && TurnManager != null) TurnManager.Settings = Settings;
+            if (StartWithSandboxEncounter)
+            {
+                StartWithMap = false;
+                AutoSpawnTestCharacters = false;
+                StartCoroutine(DelayedStartSandbox());
+                return;
+            }
 
             if (StartWithMap)
             {
@@ -117,11 +147,18 @@ namespace KyndeBlade
             SpawnTestCharacters();
         }
 
+        IEnumerator DelayedStartSandbox()
+        {
+            yield return new WaitForSeconds(0.25f);
+            StartSandboxEncounter();
+        }
+
         /// <summary>Spawns test party in poem order plus three default enemies; applies hunger scar and starts combat.</summary>
         public void SpawnTestCharacters()
         {
             _playerChars.Clear();
             _enemyChars.Clear();
+            _pendingEncounterMetricsId = "test_spawn";
 
             SpawnPartyInPoemOrder(null);
 
@@ -158,6 +195,8 @@ namespace KyndeBlade
                 Expedition33Moveset.ApplyToCharacter(c, false);
             else
                 DefaultCombatActions.AddDefaultsTo(c);
+            if (isPlayer)
+                ApplyPlayerLoopTuning(c);
             if (isPlayer) _playerChars.Add(c);
             else _enemyChars.Add(c);
         }
@@ -184,6 +223,8 @@ namespace KyndeBlade
                 DefaultCombatActions.AddDefaultsTo(c);
             if (c.GetComponent<SimpleEnemyAI>() == null && c.GetComponent<AdaptiveEnemyAI>() == null)
                 c.gameObject.AddComponent(UseExpedition33Moveset ? typeof(AdaptiveEnemyAI) : typeof(SimpleEnemyAI));
+            ApplyEnemyDifficultyTuning(c);
+            ConfigureEnemyAggression(c);
             _enemyChars.Add(c);
         }
 
@@ -197,11 +238,24 @@ namespace KyndeBlade
         /// <summary>Initializes TurnManager with given party and enemies and starts combat.</summary>
         public void StartCombatSequence(List<MedievalCharacter> players, List<MedievalCharacter> enemies)
         {
+            var metrics = UnityEngine.Object.FindFirstObjectByType<CombatMetricsManager>();
+            if (metrics != null)
+            {
+                var encounterId = string.IsNullOrWhiteSpace(_pendingEncounterMetricsId)
+                    ? "manual_test"
+                    : _pendingEncounterMetricsId;
+                metrics.BeginEncounter(encounterId, players, enemies);
+            }
+
             if (TurnManager != null)
             {
                 TurnManager.InitializeCombat(players, enemies);
                 TurnManager.StartCombat();
             }
+
+            var save = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+            if (save != null)
+                save.SaveCombatSnapshot(_pendingEncounterMetricsId, _sandboxWaveIndex, enemies != null ? enemies.Count : 0, 0f);
         }
 
         [Header("Random Green Knight")]
@@ -217,6 +271,9 @@ namespace KyndeBlade
             _isSinMinibossEncounter = false;
             _lastEncounterConfig = config;
             _lastEncounterLocation = location;
+            _pendingEncounterMetricsId = location != null && !string.IsNullOrWhiteSpace(location.LocationId)
+                ? location.LocationId
+                : (config != null ? config.name : "encounter");
             _playerChars.Clear();
             _enemyChars.Clear();
 
@@ -225,10 +282,11 @@ namespace KyndeBlade
             var offset = config.EnemyFormationOffset;
             var spacing = config.EnemySpacing;
             var enemies = config.Enemies ?? new List<EncounterConfig.EnemySpawnEntry>();
-            for (int i = 0; i < enemies.Count; i++)
+            var guardedSpawns = BuildGuardedEnemySpawns(config, enemies, offset, spacing);
+            for (int i = 0; i < guardedSpawns.Count; i++)
             {
-                var e = enemies[i];
-                var pos = e.Position != Vector3.zero ? e.Position : offset + new Vector3(0f, (i - enemies.Count * 0.5f) * spacing, 0f);
+                var e = guardedSpawns[i].Entry;
+                var pos = guardedSpawns[i].Position;
                 var prefab = e.Prefab ?? GetEnemyPrefabByType(e.CharacterTypeName);
                 if (prefab != null)
                     SpawnEnemyFromPrefab(prefab, pos);
@@ -287,6 +345,105 @@ namespace KyndeBlade
                 EnsureFaeAppearanceManager();
                 StartCoroutine(DelayedStartCombat());
             }
+        }
+
+        List<GuardedEnemySpawn> BuildGuardedEnemySpawns(
+            EncounterConfig config,
+            List<EncounterConfig.EnemySpawnEntry> enemies,
+            Vector3 offset,
+            float spacing)
+        {
+            var result = new List<GuardedEnemySpawn>();
+            if (enemies == null || enemies.Count == 0)
+                return result;
+
+            int spawnBudget = Mathf.Max(1, EncounterSpawnBudget);
+            int count = Mathf.Min(spawnBudget, enemies.Count);
+            int laneCooldown = Mathf.Max(0, SpawnLaneCooldownSlots);
+            float laneSpacing = spacing > 0.01f ? spacing : 1f;
+            float minVerticalSpacing = Mathf.Max(0.1f, MinEnemyVerticalSpacing);
+
+            var lastSpawnIndexByLane = new Dictionary<int, int>();
+            var usedPositions = new List<Vector3>();
+
+            for (int i = 0; i < count; i++)
+            {
+                var entry = enemies[i];
+                var basePos = entry.Position != Vector3.zero
+                    ? entry.Position
+                    : offset + new Vector3(0f, (i - count * 0.5f) * laneSpacing, 0f);
+
+                int desiredLane = Mathf.RoundToInt((basePos.y - offset.y) / laneSpacing);
+                int selectedLane = PickAvailableLane(desiredLane, i, laneCooldown, lastSpawnIndexByLane);
+                var guardedPos = basePos;
+                guardedPos.y = offset.y + selectedLane * laneSpacing;
+                guardedPos = ResolveVerticalOverlap(guardedPos, usedPositions, minVerticalSpacing);
+
+                lastSpawnIndexByLane[selectedLane] = i;
+                usedPositions.Add(guardedPos);
+                result.Add(new GuardedEnemySpawn { Entry = entry, Position = guardedPos });
+            }
+
+            if (enemies.Count > spawnBudget)
+            {
+                Debug.Log(
+                    $"[KyndeBlade] Encounter '{config.name}' trimmed from {enemies.Count} to {spawnBudget} enemies by spawn budget.",
+                    this);
+            }
+
+            return result;
+        }
+
+        static int PickAvailableLane(int desiredLane, int spawnIndex, int laneCooldown, Dictionary<int, int> lastSpawnIndexByLane)
+        {
+            if (laneCooldown <= 0)
+                return desiredLane;
+
+            if (!IsLaneCooling(desiredLane, spawnIndex, laneCooldown, lastSpawnIndexByLane))
+                return desiredLane;
+
+            for (int d = 1; d <= 6; d++)
+            {
+                int upLane = desiredLane + d;
+                if (!IsLaneCooling(upLane, spawnIndex, laneCooldown, lastSpawnIndexByLane))
+                    return upLane;
+
+                int downLane = desiredLane - d;
+                if (!IsLaneCooling(downLane, spawnIndex, laneCooldown, lastSpawnIndexByLane))
+                    return downLane;
+            }
+
+            return desiredLane;
+        }
+
+        static bool IsLaneCooling(int lane, int spawnIndex, int laneCooldown, Dictionary<int, int> lastSpawnIndexByLane)
+        {
+            if (!lastSpawnIndexByLane.TryGetValue(lane, out int lastIndex))
+                return false;
+            return spawnIndex - lastIndex <= laneCooldown;
+        }
+
+        static Vector3 ResolveVerticalOverlap(Vector3 candidate, List<Vector3> usedPositions, float minVerticalSpacing)
+        {
+            if (usedPositions == null || usedPositions.Count == 0)
+                return candidate;
+
+            var resolved = candidate;
+            for (int pass = 0; pass < 10; pass++)
+            {
+                bool moved = false;
+                for (int i = 0; i < usedPositions.Count; i++)
+                {
+                    if (Mathf.Abs(resolved.y - usedPositions[i].y) < minVerticalSpacing)
+                    {
+                        resolved.y += minVerticalSpacing;
+                        moved = true;
+                    }
+                }
+                if (!moved)
+                    break;
+            }
+            return resolved;
         }
 
         void ApplyAgeFromSave()
@@ -388,6 +545,7 @@ namespace KyndeBlade
             _lastEncounterConfig = null;
             _lastEncounterLocation = location;
             _lastEncounterHadGreenKnight = false;
+            _pendingEncounterMetricsId = "sin_" + sin.ToString().ToLowerInvariant();
             _playerChars.Clear();
             _enemyChars.Clear();
 
@@ -519,6 +677,8 @@ namespace KyndeBlade
                 c.GetComponent<SlothBossAI>() == null && c.GetComponent<LustBossAI>() == null &&
                 c.GetComponent<SimpleEnemyAI>() == null && c.GetComponent<AdaptiveEnemyAI>() == null)
                 c.gameObject.AddComponent(UseExpedition33Moveset ? typeof(AdaptiveEnemyAI) : typeof(SimpleEnemyAI));
+            ApplyEnemyDifficultyTuning(c);
+            ConfigureEnemyAggression(c);
             _enemyChars.Add(c);
         }
 
@@ -610,6 +770,12 @@ namespace KyndeBlade
             }
             if (UnityEngine.Object.FindFirstObjectByType<CombatFeedbackManager>() == null)
                 new GameObject("CombatFeedbackManager").AddComponent<CombatFeedbackManager>();
+            if (UnityEngine.Object.FindFirstObjectByType<BattleFeedbackManager>() == null)
+                new GameObject("BattleFeedbackManager").AddComponent<BattleFeedbackManager>();
+            if (UnityEngine.Object.FindFirstObjectByType<CombatMetricsManager>() == null)
+                new GameObject("CombatMetricsManager").AddComponent<CombatMetricsManager>();
+            if (UnityEngine.Object.FindFirstObjectByType<CombatPerformanceBudgetMonitor>() == null)
+                new GameObject("CombatPerformanceBudgetMonitor").AddComponent<CombatPerformanceBudgetMonitor>();
             if (UnityEngine.Object.FindFirstObjectByType<GameStateManager>() == null)
                 new GameObject("GameStateManager").AddComponent<GameStateManager>();
             if (UnityEngine.Object.FindFirstObjectByType<IlluminationManager>() == null)
@@ -758,6 +924,95 @@ namespace KyndeBlade
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080);
             scaler.matchWidthOrHeight = 0.5f;
+        }
+
+        void OnCombatEnded()
+        {
+            var save = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+            if (save != null)
+                save.ClearCombatSnapshot();
+
+            if (!StartWithSandboxEncounter)
+                return;
+
+            if (!SandboxTwoWaveSequence)
+                return;
+
+            if (_sandboxWaveIndex == 0)
+            {
+                _sandboxWaveIndex = 1;
+                StartCoroutine(StartNextSandboxWaveAfterDelay());
+            }
+            else
+            {
+                _sandboxWaveIndex = 0;
+            }
+        }
+
+        IEnumerator StartNextSandboxWaveAfterDelay()
+        {
+            yield return new WaitForSeconds(0.75f);
+            StartSandboxEncounter();
+        }
+
+        public void StartSandboxEncounter()
+        {
+            _playerChars.Clear();
+            _enemyChars.Clear();
+
+            _pendingEncounterMetricsId = _sandboxWaveIndex == 0 ? "sandbox_wave_1" : "sandbox_wave_2";
+            SpawnPartyInPoemOrder(null);
+
+            if (_sandboxWaveIndex == 0)
+            {
+                SpawnEnemy(null, new Vector3(4f, -0.8f, 0f), typeof(MeleePressureEnemy));
+                SpawnEnemy(null, new Vector3(4f, 0.9f, 0f), typeof(RangedPressureEnemy));
+            }
+            else
+            {
+                SpawnEnemy(null, new Vector3(4f, -1.4f, 0f), typeof(MeleePressureEnemy));
+                SpawnEnemy(null, new Vector3(4f, 0f, 0f), typeof(RangedPressureEnemy));
+                SpawnEnemy(null, new Vector3(4f, 1.4f, 0f), typeof(MeleePressureEnemy));
+            }
+
+            if (_playerChars.Count > 0 && _enemyChars.Count > 0)
+                StartCoroutine(DelayedStartCombat());
+        }
+
+        void ApplyPlayerLoopTuning(MedievalCharacter character)
+        {
+            if (Settings == null || character == null || character.AvailableActions == null) return;
+            foreach (var action in character.AvailableActions)
+            {
+                if (action == null || action.ActionData == null) continue;
+                var t = action.ActionData.ActionType;
+                if (t == CombatActionType.Strike || t == CombatActionType.RangedStrike || t == CombatActionType.Counter)
+                    action.ActionData.Damage *= Settings.PlayerDamageMultiplier;
+                if (action.ActionData.StaminaCost > 0f)
+                    action.ActionData.StaminaCost *= Settings.PlayerStaminaCostMultiplier;
+                if (action.ActionData.CastTime > 0f)
+                    action.ActionData.CastTime *= Settings.PlayerActionTimingMultiplier;
+                if (action.ActionData.ExecutionTime > 0f)
+                    action.ActionData.ExecutionTime *= Settings.PlayerActionTimingMultiplier;
+            }
+        }
+
+        void ApplyEnemyDifficultyTuning(MedievalCharacter enemy)
+        {
+            if (Settings == null || enemy == null) return;
+            float healthMult = Settings.GetEnemyHealthMultiplier();
+            enemy.Stats.MaxHealth *= healthMult;
+            enemy.Stats.CurrentHealth *= healthMult;
+        }
+
+        void ConfigureEnemyAggression(MedievalCharacter enemy)
+        {
+            if (Settings == null || enemy == null) return;
+            float aggroMult = Settings.GetEnemyAggressionMultiplier();
+            var simple = enemy.GetComponent<SimpleEnemyAI>();
+            if (simple != null) simple.DecisionDelay *= aggroMult;
+            var adaptive = enemy.GetComponent<AdaptiveEnemyAI>();
+            if (adaptive != null) adaptive.DecisionDelay *= aggroMult;
         }
     }
 }
