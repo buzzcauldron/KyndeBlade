@@ -38,17 +38,15 @@ namespace KyndeBlade
         void ResolveRefs()
         {
             if (_dialogueSystem == null)
-                _dialogueSystem = GameRuntime.DialogueSystem ?? UnityEngine.Object.FindFirstObjectByType<DialogueSystem>();
+                _dialogueSystem = (GetRuntimeProperty("DialogueSystem") as DialogueSystem) ?? UnityEngine.Object.FindFirstObjectByType<DialogueSystem>();
             if (_saveManager == null)
-                _saveManager = GameRuntime.SaveManager ?? UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+                _saveManager = (GetRuntimeProperty("SaveManager") as SaveManager) ?? UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             if (_worldMapManager == null)
-                _worldMapManager = GameRuntime.WorldMapManager != null
-                    ? GameRuntime.WorldMapManager
-                    : FindRuntimeObject("KyndeBlade.WorldMapManager");
+                _worldMapManager = GetRuntimeProperty("WorldMapManager") as UnityEngine.Object
+                    ?? FindRuntimeObject("KyndeBlade.WorldMapManager");
             if (_gameManager == null)
-                _gameManager = GameRuntime.GameManager != null
-                    ? GameRuntime.GameManager
-                    : FindRuntimeObject("KyndeBlade.KyndeBladeGameManager");
+                _gameManager = GetRuntimeProperty("GameManager") as UnityEngine.Object
+                    ?? FindRuntimeObject("KyndeBlade.KyndeBladeGameManager");
         }
 
         void BuildNodeIndex()
@@ -224,6 +222,27 @@ namespace KyndeBlade
             }
             if (targetType == null) return null;
             return UnityEngine.Object.FindFirstObjectByType(targetType);
+        }
+
+        static object GetRuntimeProperty(string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName)) return null;
+            var runtimeType = FindType("KyndeBlade.GameRuntime");
+            if (runtimeType == null) return null;
+            var prop = runtimeType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
+            return prop?.GetValue(null);
+        }
+
+        static Type FindType(string fullTypeName)
+        {
+            if (string.IsNullOrEmpty(fullTypeName)) return null;
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            for (int i = 0; i < assemblies.Length; i++)
+            {
+                var type = assemblies[i].GetType(fullTypeName, false);
+                if (type != null) return type;
+            }
+            return null;
         }
 
         static object InvokeInstanceMethod(object instance, string methodName, params object[] args)

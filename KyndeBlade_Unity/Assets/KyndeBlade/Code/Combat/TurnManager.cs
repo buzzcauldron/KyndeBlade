@@ -204,6 +204,22 @@ namespace KyndeBlade
                     : GetFirstAliveEnemy();
                 StartRealTimeWindow(_currentAction.ActionData.SuccessWindow, attacker, defender, _currentAction.ActionData.ActionType);
             }
+            else if (_currentAction != null &&
+                     EnemyCharacters.Contains(CurrentCharacter) &&
+                     IsOffensiveAction(_currentAction.ActionData.ActionType))
+            {
+                // Enemy offense opens the player reaction window so parry/dodge eye always appears for incoming hits.
+                var defender = _currentTarget != null && PlayerCharacters.Contains(_currentTarget) && _currentTarget.IsAlive()
+                    ? _currentTarget
+                    : GetFirstAlivePlayer();
+                if (defender != null)
+                    StartRealTimeWindow(_currentAction.ActionData.SuccessWindow, CurrentCharacter, defender, CombatActionType.Ward);
+                else
+                {
+                    State = CombatState.ProcessingResults;
+                    StartCoroutine(TransitionToNextTurn());
+                }
+            }
             else
             {
                 State = CombatState.ProcessingResults;
@@ -275,6 +291,21 @@ namespace KyndeBlade
             return null;
         }
 
+        MedievalCharacter GetFirstAlivePlayer()
+        {
+            foreach (var p in PlayerCharacters)
+                if (p != null && p.IsAlive()) return p;
+            return null;
+        }
+
+        static bool IsOffensiveAction(CombatActionType actionType)
+        {
+            return actionType == CombatActionType.Strike ||
+                   actionType == CombatActionType.RangedStrike ||
+                   actionType == CombatActionType.Special ||
+                   actionType == CombatActionType.Counter;
+        }
+
         public bool IsPlayerTurn() => CurrentCharacter != null && PlayerCharacters.Contains(CurrentCharacter);
 
         void CalculateTurnOrder()
@@ -314,8 +345,8 @@ namespace KyndeBlade
             if (defender == null || !defender.IsAlive()) return;
             if (attacker == null || !attacker.IsAlive()) return;
 
-            bool parrySucceeded = actionType == CombatActionType.Ward && defender.IsParrying && defender.AttemptParry();
-            bool dodgeSucceeded = actionType == CombatActionType.Escapade && defender.IsDodging && defender.AttemptDodge();
+            bool parrySucceeded = defender.IsParrying && defender.AttemptParry();
+            bool dodgeSucceeded = defender.IsDodging && defender.AttemptDodge();
             float remainingAtSuccess = parrySucceeded ? defender.ParryWindowRemaining
                 : (dodgeSucceeded ? defender.DodgeWindowRemaining : 0f);
             bool isPerfect = CombatCalculator.IsPerfectTiming(remainingAtSuccess, RealTimeWindowDuration);

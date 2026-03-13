@@ -2,223 +2,159 @@ using UnityEngine;
 
 namespace KyndeBlade
 {
-    /// <summary>Creates procedural particle effects matching the illuminated manuscript art style.</summary>
+    /// <summary>
+    /// Creates lightweight procedural VFX without requiring the Unity ParticleSystem module.
+    /// </summary>
     public static class ManuscriptParticleFactory
     {
-        static Material _particleMat;
+        static Sprite _pulseSprite;
 
-        static Material GetParticleMaterial()
+        public static GameObject CreateHitImpact(Vector3 position)
         {
-            if (_particleMat != null) return _particleMat;
-            _particleMat = new Material(Shader.Find("Sprites/Default"));
-            return _particleMat;
+            return CreatePulse("HitImpact", position, null, new Color(0.2f, 0.15f, 0.1f, 0.9f), new Color(0.1f, 0.08f, 0.05f, 0f), 0.08f, 0.28f, 0.3f, false);
         }
 
-        public static ParticleSystem CreateHitImpact(Vector3 position)
+        public static GameObject CreateBurningEmbers(Transform parent)
         {
-            var go = new GameObject("HitImpact");
-            go.transform.position = position;
-            var ps = go.AddComponent<ParticleSystem>();
-            var main = ps.main;
-            main.duration = 0.3f;
-            main.startLifetime = 0.4f;
-            main.startSpeed = 3f;
-            main.startSize = 0.15f;
-            main.startColor = new Color(0.2f, 0.15f, 0.1f, 0.9f);
-            main.maxParticles = 12;
-            main.loop = false;
-            main.playOnAwake = true;
-            main.stopAction = ParticleSystemStopAction.Destroy;
-
-            var emission = ps.emission;
-            emission.rateOverTime = 0;
-            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 8, 12) });
-
-            var shape = ps.shape;
-            shape.shapeType = ParticleSystemShapeType.Circle;
-            shape.radius = 0.1f;
-
-            var colorOverLife = ps.colorOverLifetime;
-            colorOverLife.enabled = true;
-            var grad = new Gradient();
-            grad.SetKeys(
-                new[] { new GradientColorKey(new Color(0.2f, 0.15f, 0.1f), 0f), new GradientColorKey(new Color(0.1f, 0.08f, 0.05f), 1f) },
-                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) }
-            );
-            colorOverLife.color = grad;
-
-            var renderer = go.GetComponent<ParticleSystemRenderer>();
-            renderer.material = GetParticleMaterial();
-
-            return ps;
+            return CreatePulse("BurningEmbers", Vector3.zero, parent, new Color(1f, 0.5f, 0.1f, 0.8f), new Color(1f, 0.2f, 0f, 0f), 0.05f, 0.15f, 0.8f, true);
         }
 
-        public static ParticleSystem CreateBurningEmbers(Transform parent)
+        public static GameObject CreateFrostCrystals(Transform parent)
         {
-            return CreateStatusIndicator(parent, "BurningEmbers",
-                new Color(1f, 0.5f, 0.1f, 0.8f), new Color(1f, 0.2f, 0f, 0f),
-                rateOverTime: 6, startSpeed: 1.5f, startSize: 0.08f, lifetime: 0.8f);
+            return CreatePulse("FrostCrystals", Vector3.zero, parent, new Color(0.7f, 0.85f, 1f, 0.8f), new Color(0.5f, 0.7f, 1f, 0f), 0.06f, 0.17f, 1.1f, true);
         }
 
-        public static ParticleSystem CreateFrostCrystals(Transform parent)
+        public static GameObject CreatePoisonDrip(Transform parent)
         {
-            return CreateStatusIndicator(parent, "FrostCrystals",
-                new Color(0.7f, 0.85f, 1f, 0.8f), new Color(0.5f, 0.7f, 1f, 0f),
-                rateOverTime: 4, startSpeed: 0.5f, startSize: 0.1f, lifetime: 1.2f);
+            return CreatePulse("PoisonDrip", Vector3.zero, parent, new Color(0.3f, 0.7f, 0.2f, 0.8f), new Color(0.2f, 0.5f, 0.1f, 0f), 0.05f, 0.14f, 0.7f, true);
         }
 
-        public static ParticleSystem CreatePoisonDrip(Transform parent)
+        public static GameObject CreateStunStars(Transform parent)
         {
-            return CreateStatusIndicator(parent, "PoisonDrip",
-                new Color(0.3f, 0.7f, 0.2f, 0.8f), new Color(0.2f, 0.5f, 0.1f, 0f),
-                rateOverTime: 3, startSpeed: -1f, startSize: 0.06f, lifetime: 0.6f);
+            return CreatePulse("StunStars", Vector3.zero, parent, new Color(1f, 1f, 0.5f, 0.9f), new Color(1f, 1f, 0.3f, 0f), 0.07f, 0.18f, 0.65f, true);
         }
 
-        public static ParticleSystem CreateStunStars(Transform parent)
+        public static GameObject CreateBlessedGlow(Transform parent)
         {
-            return CreateStatusIndicator(parent, "StunStars",
-                new Color(1f, 1f, 0.5f, 0.9f), new Color(1f, 1f, 0.3f, 0f),
-                rateOverTime: 5, startSpeed: 0.8f, startSize: 0.12f, lifetime: 0.5f, orbital: true);
+            return CreatePulse("BlessedGlow", Vector3.zero, parent, new Color(1f, 0.9f, 0.5f, 0.6f), new Color(ManuscriptUITheme.Gold.r, ManuscriptUITheme.Gold.g, ManuscriptUITheme.Gold.b, 0f), 0.08f, 0.2f, 1f, true);
         }
 
-        public static ParticleSystem CreateBlessedGlow(Transform parent)
+        public static GameObject CreateBlessingPickup(Vector3 position)
         {
-            return CreateStatusIndicator(parent, "BlessedGlow",
-                new Color(1f, 0.9f, 0.5f, 0.6f), ManuscriptUITheme.Gold,
-                rateOverTime: 8, startSpeed: 0.3f, startSize: 0.15f, lifetime: 1f);
+            return CreatePulse("BlessingPickup", position, null, ManuscriptUITheme.Gold, new Color(1f, 1f, 1f, 0f), 0.08f, 0.24f, 1.2f, false);
         }
 
-        public static ParticleSystem CreateBlessingPickup(Vector3 position)
+        public static GameObject CreateDeathDissolve(Transform parent)
         {
-            var go = new GameObject("BlessingPickup");
-            go.transform.position = position;
-            var ps = go.AddComponent<ParticleSystem>();
-            var main = ps.main;
-            main.duration = 1f;
-            main.startLifetime = 1.2f;
-            main.startSpeed = 2f;
-            main.startSize = 0.1f;
-            main.startColor = ManuscriptUITheme.Gold;
-            main.maxParticles = 30;
-            main.loop = false;
-            main.playOnAwake = true;
-            main.stopAction = ParticleSystemStopAction.Destroy;
-            main.gravityModifier = -0.5f;
-
-            var emission = ps.emission;
-            emission.rateOverTime = 0;
-            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 20, 30) });
-
-            var shape = ps.shape;
-            shape.shapeType = ParticleSystemShapeType.Sphere;
-            shape.radius = 0.3f;
-
-            var sizeOverLife = ps.sizeOverLifetime;
-            sizeOverLife.enabled = true;
-            sizeOverLife.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 1f, 1f, 0f));
-
-            var colorOverLife = ps.colorOverLifetime;
-            colorOverLife.enabled = true;
-            var grad = new Gradient();
-            grad.SetKeys(
-                new[] { new GradientColorKey(ManuscriptUITheme.Gold, 0f), new GradientColorKey(Color.white, 0.5f), new GradientColorKey(ManuscriptUITheme.Gold, 1f) },
-                new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.2f), new GradientAlphaKey(0f, 1f) }
-            );
-            colorOverLife.color = grad;
-
-            var renderer = go.GetComponent<ParticleSystemRenderer>();
-            renderer.material = GetParticleMaterial();
-
-            return ps;
+            return CreatePulse("DeathDissolve", Vector3.zero, parent, new Color(0.15f, 0.1f, 0.08f, 0.7f), new Color(0.1f, 0.08f, 0.05f, 0f), 0.1f, 0.3f, 1.5f, false);
         }
 
-        public static ParticleSystem CreateDeathDissolve(Transform parent)
-        {
-            var go = new GameObject("DeathDissolve");
-            go.transform.SetParent(parent, false);
-            go.transform.localPosition = Vector3.zero;
-            var ps = go.AddComponent<ParticleSystem>();
-            var main = ps.main;
-            main.duration = 1.5f;
-            main.startLifetime = 2f;
-            main.startSpeed = 0.5f;
-            main.startSize = 0.08f;
-            main.startColor = new Color(0.15f, 0.1f, 0.08f, 0.7f);
-            main.maxParticles = 50;
-            main.loop = false;
-            main.playOnAwake = false;
-            main.stopAction = ParticleSystemStopAction.Destroy;
-            main.gravityModifier = -0.3f;
-
-            var emission = ps.emission;
-            emission.rateOverTime = 30;
-
-            var shape = ps.shape;
-            shape.shapeType = ParticleSystemShapeType.Rectangle;
-            shape.scale = new Vector3(0.5f, 0.8f, 0.1f);
-
-            var colorOverLife = ps.colorOverLifetime;
-            colorOverLife.enabled = true;
-            var grad = new Gradient();
-            grad.SetKeys(
-                new[] { new GradientColorKey(new Color(0.15f, 0.1f, 0.08f), 0f), new GradientColorKey(new Color(0.1f, 0.08f, 0.05f), 1f) },
-                new[] { new GradientAlphaKey(0.7f, 0f), new GradientAlphaKey(0f, 1f) }
-            );
-            colorOverLife.color = grad;
-
-            var renderer = go.GetComponent<ParticleSystemRenderer>();
-            renderer.material = GetParticleMaterial();
-
-            return ps;
-        }
-
-        static ParticleSystem CreateStatusIndicator(Transform parent, string name,
-            Color startColor, Color endColor,
-            int rateOverTime, float startSpeed, float startSize, float lifetime,
-            bool orbital = false)
+        static GameObject CreatePulse(
+            string name,
+            Vector3 worldPosition,
+            Transform parent,
+            Color startColor,
+            Color endColor,
+            float startScale,
+            float endScale,
+            float lifetime,
+            bool loop)
         {
             var go = new GameObject(name);
-            go.transform.SetParent(parent, false);
-            go.transform.localPosition = new Vector3(0f, 0.3f, 0f);
-            var ps = go.AddComponent<ParticleSystem>();
-            var main = ps.main;
-            main.duration = 5f;
-            main.startLifetime = lifetime;
-            main.startSpeed = startSpeed;
-            main.startSize = startSize;
-            main.startColor = startColor;
-            main.maxParticles = rateOverTime * 4;
-            main.loop = true;
-            main.playOnAwake = true;
-
-            var emission = ps.emission;
-            emission.rateOverTime = rateOverTime;
-
-            var shape = ps.shape;
-            shape.shapeType = ParticleSystemShapeType.Circle;
-            shape.radius = 0.2f;
-
-            if (orbital)
+            if (parent != null)
             {
-                var velocity = ps.velocityOverLifetime;
-                velocity.enabled = true;
-                velocity.orbitalX = 3f;
-                velocity.orbitalY = 1f;
+                go.transform.SetParent(parent, false);
+                go.transform.localPosition = new Vector3(0f, 0.3f, 0f);
+            }
+            else
+            {
+                go.transform.position = worldPosition;
             }
 
-            var colorOverLife = ps.colorOverLifetime;
-            colorOverLife.enabled = true;
-            var grad = new Gradient();
-            grad.SetKeys(
-                new[] { new GradientColorKey(startColor, 0f), new GradientColorKey(endColor, 1f) },
-                new[] { new GradientAlphaKey(startColor.a, 0f), new GradientAlphaKey(0f, 1f) }
-            );
-            colorOverLife.color = grad;
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = GetPulseSprite();
+            sr.color = startColor;
+            sr.sortingOrder = 8;
 
-            var renderer = go.GetComponent<ParticleSystemRenderer>();
-            renderer.material = GetParticleMaterial();
+            var fx = go.AddComponent<ManuscriptPulseEffect>();
+            fx.StartColor = startColor;
+            fx.EndColor = endColor;
+            fx.StartScale = startScale;
+            fx.EndScale = endScale;
+            fx.Lifetime = Mathf.Max(0.05f, lifetime);
+            fx.Loop = loop;
+            return go;
+        }
 
-            return ps;
+        static Sprite GetPulseSprite()
+        {
+            if (_pulseSprite != null)
+                return _pulseSprite;
+
+            const int size = 16;
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+            tex.filterMode = FilterMode.Point;
+            var clear = new Color(0f, 0f, 0f, 0f);
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                    tex.SetPixel(x, y, clear);
+
+            int cx = size / 2;
+            int cy = size / 2;
+            int r = 6;
+            int rsq = r * r;
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                {
+                    int dx = x - cx;
+                    int dy = y - cy;
+                    if (dx * dx + dy * dy <= rsq)
+                        tex.SetPixel(x, y, Color.white);
+                }
+
+            tex.Apply();
+            _pulseSprite = Sprite.Create(tex, new Rect(0f, 0f, size, size), new Vector2(0.5f, 0.5f), 16f);
+            return _pulseSprite;
+        }
+    }
+
+    public class ManuscriptPulseEffect : MonoBehaviour
+    {
+        public Color StartColor = Color.white;
+        public Color EndColor = new Color(1f, 1f, 1f, 0f);
+        public float StartScale = 0.08f;
+        public float EndScale = 0.2f;
+        public float Lifetime = 0.8f;
+        public bool Loop;
+
+        float _timer;
+        SpriteRenderer _renderer;
+
+        void Awake()
+        {
+            _renderer = GetComponent<SpriteRenderer>();
+            transform.localScale = Vector3.one * StartScale;
+        }
+
+        void Update()
+        {
+            _timer += Time.deltaTime;
+            var duration = Mathf.Max(0.05f, Lifetime);
+            var t = Mathf.Clamp01(_timer / duration);
+
+            if (_renderer != null)
+                _renderer.color = Color.Lerp(StartColor, EndColor, t);
+            transform.localScale = Vector3.one * Mathf.Lerp(StartScale, EndScale, t);
+
+            if (Loop)
+            {
+                if (_timer >= duration)
+                    _timer = 0f;
+            }
+            else if (_timer >= duration)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

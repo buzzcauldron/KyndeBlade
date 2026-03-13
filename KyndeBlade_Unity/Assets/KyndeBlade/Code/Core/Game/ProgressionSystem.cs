@@ -94,24 +94,23 @@ namespace KyndeBlade
         public static void ApplyBlessing(IBlessingCharacter c, Blessing b, SaveManager save)
         {
             if (c == null || b == null) return;
-            var stats = c.GetBlessingStats();
-            if (stats == null) return;
+            c.SetBlessingMaxHealth(c.GetBlessingMaxHealth() + b.BonusMaxHealth + b.DrawbackMaxHealth);
+            c.SetBlessingMaxStamina(c.GetBlessingMaxStamina() + b.BonusMaxStamina);
+            c.SetBlessingAttackPower(c.GetBlessingAttackPower() + b.BonusAttackPower);
+            c.SetBlessingDefense(c.GetBlessingDefense() + b.BonusDefense + b.DrawbackDefense);
+            c.SetBlessingSpeed(c.GetBlessingSpeed() + b.BonusSpeed + b.DrawbackSpeed);
+            c.SetBlessingMaxKynde(c.GetBlessingMaxKynde() + b.BonusMaxKynde);
 
-            stats.MaxHealth += b.BonusMaxHealth + b.DrawbackMaxHealth;
-            stats.MaxStamina += b.BonusMaxStamina;
-            stats.AttackPower += b.BonusAttackPower;
-            stats.Defense += b.BonusDefense + b.DrawbackDefense;
-            stats.Speed += b.BonusSpeed + b.DrawbackSpeed;
-            stats.MaxKynde += b.BonusMaxKynde;
+            c.SetBlessingCurrentHealth(c.GetBlessingMaxHealth());
+            c.SetBlessingCurrentStamina(Mathf.Min(c.GetBlessingCurrentStamina(), c.GetBlessingMaxStamina()));
 
-            stats.CurrentHealth = stats.MaxHealth;
-            stats.CurrentStamina = Mathf.Min(stats.CurrentStamina, stats.MaxStamina);
-
-            var existing = stats.ActiveBlessings.Find(ab => ab.BlessingId == b.BlessingId);
+            var activeBlessings = c.GetActiveBlessings();
+            if (activeBlessings == null) return;
+            var existing = activeBlessings.Find(ab => ab.BlessingId == b.BlessingId);
             if (existing != null && b.Stackable)
                 existing.StackCount++;
             else if (existing == null)
-                stats.ActiveBlessings.Add(new ActiveBlessing { BlessingId = b.BlessingId, StackCount = 1 });
+                activeBlessings.Add(new ActiveBlessing { BlessingId = b.BlessingId, StackCount = 1 });
 
             if (b.CuresHungerOnPickup)
                 c.RemoveHungerStack();
@@ -119,7 +118,7 @@ namespace KyndeBlade
             if (save?.CurrentProgress != null)
             {
                 var entry = save.CurrentProgress.GetOrCreateCharacterProgress(c.GetBlessingCharacterName());
-                entry.Blessings = new List<ActiveBlessing>(stats.ActiveBlessings);
+                entry.Blessings = new List<ActiveBlessing>(activeBlessings);
             }
 
             OnBlessingApplied?.Invoke(c, b);
@@ -129,9 +128,9 @@ namespace KyndeBlade
         public static BlessingModifiers GetModifiers(IBlessingCharacter c)
         {
             var mods = BlessingModifiers.Default();
-            var stats = c?.GetBlessingStats();
-            if (stats?.ActiveBlessings == null) return mods;
-            foreach (var ab in stats.ActiveBlessings)
+            var activeBlessings = c?.GetActiveBlessings();
+            if (activeBlessings == null) return mods;
+            foreach (var ab in activeBlessings)
             {
                 var b = FindBlessing(ab.BlessingId);
                 if (b == null) continue;
@@ -161,10 +160,10 @@ namespace KyndeBlade
         public static void RestoreFromSave(IBlessingCharacter c, CharacterProgressEntry entry)
         {
             if (c == null || entry == null) return;
-            var stats = c.GetBlessingStats();
-            if (stats == null) return;
-            stats.ActiveBlessings.Clear();
-            stats.BlessingCount = 0;
+            var activeBlessings = c.GetActiveBlessings();
+            if (activeBlessings == null) return;
+            activeBlessings.Clear();
+            c.SetBlessingCount(0);
             if (entry.Blessings == null || entry.Blessings.Count == 0) return;
             foreach (var ab in entry.Blessings)
             {
@@ -173,19 +172,19 @@ namespace KyndeBlade
                 if (b == null) continue;
                 for (int i = 0; i < ab.StackCount; i++)
                 {
-                    stats.MaxHealth += b.BonusMaxHealth + b.DrawbackMaxHealth;
-                    stats.MaxStamina += b.BonusMaxStamina;
-                    stats.AttackPower += b.BonusAttackPower;
-                    stats.Defense += b.BonusDefense + b.DrawbackDefense;
-                    stats.Speed += b.BonusSpeed + b.DrawbackSpeed;
-                    stats.MaxKynde += b.BonusMaxKynde;
+                    c.SetBlessingMaxHealth(c.GetBlessingMaxHealth() + b.BonusMaxHealth + b.DrawbackMaxHealth);
+                    c.SetBlessingMaxStamina(c.GetBlessingMaxStamina() + b.BonusMaxStamina);
+                    c.SetBlessingAttackPower(c.GetBlessingAttackPower() + b.BonusAttackPower);
+                    c.SetBlessingDefense(c.GetBlessingDefense() + b.BonusDefense + b.DrawbackDefense);
+                    c.SetBlessingSpeed(c.GetBlessingSpeed() + b.BonusSpeed + b.DrawbackSpeed);
+                    c.SetBlessingMaxKynde(c.GetBlessingMaxKynde() + b.BonusMaxKynde);
                 }
-                stats.ActiveBlessings.Add(new ActiveBlessing
+                activeBlessings.Add(new ActiveBlessing
                     { BlessingId = ab.BlessingId, StackCount = ab.StackCount });
-                stats.BlessingCount += ab.StackCount;
+                c.SetBlessingCount(c.GetBlessingCount() + ab.StackCount);
             }
-            stats.CurrentHealth = stats.MaxHealth;
-            stats.CurrentStamina = stats.MaxStamina;
+            c.SetBlessingCurrentHealth(c.GetBlessingMaxHealth());
+            c.SetBlessingCurrentStamina(c.GetBlessingMaxStamina());
         }
     }
 

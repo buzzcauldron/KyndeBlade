@@ -28,7 +28,7 @@ namespace KyndeBlade
         Envy         // Hiss, whisper
     }
 
-    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(BoxCollider))]
     public class MedievalCharacter : MonoBehaviour, IKyndeUser, IBlessingCharacter
     {
         [Header("Character")]
@@ -507,8 +507,26 @@ namespace KyndeBlade
         public float GetMaxKynde() => Stats.MaxKynde;
         public bool IsAlive() => Stats.CurrentHealth > 0f;
         public bool IsBroken() => Stats.IsBroken;
-        public CharacterStats GetBlessingStats() => Stats;
         public string GetBlessingCharacterName() => CharacterName;
+        public float GetBlessingMaxHealth() => Stats.MaxHealth;
+        public void SetBlessingMaxHealth(float value) => Stats.MaxHealth = value;
+        public float GetBlessingMaxStamina() => Stats.MaxStamina;
+        public void SetBlessingMaxStamina(float value) => Stats.MaxStamina = value;
+        public float GetBlessingAttackPower() => Stats.AttackPower;
+        public void SetBlessingAttackPower(float value) => Stats.AttackPower = value;
+        public float GetBlessingDefense() => Stats.Defense;
+        public void SetBlessingDefense(float value) => Stats.Defense = value;
+        public float GetBlessingSpeed() => Stats.Speed;
+        public void SetBlessingSpeed(float value) => Stats.Speed = value;
+        public float GetBlessingMaxKynde() => Stats.MaxKynde;
+        public void SetBlessingMaxKynde(float value) => Stats.MaxKynde = value;
+        public float GetBlessingCurrentHealth() => Stats.CurrentHealth;
+        public void SetBlessingCurrentHealth(float value) => Stats.CurrentHealth = value;
+        public float GetBlessingCurrentStamina() => Stats.CurrentStamina;
+        public void SetBlessingCurrentStamina(float value) => Stats.CurrentStamina = value;
+        public int GetBlessingCount() => Stats.BlessingCount;
+        public void SetBlessingCount(int value) => Stats.BlessingCount = value;
+        public List<ActiveBlessing> GetActiveBlessings() => Stats.ActiveBlessings;
 
         /// <summary>Damage from this character's first Strike or RangedStrike action. Delegates to CombatCalculator so damage logic lives in one place.</summary>
         public float GetPrimaryStrikeDamage() => CombatCalculator.ComputePrimaryStrikeDamage(this);

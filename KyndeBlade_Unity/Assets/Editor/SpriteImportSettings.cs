@@ -1,6 +1,8 @@
 #if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.U2D;
+using UnityEditor.U2D;
 
 namespace KyndeBlade.Editor
 {
@@ -87,11 +89,11 @@ namespace KyndeBlade.Editor
         static void CreateAtlas(string name, string folder)
         {
             string atlasPath = $"Assets/KyndeBlade/Art/Atlases/{name}.spriteatlas";
-            if (AssetDatabase.LoadAssetAtPath<UnityEngine.U2D.SpriteAtlas>(atlasPath) != null) return;
+            if (AssetDatabase.LoadAssetAtPath<SpriteAtlas>(atlasPath) != null) return;
 
-            var atlas = new UnityEngine.U2D.SpriteAtlas();
+            var atlas = new SpriteAtlas();
 
-            var packSettings = new UnityEngine.U2D.SpriteAtlasPackingSettings
+            var packSettings = new SpriteAtlasPackingSettings
             {
                 padding = 2,
                 enableRotation = false,
@@ -99,7 +101,7 @@ namespace KyndeBlade.Editor
             };
             atlas.SetPackingSettings(packSettings);
 
-            var texSettings = new UnityEngine.U2D.SpriteAtlasTextureSettings
+            var texSettings = new SpriteAtlasTextureSettings
             {
                 filterMode = FilterMode.Point,
                 generateMipMaps = false,

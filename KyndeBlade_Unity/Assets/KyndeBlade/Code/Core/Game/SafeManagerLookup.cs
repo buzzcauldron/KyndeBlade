@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using UnityEngine;
 
 namespace KyndeBlade
@@ -8,23 +10,52 @@ namespace KyndeBlade
     {
         public static T Get<T>() where T : Component
         {
-            if (typeof(T) == typeof(TurnManager))
-                return (GameRuntime.TurnManager as T) ?? Object.FindFirstObjectByType<T>();
-            if (typeof(T) == typeof(KyndeBladeGameManager))
-                return (GameRuntime.GameManager as T) ?? Object.FindFirstObjectByType<T>();
-            if (typeof(T) == typeof(SaveManager))
-                return (GameRuntime.SaveManager as T) ?? Object.FindFirstObjectByType<T>();
-            if (typeof(T) == typeof(WorldMapManager))
-                return (GameRuntime.WorldMapManager as T) ?? Object.FindFirstObjectByType<T>();
-            if (typeof(T) == typeof(NarrativeManager))
-                return (GameRuntime.NarrativeManager as T) ?? Object.FindFirstObjectByType<T>();
-            if (typeof(T) == typeof(MusicManager))
-                return (GameRuntime.MusicManager as T) ?? Object.FindFirstObjectByType<T>();
-            return Object.FindFirstObjectByType<T>();
+            var runtimeCandidate = GetRuntimeManagerByTypeName(typeof(T).Name) as T;
+            if (runtimeCandidate != null)
+                return runtimeCandidate;
+            return UnityEngine.Object.FindFirstObjectByType<T>();
+        }
+
+        static object GetRuntimeManagerByTypeName(string typeName)
+        {
+            var propertyName = typeName switch
+            {
+                "TurnManager" => "TurnManager",
+                "KyndeBladeGameManager" => "GameManager",
+                "SaveManager" => "SaveManager",
+                "WorldMapManager" => "WorldMapManager",
+                "NarrativeManager" => "NarrativeManager",
+                "MusicManager" => "MusicManager",
+                _ => null
+            };
+
+            if (string.IsNullOrEmpty(propertyName))
+                return null;
+
+            var runtimeType = FindType("KyndeBlade.GameRuntime");
+            if (runtimeType == null)
+                return null;
+
+            var prop = runtimeType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
+            return prop?.GetValue(null);
+        }
+
+        static Type FindType(string fullName)
+        {
+            if (string.IsNullOrEmpty(fullName))
+                return null;
+
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var type = asm.GetType(fullName, false);
+                if (type != null)
+                    return type;
+            }
+            return null;
         }
 
         /// <summary>Load a ScriptableObject from Resources, logging a warning if missing.</summary>
-        public static T LoadResource<T>(string path) where T : Object
+        public static T LoadResource<T>(string path) where T : UnityEngine.Object
         {
             var asset = Resources.Load<T>(path);
             if (asset == null)
@@ -33,7 +64,7 @@ namespace KyndeBlade
         }
 
         /// <summary>Load a ScriptableObject or return a fallback.</summary>
-        public static T LoadResourceOrDefault<T>(string path, T fallback) where T : Object
+        public static T LoadResourceOrDefault<T>(string path, T fallback) where T : UnityEngine.Object
         {
             var asset = Resources.Load<T>(path);
             return asset != null ? asset : fallback;

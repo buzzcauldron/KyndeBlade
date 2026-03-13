@@ -110,7 +110,7 @@ namespace KyndeBlade.Editor
                     if (c == null) continue;
                     string statuses = "";
                     foreach (var se in c.ActiveStatusEffects)
-                        statuses += $"{se.Data.Type}({se.Data.RemainingTime:F0}t) ";
+                        statuses += $"{se.Data.EffectType}({se.Data.RemainingTime:F0}t) ";
                     Debug.Log($"  {c.CharacterName}: HP={c.Stats.CurrentHealth:F0}/{c.Stats.MaxHealth:F0} " +
                         $"ATK={c.Stats.AttackPower:F0} DEF={c.Stats.Defense:F0} SPD={c.Stats.Speed:F0} " +
                         $"Blessings={c.Stats.ActiveBlessings?.Count ?? 0} " +
