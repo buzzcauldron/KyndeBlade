@@ -29,6 +29,9 @@ namespace KyndeBlade
         public MedievalCharacter CurrentCharacter { get; private set; }
         public int TurnNumber { get; private set; }
         public float RealTimeWindowRemaining { get; private set; }
+
+        /// <summary>Play/Edit mode tests only (see InternalsVisibleTo).</summary>
+        internal void SetRealTimeWindowRemainingForTests(float seconds) => RealTimeWindowRemaining = seconds;
         public float ActionCastTimeRemaining { get; private set; }
         public float ActionExecutionTimeRemaining { get; private set; }
         /// <summary>Attacker whose strike is imminent (for strike-warning sound theme).</summary>
@@ -95,7 +98,7 @@ namespace KyndeBlade
         {
             isCrit = false;
             if (State == CombatState.CombatEnded) return damage;
-            if (Random.value < _critPressure)
+            if (UnityEngine.Random.value < _critPressure)
             {
                 isCrit = true;
                 _critPressure = 0f;
@@ -264,7 +267,7 @@ namespace KyndeBlade
             return true;
         }
 
-        void ResolveDefenseWindow()
+        internal void ResolveDefenseWindow()
         {
             var defender = DefenderDuringWindow;
             var attacker = CurrentAttackerDuringWindow;

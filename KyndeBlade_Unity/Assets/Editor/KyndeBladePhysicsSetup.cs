@@ -53,16 +53,16 @@ namespace KyndeBlade
 
         static void CreateOrUpdateMaterial(string assetPath, float dynamicFriction, float staticFriction, float bounciness)
         {
-            var mat = AssetDatabase.LoadAssetAtPath<PhysicMaterial>(assetPath);
+            var mat = AssetDatabase.LoadAssetAtPath<PhysicsMaterial>(assetPath);
             if (mat == null)
             {
-                mat = new PhysicMaterial(Path.GetFileNameWithoutExtension(assetPath))
+                mat = new PhysicsMaterial(Path.GetFileNameWithoutExtension(assetPath))
                 {
                     dynamicFriction = dynamicFriction,
                     staticFriction = staticFriction,
                     bounciness = bounciness,
-                    frictionCombine = PhysicMaterialCombine.Average,
-                    bounceCombine = PhysicMaterialCombine.Average
+                    frictionCombine = PhysicsMaterialCombine.Average,
+                    bounceCombine = PhysicsMaterialCombine.Average
                 };
                 AssetDatabase.CreateAsset(mat, assetPath);
             }
@@ -97,7 +97,7 @@ namespace KyndeBlade
 
         static void AssignDefaultPhysicsMaterial()
         {
-            var defaultMat = AssetDatabase.LoadAssetAtPath<PhysicMaterial>(Path.Combine(PhysicsFolder, DefaultMaterialName + ".physicMaterial"));
+            var defaultMat = AssetDatabase.LoadAssetAtPath<PhysicsMaterial>(Path.Combine(PhysicsFolder, DefaultMaterialName + ".physicMaterial"));
             if (defaultMat == null) return;
             var physicsManager = AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/DynamicsManager.asset");
             if (physicsManager == null || physicsManager.Length == 0) return;

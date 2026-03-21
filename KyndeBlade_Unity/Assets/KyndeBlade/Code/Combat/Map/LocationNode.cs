@@ -42,6 +42,8 @@ namespace KyndeBlade
         public bool AdvancesWodeWoArcOnSequenceComplete;
         [Tooltip("When Wode-Wo arc is complete (stage 4), show this positive beat on arrival instead of StoryBeatOnArrival. First time at stage 3 shows it and completes the arc.")]
         public StoryBeat StoryBeatOnArrivalWhenWodeWoComplete;
+        [Tooltip("When Wode-Wo has been lost/killed in the run, show this beat on arrival (e.g. Malvern remains). Optional on other nodes.")]
+        public StoryBeat StoryBeatOnArrivalWhenWodeWoDead;
         [Tooltip("When the run has ever had hunger, show this beat on arrival instead of StoryBeatOnArrival (permanent effect discernable in narrative).")]
         public StoryBeat StoryBeatOnArrivalWhenHasEverHadHunger;
         [Tooltip("Dialogue with choices before combat (e.g. Green Chapel). Wrong choice = Green Knight appears randomly later.")]

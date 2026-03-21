@@ -20,7 +20,7 @@ namespace KyndeBlade
         [Tooltip("Static = collider only. Kinematic = Rigidbody (isKinematic). Dynamic = full physics.")]
         public BodyType Type = BodyType.Static;
         [Tooltip("Assign for friction/bounce. Create via KyndeBlade > Setup Physics and Layers if missing.")]
-        public PhysicMaterial Material;
+        public PhysicsMaterial Material;
 
         [Header("Collider (auto if missing)")]
         [Tooltip("If no Collider exists, add a BoxCollider with this size (world space).")]
