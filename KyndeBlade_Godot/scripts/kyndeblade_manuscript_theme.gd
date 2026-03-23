@@ -15,11 +15,20 @@ static func _flat(bg: Color, border: Color, width: int = 2) -> StyleBoxFlat:
 static func build_theme() -> Theme:
 	var th := Theme.new()
 	var n := _flat(KyndeBladeArtPalette.PARCHMENT, KyndeBladeArtPalette.BORDER_SEPIA)
-	var h := _flat(KyndeBladeArtPalette.PARCHMENT_DARK, KyndeBladeArtPalette.GOLD_DARK)
+	## Hover / focus: jewel-tinged borders (Salome / Pre-Raphaelite layer); keep fills manuscript.
+	var h := _flat(
+			KyndeBladeArtPalette.PARCHMENT_DARK,
+			KyndeBladeArtPalette.JEWEL_CRIMSON.lerp(KyndeBladeArtPalette.GOLD_DARK, 0.35),
+			2
+	)
 	var p := _flat(KyndeBladeArtPalette.PARCHMENT_AGED, KyndeBladeArtPalette.BORDER_DARK)
+	var focus_border: Color = KyndeBladeArtPalette.JEWEL_ULTRAMARINE.lerp(KyndeBladeArtPalette.JEWEL_VIOLET_SHADOW, 0.4)
+	focus_border = focus_border.lerp(KyndeBladeArtPalette.SICKLY_HIGHLIGHT, 0.1)
+	var focus_b := _flat(KyndeBladeArtPalette.PARCHMENT, focus_border, 2)
 	th.set_stylebox("normal", "Button", n)
 	th.set_stylebox("hover", "Button", h)
 	th.set_stylebox("pressed", "Button", p)
+	th.set_stylebox("focus", "Button", focus_b)
 	th.set_stylebox("disabled", "Button", _flat(KyndeBladeArtPalette.PARCHMENT_AGED, KyndeBladeArtPalette.INK_LIGHT, 1))
 	th.set_color("font_color", "Button", KyndeBladeArtPalette.INK_PRIMARY)
 	th.set_color("font_hover_color", "Button", KyndeBladeArtPalette.INK_PRIMARY)
@@ -40,8 +49,9 @@ static func build_theme() -> Theme:
 	th.set_stylebox("background", "ProgressBar", track)
 	th.set_stylebox("fill", "ProgressBar", fill_player)
 
-	# Panels (hub flavor, settings)
-	var panel := _flat(KyndeBladeArtPalette.PARCHMENT_LIGHT, KyndeBladeArtPalette.BORDER_BLUE)
+	# Panels (hub flavor, settings): lapis with a violet undertone for manuscript “frame” read.
+	var panel_border: Color = KyndeBladeArtPalette.BORDER_BLUE.lerp(KyndeBladeArtPalette.JEWEL_VIOLET_SHADOW, 0.25)
+	var panel := _flat(KyndeBladeArtPalette.PARCHMENT_LIGHT, panel_border)
 	th.set_stylebox("panel", "PanelContainer", panel)
 
 	return th

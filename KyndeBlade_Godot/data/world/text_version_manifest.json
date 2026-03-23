@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "description": "Structural alignment of Kynde Blade locations to Piers Plowman text versions (A/B/C) and narrative phases (Visio / Vita). Spine keys reference campaign_spine.json.",
+  "default_edition": "B",
+  "editions": {
+    "A": {
+      "label": "A-text",
+      "notes": "Earlier witness; shorter arc. Use for optional A-lane content only unless canon shifts.",
+      "passus_count_hint": 12
+    },
+    "B": {
+      "label": "B-text",
+      "notes": "Default for player-facing passus labels and Godot slice spine.",
+      "passus_count_hint": 20
+    },
+    "C": {
+      "label": "C-text",
+      "notes": "Revised witness; political and lexical shifts. Future branch via piers_text_edition in save.",
+      "passus_count_hint": 22
+    }
+  },
+  "narrative_phases": {
+    "visio": {
+      "label": "Visio — fair field, tower, sins, pilgrimage imagery",
+      "spine_key": "vision_0_fair_field_arc",
+      "notes": "Optional branches: green_chapel_lane, orfeo_alternate_lane (see campaign_spine.json)."
+    },
+    "vita_dowel": {
+      "label": "Vita — Do-Wel (Dowel) quest",
+      "spine_key": "vision_2_do_wel_arc",
+      "notes": "Kynde Blade uses quest_do_wel / depths / years_pass / field_of_grace ordering."
+    },
+    "vita_dobet": {
+      "label": "Vita — Do-Bet (placeholder)",
+      "spine_key": null,
+      "ordered_location_ids": [],
+      "notes": "Reserve for expanded Vision II+ when beats are authored."
+    },
+    "vita_dobest": {
+      "label": "Vita — Do-Best (placeholder)",
+      "spine_key": null,
+      "ordered_location_ids": [],
+      "notes": "Reserve for expanded Vision II+ when beats are authored."
+    }
+  }
+}

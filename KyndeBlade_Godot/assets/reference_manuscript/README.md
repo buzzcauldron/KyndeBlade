@@ -2,6 +2,8 @@
 
 Use this folder for **cleared**, **in-repo** manuscript-derived textures after you confirm **license / scan terms** (see [`docs/ASSET_LICENSES.md`](../../docs/ASSET_LICENSES.md)).
 
+**Shipped UI crops** (game-ready ornaments) live under [`assets/ui_manuscript/`](../ui_manuscript/README.md) once processed.
+
 ## Workflow
 
 1. Crop the motif from a high-res reference.

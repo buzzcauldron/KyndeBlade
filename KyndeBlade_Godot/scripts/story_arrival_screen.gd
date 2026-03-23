@@ -41,5 +41,6 @@ func _escape_bbcode(s: String) -> String:
 
 func _on_continue_pressed() -> void:
 	# Medieval-text grant aligned with Unity `tower_vista` arrival beat (`medieval_text_unlocks.json`).
+	GameState.record_location_visit("tour")
 	GameState.mark_medieval_text_read("tower_vista")
 	get_tree().change_scene_to_file(HUB)

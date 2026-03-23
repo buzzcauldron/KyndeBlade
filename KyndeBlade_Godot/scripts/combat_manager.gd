@@ -125,7 +125,7 @@ func get_dodge_stamina_cost() -> float:
 
 
 func get_parry_stamina_cost() -> float:
-	return 25.0
+	return PlayerMovesetModifiers.parry_stamina_total()
 
 
 func player_strike() -> void:
@@ -163,9 +163,10 @@ func player_dodge() -> void:
 
 
 func player_parry() -> void:
-	if state != State.WAITING_PLAYER or player_stamina < 25:
+	var pcost: float = get_parry_stamina_cost()
+	if state != State.WAITING_PLAYER or player_stamina < pcost:
 		return
-	player_stamina -= 25
+	player_stamina -= pcost
 	player_parrying = true
 	player_dodging = false
 	dreamer_move_committed.emit(DreamerMoveKind.PARRY)

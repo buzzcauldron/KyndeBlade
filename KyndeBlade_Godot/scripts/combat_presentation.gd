@@ -6,6 +6,8 @@ extends Node2D
 const HIT_FLASH_SEC := 0.22
 const SHAKE_SEC := 0.14
 const SHAKE_PX := 7.0
+## ~3 frames at 60fps: frozen tableau when the defensive window opens (Salome “stillness” before motion).
+const TELEGRAPH_HOLD_SEC := 0.05
 
 var _combat: CombatManager
 var _player_base: Vector2
@@ -16,6 +18,10 @@ var _strike_punch_t: float = 0.0
 var _hit_flash_t: float = 0.0
 var _shake_t: float = 0.0
 var _shake_dir: Vector2 = Vector2.RIGHT
+var _prev_combat_state: CombatManager.State = CombatManager.State.ENDED
+var _telegraph_hold_left: float = 0.0
+var _telegraph_snap_bob: float = 0.0
+var _telegraph_snap_ms: float = 0.0
 
 ## Main hull used for hit flash; whole trees bob for idle.
 var player_body: Polygon2D
@@ -77,7 +83,8 @@ func _build_manuscript_figures() -> void:
 	# --- False: jagged “rubric” fiend, manuscript margin beast simplified ---
 	enemy_body = Polygon2D.new()
 	enemy_body.z_index = 1
-	enemy_body.color = KyndeBladeArtPalette.RUBRICATION.darkened(0.12)
+	var eb: Color = KyndeBladeArtPalette.RUBRICATION.darkened(0.1)
+	enemy_body.color = eb.lerp(KyndeBladeArtPalette.JEWEL_CRIMSON, KyndeBladeArtPalette.ENEMY_BODY_JEWEL_MIX)
 	enemy_body.polygon = PackedVector2Array([
 		Vector2(-32, -92), Vector2(8, -98), Vector2(44, -72), Vector2(38, -20),
 		Vector2(48, 28), Vector2(12, 84), Vector2(-36, 76), Vector2(-44, 20), Vector2(-40, -40)
@@ -141,6 +148,13 @@ func _modulate_enemy_figure(c: Color) -> void:
 func _process(delta: float) -> void:
 	if _combat == null:
 		return
+	var st: CombatManager.State = _combat.state
+	if st == CombatManager.State.REAL_TIME_WINDOW and _prev_combat_state != CombatManager.State.REAL_TIME_WINDOW:
+		_telegraph_hold_left = TELEGRAPH_HOLD_SEC
+		_telegraph_snap_ms = float(Time.get_ticks_msec())
+		_telegraph_snap_bob = _telegraph_snap_ms * 0.003
+	_prev_combat_state = st
+
 	var bob_t := float(Time.get_ticks_msec()) * 0.003
 	if _strike_punch_t > 0.0:
 		_strike_punch_t = maxf(0.0, _strike_punch_t - delta * 3.5)
@@ -155,17 +169,26 @@ func _process(delta: float) -> void:
 				_modulate_enemy_figure(Color.WHITE)
 				_modulate_player_figure(Color.WHITE)
 			CombatManager.State.REAL_TIME_WINDOW:
-				player_root.position = _player_base
-				enemy_root.position = _enemy_base
+				var holding_telegraph := _telegraph_hold_left > 0.0
+				if holding_telegraph:
+					bob_t = _telegraph_snap_bob
+				## Dramatic stillness: minimal bob; slow, small breathing scale (tableau before violence).
+				player_root.position = _player_base + Vector2(0, sin(bob_t * 0.35) * 0.35)
+				enemy_root.position = _enemy_base + Vector2(0, sin(bob_t * 0.28 + 0.5) * 0.28)
+				var t_ms: float = _telegraph_snap_ms if holding_telegraph else float(Time.get_ticks_msec())
 				if _combat.is_enemy_swing_real():
-					var w := 1.0 + sin(float(Time.get_ticks_msec()) * 0.02) * 0.1
+					var w := 1.0 + sin(t_ms * 0.011) * 0.028
 					enemy_root.scale = Vector2(w, w)
-					_modulate_enemy_figure(Color(1.0, 0.82, 0.78, 1.0))
+					var env: Color = KyndeBladeArtPalette.JEWEL_CRIMSON.lerp(KyndeBladeArtPalette.JEWEL_VIOLET_SHADOW, 0.38)
+					_modulate_enemy_figure(env.lerp(Color.WHITE, 0.12))
 				else:
-					var w2 := 1.0 + sin(float(Time.get_ticks_msec()) * 0.06) * 0.06
+					var w2 := 1.0 + sin(t_ms * 0.022) * 0.018
 					enemy_root.scale = Vector2(w2, w2)
-					_modulate_enemy_figure(Color(0.78, 0.82, 1.0, 1.0))
-				_modulate_player_figure(Color(0.92, 0.92, 1.0, 1.0))
+					var em: Color = KyndeBladeArtPalette.JEWEL_EMERALD
+					_modulate_enemy_figure(Color(em.r * 1.05, em.g * 1.08, em.b * 1.12, 1.0).lerp(Color.WHITE, 0.45))
+				_modulate_player_figure(Color(0.9, 0.92, 0.98, 1.0))
+				if holding_telegraph:
+					_telegraph_hold_left = maxf(0.0, _telegraph_hold_left - delta)
 			_:
 				player_root.position = _player_base
 				enemy_root.position = _enemy_base

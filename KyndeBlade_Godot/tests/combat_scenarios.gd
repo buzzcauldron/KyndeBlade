@@ -77,8 +77,9 @@ func dodge_mitigates_first_swing(p_root: Window) -> bool:
 func parry_reduces_swing_damage(p_root: Window) -> bool:
 	var c := _spawn_cm(p_root, null)
 	await p_root.get_tree().process_frame
+	var want_dur: float = PlayerMovesetModifiers.parry_window_ms() / 1000.0
 	c.player_parry()
-	if not is_equal_approx(c.window_duration, 1.0):
+	if not is_equal_approx(c.window_duration, want_dur):
 		_fail_cleanup(c)
 		return false
 	if not c.is_enemy_swing_real():

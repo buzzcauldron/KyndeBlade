@@ -18,7 +18,7 @@ This Godot 4 project is treated as the **shipping Steam (and desktop) build** fo
 
 **World skeleton (authoring):** From hub, **World atlas — all stedes** opens the full Unity-planned location list (`data/world/locations_registry.json`). See [`docs/GAME_SKELETON.md`](docs/GAME_SKELETON.md).
 
-**Target experience (longer-term Godot direction):** [`docs/GODOT_TARGET_EXPERIENCE.md`](docs/GODOT_TARGET_EXPERIENCE.md) — fake-voxel map crawl, full-screen 3D voxel combat, E33-style windows, Noita mood, manuscript pixel refs (provenance required).
+**Target experience (longer-term Godot direction):** [`docs/GODOT_TARGET_EXPERIENCE.md`](docs/GODOT_TARGET_EXPERIENCE.md) — fake-voxel map crawl, full-screen 3D voxel combat, E33-style windows, Noita mood, manuscript pixel refs (provenance required). **One-page vision:** [`docs/VISION_CRAWL_NOITA_E33.md`](docs/VISION_CRAWL_NOITA_E33.md). **Future phases:** [`docs/CRAWL_PROTOTYPE_FUTURE.md`](docs/CRAWL_PROTOTYPE_FUTURE.md), [`docs/COMBAT_VOXEL_STAGE_FUTURE.md`](docs/COMBAT_VOXEL_STAGE_FUTURE.md).
 
 **Extra modes (menu):** **Tiny practice loop** → `scenes/beginner_loop.tscn`. **High-bit medieval bonus** → `scenes/hi_bit_bonus_level.tscn` — **320×180** faux-pixel view (integer scaled), procedural art only.
 
@@ -43,7 +43,7 @@ This is **not** a line-by-line port of Unity. It mirrors **names and flow** from
 | **Depots** | Use Godot export presets per OS; one depot per OS is typical for Steam. |
 | **steam_appid.txt** | For local Steam API testing, place `steam_appid.txt` with your AppID next to the executable (not committed here). |
 | **Cloud** | Saves live under Godot `user://` (`kyndeblade_save.cfg`, etc.). Enable **Steam Cloud** only after you map these paths in Steamworks partner settings. |
-| **Build ID** | Bump `SaveService.SAVE_VERSION` when you migrate save schema; document in release notes. |
+| **Build ID** | Bump `SaveService.SAVE_VERSION` when you migrate save schema; document in release notes. **v2** adds Piers metadata: `piers_text_edition`, `narrative_phase_id`, `location_visit_counts` (pipe-separated `loc:count` pairs), `fair_field_return_count`, `dream_iteration` — older saves default these on load. |
 
 ## Unity ↔ Godot parity (TDAD demo-vertical-slice titles)
 

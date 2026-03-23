@@ -89,11 +89,13 @@ func _on_next_pressed(target_id: String) -> void:
 		WorldNav.open_location_preview(target_id)
 		return
 	if target_id == GameWorldIds.LOCATION_FAYRE_FELDE:
+		GameState.record_location_visit("fayre_felde")
 		GameState.current_location_id = "fayre_felde"
 		GameState.sync_to_save()
 		get_tree().change_scene_to_file(HUB)
 		return
 	if target_id == GameWorldIds.LOCATION_TOUR:
+		GameState.record_location_visit("tour")
 		GameState.current_location_id = "tour"
 		GameState.sync_to_save()
 		get_tree().change_scene_to_file(HUB)

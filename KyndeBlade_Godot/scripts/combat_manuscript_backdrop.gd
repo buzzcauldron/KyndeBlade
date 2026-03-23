@@ -1,10 +1,15 @@
 extends Control
 ## Lane B backdrop: **hi-bit ruin vista** + **crawl-style parallax** via [`CrawlParallax`](crawl_parallax.gd).
 ## Visual target: [`assets/hi_bit_ruin_vista/reference_style_target.png`](../assets/hi_bit_ruin_vista/reference_style_target.png).
+## Optional **jewel wash** (`jewel_wash_strength`): Salome / Pre-Raphaelite contamination over sky—see `KyndeBladeArtPalette.JEWEL_*`.
 
 @export var manuscript_void_blend: float = 0.12
 @export var parallax_enabled: bool = true
 @export var parallax_speed_scale: float = 1.0
+## Salome / Pre-Raphaelite contamination: 0 = off, ~0.12–0.22 = subtle crimson→violet wash over sky.
+@export_range(0.0, 0.35, 0.01) var jewel_wash_strength: float = 0.14
+## Skyward end of the wash gradient: lerp from violet toward ultramarine (0 = crimson→violet only).
+@export_range(0.0, 1.0, 0.05) var jewel_wash_ultramarine_mix: float = 0.0
 
 var _time_sec: float = 0.0
 
@@ -64,6 +69,22 @@ func _draw() -> void:
 			c = KyndeBladeArtPalette.HI_BIT_SKY_PEACH.lerp(KyndeBladeArtPalette.HI_BIT_SKY_GLOW, v)
 		var band_ox: float = o_sky.x + sin(t * 0.2 + float(i) * 0.35) * 1.5
 		draw_rect(Rect2(band_ox, h * t0, w + 8.0, h * (t1 - t0) + 1.0), c)
+
+	# --- Jewel wash (crimson → violet, low alpha): “cool / wrong” layer over hi-bit sky ---
+	if jewel_wash_strength > 0.001:
+		var strips: int = 9
+		var y0: float = h * 0.12
+		var y1: float = h * 0.56
+		for j in strips:
+			var sj: float = float(j) / float(max(1, strips - 1))
+			var y_a: float = lerpf(y0, y1, float(j) / float(strips))
+			var y_b: float = lerpf(y0, y1, float(j + 1) / float(strips))
+			var wash_end: Color = KyndeBladeArtPalette.JEWEL_VIOLET_SHADOW.lerp(
+					KyndeBladeArtPalette.JEWEL_ULTRAMARINE, clampf(jewel_wash_ultramarine_mix, 0.0, 1.0)
+			)
+			var wash_c: Color = KyndeBladeArtPalette.JEWEL_CRIMSON.lerp(wash_end, sj)
+			var a: float = jewel_wash_strength * lerpf(0.04, 0.2, sj)
+			draw_rect(Rect2(o_sky.x * 0.3, y_a, w + 12.0, y_b - y_a + 0.5), Color(wash_c.r, wash_c.g, wash_c.b, a))
 
 	var o_far: Vector2 = CrawlParallax.offset(t, CrawlParallax.Layer.FAR_SILHOUETTE, sc)
 	draw_colored_polygon(

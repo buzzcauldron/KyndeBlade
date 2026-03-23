@@ -46,6 +46,6 @@
       "res://scenes/world/location_shell.tscn",
       "res://scenes/world/world_atlas.tscn"
     ],
-    "data_loaders": ["LocationRegistry", "UnityExportData", "MedievalTextCatalog"]
+    "data_loaders": ["LocationRegistry", "UnityExportData", "MedievalTextCatalog", "PiersSymbolCatalog"]
   }
 }

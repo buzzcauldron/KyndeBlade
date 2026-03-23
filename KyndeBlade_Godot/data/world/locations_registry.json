@@ -6,6 +6,9 @@
     "malvern": {
       "display_name": "Malvern Hills",
       "description": "Real life: Worcestershire. Wille rests beneath the Beacon; the dream begins here.",
+      "piers_symbols": ["cat"],
+      "text_edition_notes": "Prologue framing; all major editions open from waking life.",
+      "passus_anchor_b": "Prologue",
       "unity_data_folder": "Vision1",
       "unity_asset": "Loc_malvern",
       "vision_index": 0,
@@ -20,6 +23,9 @@
     "tour": {
       "display_name": "Tour on Toft",
       "description": "Dream: The Tower of Truth.",
+      "piers_symbols": ["castle_on_the_hill", "three_wooden_poles"],
+      "text_edition_notes": "B-text Passus I–II hub imagery; default slice start.",
+      "passus_anchor_b": "Passus II",
       "unity_data_folder": "Vision1",
       "unity_asset": "Loc_tour",
       "vision_index": 0,
@@ -48,6 +54,9 @@
     "dongeoun": {
       "display_name": "Dongeoun",
       "description": "Dream: The Dungeon in the valley.",
+      "piers_symbols": ["dungeon_in_the_valley"],
+      "text_edition_notes": "Valley dungeon imagery; hunger and correction.",
+      "passus_anchor_b": "Passus III",
       "unity_data_folder": "Vision1",
       "unity_asset": "Loc_dongeoun",
       "vision_index": 0,
@@ -62,6 +71,9 @@
     "piers_field": {
       "display_name": "Piers' Field",
       "description": "Dream: Where Piers the Plowman works.",
+      "piers_symbols": ["four_oxen", "four_horses", "two_harrows", "four_types_of_seeds", "hand", "hawkins_coat"],
+      "text_edition_notes": "Labour and seed parable cluster (study-guide symbols).",
+      "passus_anchor_b": "Passus VI–VII",
       "unity_data_folder": "Vision1",
       "unity_asset": "Loc_piers_field",
       "vision_index": 0,
@@ -76,6 +88,9 @@
     "seven_sins": {
       "display_name": "Seven Sins",
       "description": "Dream: The gathering of the deadly sins.",
+      "piers_symbols": ["hawkins_coat"],
+      "text_edition_notes": "Confession / coat-of-stains imagery adjacent in many readings.",
+      "passus_anchor_b": "Passus V–VIII",
       "unity_data_folder": "Vision1",
       "unity_asset": "Loc_seven_sins",
       "vision_index": 0,
@@ -90,6 +105,9 @@
     "green_chapel": {
       "display_name": "The Green Chapel",
       "description": "Optional dungeon. The Knight of the Green Chapel awaits. Choose thy words wisely.",
+      "piers_symbols": [],
+      "text_edition_notes": "Sir Gawain branch; not core Piers spine.",
+      "passus_anchor_b": null,
       "unity_data_folder": "GreenChapel",
       "unity_asset": "Loc_green_chapel",
       "vision_index": 1,
@@ -104,6 +122,9 @@
     "boundary_tree": {
       "display_name": "The Boundary Tree",
       "description": "A tree at the edge of worlds. Music drifts from beyond.",
+      "piers_symbols": ["tree"],
+      "text_edition_notes": "Orfeo lane; tree as threshold.",
+      "passus_anchor_b": null,
       "unity_data_folder": "OrfeoOtherworld",
       "unity_asset": "Loc_boundary_tree",
       "vision_index": 1,
@@ -118,6 +139,9 @@
     "quest_do_wel": {
       "display_name": "Quest for Do-Wel",
       "description": "The search for Do-Wel begins.",
+      "piers_symbols": ["three_wooden_poles", "hand"],
+      "text_edition_notes": "Vita / Dowel arc (Kynde Blade naming).",
+      "passus_anchor_b": "Passus VIII–IX",
       "unity_data_folder": "Vision2",
       "unity_asset": "Loc_quest_do_wel",
       "vision_index": 1,
@@ -146,6 +170,9 @@
     "years_pass": {
       "display_name": "Years Pass",
       "description": "Time passes. The party ages.",
+      "piers_symbols": [],
+      "text_edition_notes": "Vita progression; time and repetition.",
+      "passus_anchor_b": "Passus XII–XIII",
       "unity_data_folder": "Vision2",
       "unity_asset": "Loc_years_pass",
       "vision_index": 1,
@@ -160,6 +187,9 @@
     "field_of_grace": {
       "display_name": "Field of Grace",
       "description": "Best outcome: wait for Grace. She does not come.",
+      "piers_symbols": ["tree"],
+      "text_edition_notes": "Vision II terminal mood; grace deferred.",
+      "passus_anchor_b": "Passus XIV",
       "unity_data_folder": "Vision2",
       "unity_asset": "Loc_field_of_grace",
       "vision_index": 1,
@@ -174,6 +204,9 @@
     "otherworld": {
       "display_name": "Orfeo's Otherworld",
       "description": "The Fairy Realm. Inescapable.",
+      "piers_symbols": [],
+      "text_edition_notes": "Orfeo terminal; not Piers core.",
+      "passus_anchor_b": null,
       "unity_data_folder": "OrfeoOtherworld",
       "unity_asset": "Loc_otherworld",
       "vision_index": 1,

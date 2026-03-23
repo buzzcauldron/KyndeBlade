@@ -25,5 +25,12 @@ Godot may **lead** Unity on **counsel → meta flags → feint offset** and **Go
 
 ## Related
 
+- [`VISION_CRAWL_NOITA_E33.md`](VISION_CRAWL_NOITA_E33.md) — short crawl / 3D combat / Noita / E33 / oracle summary.  
+- [`CRAWL_PROTOTYPE_FUTURE.md`](CRAWL_PROTOTYPE_FUTURE.md) — future fake-voxel overworld + encounter pop-out.  
+- [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) — future full-screen 3D voxel combat + HUD layering + CI/GPU notes.  
 - [`CULT_SHIP_BAR.md`](CULT_SHIP_BAR.md) — shippable voice and checklist.  
 - [`docs/KYNDEBLADE_CAREFUL_CANON.md`](../../docs/KYNDEBLADE_CAREFUL_CANON.md) — repo-wide planning index.
+
+## External — Godot ecosystem
+
+- **[Godot Showcase — RPG in a Box (Justin Arnold)](https://godotengine.org/article/godot-showcase-justin-arnold-rpg-in-a-box/)** — interview on shipping a **voxel-style, grid-based RPG authoring tool** built in Godot (complex editors + 3D viewports, multi-platform release). Useful reference for **fake-voxel map** and **tooling-heavy UI** directions above, not a dependency.

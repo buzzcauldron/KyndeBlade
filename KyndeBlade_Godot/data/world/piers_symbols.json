@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "attribution": "Symbol names and concepts align with common study guides (e.g. LitCharts topic list). Descriptions are original short paraphrases for game use — not third-party prose.",
+  "reference_links": [
+    "https://www.litcharts.com/lit/piers-plowman/symbols"
+  ],
+  "symbols": [
+    {
+      "id": "field_full_of_folk",
+      "display_name": "Field Full of Folk",
+      "short_paraphrase": "The crowded fair field where society gathers — a social panorama and moral stage.",
+      "related_location_ids": ["fayre_felde"],
+      "related_beat_ids": ["fayre_felde_arrival"]
+    },
+    {
+      "id": "cat",
+      "display_name": "The Cat",
+      "short_paraphrase": "A small fable image of power and predation — the strong toying with the weak.",
+      "related_location_ids": ["malvern"],
+      "related_beat_ids": ["malvern_prologue_sequence"]
+    },
+    {
+      "id": "castle_on_the_hill",
+      "display_name": "Castle on the Hill",
+      "short_paraphrase": "The tower of Truth overlooking the field — authority, doctrine, and judgment above the crowd.",
+      "related_location_ids": ["tour"],
+      "related_beat_ids": ["tower_vista"]
+    },
+    {
+      "id": "dungeon_in_the_valley",
+      "display_name": "Dungeon in the Valley",
+      "short_paraphrase": "A low place of confinement and need — want and correction beneath the high tower.",
+      "related_location_ids": ["dongeoun", "dongeoun_depths"],
+      "related_beat_ids": ["dongeoun_arrival"]
+    },
+    {
+      "id": "hawkins_coat",
+      "display_name": "Hawkin’s Coat",
+      "short_paraphrase": "A garment marked with stains — a figure for conscience, penance, and the traces of sin.",
+      "related_location_ids": ["seven_sins", "piers_field"],
+      "related_beat_ids": ["seven_sins_arrival", "piers_field_arrival"]
+    },
+    {
+      "id": "tree",
+      "display_name": "The Tree",
+      "short_paraphrase": "Wood and growth — teaching, trial, or boundary between worlds depending on the vision.",
+      "related_location_ids": ["boundary_tree", "field_of_grace"],
+      "related_beat_ids": ["boundary_tree_arrival", "field_of_grace_wait"]
+    },
+    {
+      "id": "three_wooden_poles",
+      "display_name": "Three Wooden Poles",
+      "short_paraphrase": "Three stakes or posts — a tripartite image often read alongside the Dowel / Dobet / Dobest moral ladder.",
+      "related_location_ids": ["tour", "quest_do_wel"],
+      "related_beat_ids": ["tower_vista"]
+    },
+    {
+      "id": "hand",
+      "display_name": "The Hand",
+      "short_paraphrase": "Agency and help — divine or human reach, labour, and the gift of doing well.",
+      "related_location_ids": ["quest_do_wel", "piers_field"],
+      "related_beat_ids": ["piers_field_arrival"]
+    },
+    {
+      "id": "four_oxen",
+      "display_name": "Four Oxen",
+      "short_paraphrase": "Teams of plough-beasts — patient work, seasons, and the yoke of honest labour.",
+      "related_location_ids": ["piers_field"],
+      "related_beat_ids": ["piers_field_arrival"]
+    },
+    {
+      "id": "four_horses",
+      "display_name": "Four Horses",
+      "short_paraphrase": "Speed and service — another quartet of beasts tied to field labour and social order.",
+      "related_location_ids": ["piers_field"],
+      "related_beat_ids": ["piers_field_arrival"]
+    },
+    {
+      "id": "two_harrows",
+      "display_name": "Two Harrows",
+      "short_paraphrase": "Breaking and smoothing the soil — discipline and nurture after the plough.",
+      "related_location_ids": ["piers_field"],
+      "related_beat_ids": ["piers_field_arrival"]
+    },
+    {
+      "id": "four_types_of_seeds",
+      "display_name": "Four Types of Seeds",
+      "short_paraphrase": "Seed parable logic — different receptions of teaching; fruit, waste, or thorns.",
+      "related_location_ids": ["piers_field", "fayre_felde"],
+      "related_beat_ids": ["piers_field_arrival", "fayre_felde_arrival"]
+    }
+  ]
+}

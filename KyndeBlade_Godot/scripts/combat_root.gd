@@ -130,6 +130,7 @@ func _on_turn_changed() -> void:
 					combat.get_strike_stamina_cost(),
 					combat.get_strike_damage_preview(),
 					combat.get_dodge_stamina_cost(),
+					combat.get_parry_stamina_cost(),
 			)
 			telegraph_label.text = ""
 		combat.State.REAL_TIME_WINDOW:

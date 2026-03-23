@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8hubmap001"]
+[gd_scene load_steps=4 format=3 uid="uid://c8hubmap001"]
 
 [ext_resource type="Script" path="res://scripts/hub_map.gd" id="1_hub"]
 [ext_resource type="Script" path="res://scripts/hub_crawl_parallax.gd" id="2_crawl_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui_manuscript/historiated_margin_crowned_figure.png" id="3_hist"]
 
 [node name="HubMap" type="Control"]
 layout_mode = 3
@@ -100,6 +101,14 @@ grow_vertical = 2
 [node name="FVBox" type="VBoxContainer" parent="FlavorPanel"]
 layout_mode = 2
 theme_override_constants/separation = 12
+
+[node name="HistoriatedMotif" type="TextureRect" parent="FlavorPanel/FVBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(64, 96)
+texture = ExtResource("3_hist")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="FlavorText" type="Label" parent="FlavorPanel/FVBox"]
 unique_name_in_owner = true

@@ -76,7 +76,10 @@ func _world_state_prefix() -> String:
 				% GameState.ethical_misstep_count
 		)
 	if GameState.has_ever_had_hunger:
-		parts.append("Hunger hath been named; the feeld remembereth thy want.")
+		parts.append(
+				"Hunger hath been named; the feeld remembereth thy want — "
+				+ "the next shelde-fray taketh a slightly other tithe each tyme."
+		)
 	if parts.is_empty():
 		return ""
 	return "\n\n".join(parts) + "\n\n"
@@ -102,7 +105,7 @@ func _update_ui() -> void:
 		if GameState.ethical_misstep_count > 0:
 			extra += " Mede’s count: %d." % GameState.ethical_misstep_count
 		if GameState.has_ever_had_hunger:
-			extra += " Hunger is named upon thy record."
+			extra += " Hunger is named; punishments shift like weather — odd, sharp, not quite the same twice."
 		hint_label.text = base + extra
 	if locked_button:
 		locked_button.text = "Dongeoun — loke, not yet in this build"
@@ -165,6 +168,7 @@ func _on_flavor_continue_pressed() -> void:
 			GameState.ethical_misstep_count += 1
 		CounselChoice.HUNGER:
 			GameState.has_ever_had_hunger = true
+	GameState.record_location_visit("fayre_felde")
 	GameState.sync_to_save()
 	flavor_panel.visible = false
 	_reset_counsel_ui()

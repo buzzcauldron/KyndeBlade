@@ -16,6 +16,10 @@ Use this file (and per-pack `LICENSE.txt` under each folder) so **commercial use
 
 Avoid assets without a clear license file or page.
 
+## Optional Godot mood refs (no row until you commit a file)
+
+- **Pre-Raphaelite / Salome plates:** when you add cleared PNG/WebP under [`KyndeBlade_Godot/assets/reference_preraphaelite/`](../KyndeBlade_Godot/assets/reference_preraphaelite/), add an **inventory row** below (path, URL, license, attribution). See that folder’s README.
+
 ## Inventory (fill in as you add files)
 
 | Asset / pack | Repo path | Source URL | License | Attribution (if required) |
@@ -26,6 +30,8 @@ Avoid assets without a clear license file or page.
 | Combat defensive-window tones | `KyndeBlade_Godot/scripts/combat_window_tone.gd` (`CombatWindowTone.make_tone_hz`) | *(engine-generated sine bursts at runtime)* | *(n/a — project-authored PCM)* | No third-party sample; plays on **SFX** bus |
 | Combat enemy-kill impact | `KyndeBlade_Godot/scripts/combat_window_tone.gd` (`CombatWindowTone.make_enemy_kill_impact`) | *(engine-generated thump + decay + noise at runtime)* | *(n/a — project-authored PCM)* | No third-party sample; plays on **SFX** bus during victory slow-mo; see [`GODOT_AUDIO_DESIGN.md`](../KyndeBlade_Godot/docs/GODOT_AUDIO_DESIGN.md) |
 | Hi-bit ruin vista **reference** PNG | `KyndeBlade_Godot/assets/hi_bit_ruin_vista/reference_style_target.png` | *(see folder README — confirm author / license before Steam ship)* | **TBD** — treat as mood reference until cleared | Add URL + attribution when source confirmed; see [`hi_bit_ruin_vista/README.md`](../KyndeBlade_Godot/assets/hi_bit_ruin_vista/README.md) |
+| Historiated margin motif (pixel UI) | `KyndeBlade_Godot/assets/ui_manuscript/historiated_margin_crowned_figure.png` | Derivative: **crop** (right margin), **nearest-neighbor** resize, **palette quantize** to `KyndeBladeArtPalette` colors — from a **staging** manuscript-fragment photograph in project reference set (not a retail digitization record). | **Placeholder pipeline proof** — confirm with an **open-access** shelfmark + scan terms before Steam; see [`ui_manuscript/README.md`](../KyndeBlade_Godot/assets/ui_manuscript/README.md) | Replace or supplement with documented BL / institutional open-access source when locking ship art. |
+| **Excluded (do not vendor)** | — | **Modern trade book covers** (e.g. copyrighted edition jackets), **third-party game screenshots**, **uncleared** `.cursor/.../assets/` drops | **N/A — not in repo** | Use **composition / mood only**; do not commit to `export_presets` / player builds. |
 
 ## Engine-authored assets
 

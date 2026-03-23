@@ -7,63 +7,133 @@
       "location_id": "malvern",
       "unity_hint": "StoryBeatSequenceOnArrival on Loc_malvern",
       "placeholder_arrival": "[AUTHOR] Three-beat Malvern / dream threshold sequence.",
-      "grants_medieval_text_ids_hint": ["MalvernPrologue"]
+      "grants_medieval_text_ids_hint": ["MalvernPrologue"],
+      "piers_symbols": ["cat"],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": []
     },
     {
       "beat_id": "tower_vista",
       "location_id": "tour",
       "unity_hint": "StoryBeat_TowerVista",
       "placeholder_arrival": "[AUTHOR] Tower vista — overlook the field.",
-      "grants_medieval_text_ids_hint": ["tower_vista"]
+      "grants_medieval_text_ids_hint": ["tower_vista"],
+      "piers_symbols": ["castle_on_the_hill", "three_wooden_poles"],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": []
     },
     {
       "beat_id": "fayre_felde_arrival",
       "location_id": "fayre_felde",
       "unity_hint": "FayreFelde / StoryBeat on Loc_fayre_felde",
       "placeholder_arrival": "[AUTHOR] Fair Field ful of folke — counsel before False.",
-      "grants_medieval_text_ids_hint": ["FayreFelde"]
+      "grants_medieval_text_ids_hint": ["FayreFelde"],
+      "piers_symbols": ["field_full_of_folk", "four_types_of_seeds"],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": ["fair_field_return"]
     },
     {
       "beat_id": "dongeoun_arrival",
       "location_id": "dongeoun",
       "unity_hint": "TourDongeoun / Loc_dongeoun StoryBeatOnArrival",
-      "placeholder_arrival": "[AUTHOR] Dungeon descent; hunger motif."
+      "placeholder_arrival": "[AUTHOR] Dungeon descent; hunger motif.",
+      "piers_symbols": ["dungeon_in_the_valley"],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": []
     },
     {
       "beat_id": "piers_field_arrival",
       "location_id": "piers_field",
       "unity_hint": "PiersField",
-      "placeholder_arrival": "[AUTHOR] Labour / Piers in the field."
+      "placeholder_arrival": "[AUTHOR] Labour / Piers in the field.",
+      "piers_symbols": ["four_oxen", "four_horses", "two_harrows", "hand", "hawkins_coat"],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": []
     },
     {
       "beat_id": "seven_sins_arrival",
       "location_id": "seven_sins",
       "unity_hint": "SevenSins",
-      "placeholder_arrival": "[AUTHOR] Council of sins — combat framing."
+      "placeholder_arrival": "[AUTHOR] Council of sins — combat framing.",
+      "piers_symbols": ["hawkins_coat"],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": []
     },
     {
       "beat_id": "green_chapel_choice",
       "location_id": "green_chapel",
       "unity_hint": "GreenChapelChoice / PreCombatChoiceBeat",
-      "placeholder_arrival": "[AUTHOR] Covenant language; Green Knight tone."
+      "placeholder_arrival": "[AUTHOR] Covenant language; Green Knight tone.",
+      "piers_symbols": [],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": []
     },
     {
       "beat_id": "boundary_tree_arrival",
       "location_id": "boundary_tree",
       "unity_hint": "OtherworldArrival-adjacent",
-      "placeholder_arrival": "[AUTHOR] Edge of worlds; Orfeo music motif."
+      "placeholder_arrival": "[AUTHOR] Edge of worlds; Orfeo music motif.",
+      "piers_symbols": ["tree"],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": []
     },
     {
       "beat_id": "field_of_grace_wait",
       "location_id": "field_of_grace",
       "unity_hint": "StoryBeat_FieldOfGrace",
-      "placeholder_arrival": "[AUTHOR] Waiting for Grace — she does not come."
+      "placeholder_arrival": "[AUTHOR] Waiting for Grace — she does not come.",
+      "piers_symbols": ["tree"],
+      "edition_emphasis": "B",
+      "narrative_phase": "vita_dowel",
+      "repetition_tags": ["vision_layer"]
     },
     {
       "beat_id": "otherworld_terminal",
       "location_id": "otherworld",
       "unity_hint": "OtherworldArrival",
-      "placeholder_arrival": "[AUTHOR] Fairy realm terminal state."
+      "placeholder_arrival": "[AUTHOR] Fairy realm terminal state.",
+      "piers_symbols": [],
+      "edition_emphasis": "B",
+      "narrative_phase": "visio",
+      "repetition_tags": ["vision_layer"]
+    },
+    {
+      "beat_id": "quest_do_wel_arrival",
+      "location_id": "quest_do_wel",
+      "unity_hint": "QuestDoWelEncounter",
+      "placeholder_arrival": "[AUTHOR] Search for Do-Wel opens.",
+      "piers_symbols": ["three_wooden_poles", "hand"],
+      "edition_emphasis": "B",
+      "narrative_phase": "vita_dowel",
+      "repetition_tags": []
+    },
+    {
+      "beat_id": "dongeoun_depths_arrival",
+      "location_id": "dongeoun_depths",
+      "unity_hint": "DongeounDepthsEncounter",
+      "placeholder_arrival": "[AUTHOR] Depths of poverty; Hunger.",
+      "piers_symbols": ["dungeon_in_the_valley"],
+      "edition_emphasis": "B",
+      "narrative_phase": "vita_dowel",
+      "repetition_tags": []
+    },
+    {
+      "beat_id": "years_pass_arrival",
+      "location_id": "years_pass",
+      "unity_hint": "YearsPassEncounter",
+      "placeholder_arrival": "[AUTHOR] Time passes; the company ages.",
+      "piers_symbols": [],
+      "edition_emphasis": "B",
+      "narrative_phase": "vita_dowel",
+      "repetition_tags": ["vision_layer"]
     }
   ]
 }

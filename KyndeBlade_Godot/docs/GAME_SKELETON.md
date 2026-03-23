@@ -8,6 +8,8 @@ This is the **authoring spine** for the full Kynde Blade campaign: same **locati
 |--------|--------|----------------|
 | Canonical ids | `scripts/world/world_constants.gd` (`GameWorldIds`) | `GameWorldConstants.cs` |
 | All locations + graph + writer notes | `data/world/locations_registry.json` | `LocationNode` assets (`Loc_*.asset`) |
+| Piers symbols + paraphrases | `data/world/piers_symbols.json` + `PiersSymbolCatalog` | N/A (Godot-first content hooks) |
+| Text edition / Visio–Vita phases | `data/world/text_version_manifest.json` + [`docs/PIERS_SOURCE_VERSIONING.md`](PIERS_SOURCE_VERSIONING.md) | N/A |
 | Act / vision ordering (for writers) | `data/world/campaign_spine.json` | `WorldMapManager` + folder layout |
 | Beat placeholders | `data/world/narrative_beats_skeleton.json` | `StoryBeat` assets on `LocationNode` |
 | Encounter checklist | `data/encounters/encounter_index.json` | `EncounterConfig` referenced by locations |
@@ -38,6 +40,7 @@ If Unity data changes, update **`locations_registry.json`** and **`campaign_spin
 
 ## Related docs
 
+- Piers text versions, symbols, repetition: [`docs/PIERS_SOURCE_VERSIONING.md`](PIERS_SOURCE_VERSIONING.md), `piers_symbols.json`, `GameState` visit counters + `NarrativeContext.arrival_variant_key` (stub).
 - Planning index: [`docs/KYNDEBLADE_CAREFUL_CANON.md`](../../docs/KYNDEBLADE_CAREFUL_CANON.md)
 - Module map: [`docs/UNITY_GODOT_MODULE_MAP.md`](../../docs/UNITY_GODOT_MODULE_MAP.md)
 - Story digest: [`docs/UNITY_STORY_AND_SPAWN_DIGEST.md`](../../docs/UNITY_STORY_AND_SPAWN_DIGEST.md)

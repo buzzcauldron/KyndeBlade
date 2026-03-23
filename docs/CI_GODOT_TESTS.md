@@ -7,9 +7,16 @@ Run automated checks for [`KyndeBlade_Godot/`](../KyndeBlade_Godot/). **TDAD:** 
 - **Godot 4.2+** binary on `PATH` (e.g. `godot4`, or rename the editor binary).
 - Project path: repo root + `KyndeBlade_Godot`.
 
+### PATH on macOS (this repo + your shell)
+
+- **Cursor / VS Code:** [`.vscode/settings.json`](../.vscode/settings.json) prepends `Godot.app` / `Godot 4.app` `Contents/MacOS` to `PATH` in the **integrated terminal** (new terminal tab after saving).
+- **System zsh:** if you use the snippet in `~/.zshrc` (Godot paths + optional `alias godot4=Godot`), open a **new** terminal or run `source ~/.zshrc`. Install Godot from [godotengine.org](https://godotengine.org/download) or `brew install --cask godot` (adjust paths in `.zshrc` if the cask uses a different app name).
+
 ## Headless smoke (no addon)
 
-The project ships [`tests/run_headless_tests.gd`](../KyndeBlade_Godot/tests/run_headless_tests.gd). It runs save/settings/export checks, then **[`tests/combat_scenarios.gd`](../KyndeBlade_Godot/tests/combat_scenarios.gd)** (strike loop, dodge/parry windows, feint chip, stamina gate, defeat) via `CombatManager.use_instant_resolution_for_tests`, then exits.
+The project ships [`tests/run_headless_tests.gd`](../KyndeBlade_Godot/tests/run_headless_tests.gd). It runs save/settings/export checks, **`_test_scene_transition_smoke`** (loads `hub_map.tscn` and `combat.tscn`, mounts each for one frame — future crawl pop-out path), then **[`tests/combat_scenarios.gd`](../KyndeBlade_Godot/tests/combat_scenarios.gd)** (strike loop, dodge/parry windows, feint chip, stamina gate, defeat) via `CombatManager.use_instant_resolution_for_tests`, then exits.
+
+**Future full-screen 3D combat** may need optional GPU-backed visual smoke; logic tests stay headless — see [`KyndeBlade_Godot/docs/COMBAT_VOXEL_STAGE_FUTURE.md`](../KyndeBlade_Godot/docs/COMBAT_VOXEL_STAGE_FUTURE.md).
 
 ```bash
 cd /path/to/KyndeBlade

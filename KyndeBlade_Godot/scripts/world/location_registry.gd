@@ -90,5 +90,31 @@ static func get_writer_notes(location_id: String) -> String:
 	return str(get_location(location_id).get("writer_notes", ""))
 
 
+## Optional Piers symbol ids from `piers_symbols` field (see `piers_symbols.json`).
+static func get_piers_symbol_ids(location_id: String) -> PackedStringArray:
+	var row := get_location(location_id)
+	var raw: Variant = row.get("piers_symbols", [])
+	var out := PackedStringArray()
+	if typeof(raw) != TYPE_ARRAY:
+		return out
+	for x in raw:
+		var s := str(x).strip_edges()
+		if not s.is_empty():
+			out.append(s)
+	return out
+
+
+static func get_text_edition_notes(location_id: String) -> String:
+	return str(get_location(location_id).get("text_edition_notes", ""))
+
+
+## B-text-oriented passus label for writers, if set (may be empty).
+static func get_passus_anchor_b(location_id: String) -> String:
+	var v: Variant = get_location(location_id).get("passus_anchor_b", "")
+	if v == null:
+		return ""
+	return str(v)
+
+
 static func clear_cache() -> void:
 	_cache.clear()

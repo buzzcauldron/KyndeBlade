@@ -26,6 +26,8 @@ godot4 --path KyndeBlade_Godot --headless --script res://tests/run_headless_test
 
 See [docs/CI_GODOT_TESTS.md](../docs/CI_GODOT_TESTS.md).
 
+**Godot ecosystem (showcase):** [RPG in a Box — Justin Arnold on Godot](https://godotengine.org/article/godot-showcase-justin-arnold-rpg-in-a-box/) (voxel/grid RPG tooling + editor UI in Godot).
+
 ## Controls
 
 Defaults are applied by autoload `InputMapSetup` if actions are empty: strike (**X**), dodge (**Space**), parry (**Shift**), pause (**Escape**). Gamepad: **A / B / X** and **Start** when bound.
@@ -42,6 +44,7 @@ Full table: [STEAM_BUILD.md](STEAM_BUILD.md).
 | `scenes/world/` | `world_atlas.tscn`, `location_shell.tscn` — preview entire Unity-planned map |
 | `tests/` | Headless smoke + combat scenarios |
 | `docs/GODOT_AUDIO_DESIGN.md` | Procedural SFX policy, parry-band vs cue length, CC0 guidance |
+| `assets/reference_preraphaelite/` | Optional cleared Salome / Lee mood-board PNGs ([README](assets/reference_preraphaelite/README.md)) |
 
 ## License
 

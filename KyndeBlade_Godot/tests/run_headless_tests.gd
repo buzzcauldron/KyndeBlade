@@ -26,6 +26,10 @@ func _kickoff() -> void:
 	ok = ok and _test_load_fallback_autosave()
 	ok = ok and _test_legacy_demo_save_migrates()
 	ok = ok and _test_medieval_list_granted_codes()
+	ok = ok and _test_piers_symbol_catalog_fayre_felde()
+	ok = ok and _test_piers_state_save_roundtrip()
+	ok = ok and _test_narrative_context_arrival_variant()
+	ok = ok and await _test_scene_transition_smoke()
 	if not ok:
 		_finish(false)
 		return
@@ -232,3 +236,83 @@ func _test_legacy_demo_save_migrates() -> bool:
 func _test_medieval_list_granted_codes() -> bool:
 	var codes := MedievalTextCatalog.list_granted_codes_in_order(PackedStringArray(["tower_vista", "FayreFelde"]))
 	return codes.size() == 2 and str(codes[0]) == "dreamer_ledger_stride" and str(codes[1]) == "crowd_surge"
+
+
+func _test_piers_symbol_catalog_fayre_felde() -> bool:
+	PiersSymbolCatalog.clear_cache()
+	LocationRegistry.clear_cache()
+	var row: Dictionary = PiersSymbolCatalog.get_symbol("field_full_of_folk")
+	if row.is_empty() or str(row.get("id", "")) != "field_full_of_folk":
+		return false
+	var ids: PackedStringArray = PiersSymbolCatalog.symbols_for_location("fayre_felde")
+	return ids.has("field_full_of_folk") and ids.has("four_types_of_seeds")
+
+
+func _test_piers_state_save_roundtrip() -> bool:
+	SaveService.write_new_game()
+	GameState.reset_from_new_game()
+	GameState.piers_text_edition = "C"
+	GameState.narrative_phase_id = "vita_dowel"
+	GameState.record_location_visit("tour")
+	GameState.record_location_visit("fayre_felde")
+	GameState.record_location_visit("fayre_felde")
+	GameState.fair_field_return_count = 2
+	GameState.dream_iteration = 4
+	GameState.sync_to_save()
+	var d: Dictionary = SaveService.load_save()
+	if str(d.get("piers_text_edition", "")) != "C":
+		return false
+	if str(d.get("narrative_phase_id", "")) != "vita_dowel":
+		return false
+	if int(d.get("fair_field_return_count", -1)) != 2:
+		return false
+	if int(d.get("dream_iteration", -1)) != 4:
+		return false
+	GameState.reset_from_new_game()
+	GameState.apply_loaded(d)
+	return (
+			GameState.piers_text_edition == "C"
+			and GameState.narrative_phase_id == "vita_dowel"
+			and int(GameState.location_visit_counts.get("tour", 0)) == 1
+			and int(GameState.location_visit_counts.get("fayre_felde", 0)) == 2
+			and GameState.fair_field_return_count == 2
+			and GameState.dream_iteration == 4
+	)
+
+
+func _test_narrative_context_arrival_variant() -> bool:
+	GameState.reset_from_new_game()
+	if NarrativeContext.arrival_variant_key("tour") != "first":
+		return false
+	GameState.record_location_visit("tour")
+	if NarrativeContext.arrival_variant_key("tour") != "first":
+		return false
+	GameState.record_location_visit("tour")
+	return NarrativeContext.arrival_variant_key("tour") == "return_2"
+
+
+func _test_scene_transition_smoke() -> bool:
+	## Crawl prototype will pop out to combat; prove hub + combat scenes load and mount headless.
+	var hub_path := "res://scenes/hub_map.tscn"
+	var combat_path := "res://scenes/combat.tscn"
+	if not FileAccess.file_exists(hub_path) or not FileAccess.file_exists(combat_path):
+		push_error("scene transition smoke: missing tscn path")
+		return false
+	var hub_ps: PackedScene = load(hub_path) as PackedScene
+	var combat_ps: PackedScene = load(combat_path) as PackedScene
+	if hub_ps == null or combat_ps == null:
+		push_error("scene transition smoke: PackedScene load failed")
+		return false
+	var hub_inst: Node = hub_ps.instantiate()
+	var combat_inst: Node = combat_ps.instantiate()
+	if hub_inst == null or combat_inst == null:
+		return false
+	root.add_child(hub_inst)
+	await process_frame
+	hub_inst.queue_free()
+	await process_frame
+	root.add_child(combat_inst)
+	await process_frame
+	combat_inst.queue_free()
+	await process_frame
+	return true

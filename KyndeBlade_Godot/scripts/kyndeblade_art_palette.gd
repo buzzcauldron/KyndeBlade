@@ -4,6 +4,8 @@ class_name KyndeBladeArtPalette
 ## **Primary visual reference:** [`assets/hi_bit_ruin_vista/reference_style_target.png`](../assets/hi_bit_ruin_vista/reference_style_target.png) — hi-bit ruin vista (misty teal sky, coral/peach clouds, lime foliage, terracotta stone, slate shadows).
 ## This palette is a **high-contrast, higher-saturation** interpretation of that image so Lane A manuscript UI and Lane B combat read clearly at 960×540.
 ##
+## **Salome / Pre-Raphaelite layer** (`JEWEL_*` constants): jewel accents for figures, UI contamination, fog—see [ART_DIRECTION_VISUAL_BIBLE.md](../../../ProjectArchive/docs/ART_DIRECTION_VISUAL_BIBLE.md). Layers on top of **HI_BIT_*** ruin vista, not a replacement.
+##
 ## Also aligned with repo docs:
 ## - [ART_DIRECTION.md](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md)
 ## - [UI_MANUSCRIPT_THEME.md](../../ProjectArchive/docs/UI_MANUSCRIPT_THEME.md)
@@ -34,14 +36,28 @@ const INK_LIGHT := Color("#5c4838")
 # --- Manuscript — illumination & accents (saturated gold / vermillion / lapis) ---
 const GOLD := Color("#e8a010")
 const GOLD_DARK := Color("#a06820")
-const RUBRICATION := Color("#d42010")
+## Deeper jewel crimson (Pre-Raphaelite rubrication); enemy / margin-beast read.
+const RUBRICATION := Color("#bc1020")
 const LAPIS := Color("#1858c8")
 
 # --- Manuscript — borders (stronger chroma for panel edges) ---
 const BORDER_SEPIA := Color("#5c4030")
 const BORDER_BLUE := Color("#2050a0")
-const BORDER_RED := Color("#a02018")
+## Jewel-adjacent border red for maw / danger edges.
+const BORDER_RED := Color("#8c1020")
 const BORDER_DARK := Color("#2a1810")
+
+# --- Salome / Pre-Raphaelite — jewel & uncanny accents ---
+## Deep crimson gown / ritual red — enemy silhouette modulate, sky wash start, hover accents.
+const JEWEL_CRIMSON := Color("#8a1532")
+## Poison-sick emerald — **feint** telegraph read and contamination fringe (keep separate from real-swing violet/crimson).
+const JEWEL_EMERALD := Color("#148060")
+## Rich ultramarine — panel/button focus, lapis-adjacent UI frame (pairs with violet for tragic depth).
+const JEWEL_ULTRAMARINE := Color("#203878")
+## Tragic shadow / violet recess — lerp with crimson for defensive-window “real swing” depth.
+const JEWEL_VIOLET_SHADOW := Color("#4a2060")
+## Corpse-candle / fever highlight — sparse specular or focus-ring hint; do not flood UI.
+const SICKLY_HIGHLIGHT := Color("#c8d890")
 
 # --- Boss tints (grimdark doc) — UI chips / future bars; sat bumped ---
 const BOSS_PRIDE := Color("#602878")
@@ -67,3 +83,6 @@ const HI_BIT_TERRACOTTA_DEEP := Color("#702818")
 const HI_BIT_FOLIAGE := Color("#2fa060")
 ## Soft dither speckle; warm tint from sky glow.
 const HI_BIT_DITHER := Color(1.0, 0.88, 0.72, 0.14)
+
+## Enemy hull base color: lerp rubrication toward JEWEL_CRIMSON (0 = manuscript red only, ~0.2 = ornate “wrong”).
+const ENEMY_BODY_JEWEL_MIX := 0.22

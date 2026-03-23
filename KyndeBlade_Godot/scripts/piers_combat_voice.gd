@@ -5,13 +5,13 @@ class_name PiersCombatVoice
 
 
 const CODE_KENNING := {
-	"dreamer_ledger_stride": "The ledgere of thy dreme lengtheth the stroke.",
-	"hunger_strike_surge": "Hunger whetteth the yren—yet it eteth thy breeth.",
-	"crowd_surge": "The multitude crieth; Medes echo maketh thyn arme hevy.",
-	"ward_warden": "The Grene chapels covenant biddeth thee kepe thy ward—costly withdrawyng.",
-	"gk_pressure_trace": "A grene trace folewith—more encountres on the weye (world hook).",
-	"fae_drift_step": "Fayerie cadence lighteth thy foot—othir londes drawe nerre.",
-	"drowse_guard": "Somer seson lulleth the herte; thy blowe is softe but spares stamyn.",
+	"dreamer_ledger_stride": "The ledgere of thy dreme lengtheth the stroke — a dear bargayn.",
+	"hunger_strike_surge": "Hunger whetteth the yren, yet it gnaweth thyn shelde-hand never the same wyse twice.",
+	"crowd_surge": "The multitude crieth; Medes echo maketh thyn arme hevy and thy rede of fals untrewe.",
+	"ward_warden": "The Grene chapels covenant biddeth kepen of ward — withdrawyng groweth costly and oȝe.",
+	"gk_pressure_trace": "A grene trace folewith; the next covenant feleth nerre, odd and kepe.",
+	"fae_drift_step": "Fayerie cadence lighteth the foot — the other world leyeth a finger on thy feint-rede.",
+	"drowse_guard": "Somer seson lulleth the herte; softe blowe, spared stamyn, a small mercy in a cruel feeld.",
 }
 
 
@@ -37,14 +37,15 @@ static func enemy_epithet(display_name: String) -> String:
 	return display_name
 
 
-static func player_turn_rubric(strike_stam: float, strike_dmg: float, dodge_stam: float) -> String:
-	return "%s (%.0f stam / %.0f smyting)  ·  %s (%.0f stam)  ·  %s (25 stam)" % [
+static func player_turn_rubric(strike_stam: float, strike_dmg: float, dodge_stam: float, parry_stam: float) -> String:
+	return "%s (%.0f stam / %.0f smyting)  ·  %s (%.0f stam)  ·  %s (%.0f stam)" % [
 		strike_action_name(),
 		strike_stam,
 		strike_dmg,
 		dodge_action_name(),
 		dodge_stam,
 		parry_action_name(),
+		parry_stam,
 	]
 
 
@@ -60,7 +61,14 @@ static func granted_kennings_block() -> String:
 	for c in codes:
 		var line: String = str(CODE_KENNING.get(c, "— %s (unwrit kennynge)" % c))
 		lines.append("• " + line)
-	return "Lettres redde:\n" + "\n".join(lines)
+	var tail := ""
+	if GameState.has_ever_had_hunger:
+		tail = "\n\nHunger’s countenance shifteth — shelde and tyme pay uneven tribute."
+	if PlayerMovesetModifiers.fae_chance_delta() > 0.0001:
+		tail += "\nThe fae-weight leaneth on the field — odd spawns when the crawl knows that lettre."
+	if PlayerMovesetModifiers.green_knight_weight_delta() > 0.0001:
+		tail += "\nGrene pressure traceth thee — the chapel’s math groweth stranger."
+	return "Lettres redde:\n" + "\n".join(lines) + tail
 
 
 static func outcome_victory_line() -> String:
