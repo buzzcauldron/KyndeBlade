@@ -15,7 +15,6 @@ const _FALLBACK_TOWER := "A tour on a toft, trieliche ymaked—narwe, lovelich a
 
 func _ready() -> void:
 	theme = KyndeBladeManuscriptTheme.build_theme()
-	$Bg.color = KyndeBladeArtPalette.HUB_MIST
 	title_label.add_theme_color_override("font_color", KyndeBladeArtPalette.GOLD)
 	speaker_label.add_theme_color_override("font_color", KyndeBladeArtPalette.LAPIS)
 	body_label.add_theme_color_override("default_color", KyndeBladeArtPalette.INK_PRIMARY)

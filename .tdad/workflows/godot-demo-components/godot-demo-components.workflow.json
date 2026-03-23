@@ -1,0 +1,190 @@
+{
+  "version": "1.0",
+  "title": "Godot demo components (granular TDAD proofs)",
+  "description": "One node per Godot slice subsystem; each maps to run_headless_tests.gd function(s), BDD scenario in godot-parity-slice.feature, and/or STEAM_BUILD.md manual. Depends logically on godot-parity-slice. See docs/CI_GODOT_TESTS.md traceability table.",
+  "nodes": [
+    {
+      "id": "gdc-main-menu",
+      "workflowId": "godot-demo-components",
+      "title": "Main menu Continue gating",
+      "description": "Continue disabled without save; enabled when SaveService.has_save. Proof: godot_headless _test_main_menu_continue_gated_smoke; BDD Continue scenario; manual STEAM_BUILD.",
+      "nodeType": "feature",
+      "fileName": "gdc-main-menu",
+      "position": { "x": 80, "y": 80 },
+      "dependencies": [],
+      "testLayers": ["godot_headless", "bdd", "godot_manual"]
+    },
+    {
+      "id": "gdc-tower-intro",
+      "workflowId": "godot-demo-components",
+      "title": "Tower arrival beat + export text",
+      "description": "tower_intro.tscn; Unity export arrival_beat_* for tour. Proof: godot_headless _test_unity_export_json (partial); manual.",
+      "nodeType": "feature",
+      "fileName": "gdc-tower-intro",
+      "position": { "x": 280, "y": 80 },
+      "dependencies": [],
+      "testLayers": ["godot_headless", "godot_manual", "bdd"]
+    },
+    {
+      "id": "gdc-hub-slice-locations",
+      "workflowId": "godot-demo-components",
+      "title": "Hub slice_locations.json parity",
+      "description": "tour.next includes fayre_felde. Proof: godot_headless _test_slice_locations_json.",
+      "nodeType": "feature",
+      "fileName": "gdc-hub-slice-locations",
+      "position": { "x": 480, "y": 80 },
+      "dependencies": [],
+      "testLayers": ["godot_headless", "bdd"]
+    },
+    {
+      "id": "gdc-hub-counsel-gate",
+      "workflowId": "godot-demo-components",
+      "title": "Fair Field counsel before combat",
+      "description": "EnterCombat disabled until Trewthe/Mede/Hunger. Proof: godot_headless _test_hub_counsel_gate_smoke; BDD counsel scenario.",
+      "nodeType": "feature",
+      "fileName": "gdc-hub-counsel-gate",
+      "position": { "x": 680, "y": 80 },
+      "dependencies": ["gdc-hub-slice-locations"],
+      "testLayers": ["godot_headless", "bdd"]
+    },
+    {
+      "id": "gdc-world-atlas",
+      "workflowId": "godot-demo-components",
+      "title": "World atlas lists registry",
+      "description": "world_atlas.tscn + LocationRegistry. Proof: godot_headless _test_world_atlas_scene_smoke (optional scene mount).",
+      "nodeType": "feature",
+      "fileName": "gdc-world-atlas",
+      "position": { "x": 80, "y": 220 },
+      "dependencies": [],
+      "testLayers": ["godot_headless"]
+    },
+    {
+      "id": "gdc-location-shell",
+      "workflowId": "godot-demo-components",
+      "title": "Location preview shell + placeholder backdrop",
+      "description": "location_shell.tscn + PlaceholderLocationBackdrop. Proof: godot_headless _test_location_shell_scene_smoke.",
+      "nodeType": "feature",
+      "fileName": "gdc-location-shell",
+      "position": { "x": 280, "y": 220 },
+      "dependencies": [],
+      "testLayers": ["godot_headless"]
+    },
+    {
+      "id": "gdc-combat-encounter-load",
+      "workflowId": "godot-demo-components",
+      "title": "EncounterDef Fair Field / False",
+      "description": "data/encounter_fair_field.tres. Proof: godot_headless _test_encounter_resource.",
+      "nodeType": "feature",
+      "fileName": "gdc-combat-encounter-load",
+      "position": { "x": 480, "y": 220 },
+      "dependencies": [],
+      "testLayers": ["godot_headless", "bdd"]
+    },
+    {
+      "id": "gdc-combat-scenarios",
+      "workflowId": "godot-demo-components",
+      "title": "Combat scenario suite",
+      "description": "tests/combat_scenarios.gd via runner. Proof: godot_headless end of run_headless_tests.gd.",
+      "nodeType": "feature",
+      "fileName": "gdc-combat-scenarios",
+      "position": { "x": 680, "y": 220 },
+      "dependencies": ["gdc-combat-encounter-load"],
+      "testLayers": ["godot_headless", "bdd"]
+    },
+    {
+      "id": "gdc-combat-misstep-feint",
+      "workflowId": "godot-demo-components",
+      "title": "Misstep inverts first defensive window",
+      "description": "ethical_misstep_count + feint_pattern_offset. Proof: combat_scenarios misstep_inverts_first_defensive_window.",
+      "nodeType": "feature",
+      "fileName": "gdc-combat-misstep-feint",
+      "position": { "x": 80, "y": 360 },
+      "dependencies": ["gdc-combat-scenarios"],
+      "testLayers": ["godot_headless", "bdd"]
+    },
+    {
+      "id": "gdc-combat-pause",
+      "workflowId": "godot-demo-components",
+      "title": "Pause freezes defensive window tick",
+      "description": "get_tree().paused stops combat_root from advancing CombatManager window. Proof: godot_headless _test_combat_pause_freezes_window_tick_smoke.",
+      "nodeType": "feature",
+      "fileName": "gdc-combat-pause",
+      "position": { "x": 280, "y": 360 },
+      "dependencies": ["gdc-combat-scenarios"],
+      "testLayers": ["godot_headless", "bdd"]
+    },
+    {
+      "id": "gdc-combat-victory-save",
+      "workflowId": "godot-demo-components",
+      "title": "Victory updates GameState and save",
+      "description": "GameState.on_victory_fair_field. Proof: godot_headless _test_victory_fair_field_updates_gamestate.",
+      "nodeType": "feature",
+      "fileName": "gdc-combat-victory-save",
+      "position": { "x": 480, "y": 360 },
+      "dependencies": ["gdc-combat-scenarios"],
+      "testLayers": ["godot_headless", "bdd"]
+    },
+    {
+      "id": "gdc-settings-fullscreen",
+      "workflowId": "godot-demo-components",
+      "title": "Fullscreen setting persists",
+      "description": "SaveService save_fullscreen / load_fullscreen. Proof: godot_headless _test_settings_fullscreen_roundtrip.",
+      "nodeType": "feature",
+      "fileName": "gdc-settings-fullscreen",
+      "position": { "x": 680, "y": 360 },
+      "dependencies": [],
+      "testLayers": ["godot_headless"]
+    },
+    {
+      "id": "gdc-medieval-catalog",
+      "workflowId": "godot-demo-components",
+      "title": "Medieval text catalog + modifiers",
+      "description": "MedievalTextCatalog / read ids roundtrip. Proof: godot_headless _test_medieval_* , _test_read_medieval_text_ids_roundtrip.",
+      "nodeType": "feature",
+      "fileName": "gdc-medieval-catalog",
+      "position": { "x": 80, "y": 500 },
+      "dependencies": [],
+      "testLayers": ["godot_headless"]
+    },
+    {
+      "id": "gdc-piers-symbols",
+      "workflowId": "godot-demo-components",
+      "title": "Piers symbol catalog",
+      "description": "piers_symbols.json + fayre_felde mapping. Proof: godot_headless _test_piers_symbol_catalog_fayre_felde, _test_piers_state_save_roundtrip.",
+      "nodeType": "feature",
+      "fileName": "gdc-piers-symbols",
+      "position": { "x": 280, "y": 500 },
+      "dependencies": [],
+      "testLayers": ["godot_headless"]
+    },
+    {
+      "id": "gdc-placeholder-art-registry",
+      "workflowId": "godot-demo-components",
+      "title": "Placeholder art registry vs locations",
+      "description": "data/art/placeholder_registry.json coverage. Proof: godot_headless _test_placeholder_art_registry.",
+      "nodeType": "feature",
+      "fileName": "gdc-placeholder-art-registry",
+      "position": { "x": 480, "y": 500 },
+      "dependencies": [],
+      "testLayers": ["godot_headless"]
+    },
+    {
+      "id": "gdc-scene-transition",
+      "workflowId": "godot-demo-components",
+      "title": "Hub and combat scene mount smoke",
+      "description": "PackedScene load hub_map + combat. Proof: godot_headless _test_scene_transition_smoke.",
+      "nodeType": "feature",
+      "fileName": "gdc-scene-transition",
+      "position": { "x": 680, "y": 500 },
+      "dependencies": [],
+      "testLayers": ["godot_headless"]
+    }
+  ],
+  "edges": [
+    { "id": "e1", "source": "gdc-hub-slice-locations", "target": "gdc-hub-counsel-gate" },
+    { "id": "e2", "source": "gdc-combat-encounter-load", "target": "gdc-combat-scenarios" },
+    { "id": "e3", "source": "gdc-combat-scenarios", "target": "gdc-combat-misstep-feint" },
+    { "id": "e4", "source": "gdc-combat-scenarios", "target": "gdc-combat-pause" },
+    { "id": "e5", "source": "gdc-combat-scenarios", "target": "gdc-combat-victory-save" }
+  ]
+}

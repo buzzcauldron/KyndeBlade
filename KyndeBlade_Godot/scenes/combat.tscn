@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c8combat001"]
+[gd_scene load_steps=10 format=3 uid="uid://c8combat001"]
 
 [ext_resource type="Script" path="res://scripts/combat_root.gd" id="1_root"]
 [ext_resource type="Script" path="res://scripts/combat_manager.gd" id="2_combat"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/dreamer_ink_physics.gd" id="5_ink"]
 [ext_resource type="Script" path="res://scripts/combat_manuscript_backdrop.gd" id="6_backdrop"]
 [ext_resource type="Shader" path="res://shaders/kill_desaturate.gdshader" id="7_kill_shader"]
+[ext_resource type="Texture2D" path="res://assets/hi_bit_ruin_vista/reference_style_target.png" id="8_concept"]
 
 [sub_resource type="ShaderMaterial" id="KillDesatMat"]
 shader = ExtResource("7_kill_shader")
@@ -31,6 +32,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("6_backdrop")
+mood_texture = ExtResource("8_concept")
+paint_mood_texture_only = false
 
 [node name="CombatManager" type="Node" parent="."]
 process_mode = 1
@@ -59,7 +62,7 @@ mouse_filter = 2
 color = Color(1, 1, 1, 1)
 
 [node name="CombatStage" type="Node2D" parent="."]
-position = Vector2(480, 270)
+position = Vector2(480, 288)
 script = ExtResource("3_pres")
 
 [node name="Camera2D" type="Camera2D" parent="CombatStage"]
@@ -85,95 +88,204 @@ polygon = PackedVector2Array(-520, 188, 520, 188, 520, 230, -520, 230)
 [node name="PlayerRoot" type="Node2D" parent="CombatStage"]
 position = Vector2(-200, 24)
 
-[node name="Body" type="Polygon2D" parent="CombatStage/PlayerRoot"]
-color = Color(0.32, 0.48, 0.72, 1)
-polygon = PackedVector2Array(-22, -52, 26, -46, 30, 42, -24, 48)
-
 [node name="EnemyRoot" type="Node2D" parent="CombatStage"]
 position = Vector2(208, 8)
 
-[node name="Body" type="Polygon2D" parent="CombatStage/EnemyRoot"]
-color = Color(0.78, 0.24, 0.22, 1)
-polygon = PackedVector2Array(-38, -88, 42, -82, 36, 78, -40, 82)
-
 [node name="UI" type="CanvasLayer" parent="."]
+layer = 8
 
-[node name="RootVBox" type="VBoxContainer" parent="UI"]
-anchors_preset = 10
+[node name="HudMargin" type="MarginContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 280.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-theme_override_constants/separation = 8
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 108
 
-[node name="TurnLabel" type="Label" parent="UI/RootVBox"]
+[node name="HudColumn" type="VBoxContainer" parent="UI/HudMargin"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.92, 0.86, 0.72, 1)
-text = "Combat"
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="TelegraphLabel" type="Label" parent="UI/RootVBox"]
+[node name="HudRow" type="HBoxContainer" parent="UI/HudMargin/HudColumn"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.85, 0.55, 0.45, 1)
-text = ""
+size_flags_horizontal = 3
+size_flags_vertical = 0
+alignment = 1
 
-[node name="FieldSubtitle" type="Label" parent="UI/RootVBox"]
+[node name="HudPanel" type="PanelContainer" parent="UI/HudMargin/HudColumn/HudRow"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-theme_override_colors/font_color = Color(0.68, 0.62, 0.52, 1)
-text = ""
+custom_minimum_size = Vector2(436, 0)
 
-[node name="MovesetRubric" type="Label" parent="UI/RootVBox"]
+[node name="HudVBox" type="VBoxContainer" parent="UI/HudMargin/HudColumn/HudRow/HudPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="EncounterTitle" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Shelde-fray"
+horizontal_alignment = 1
+
+[node name="Bars" type="VBoxContainer" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="PHLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
-theme_override_colors/font_color = Color(0.55, 0.5, 0.42, 1)
-autowrap_mode = 3
+text = "Wille"
 
-[node name="ParryDodgeEye" parent="UI/RootVBox" instance=ExtResource("4_eye")]
-layout_mode = 2
-
-[node name="Bars" type="VBoxContainer" parent="UI/RootVBox"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="PHLabel" type="Label" parent="UI/RootVBox/Bars"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "Player HP"
-
-[node name="PlayerHP" type="ProgressBar" parent="UI/RootVBox/Bars"]
-custom_minimum_size = Vector2(0, 18)
+[node name="PlayerHP" type="ProgressBar" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(396, 14)
 layout_mode = 2
 max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="EHLabel" type="Label" parent="UI/RootVBox/Bars"]
+[node name="EHLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "Enemy HP (False)"
+theme_override_font_sizes/font_size = 11
+text = "False"
 
-[node name="EnemyHP" type="ProgressBar" parent="UI/RootVBox/Bars"]
-custom_minimum_size = Vector2(0, 18)
+[node name="EnemyHP" type="ProgressBar" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(396, 14)
 layout_mode = 2
 max_value = 80.0
 value = 80.0
 show_percentage = false
 
-[node name="StLabel" type="Label" parent="UI/RootVBox/Bars"]
+[node name="StLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 text = "Stamina"
 
-[node name="Stamina" type="ProgressBar" parent="UI/RootVBox/Bars"]
-custom_minimum_size = Vector2(0, 18)
+[node name="Stamina" type="ProgressBar" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(396, 14)
 layout_mode = 2
 max_value = 100.0
 value = 100.0
 show_percentage = false
+
+[node name="HudSep" type="HSeparator" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+layout_mode = 2
+
+[node name="TurnLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.92, 0.86, 0.72, 1)
+text = "Combat"
+autowrap_mode = 3
+
+[node name="TelegraphLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.85, 0.55, 0.45, 1)
+text = ""
+autowrap_mode = 3
+
+[node name="FieldSubtitle" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.68, 0.62, 0.52, 1)
+text = ""
+autowrap_mode = 3
+
+[node name="MovesetRubric" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.55, 0.5, 0.42, 1)
+autowrap_mode = 3
+
+[node name="ParryDodgeEye" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox" instance=ExtResource("4_eye")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HudFill" type="Control" parent="UI/HudMargin/HudColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="ActionBar" type="MarginContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -108.0
+offset_right = -8.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="ActionCenter" type="CenterContainer" parent="UI/ActionBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ActionPanel" type="PanelContainer" parent="UI/ActionBar/ActionCenter"]
+layout_mode = 2
+custom_minimum_size = Vector2(420, 0)
+
+[node name="ActionInner" type="VBoxContainer" parent="UI/ActionBar/ActionCenter/ActionPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ControlsHint" type="Label" parent="UI/ActionBar/ActionPanel/ActionInner"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Strike — X   ·   Dodge — Space   ·   Parry — Shift   ·   Pause — Esc"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="UI/ActionBar/ActionPanel/ActionInner"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="StrikeCombatButton" type="Button" parent="UI/ActionBar/ActionPanel/ActionInner/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(118, 32)
+layout_mode = 2
+text = "Strike"
+
+[node name="DodgeCombatButton" type="Button" parent="UI/ActionBar/ActionPanel/ActionInner/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(118, 32)
+layout_mode = 2
+text = "Dodge"
+
+[node name="ParryCombatButton" type="Button" parent="UI/ActionBar/ActionPanel/ActionInner/ActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(118, 32)
+layout_mode = 2
+text = "Parry"
 
 [node name="PauseLayer" type="CanvasLayer" parent="."]
 process_mode = 3

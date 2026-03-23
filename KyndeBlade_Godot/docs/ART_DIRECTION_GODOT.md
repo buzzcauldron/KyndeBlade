@@ -45,6 +45,22 @@ Target: **high-fidelity pixel** with **sage / dusty teal / terracotta** stone, *
 - **Palette constants:** `KyndeBladeArtPalette` in [`scripts/kyndeblade_art_palette.gd`](../scripts/kyndeblade_art_palette.gd) — **HI_BIT_*** from [`reference_style_target.png`](../assets/hi_bit_ruin_vista/reference_style_target.png) with **boosted saturation/contrast**; manuscript **GOLD / RUBRICATION / LAPIS / PARCHMENT** tuned to match that illumination read.
 - **Combat backdrop:** [`scripts/combat_manuscript_backdrop.gd`](../scripts/combat_manuscript_backdrop.gd) — procedural approximation; swap in a full `TextureRect` using the PNG when ship license is cleared.
 
+## Placeholder actors & level backdrops (art bible → data → Godot)
+
+Procedural **silhouettes** and **location backdrops** mirror Lane A / Lane B / jewel / hi-bit language from the markdown bibles above (no new raster art).
+
+| Piece | Role |
+|-------|------|
+| [`data/art/placeholder_registry.json`](../data/art/placeholder_registry.json) | Per **location**: `preset`, `jewel_wash`, `preview_character`. Per **character** id: `silhouette` + bible lane note. |
+| [`scripts/art/placeholder_art_registry.gd`](../scripts/art/placeholder_art_registry.gd) | Loads JSON, resolves color tokens, **`validate_coverage()`** vs `LocationRegistry`. |
+| [`scripts/art/placeholder_silhouette_library.gd`](../scripts/art/placeholder_silhouette_library.gd) | `Polygon2D` recipes: Wille, False, Green Knight, Mede, Wrath, Hunger, Piers, Orfeo, crowd, grace kneeler. |
+| [`scripts/art/placeholder_actor_2d.gd`](../scripts/art/placeholder_actor_2d.gd) | `character_id` → rebuild figure. |
+| [`scripts/art/placeholder_location_backdrop.gd`](../scripts/art/placeholder_location_backdrop.gd) | `_draw` presets (mist, hi-bit field, dungeon void, Orfeo violet, etc.). |
+| [`addons/kyndeblade_placeholders/`](../addons/kyndeblade_placeholders/) | **Editor plugin** — *Project → Tools → KyndeBlade: Validate art placeholders*. |
+| [`scenes/placeholders/character_placeholder.tscn`](../scenes/placeholders/character_placeholder.tscn) | Drop-in instance for authoring. |
+
+[`scenes/world/location_shell.tscn`](../scenes/world/location_shell.tscn) composes backdrop + bottom **preview** silhouette per location.
+
 ## Implementation (this project)
 
 | Asset | File |
@@ -54,7 +70,7 @@ Target: **high-fidelity pixel** with **sage / dusty teal / terracotta** stone, *
 
 **Applied in:**
 
-- **Main menu** — manuscript buttons + settings parchment scrim; Lane A vignette; title gold / subtitle body (`main_menu.gd`).
+- **Main menu** — full **manuscript page** (`main_menu.tscn`): parchment field, framed `PanelContainer` sheet, historiated margin motif, rubric rule, ink subtitle; settings on parchment dialog over scrim; slider/check styling in `KyndeBladeManuscriptTheme` (`main_menu.gd`).
 - **Hub** — twilight backdrop, manuscript theme, vista title colors (`hub_map.gd`).
 - **Tower intro / arrival** — mist backdrop, gold title, lapis speaker, ink body (`story_arrival_screen.gd`).
 - **Combat** — Lane B **hi-bit-style** procedural backdrop with **crawl parallax** (`combat.tscn` `BackdropLayer` → `ManuscriptBackdrop`, [`crawl_parallax.gd`](../scripts/crawl_parallax.gd)); manuscript UI, gold/rubric/lapis bars (`combat_root.gd`).

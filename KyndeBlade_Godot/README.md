@@ -14,9 +14,11 @@ Clone from repo root branch **`main`** (Godot-first default); see [`docs/BRANCH_
 
 ## Quick start
 
-1. Open this folder in **Godot 4.2+** (project pins 4.6 features in `project.godot`; adjust if your editor warns).
+1. Open this folder in **Godot 4.6.1** (or newer **4.6.x**). `project.godot` uses `config/features` **4.6**; match that line if the editor proposes a change when opening.
 2. **Run** the main scene (`scenes/main_menu.tscn`).
-3. **New Game** → tower intro → hub → Fair Field → combat.
+3. **New vision** (main menu) → tower intro → hub → Fair Field → combat.
+
+**Combat iteration:** In the **editor** or a **debug** export, the main menu shows **Combat drill** — jumps straight to `combat.tscn` with a fresh save. During combat, **Strike / Dodge / Parry** buttons and a control hint line mirror the keyboard bindings.
 
 ## Tests (headless)
 

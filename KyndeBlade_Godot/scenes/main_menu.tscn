@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c8mainmenu001"]
 
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu"]
-[ext_resource type="Texture2D" path="res://assets/lane_a_menu_backdrop.tres" id="2_lane_a"]
+[ext_resource type="Texture2D" path="res://assets/ui_manuscript/historiated_margin_crowned_figure.png" id="2_motif"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -12,82 +12,139 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu")
 
-[node name="MenuBackdrop" type="TextureRect" parent="."]
+[node name="ParchmentBase" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_lane_a")
+mouse_filter = 2
+color = Color(0.98, 0.95, 0.86, 1)
+
+[node name="ParchmentWash" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.87, 0.75, 0.55, 0.12)
+
+[node name="EdgeAging" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.04, 0.03, 0.02, 0.14)
+
+[node name="SheetMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 28
+
+[node name="ManuscriptPanel" type="PanelContainer" parent="SheetMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PageInner" type="MarginContainer" parent="SheetMargin/ManuscriptPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="Center" type="CenterContainer" parent="SheetMargin/ManuscriptPanel/PageInner"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBox" type="VBoxContainer" parent="SheetMargin/ManuscriptPanel/PageInner/Center"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Motif" type="TextureRect" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+custom_minimum_size = Vector2(48, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_motif")
 expand_mode = 1
-stretch_mode = 0
+stretch_mode = 5
 
-[node name="VignetteOverlay" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.06, 0.05, 0.09, 0.42)
-
-[node name="Center" type="CenterContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBox" type="VBoxContainer" parent="Center"]
+[node name="Title" type="Label" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Title" type="Label" parent="Center/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-theme_override_colors/font_color = Color(0.9, 0.82, 0.65, 1)
+theme_override_font_sizes/font_size = 30
 text = "Kynde Blade"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="Center/VBox"]
+[node name="RubricRule" type="ColorRect" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+custom_minimum_size = Vector2(280, 3)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.75, 0.7, 0.6, 1)
-text = "Menu → Hub → Fair Field combat"
+size_flags_horizontal = 4
+mouse_filter = 2
+color = Color(0.72, 0.4, 0.12, 1)
+
+[node name="Subtitle" type="Label" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Heere bigynneth the dreme — tour, feeld, and shelde-fray"
 horizontal_alignment = 1
+autowrap_mode = 3
 
-[node name="ContinueButton" type="Button" parent="Center/VBox" groups=["menu_button"]]
+[node name="Spacer" type="Control" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ContinueButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox" groups=["menu_button"]]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 0)
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
-text = "Continue"
+text = "Continue thy dreme"
 
-[node name="NewGameButton" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(220, 0)
+[node name="NewGameButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
-text = "New Game"
+text = "New vision (writ save anew)"
 
-[node name="SettingsButton" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(220, 0)
+[node name="SettingsButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
-text = "Settings"
+text = "Settynges of the book"
 
-[node name="TinyLoopButton" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(220, 0)
+[node name="TinyLoopButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 text = "Tiny practice loop"
 
-[node name="HiBitBonusButton" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(220, 0)
+[node name="HiBitBonusButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 text = "High-bit medieval bonus"
 
-[node name="QuitButton" type="Button" parent="Center/VBox"]
-custom_minimum_size = Vector2(220, 0)
+[node name="CombatDrillButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
-text = "Quit"
+text = "Combat drill (editor / debug)"
+
+[node name="QuitButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+text = "Quit — leve the leef"
 
 [node name="SettingsPanel" type="ColorRect" parent="."]
 unique_name_in_owner = true
@@ -98,7 +155,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.08, 0.07, 0.1, 0.94)
+mouse_filter = 0
+color = Color(0.02, 0.04, 0.08, 0.72)
 
 [node name="SettingsCenter" type="CenterContainer" parent="SettingsPanel"]
 layout_mode = 1
@@ -108,43 +166,61 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SettingsVBox" type="VBoxContainer" parent="SettingsPanel/SettingsCenter"]
+[node name="SettingsFrame" type="PanelContainer" parent="SettingsPanel/SettingsCenter"]
+layout_mode = 2
+
+[node name="SettingsInner" type="MarginContainer" parent="SettingsPanel/SettingsCenter/SettingsFrame"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 22
+
+[node name="SettingsVBox" type="VBoxContainer" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="SettingsTitle" type="Label" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+[node name="SettingsTitle" type="Label" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "Settings"
+text = "Settynges"
 horizontal_alignment = 1
 
-[node name="VolLabel" type="Label" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+[node name="SettingsRule" type="ColorRect" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox"]
+custom_minimum_size = Vector2(260, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+color = Color(0.63, 0.13, 0.13, 1)
+
+[node name="VolLabel" type="Label" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox"]
 layout_mode = 2
 text = "Master volume"
 
-[node name="VolumeSlider" type="HSlider" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+[node name="VolumeSlider" type="HSlider" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(300, 28)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
 value = 1.0
 
-[node name="Fullscreen" type="CheckButton" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+[node name="Fullscreen" type="CheckButton" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Fullscreen"
+text = "Ful screne"
 
-[node name="CloseSettings" type="Button" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+[node name="CloseSettings" type="Button" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox"]
 layout_mode = 2
-text = "Close"
+text = "Clos the leef"
 
-[connection signal="pressed" from="Center/VBox/ContinueButton" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="Center/VBox/NewGameButton" to="." method="_on_new_game_pressed"]
-[connection signal="pressed" from="Center/VBox/SettingsButton" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="Center/VBox/TinyLoopButton" to="." method="_on_tiny_loop_pressed"]
-[connection signal="pressed" from="Center/VBox/HiBitBonusButton" to="." method="_on_hi_bit_bonus_pressed"]
-[connection signal="pressed" from="Center/VBox/QuitButton" to="." method="_on_quit_pressed"]
-[connection signal="value_changed" from="SettingsPanel/SettingsCenter/SettingsVBox/VolumeSlider" to="." method="_on_volume_changed"]
-[connection signal="toggled" from="SettingsPanel/SettingsCenter/SettingsVBox/Fullscreen" to="." method="_on_fullscreen_toggled"]
-[connection signal="pressed" from="SettingsPanel/SettingsCenter/SettingsVBox/CloseSettings" to="." method="_on_settings_close_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/NewGameButton" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/TinyLoopButton" to="." method="_on_tiny_loop_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/HiBitBonusButton" to="." method="_on_hi_bit_bonus_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/CombatDrillButton" to="." method="_on_combat_drill_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/QuitButton" to="." method="_on_quit_pressed"]
+[connection signal="value_changed" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/VolumeSlider" to="." method="_on_volume_changed"]
+[connection signal="toggled" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="pressed" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/CloseSettings" to="." method="_on_settings_close_pressed"]

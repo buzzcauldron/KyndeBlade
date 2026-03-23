@@ -259,6 +259,16 @@
       "dependencies": ["demo-vertical-slice", "godot-full-port"]
     },
     {
+      "id": "godot-demo-components",
+      "workflowId": "root",
+      "title": "Godot demo components (granular proofs)",
+      "description": "Per-subsystem TDAD nodes mapping to run_headless_tests.gd and BDD; see .tdad/workflows/godot-demo-components/ and docs/CI_GODOT_TESTS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-demo-components",
+      "position": { "x": 550, "y": 1000 },
+      "dependencies": ["godot-parity-slice"]
+    },
+    {
       "id": "godot-steam-build",
       "workflowId": "root",
       "title": "Godot Steam / retail build (TDAD)",

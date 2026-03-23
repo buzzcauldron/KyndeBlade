@@ -35,4 +35,4 @@ git checkout main
 git pull origin main
 ```
 
-Open **`KyndeBlade_Godot/`** in Godot 4.2+ for the shipping slice; open **`KyndeBlade_Unity/`** in Unity when editing the oracle project or running the export menu.
+Open **`KyndeBlade_Godot/`** in **Godot 4.6.1** (or **4.6.x**) for the shipping slice; open **`KyndeBlade_Unity/`** in Unity when editing the oracle project or running the export menu.

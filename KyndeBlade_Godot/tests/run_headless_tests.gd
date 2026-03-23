@@ -29,6 +29,14 @@ func _kickoff() -> void:
 	ok = ok and _test_piers_symbol_catalog_fayre_felde()
 	ok = ok and _test_piers_state_save_roundtrip()
 	ok = ok and _test_narrative_context_arrival_variant()
+	ok = ok and _test_placeholder_art_registry()
+	ok = ok and _test_victory_fair_field_updates_gamestate()
+	ok = ok and _test_settings_fullscreen_roundtrip()
+	ok = ok and await _test_main_menu_continue_gated_smoke()
+	ok = ok and await _test_hub_counsel_gate_smoke()
+	ok = ok and await _test_combat_pause_freezes_window_tick_smoke()
+	ok = ok and await _test_world_atlas_scene_smoke()
+	ok = ok and await _test_location_shell_scene_smoke()
 	ok = ok and await _test_scene_transition_smoke()
 	if not ok:
 		_finish(false)
@@ -289,6 +297,210 @@ func _test_narrative_context_arrival_variant() -> bool:
 		return false
 	GameState.record_location_visit("tour")
 	return NarrativeContext.arrival_variant_key("tour") == "return_2"
+
+
+func _test_placeholder_art_registry() -> bool:
+	PlaceholderArtRegistry.clear_cache()
+	return PlaceholderArtRegistry.validate_coverage() and PlaceholderArtRegistry.validate_characters_known()
+
+
+func _test_victory_fair_field_updates_gamestate() -> bool:
+	SaveService.write_new_game()
+	GameState.reset_from_new_game()
+	GameState.on_victory_fair_field()
+	if GameState.current_location_id != "fayre_felde" or not GameState.fair_field_cleared:
+		SaveService.write_new_game()
+		GameState.reset_from_new_game()
+		return false
+	var d: Dictionary = SaveService.load_save()
+	var ok: bool = str(d.get("location_id", "")) == "fayre_felde" and bool(d.get("fair_field_cleared", false))
+	SaveService.write_new_game()
+	GameState.reset_from_new_game()
+	return ok
+
+
+func _test_settings_fullscreen_roundtrip() -> bool:
+	var before: bool = SaveService.load_fullscreen()
+	SaveService.save_fullscreen(not before)
+	if SaveService.load_fullscreen() != (not before):
+		SaveService.save_fullscreen(before)
+		return false
+	SaveService.save_fullscreen(before)
+	return SaveService.load_fullscreen() == before
+
+
+func _test_main_menu_continue_gated_smoke() -> bool:
+	SaveService.delete_save()
+	GameState.reset_from_new_game()
+	var menu_path := "res://scenes/main_menu.tscn"
+	if not FileAccess.file_exists(menu_path):
+		push_error("main menu smoke: missing tscn")
+		SaveService.write_new_game()
+		GameState.reset_from_new_game()
+		return false
+	var ps: PackedScene = load(menu_path) as PackedScene
+	var mm: Control = ps.instantiate() as Control
+	if mm == null:
+		SaveService.write_new_game()
+		GameState.reset_from_new_game()
+		return false
+	root.add_child(mm)
+	await process_frame
+	var cont: Button = mm.get_node("%ContinueButton") as Button
+	if cont == null:
+		push_error("main menu smoke: missing %ContinueButton")
+		mm.queue_free()
+		await process_frame
+		SaveService.write_new_game()
+		GameState.reset_from_new_game()
+		return false
+	if not cont.disabled:
+		push_error("main menu smoke: Continue should be disabled without save")
+		mm.queue_free()
+		await process_frame
+		SaveService.write_new_game()
+		GameState.reset_from_new_game()
+		return false
+	SaveService.write_new_game()
+	await process_frame
+	if cont.disabled:
+		push_error("main menu smoke: Continue should enable after save")
+		mm.queue_free()
+		await process_frame
+		GameState.reset_from_new_game()
+		return false
+	mm.queue_free()
+	await process_frame
+	GameState.reset_from_new_game()
+	return true
+
+
+func _test_hub_counsel_gate_smoke() -> bool:
+	SaveService.write_new_game()
+	GameState.reset_from_new_game()
+	var hub_path := "res://scenes/hub_map.tscn"
+	var ps: PackedScene = load(hub_path) as PackedScene
+	var hub: Control = ps.instantiate() as Control
+	if hub == null:
+		return false
+	root.add_child(hub)
+	await process_frame
+	var fair: Button = hub.get_node("%FairFieldButton") as Button
+	var proceed: Button = hub.get_node("%EnterCombat") as Button
+	var counsel: Button = hub.get_node("%CounselTrewthe") as Button
+	var cancel: Button = hub.get_node("FlavorPanel/FVBox/CancelFlavor") as Button
+	if fair == null or proceed == null or counsel == null or cancel == null:
+		push_error("hub counsel smoke: expected hub nodes missing")
+		hub.queue_free()
+		await process_frame
+		return false
+	fair.pressed.emit()
+	await process_frame
+	if not proceed.disabled:
+		push_error("hub counsel smoke: Proceed should stay disabled before counsel")
+		hub.queue_free()
+		await process_frame
+		return false
+	counsel.pressed.emit()
+	await process_frame
+	if proceed.disabled:
+		push_error("hub counsel smoke: Proceed should enable after counsel")
+		hub.queue_free()
+		await process_frame
+		return false
+	cancel.pressed.emit()
+	await process_frame
+	hub.queue_free()
+	await process_frame
+	return true
+
+
+func _test_combat_pause_freezes_window_tick_smoke() -> bool:
+	var combat_path := "res://scenes/combat.tscn"
+	var ps: PackedScene = load(combat_path) as PackedScene
+	var combat_inst: Node = ps.instantiate()
+	if combat_inst == null:
+		return false
+	var cm: CombatManager = combat_inst.get_node_or_null("CombatManager") as CombatManager
+	if cm == null:
+		push_error("combat pause smoke: CombatManager missing")
+		return false
+	cm.use_instant_resolution_for_tests = true
+	root.add_child(combat_inst)
+	await process_frame
+	if cm.state != CombatManager.State.WAITING_PLAYER:
+		push_error("combat pause smoke: expected WAITING_PLAYER")
+		combat_inst.queue_free()
+		await process_frame
+		return false
+	cm.player_dodge()
+	if cm.state != CombatManager.State.REAL_TIME_WINDOW:
+		push_error("combat pause smoke: expected REAL_TIME_WINDOW after dodge")
+		combat_inst.queue_free()
+		await process_frame
+		return false
+	var r0: float = cm.window_remaining
+	if r0 <= 0.0001:
+		push_error("combat pause smoke: expected positive window_remaining")
+		combat_inst.queue_free()
+		await process_frame
+		return false
+	get_tree().paused = true
+	for _i in 5:
+		await process_frame
+	var r1: float = cm.window_remaining
+	get_tree().paused = false
+	combat_inst.queue_free()
+	await process_frame
+	if not is_equal_approx(r0, r1):
+		push_error("combat pause smoke: window_remaining changed while paused (%s vs %s)" % [r0, r1])
+		return false
+	return true
+
+
+func _test_world_atlas_scene_smoke() -> bool:
+	var path := "res://scenes/world/world_atlas.tscn"
+	if not FileAccess.file_exists(path):
+		push_error("world atlas smoke: missing tscn")
+		return false
+	var ps: PackedScene = load(path) as PackedScene
+	var inst: Control = ps.instantiate() as Control
+	if inst == null:
+		return false
+	root.add_child(inst)
+	await process_frame
+	var list: VBoxContainer = inst.get_node_or_null("%LocationList") as VBoxContainer
+	if list == null or list.get_child_count() < 1:
+		push_error("world atlas smoke: LocationList should list at least one location")
+		inst.queue_free()
+		await process_frame
+		return false
+	inst.queue_free()
+	await process_frame
+	return true
+
+
+func _test_location_shell_scene_smoke() -> bool:
+	WorldNav.pending_location_id = "tour"
+	var path := "res://scenes/world/location_shell.tscn"
+	if not FileAccess.file_exists(path):
+		push_error("location shell smoke: missing tscn")
+		return false
+	var ps: PackedScene = load(path) as PackedScene
+	var inst: Control = ps.instantiate() as Control
+	if inst == null:
+		return false
+	root.add_child(inst)
+	await process_frame
+	var title: Label = inst.get_node_or_null("%TitleLabel") as Label
+	if title == null or str(title.text).strip_edges().is_empty():
+		push_error("location shell smoke: title not populated for tour")
+		inst.queue_free()
+		await process_frame
+		return false
+	inst.queue_free()
+	await process_frame
+	return true
 
 
 func _test_scene_transition_smoke() -> bool:

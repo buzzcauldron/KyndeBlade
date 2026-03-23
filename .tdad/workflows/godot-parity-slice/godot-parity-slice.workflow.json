@@ -1,106 +1,106 @@
 {
   "version": "1.0",
   "title": "Godot parity slice (mirrors demo-vertical-slice)",
-  "description": "Same player-visible behaviors as demo-vertical-slice but Godot proofs. Traceability: node titles align with demo-vertical-slice.workflow.json. Oracle until M6: Unity slice; after archive, Godot tests are canonical. Shipping filenames, autosave, migration, export: sibling workflow godot-steam-build.",
+  "description": "Same player-visible behaviors as demo-vertical-slice but Godot proofs. Traceability: node titles align with demo-vertical-slice.workflow.json. Oracle until M6: Unity slice; after archive, Godot tests are canonical. Primary automation: KyndeBlade_Godot/tests/run_headless_tests.gd (layer godot_headless). Shipping filenames, autosave, migration, export: sibling workflow godot-steam-build. Granular component nodes: workflow godot-demo-components.",
   "nodes": [
     {
       "id": "gparity-hub-starts-tour",
       "workflowId": "godot-parity-slice",
       "title": "Main scene map bootstraps at tour",
-      "description": "Parity: demo-main-map-bootstraps-tour. Given New Game, when hub loads, GameState.current_location_id is tour. Proof: manual + tests/test_game_state.gd.",
+      "description": "Parity: demo-main-map-bootstraps-tour. Given New Game, when hub loads, GameState.current_location_id is tour. Proof: godot_headless _test_game_state_tour + manual STEAM_BUILD.md.",
       "nodeType": "feature",
       "fileName": "gparity-hub-starts-tour",
       "position": { "x": 100, "y": 100 },
       "dependencies": [],
-      "testLayers": ["godot_gut", "godot_manual"]
+      "testLayers": ["godot_headless", "godot_manual", "bdd"]
     },
     {
       "id": "gparity-tour-to-fayre-felde",
       "workflowId": "godot-parity-slice",
       "title": "Tour location lists Fair Field as next",
-      "description": "Parity: demo-map-graph-tour-to-fayre-felde. Hub exposes Fair Field travel (data id fayre_felde). Proof: hub_map.gd + locations data resource.",
+      "description": "Parity: demo-map-graph-tour-to-fayre-felde. Hub exposes Fair Field travel (data id fayre_felde). Proof: godot_headless _test_slice_locations_json + hub_map.gd; manual.",
       "nodeType": "feature",
       "fileName": "gparity-tour-to-fayre-felde",
       "position": { "x": 300, "y": 100 },
       "dependencies": [],
-      "testLayers": ["godot_manual"]
+      "testLayers": ["godot_headless", "godot_manual", "bdd"]
     },
     {
       "id": "gparity-fayre-felde-false",
       "workflowId": "godot-parity-slice",
       "title": "Fair Field encounter wired to False",
-      "description": "Parity: demo-fayre-felde-encounter-wired. EncounterDef enemy_id false; combat uses EncounterDef. Proof: data/encounter_fair_field.tres + combat_manager.gd.",
+      "description": "Parity: demo-fayre-felde-encounter-wired. EncounterDef enemy_id false; combat uses EncounterDef. Proof: godot_headless _test_encounter_resource + combat_manager.gd + combat_scenarios.gd.",
       "nodeType": "feature",
       "fileName": "gparity-fayre-felde-false",
       "position": { "x": 500, "y": 100 },
       "dependencies": ["gparity-tour-to-fayre-felde"],
-      "testLayers": ["godot_gut"]
+      "testLayers": ["godot_headless", "bdd"]
     },
     {
       "id": "gparity-save-location",
       "workflowId": "godot-parity-slice",
       "title": "Save checkpoint updates current location",
-      "description": "Parity: demo-checkpoint-updates-location. SaveService.save_progress updates location_id. Proof: tests/run_headless_tests.gd save section.",
+      "description": "Parity: demo-checkpoint-updates-location. SaveService.save_progress updates location_id. Proof: godot_headless _test_save_roundtrip_service.",
       "nodeType": "feature",
       "fileName": "gparity-save-location",
       "position": { "x": 100, "y": 250 },
       "dependencies": [],
-      "testLayers": ["godot_gut"]
+      "testLayers": ["godot_headless", "bdd"]
     },
     {
       "id": "gparity-save-roundtrip",
       "workflowId": "godot-parity-slice",
       "title": "Game progress persistence roundtrip",
-      "description": "Parity: demo-progress-json-roundtrip. ConfigFile save/load fields match. Proof: run_headless_tests.gd.",
+      "description": "Parity: demo-progress-json-roundtrip. ConfigFile save/load fields match. Proof: godot_headless run_headless_tests.gd save/meta sections.",
       "nodeType": "feature",
       "fileName": "gparity-save-roundtrip",
       "position": { "x": 300, "y": 250 },
       "dependencies": [],
-      "testLayers": ["godot_gut"]
+      "testLayers": ["godot_headless", "bdd"]
     },
     {
       "id": "gparity-pause-overlay",
       "workflowId": "godot-parity-slice",
       "title": "Pause overlay present after bootstrap",
-      "description": "Parity: demo-pause-overlay-present. Combat scene PauseLayer; Escape toggles. Proof: manual + combat.tscn.",
+      "description": "Parity: demo-pause-overlay-present. Combat scene PauseLayer; Escape toggles; tree pause freezes defensive window tick (godot_headless _test_combat_pause_freezes_window_tick_smoke). Proof: manual + combat.tscn.",
       "nodeType": "feature",
       "fileName": "gparity-pause-overlay",
       "position": { "x": 500, "y": 250 },
       "dependencies": [],
-      "testLayers": ["godot_manual"]
+      "testLayers": ["godot_headless", "godot_manual", "bdd"]
     },
     {
       "id": "gparity-settings-volume",
       "workflowId": "godot-parity-slice",
       "title": "Settings master volume persists",
-      "description": "Parity: demo-settings-volume-persists. SaveService settings cfg. Proof: run_headless_tests.gd settings section.",
+      "description": "Parity: demo-settings-volume-persists. SaveService settings cfg. Proof: godot_headless _test_settings_volume.",
       "nodeType": "feature",
       "fileName": "gparity-settings-volume",
       "position": { "x": 700, "y": 250 },
       "dependencies": [],
-      "testLayers": ["godot_gut"]
+      "testLayers": ["godot_headless", "bdd"]
     },
     {
       "id": "gparity-continue-save",
       "workflowId": "godot-parity-slice",
       "title": "Continue when save exists",
-      "description": "Parity: demo-continue-available-when-save-exists. has_save gates Continue. Proof: manual + run_headless_tests.gd.",
+      "description": "Parity: demo-continue-available-when-save-exists. has_save gates Continue. Proof: godot_headless save tests + manual main_menu; optional gdc-main-menu.",
       "nodeType": "feature",
       "fileName": "gparity-continue-save",
       "position": { "x": 100, "y": 400 },
       "dependencies": ["gparity-save-roundtrip"],
-      "testLayers": ["godot_gut", "godot_manual"]
+      "testLayers": ["godot_headless", "godot_manual", "bdd"]
     },
     {
       "id": "gparity-victory-hub-manual",
       "workflowId": "godot-parity-slice",
       "title": "Combat win Continue returns to map (manual)",
-      "description": "Parity: demo-slice-combat-victory-to-map-manual. Victory → hub; location updated. Proof: STEAM_BUILD.md QA + manual.",
+      "description": "Parity: demo-slice-combat-victory-to-map-manual. Victory → hub; location updated. Proof: godot_headless _test_victory_fair_field_updates_gamestate + STEAM_BUILD.md QA + manual full loop.",
       "nodeType": "feature",
       "fileName": "gparity-victory-hub-manual",
       "position": { "x": 500, "y": 400 },
       "dependencies": ["gparity-fayre-felde-false", "gparity-hub-starts-tour"],
-      "testLayers": ["godot_manual", "parity_unity_ref"]
+      "testLayers": ["godot_headless", "godot_manual", "parity_unity_ref", "bdd"]
     }
   ],
   "edges": [

@@ -3,6 +3,10 @@ extends Control
 
 const HUB := "res://scenes/hub_map.tscn"
 
+@onready var backdrop: PlaceholderLocationBackdrop = $Backdrop
+@onready var character_preview: Control = $CharacterPreview
+@onready var preview_actor: Node2D = $CharacterPreview/CenterActor/Actor
+
 @onready var title_label: Label = %TitleLabel
 @onready var meta_label: Label = %MetaLabel
 @onready var body_label: Label = %BodyLabel
@@ -27,7 +31,24 @@ func _populate(loc_id: String) -> void:
 		meta_label.text = ""
 		notes_label.text = ""
 		_clear_next()
+		if backdrop:
+			backdrop.set_location_id("")
+		if character_preview:
+			character_preview.visible = false
 		return
+
+	if backdrop:
+		backdrop.set_location_id(loc_id)
+	var pc := PlaceholderArtRegistry.level_preview_character(loc_id)
+	if character_preview and preview_actor:
+		if pc.is_empty():
+			character_preview.visible = false
+		else:
+			character_preview.visible = true
+			var pa := preview_actor as PlaceholderActor2D
+			if pa:
+				pa.character_id = pc
+				pa.apply_character()
 
 	title_label.text = LocationRegistry.get_display_name(loc_id)
 	var folder: String = str(row.get("unity_data_folder", ""))

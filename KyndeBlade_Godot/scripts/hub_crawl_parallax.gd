@@ -35,25 +35,30 @@ func _draw() -> void:
 		return
 	var sc: float = parallax_speed_scale
 
-	# Base twilight (crawl ground — no parallax or minimal)
+	# Base twilight + bruised lower air (Lane A coastal haze — ART_DIRECTION_GODOT).
 	draw_rect(Rect2(0, 0, w, h), KyndeBladeArtPalette.HUB_TWILIGHT)
+	var jv := KyndeBladeArtPalette.JEWEL_VIOLET_SHADOW
+	draw_rect(
+			Rect2(0, h * 0.58, w, h * 0.42 + 2.0),
+			Color(jv.r, jv.g, jv.b, 0.07)
+	)
 
 	var o0: Vector2 = CrawlParallax.hub_band_offset(_time_sec, 0, sc)
 	draw_rect(
-			Rect2(o0.x * 0.4, o0.y, w + 40.0, h * 0.55),
-			KyndeBladeArtPalette.HUB_MIST.lerp(KyndeBladeArtPalette.HUB_TWILIGHT, 0.35)
+			Rect2(o0.x * 0.4, o0.y, w + 40.0, h * 0.58),
+			KyndeBladeArtPalette.HUB_MIST.lerp(KyndeBladeArtPalette.HUB_TWILIGHT, 0.28)
 	)
 
 	var o1: Vector2 = CrawlParallax.hub_band_offset(_time_sec, 1, sc)
 	draw_rect(
-			Rect2(o1.x, h * 0.25 + o1.y * 0.5, w + 24.0, h * 0.45),
-			Color(KyndeBladeArtPalette.HUB_MIST.r, KyndeBladeArtPalette.HUB_MIST.g, KyndeBladeArtPalette.HUB_MIST.b, 0.55)
+			Rect2(o1.x, h * 0.22 + o1.y * 0.5, w + 24.0, h * 0.48),
+			Color(KyndeBladeArtPalette.HUB_MIST.r, KyndeBladeArtPalette.HUB_MIST.g, KyndeBladeArtPalette.HUB_MIST.b, 0.62)
 	)
 
 	var o2: Vector2 = CrawlParallax.hub_band_offset(_time_sec, 2, sc)
 	draw_rect(
-			Rect2(o2.x * 1.2, h * 0.5 + o2.y, w + 32.0, h * 0.35),
-			Color(KyndeBladeArtPalette.VISTA_GOLD_TITLE.r, KyndeBladeArtPalette.VISTA_GOLD_TITLE.g, KyndeBladeArtPalette.VISTA_GOLD_TITLE.b, 0.08)
+			Rect2(o2.x * 1.2, h * 0.48 + o2.y, w + 32.0, h * 0.38),
+			Color(KyndeBladeArtPalette.VISTA_GOLD_TITLE.r, KyndeBladeArtPalette.VISTA_GOLD_TITLE.g, KyndeBladeArtPalette.VISTA_GOLD_TITLE.b, 0.11)
 	)
 
 	# Distant “wayes” specks (crawl path flavour)

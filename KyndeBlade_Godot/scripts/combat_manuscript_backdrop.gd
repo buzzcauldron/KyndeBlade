@@ -3,13 +3,23 @@ extends Control
 ## Visual target: [`assets/hi_bit_ruin_vista/reference_style_target.png`](../assets/hi_bit_ruin_vista/reference_style_target.png).
 ## Optional **jewel wash** (`jewel_wash_strength`): Salome / Pre-Raphaelite contamination over sky—see `KyndeBladeArtPalette.JEWEL_*`.
 
+const _HI_BIT_STYLE_REF := preload("res://assets/hi_bit_ruin_vista/reference_style_target.png")
+
 @export var manuscript_void_blend: float = 0.12
 @export var parallax_enabled: bool = true
 @export var parallax_speed_scale: float = 1.0
+## Draw the committed **hi-bit style bible** PNG under translucent procedural sky bands (ART_DIRECTION_GODOT — reference + procedural mix).
+@export var hi_bit_reference_underlay: bool = true
+## Opacity of procedural sky bands when [member hi_bit_reference_underlay] is on (0.35–0.75 typical).
+@export_range(0.2, 1.0, 0.02) var procedural_sky_alpha: float = 0.56
+## Optional full-frame mood plate (e.g. concept or export). Used when [member paint_mood_texture_only] is on.
+@export var mood_texture: Texture2D
+## **true** = draw only [member mood_texture] scaled to the control (no procedural parallax). **false** = procedural hi-bit vista (default).
+@export var paint_mood_texture_only: bool = false
 ## Salome / Pre-Raphaelite contamination: 0 = off, ~0.12–0.22 = subtle crimson→violet wash over sky.
 @export_range(0.0, 0.35, 0.01) var jewel_wash_strength: float = 0.14
 ## Skyward end of the wash gradient: lerp from violet toward ultramarine (0 = crimson→violet only).
-@export_range(0.0, 1.0, 0.05) var jewel_wash_ultramarine_mix: float = 0.0
+@export_range(0.0, 1.0, 0.05) var jewel_wash_ultramarine_mix: float = 0.12
 
 var _time_sec: float = 0.0
 
@@ -50,7 +60,19 @@ func _draw() -> void:
 	var sc: float = parallax_speed_scale
 	var t: float = _time_sec if parallax_enabled else 0.0
 
+	if paint_mood_texture_only and mood_texture != null:
+		draw_texture_rect(mood_texture, Rect2(0.0, 0.0, w, h), false)
+		return
+
 	var o_sky: Vector2 = CrawlParallax.offset(t, CrawlParallax.Layer.SKY, sc)
+	var sky_a: float = procedural_sky_alpha if hi_bit_reference_underlay else 1.0
+
+	if hi_bit_reference_underlay:
+		draw_texture_rect(_HI_BIT_STYLE_REF, Rect2(0.0, 0.0, w, h), false)
+		# Distant weather: cool corners (grey–teal haze note).
+		var cc := KyndeBladeArtPalette.COMBAT_VOID_COOL
+		draw_rect(Rect2(0.0, 0.0, w * 0.24, h * 0.42), Color(cc.r, cc.g, cc.b, 0.14), true)
+		draw_rect(Rect2(w * 0.76, 0.0, w * 0.26, h * 0.45), Color(cc.r, cc.g, cc.b, 0.12), true)
 
 	# --- Sky bands (subtle per-band phase) ---
 	var bands: int = 10
@@ -67,6 +89,7 @@ func _draw() -> void:
 		else:
 			var v: float = (mid - 0.65) / 0.35
 			c = KyndeBladeArtPalette.HI_BIT_SKY_PEACH.lerp(KyndeBladeArtPalette.HI_BIT_SKY_GLOW, v)
+		c = Color(c.r, c.g, c.b, c.a * sky_a)
 		var band_ox: float = o_sky.x + sin(t * 0.2 + float(i) * 0.35) * 1.5
 		draw_rect(Rect2(band_ox, h * t0, w + 8.0, h * (t1 - t0) + 1.0), c)
 
@@ -148,6 +171,18 @@ func _draw() -> void:
 			KyndeBladeArtPalette.HI_BIT_TEAL_SHADOW.lerp(Color.BLACK, 0.18)
 	)
 
+	# Wet stone sheen (cool grey–teal vs warm brick — art note).
+	var sheen_c := Color(
+			KyndeBladeArtPalette.HI_BIT_SKY_MIST.r,
+			KyndeBladeArtPalette.HI_BIT_SKY_MIST.g,
+			KyndeBladeArtPalette.HI_BIT_SKY_MIST.b,
+			0.11
+	)
+	var sx0: float = rx + rw * 0.08
+	for k in 5:
+		var yy: float = h * (0.34 + float(k) * 0.048) + ry_off
+		draw_line(Vector2(sx0, yy), Vector2(rx + rw * 0.92, yy + 0.5), sheen_c, 1.0)
+
 	var o_mist: Vector2 = CrawlParallax.offset(t, CrawlParallax.Layer.MIST_WASH, sc)
 	draw_rect(
 			Rect2(o_mist.x * 0.5, h * 0.35 + o_mist.y * 0.3, w + 16.0, h * 0.35),
@@ -157,12 +192,14 @@ func _draw() -> void:
 	var o_ground: Vector2 = CrawlParallax.offset(t, CrawlParallax.Layer.GROUND, sc)
 	var ground_top: float = h * 0.62 + o_ground.y * 0.25
 	draw_rect(Rect2(o_ground.x * 0.35, ground_top, w + 20.0, h - ground_top + 4.0), KyndeBladeArtPalette.HI_BIT_SAGE_DEEP)
+	var ground_line: Color = KyndeBladeArtPalette.HI_BIT_FOLIAGE.lerp(KyndeBladeArtPalette.HI_BIT_SAGE, 0.5)
+	var ground_line_a := Color(ground_line.r, ground_line.g, ground_line.b, 0.28)
 	for i in 6:
 		var y: float = ground_top + float(i) * h * 0.055
 		draw_line(
 				Vector2(o_ground.x * 0.2, y),
 				Vector2(w + o_ground.x * 0.2, y + 1),
-				KyndeBladeArtPalette.HI_BIT_FOLIAGE.lerp(KyndeBladeArtPalette.HI_BIT_SAGE, 0.5).with_alpha(0.28),
+				ground_line_a,
 				1.0
 		)
 	var bot_blend: float = clampf(manuscript_void_blend, 0.0, 0.45)
@@ -189,13 +226,17 @@ func _draw() -> void:
 	var o_fg: Vector2 = CrawlParallax.offset(t, CrawlParallax.Layer.FOREGROUND, sc)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 2244
+	var fol_base: Color = KyndeBladeArtPalette.HI_BIT_FOLIAGE
+	var fol_dot_a := Color(fol_base.r, fol_base.g, fol_base.b, 0.22)
+	var sage_base: Color = KyndeBladeArtPalette.HI_BIT_SAGE
+	var sage_dot_a := Color(sage_base.r, sage_base.g, sage_base.b, 0.2)
 	for i in 28:
 		var fx: float = rng.randf_range(0, w * 0.35)
 		var fy: float = rng.randf_range(h * 0.72, h * 0.98)
 		draw_circle(
 				Vector2(fx + o_fg.x, fy + o_fg.y),
 				rng.randf_range(2.0, 9.0),
-				KyndeBladeArtPalette.HI_BIT_FOLIAGE.with_alpha(0.22)
+				fol_dot_a
 		)
 	for i in 22:
 		var fx2: float = rng.randf_range(w * 0.65, w)
@@ -203,12 +244,12 @@ func _draw() -> void:
 		draw_circle(
 				Vector2(fx2 + o_fg.x * 1.1, fy2 + o_fg.y * 1.1),
 				rng.randf_range(2.0, 8.0),
-				KyndeBladeArtPalette.HI_BIT_SAGE.with_alpha(0.2)
+				sage_dot_a
 		)
 
 	var o_dith: Vector2 = CrawlParallax.offset(t, CrawlParallax.Layer.DITHER, sc)
 	rng.seed = 1337
-	for i in 120:
+	for i in 168:
 		var sx: float = rng.randf_range(0, w)
 		var sy: float = rng.randf_range(0, h * 0.5)
 		draw_circle(Vector2(sx + o_dith.x, sy + o_dith.y), rng.randf_range(0.4, 1.1), KyndeBladeArtPalette.HI_BIT_DITHER)

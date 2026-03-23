@@ -8,7 +8,7 @@ A **high-bit style** turn-based RPG with real-time combat mechanics (Expedition 
 
 ### Godot (shipping slice — recommended)
 
-1. Install **Godot 4.2+** (project notes: [`KyndeBlade_Godot/README.md`](KyndeBlade_Godot/README.md)).
+1. Install **Godot 4.6.1** (or any **4.6.x**; see [`KyndeBlade_Godot/README.md`](KyndeBlade_Godot/README.md)).
 2. **Project → Open** → select the **`KyndeBlade_Godot`** folder.
 3. **Run** the main menu scene (`scenes/main_menu.tscn`).
 4. **Headless tests:** [`docs/CI_GODOT_TESTS.md`](docs/CI_GODOT_TESTS.md).

@@ -4,34 +4,40 @@
 
 Feature: Godot Steam build mirrors Unity vertical slice behaviors
 
+  @gdc-tower-intro @gdc-hub-slice-locations
   Scenario: Hub shows tour after New Game
     Given a new game was started in the Godot Steam build
     When the player continues past the tower arrival beat
     And the hub map scene loads
     Then current location id should be "tour"
 
+  @gdc-hub-slice-locations
   Scenario: Hub offers travel to Fair Field
     Given the hub map
     When the player inspects destinations
     Then Fair Field (fayre_felde) is available
 
+  @gdc-hub-counsel-gate
   Scenario: Fair Field travel requires counsel before combat
     Given the hub map at tour
     When the player opens travel to Fair Field
     Then a counsel choice is shown (Trewthe Mede or Name hunger)
     And proceeding to combat is disabled until a counsel is chosen
 
+  @gdc-combat-misstep-feint
   Scenario: Ethical misstep inverts first defensive read in combat
     Given GameState ethical_misstep_count is odd before combat loads
     When the player opens the first dodge or parry window
     Then the first window is a feint not a real swing
     And headless suite scenario misstep_inverts_first_defensive_window passes
 
+  @gdc-combat-encounter-load
   Scenario: Fair Field combat uses False encounter data
     Given EncounterDef for Fair Field
     When combat starts from that encounter
     Then the enemy identity matches the slice (False)
 
+  @gdc-combat-scenarios
   Scenario: Headless combat scenario suite passes
     Given tests/combat_scenarios.gd with CombatManager.use_instant_resolution_for_tests
     When run_headless_tests.gd executes all scenarios
@@ -47,6 +53,7 @@ Feature: Godot Steam build mirrors Unity vertical slice behaviors
     When fields are written then read back
     Then version location_id and fair_field_cleared match
 
+  @gdc-combat-pause
   Scenario: Pause exists in combat
     Given the combat scene is running
     When the player opens pause
@@ -63,16 +70,19 @@ Feature: Godot Steam build mirrors Unity vertical slice behaviors
     When master volume is saved
     Then loading settings returns the same linear value
 
+  @gdc-main-menu
   Scenario: Continue is available when save exists
     Given a save file exists under user://
     When the main menu loads
     Then Continue is enabled
 
+  @gdc-combat-victory-save
   Scenario: Victory returns to hub with updated progress
     Given the player won the Fair Field fight
     When they continue to hub
     Then save reflects cleared Fair Field and hub shows replay state
 
+  @gdc-tower-intro @gdc-hub-slice-locations @gdc-combat-encounter-load
   Scenario: Unity export JSON is present for pipeline parity
     Given exported_from_unity.json in the Godot data folder
     When headless tests parse the file

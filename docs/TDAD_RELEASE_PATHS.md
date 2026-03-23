@@ -31,7 +31,9 @@ Tier B **depends on** Tier A in the root graph (`steam-early-access` → `demo-v
 |----------|------|
 | Full port milestones (M1–M6) | [`.tdad/workflows/godot-full-port/godot-full-port.workflow.json`](../.tdad/workflows/godot-full-port/godot-full-port.workflow.json) |
 | Parity slice (mirrors Tier A demo) | [`.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json`](../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json) |
-| Gherkin (Godot) | [`.tdad/bdd/godot-parity-slice.feature`](../.tdad/bdd/godot-parity-slice.feature) |
+| **Demo components** (granular Godot proofs) | [`.tdad/workflows/godot-demo-components/godot-demo-components.workflow.json`](../.tdad/workflows/godot-demo-components/godot-demo-components.workflow.json) |
+| Gherkin (Godot) | [`.tdad/bdd/godot-parity-slice.feature`](../.tdad/bdd/godot-parity-slice.feature) (`@gdc-*` tags ↔ component nodes) |
+| Headless ↔ TDAD traceability | [`docs/CI_GODOT_TESTS.md`](CI_GODOT_TESTS.md) |
 | Expand a milestone (prompt) | [`.tdad/prompts/plan-godot-port-milestone.md`](../.tdad/prompts/plan-godot-port-milestone.md) |
 | M6 archive checklist (human-gated) | [`.tdad/prompts/godot-archive-unity-snapshot.md`](../.tdad/prompts/godot-archive-unity-snapshot.md) |
 | Godot Steam / retail build + QA | [`KyndeBlade_Godot/STEAM_BUILD.md`](../KyndeBlade_Godot/STEAM_BUILD.md) |

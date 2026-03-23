@@ -1,38 +1,59 @@
 extends Control
-## Main menu: New / Continue / Settings / Quit
+## Main menu — manuscript page layout: parchment field, framed panel, rubric + motif (`main_menu.tscn`).
 
 const TOWER_INTRO := "res://scenes/tower_intro.tscn"
 const HUB := "res://scenes/hub_map.tscn"
 const BEGINNER_LOOP := "res://scenes/beginner_loop.tscn"
 const HI_BIT_BONUS := "res://scenes/hi_bit_bonus_level.tscn"
+const COMBAT := "res://scenes/combat.tscn"
 
 @onready var continue_btn: Button = %ContinueButton
+@onready var combat_drill_btn: Button = %CombatDrillButton
 @onready var settings_panel: ColorRect = %SettingsPanel
 @onready var volume_slider: HSlider = %VolumeSlider
 @onready var fullscreen_toggle: CheckButton = %Fullscreen
 
 
 func _ready() -> void:
-	_apply_manuscript_lane_a()
+	_apply_manuscript_page()
 	SaveService.save_changed.connect(_refresh_continue)
 	SaveService.apply_stored_settings()
 	volume_slider.value = SaveService.load_master_volume()
 	fullscreen_toggle.button_pressed = SaveService.load_fullscreen()
 	_refresh_continue()
+	combat_drill_btn.visible = OS.is_debug_build() or Engine.is_editor_hint()
 
 
-func _apply_manuscript_lane_a() -> void:
+func _apply_manuscript_page() -> void:
 	theme = KyndeBladeManuscriptTheme.build_theme()
-	$Center/VBox/Title.add_theme_color_override("font_color", KyndeBladeArtPalette.GOLD)
-	$Center/VBox/Subtitle.add_theme_color_override("font_color", KyndeBladeArtPalette.VISTA_BODY)
-	$VignetteOverlay.color = Color(KyndeBladeArtPalette.HUB_TWILIGHT.r, KyndeBladeArtPalette.HUB_TWILIGHT.g, KyndeBladeArtPalette.HUB_TWILIGHT.b, 0.48)
-	$SettingsPanel.color = Color(
-		KyndeBladeArtPalette.PARCHMENT_AGED.r,
-		KyndeBladeArtPalette.PARCHMENT_AGED.g,
-		KyndeBladeArtPalette.PARCHMENT_AGED.b,
-		0.94
+	KyndeBladeManuscriptTheme.style_menu_volume_slider(volume_slider)
+	KyndeBladeManuscriptTheme.style_menu_checkbutton(fullscreen_toggle)
+
+	var ink_faint := KyndeBladeArtPalette.INK_PRIMARY
+	ink_faint.a = 0.11
+	$ParchmentBase.color = KyndeBladeArtPalette.PARCHMENT_LIGHT
+	$ParchmentWash.color = Color(
+			KyndeBladeArtPalette.PARCHMENT.r,
+			KyndeBladeArtPalette.PARCHMENT.g,
+			KyndeBladeArtPalette.PARCHMENT.b,
+			0.14
 	)
-	$SettingsPanel/SettingsCenter/SettingsVBox/SettingsTitle.add_theme_color_override("font_color", KyndeBladeArtPalette.RUBRICATION)
+	$EdgeAging.color = ink_faint
+
+	var vb: VBoxContainer = $SheetMargin/ManuscriptPanel/PageInner/Center/VBox
+	vb.get_node("Title").add_theme_color_override("font_color", KyndeBladeArtPalette.GOLD)
+	vb.get_node("Subtitle").add_theme_color_override("font_color", KyndeBladeArtPalette.INK_SECONDARY)
+	vb.get_node("RubricRule").color = KyndeBladeArtPalette.RUBRICATION.lerp(KyndeBladeArtPalette.GOLD_DARK, 0.35)
+
+	$SettingsPanel.color = KyndeBladeArtPalette.COMBAT_UI_SCRIM
+	var st: Label = $SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/SettingsTitle
+	st.add_theme_color_override("font_color", KyndeBladeArtPalette.GOLD)
+	$SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/VolLabel.add_theme_color_override(
+			"font_color", KyndeBladeArtPalette.INK_PRIMARY
+	)
+	$SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/SettingsRule.color = (
+			KyndeBladeArtPalette.RUBRICATION
+	)
 
 
 func _refresh_continue() -> void:
@@ -65,6 +86,12 @@ func _on_tiny_loop_pressed() -> void:
 
 func _on_hi_bit_bonus_pressed() -> void:
 	get_tree().change_scene_to_file(HI_BIT_BONUS)
+
+
+func _on_combat_drill_pressed() -> void:
+	SaveService.write_new_game()
+	GameState.reset_from_new_game()
+	get_tree().change_scene_to_file(COMBAT)
 
 
 func _on_quit_pressed() -> void:

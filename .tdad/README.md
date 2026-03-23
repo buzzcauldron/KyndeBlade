@@ -9,6 +9,7 @@ This folder holds **workflows** (feature graphs), **BDD** (Gherkin), and **promp
 | **A** | Playable vertical slice (Unity oracle path) | [`workflows/demo-vertical-slice/demo-vertical-slice.workflow.json`](workflows/demo-vertical-slice/demo-vertical-slice.workflow.json) + [`bdd/demo-vertical-slice.feature`](bdd/demo-vertical-slice.feature) |
 | **B** | Steam / EA **planning** (milestones, store, depots) | [`workflows/steam-early-access/steam-early-access.workflow.json`](workflows/steam-early-access/steam-early-access.workflow.json) + [`prompts/plan-steam-milestones.md`](prompts/plan-steam-milestones.md) |
 | **Godot — parity** | Same **behaviours** as Tier A, Godot proofs | [`workflows/godot-parity-slice/godot-parity-slice.workflow.json`](workflows/godot-parity-slice/godot-parity-slice.workflow.json) + [`bdd/godot-parity-slice.feature`](bdd/godot-parity-slice.feature) |
+| **Godot — demo components** | Granular slice subsystems → headless / BDD / manual | [`workflows/godot-demo-components/godot-demo-components.workflow.json`](workflows/godot-demo-components/godot-demo-components.workflow.json) + traceability in [`docs/CI_GODOT_TESTS.md`](../docs/CI_GODOT_TESTS.md) |
 | **Godot — Steam build** | **Shipping** filenames, autosave, migration, CI, export | [`workflows/godot-steam-build/godot-steam-build.workflow.json`](workflows/godot-steam-build/godot-steam-build.workflow.json) + [`KyndeBlade_Godot/STEAM_BUILD.md`](../KyndeBlade_Godot/STEAM_BUILD.md) |
 | **Godot — full port** | M1–M6 migration + archive gate | [`workflows/godot-full-port/godot-full-port.workflow.json`](workflows/godot-full-port/godot-full-port.workflow.json) |
 
@@ -22,6 +23,7 @@ Full narrative for demos vs Steam vs Godot: **[`docs/TDAD_RELEASE_PATHS.md`](../
 - `steam-early-access` → depends on `demo-vertical-slice`  
 - `godot-full-port` → depends on `demo-vertical-slice`  
 - `godot-parity-slice` → depends on `demo-vertical-slice`, `godot-full-port`  
+- **`godot-demo-components`** → depends on **`godot-parity-slice`** (granular test hooks; optional planning graph)  
 - **`godot-steam-build`** → depends on **`godot-parity-slice`** (shipping layer on top of parity proofs)
 
 ## Subsystem workflows (`workflows/<id>/`)
@@ -38,7 +40,7 @@ Full narrative for demos vs Steam vs Godot: **[`docs/TDAD_RELEASE_PATHS.md`](../
 | File | Workflow |
 |------|----------|
 | [`bdd/demo-vertical-slice.feature`](bdd/demo-vertical-slice.feature) | `demo-vertical-slice` |
-| [`bdd/godot-parity-slice.feature`](bdd/godot-parity-slice.feature) | `godot-parity-slice` |
+| [`bdd/godot-parity-slice.feature`](bdd/godot-parity-slice.feature) | `godot-parity-slice` (tags `@gdc-*` → `godot-demo-components` nodes) |
 
 ## Prompts (`prompts/`)
 

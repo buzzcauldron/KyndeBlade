@@ -6,7 +6,7 @@ const MENU := "res://scenes/main_menu.tscn"
 
 enum CounselChoice { NONE, TREWTHE, MEDE, HUNGER }
 
-@onready var location_label: Label = %LocationLabel
+@onready var location_label: RichTextLabel = %LocationLabel
 @onready var flavor_panel: PanelContainer = %FlavorPanel
 @onready var fair_button: Button = %FairFieldButton
 @onready var flavor_text: Label = %FlavorText
@@ -25,7 +25,6 @@ func _ready() -> void:
 	theme = KyndeBladeManuscriptTheme.build_theme()
 	# Twilight / mist backdrop: `CrawlParallaxBackdrop` (parallax crawl feature)
 	$Margin/VBox/Title.add_theme_color_override("font_color", KyndeBladeArtPalette.VISTA_GOLD_TITLE)
-	$Margin/VBox/LocationLabel.add_theme_color_override("font_color", KyndeBladeArtPalette.PARCHMENT_LIGHT)
 	$Margin/VBox/HintLabel.add_theme_color_override("font_color", KyndeBladeArtPalette.VISTA_BODY)
 	_unity_export = UnityExportData.load_export()
 	_validate_slice_locations_json()
@@ -68,6 +67,10 @@ func _validate_unity_export() -> void:
 		push_warning("HubMap: Unity export encounter missing enemy_character_types")
 
 
+func _bb_escape(s: String) -> String:
+	return s.replace("[", "[lb]")
+
+
 func _world_state_prefix() -> String:
 	var parts: PackedStringArray = []
 	if GameState.ethical_misstep_count > 0:
@@ -87,12 +90,17 @@ func _world_state_prefix() -> String:
 
 func _update_ui() -> void:
 	var loc := GameState.current_location_id
-	var name := "Tower on the Toft" if loc == "tour" else "Fair Field" if loc == "fayre_felde" else loc
+	var display_name := "Tower on the Toft" if loc == "tour" else "Fair Field" if loc == "fayre_felde" else loc
 	if not _unity_export.is_empty():
 		var row: Dictionary = UnityExportData.location_by_id(_unity_export, loc)
 		if not row.is_empty():
-			name = str(row.get("display_name", name))
-	location_label.text = "Current: %s (%s)" % [name, loc]
+			display_name = str(row.get("display_name", display_name))
+	var ink := KyndeBladeArtPalette.INK_PRIMARY.to_html(false)
+	var gold := KyndeBladeArtPalette.GOLD.to_html(false)
+	location_label.text = (
+			"[color=#%s]Current:[/color] [color=#%s]%s[/color] [color=#%s](%s)[/color]"
+			% [ink, gold, _bb_escape(display_name), ink, _bb_escape(loc)]
+	)
 	fair_button.disabled = false
 	fair_button.text = "Fayr Feeld — abide the fight again" if GameState.fair_field_cleared else "Travel to the Fayr Feeld"
 	if hint_label:

@@ -57,6 +57,35 @@ static func build_theme() -> Theme:
 	return th
 
 
+## Main menu volume control — parchment track + gold grabber.
+static func style_menu_volume_slider(s: HSlider) -> void:
+	var track := _flat(KyndeBladeArtPalette.PARCHMENT_AGED, KyndeBladeArtPalette.BORDER_SEPIA, 1)
+	track.set_corner_radius_all(5)
+	var grab := _flat(KyndeBladeArtPalette.GOLD, KyndeBladeArtPalette.GOLD_DARK, 1)
+	grab.set_corner_radius_all(10)
+	grab.set_content_margin_all(6)
+	var grab_hi := _flat(
+			KyndeBladeArtPalette.GOLD.lerp(KyndeBladeArtPalette.PARCHMENT_LIGHT, 0.2),
+			KyndeBladeArtPalette.GOLD_DARK,
+			1
+	)
+	grab_hi.set_corner_radius_all(10)
+	grab_hi.set_content_margin_all(6)
+	var empty := StyleBoxEmpty.new()
+	s.add_theme_stylebox_override("slider", track)
+	s.add_theme_stylebox_override("grabber_area", empty)
+	s.add_theme_stylebox_override("grabber_area_highlight", empty)
+	s.add_theme_stylebox_override("grabber", grab)
+	s.add_theme_stylebox_override("grabber_highlight", grab_hi)
+
+
+static func style_menu_checkbutton(cb: CheckButton) -> void:
+	cb.add_theme_color_override("font_color", KyndeBladeArtPalette.INK_PRIMARY)
+	cb.add_theme_color_override("font_hover_color", KyndeBladeArtPalette.INK_SECONDARY)
+	cb.add_theme_color_override("font_pressed_color", KyndeBladeArtPalette.INK_PRIMARY)
+	cb.add_theme_color_override("font_focus_color", KyndeBladeArtPalette.INK_PRIMARY)
+
+
 static func style_progress_bar(bar: ProgressBar, fill: Color, border: Color) -> void:
 	var track := _flat(KyndeBladeArtPalette.PARCHMENT_AGED, KyndeBladeArtPalette.BORDER_SEPIA, 1)
 	track.set_corner_radius_all(2)
