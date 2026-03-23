@@ -17,6 +17,8 @@ namespace KyndeBlade
         public Image PanelBackground;
         public Image BorderImage;
         public Button ContinueButton;
+        [Tooltip("Full-screen vista backdrop; auto-created if null.")]
+        public RawImage StoryBackdropImage;
 
         [Header("Layout")]
         public float PanelWidth = 600f;
@@ -31,8 +33,27 @@ namespace KyndeBlade
                 EnsurePanel();
         }
 
+        void EnsureStoryBackdropLayer()
+        {
+            if (StoryBackdropImage != null) return;
+            var go = new GameObject("StoryBackdrop");
+            go.transform.SetParent(transform, false);
+            go.transform.SetAsFirstSibling();
+            var rt = go.AddComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+            var raw = go.AddComponent<RawImage>();
+            raw.raycastTarget = false;
+            raw.color = Color.white;
+            go.SetActive(false);
+            StoryBackdropImage = raw;
+        }
+
         void EnsurePanel()
         {
+            EnsureStoryBackdropLayer();
             var go = new GameObject("DialoguePanel");
             go.transform.SetParent(transform, false);
 
@@ -129,6 +150,17 @@ namespace KyndeBlade
                 StopCoroutine(_displayCoroutine);
 
             if (PanelRoot == null) EnsurePanel();
+            EnsureStoryBackdropLayer();
+            if (StoryBackdropImage != null)
+            {
+                if (beat.StoryBackdrop != null)
+                {
+                    StoryBackdropImage.texture = beat.StoryBackdrop;
+                    StoryBackdropImage.gameObject.SetActive(true);
+                }
+                else
+                    StoryBackdropImage.gameObject.SetActive(false);
+            }
             PanelRoot.gameObject.SetActive(true);
 
             if (DialogueText != null) DialogueText.text = beat.Text ?? "";
@@ -170,6 +202,8 @@ namespace KyndeBlade
 
         void Complete()
         {
+            if (StoryBackdropImage != null)
+                StoryBackdropImage.gameObject.SetActive(false);
             if (PanelRoot != null)
                 PanelRoot.gameObject.SetActive(false);
             var cb = _onComplete;
@@ -184,6 +218,8 @@ namespace KyndeBlade
                 StopCoroutine(_displayCoroutine);
                 _displayCoroutine = null;
             }
+            if (StoryBackdropImage != null)
+                StoryBackdropImage.gameObject.SetActive(false);
             if (PanelRoot != null)
                 PanelRoot.gameObject.SetActive(false);
             _onComplete = null;

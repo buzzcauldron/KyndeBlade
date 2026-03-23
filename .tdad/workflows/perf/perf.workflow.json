@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "combat-frame-budget",
+      "workflowId": "perf",
+      "title": "Combat frame budget",
+      "description": "Given N characters and hazards in combat, when TurnManager and characters Update run, then frame time stays under a defined budget on target hardware (manual or CI profile).",
+      "nodeType": "feature",
+      "fileName": "combat-frame-budget",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "no-gc-hotpath-turnmanager",
+      "workflowId": "perf",
+      "title": "No GC on TurnManager hot path",
+      "description": "Given combat in RealTimeWindow or counter window, when Update runs for several frames, then managed heap does not allocate per frame on TurnManager hot paths (Profiler verification).",
+      "nodeType": "feature",
+      "fileName": "no-gc-hotpath-turnmanager",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["manual"]
+    }
+  ],
+  "edges": []
+}

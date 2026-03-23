@@ -12,6 +12,9 @@ namespace KyndeBlade
         [Header("References")]
         public TurnManager TurnManager;
 
+        [Tooltip("When set, this source is polled instead of Keyboard/Gamepad. Use for automated tests or a future Input Actions adapter.")]
+        public ICombatWindowInput InputSourceOverride;
+
         public event Action<float> OnDodgePressed;
         public event Action<float> OnParryPressed;
 
@@ -27,6 +30,8 @@ namespace KyndeBlade
 
         bool GetDodgePressed()
         {
+            if (InputSourceOverride != null)
+                return InputSourceOverride.WasDodgePressedThisFrame();
             if (Keyboard.current != null && Keyboard.current[DodgeKey].wasPressedThisFrame) return true;
             if (Gamepad.current != null && Gamepad.current[DodgeButton].wasPressedThisFrame) return true;
             return false;
@@ -34,6 +39,8 @@ namespace KyndeBlade
 
         bool GetParryPressed()
         {
+            if (InputSourceOverride != null)
+                return InputSourceOverride.WasParryPressedThisFrame();
             if (Keyboard.current != null && Keyboard.current[ParryKey].wasPressedThisFrame) return true;
             if (Gamepad.current != null && Gamepad.current[ParryButton].wasPressedThisFrame) return true;
             return false;
@@ -41,6 +48,8 @@ namespace KyndeBlade
 
         bool GetCounterPressed()
         {
+            if (InputSourceOverride != null)
+                return InputSourceOverride.WasCounterPressedThisFrame();
             if (Keyboard.current != null && Keyboard.current[CounterKey].wasPressedThisFrame) return true;
             if (Gamepad.current != null && Gamepad.current[CounterButton].wasPressedThisFrame) return true;
             return false;

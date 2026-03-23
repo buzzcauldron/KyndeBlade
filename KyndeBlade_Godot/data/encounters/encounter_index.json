@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "description": "Skeleton index: Unity EncounterConfig asset name → planned Godot EncounterDef path. Only Fair Field is wired today.",
+  "encounters": [
+    { "unity_asset": "FayreFeldeEncounter", "location_id": "fayre_felde", "godot_resource": "res://data/encounter_fair_field.tres", "status": "wired" },
+    { "unity_asset": "TutorialEncounter", "location_id": null, "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "DongeounEncounter", "location_id": "dongeoun", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "PiersFieldEncounter", "location_id": "piers_field", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "SevenSinsEncounter", "location_id": "seven_sins", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "GreenChapelEncounter", "location_id": "green_chapel", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "BoundaryTreeEncounter", "location_id": "boundary_tree", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "QuestDoWelEncounter", "location_id": "quest_do_wel", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "DongeounDepthsEncounter", "location_id": "dongeoun_depths", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "YearsPassEncounter", "location_id": "years_pass", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "OtherworldEncounter", "location_id": "otherworld", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "MalvernPrologue", "location_id": "malvern", "godot_resource": null, "status": "placeholder" }
+  ]
+}

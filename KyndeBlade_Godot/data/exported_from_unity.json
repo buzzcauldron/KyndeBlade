@@ -1,0 +1,40 @@
+{
+  "schema_version": 2,
+  "exported_at": "2026-03-22T00:00:00.0000000Z",
+  "unity_note": "Regenerate with Unity menu KyndeBlade → Export Slice Data for Godot",
+  "locations": [
+    {
+      "location_id": "tour",
+      "display_name": "Tour on Toft",
+      "description": "Dream: The Tower of Truth.",
+      "vision_index": 0,
+      "passus_index": 2,
+      "passus_title": "Passus II",
+      "next_location_ids": ["dongeoun", "fayre_felde"],
+      "arrival_beat_id": "tower_vista",
+      "arrival_beat_speaker": "Narrator",
+      "arrival_beat_text": "A tour on a toft, trieliche ymaked—narwe, lovelich and selcouth. Fro this elritch heght thou overlookest the fayr feeld ful of folke. Hier the drem is stille; no triaile stireth. The Tour of Trewthe and the world bynethe abyden.",
+      "encounter_asset_name": ""
+    },
+    {
+      "location_id": "fayre_felde",
+      "display_name": "Fayre Felde",
+      "description": "Dream: The Fair Field full of folk.",
+      "vision_index": 0,
+      "passus_index": 1,
+      "passus_title": "Passus I",
+      "next_location_ids": ["tour", "dongeoun", "green_chapel", "boundary_tree"],
+      "arrival_beat_id": "FayreFelde",
+      "arrival_beat_speaker": "Narrator",
+      "arrival_beat_text": "A fayr feeld ful of folke fonde I ther bitwene. Wille seeth the feeld ful of folk—alle maner of men and wommen, werchynge.",
+      "encounter_asset_name": "FayreFeldeEncounter"
+    }
+  ],
+  "encounters": [
+    {
+      "asset_name": "FayreFeldeEncounter",
+      "enemy_spacing": 1.5,
+      "enemy_character_types": ["False"]
+    }
+  ]
+}

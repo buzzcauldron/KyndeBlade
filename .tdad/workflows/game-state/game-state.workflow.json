@@ -1,0 +1,135 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "victory-xp-calculation",
+      "workflowId": "game-state",
+      "title": "Victory XP Calculation",
+      "description": "Given combat ends with victory, when CalculateVictoryXP() is called, then XP = BonusXPForVictory (100) + BaseXPPerEnemy (50) * number of defeated enemies.",
+      "nodeType": "feature",
+      "fileName": "victory-xp-calculation",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "victory-panel-display",
+      "workflowId": "game-state",
+      "title": "Victory Panel Display",
+      "description": "Given victory occurs, then VictoryPanel is activated, VictoryText shows 'Victory! +{xp} XP', and ContinueButton is visible.",
+      "nodeType": "feature",
+      "fileName": "victory-panel-display",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["victory-xp-calculation"],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "defeat-panel-display",
+      "workflowId": "game-state",
+      "title": "Defeat Panel Display",
+      "description": "Given defeat occurs (all players dead), then DefeatPanel is activated with defeat message and RestartButton visible (if checkpoint available).",
+      "nodeType": "feature",
+      "fileName": "defeat-panel-display",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "defeat-orfeo-transition",
+      "workflowId": "game-state",
+      "title": "Defeat Orfeo Transition",
+      "description": "Given defeat during a sin miniboss encounter (IsSinMinibossEncounter=true), then instead of normal defeat, player transitions to Orfeo Otherworld location after illumination delay.",
+      "nodeType": "feature",
+      "fileName": "defeat-orfeo-transition",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "defeat-green-chapel-restart",
+      "workflowId": "game-state",
+      "title": "Defeat Green Chapel Restart",
+      "description": "Given defeat at Green Chapel location, then SaveManager.IncrementGreenChapelBodies() is called and the game restarts as NewGame from Malvern.",
+      "nodeType": "feature",
+      "fileName": "defeat-green-chapel-restart",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "death-of-old-age",
+      "workflowId": "game-state",
+      "title": "Death Of Old Age",
+      "description": "Given AgingManager.OnDeathOfOldAgeRequested fires, then TriggerDeathOfOldAge shows a special defeat panel with message from GameWorldConstants.DefeatDeathOfOldAgeMessage and 'New Game' button.",
+      "nodeType": "feature",
+      "fileName": "death-of-old-age",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "victory-continue-to-map",
+      "workflowId": "game-state",
+      "title": "Victory Continue To Map",
+      "description": "Given victory panel is showing, when Continue button is clicked, then VictoryPanel hides, SaveManager.SaveCheckpoint is called with the encounter location, and map UI is shown.",
+      "nodeType": "feature",
+      "fileName": "victory-continue-to-map",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["victory-panel-display"],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "final-combat-to-field-of-grace",
+      "workflowId": "game-state",
+      "title": "Final Combat To Field Of Grace",
+      "description": "Given victory at Years Pass location (IsFinalCombatLocation=true), when Continue is clicked, then player transitions to Field of Grace instead of normal map return.",
+      "nodeType": "feature",
+      "fileName": "final-combat-to-field-of-grace",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": ["victory-continue-to-map"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "on-victory-event",
+      "workflowId": "game-state",
+      "title": "On Victory Event",
+      "description": "Given victory occurs, then OnVictory event fires for external listeners (audio, analytics, etc.).",
+      "nodeType": "feature",
+      "fileName": "on-victory-event",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["victory-panel-display"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "on-defeat-event",
+      "workflowId": "game-state",
+      "title": "On Defeat Event",
+      "description": "Given defeat occurs, then OnDefeat event fires for external listeners.",
+      "nodeType": "feature",
+      "fileName": "on-defeat-event",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["defeat-panel-display"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "illumination-before-panel",
+      "workflowId": "game-state",
+      "title": "Illumination Before Panel",
+      "description": "Given IlluminationManager is assigned, when victory or defeat occurs, then the illumination effect plays first (2.6s for victory, 2.6s for defeat) before the panel is shown.",
+      "nodeType": "feature",
+      "fileName": "illumination-before-panel",
+      "position": { "x": 700, "y": 250 },
+      "dependencies": ["victory-panel-display", "defeat-panel-display"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "xp-to-victory-panel", "source": "victory-xp-calculation", "target": "victory-panel-display" },
+    { "id": "victory-panel-to-continue", "source": "victory-panel-display", "target": "victory-continue-to-map" },
+    { "id": "continue-to-field", "source": "victory-continue-to-map", "target": "final-combat-to-field-of-grace" },
+    { "id": "victory-panel-to-event", "source": "victory-panel-display", "target": "on-victory-event" },
+    { "id": "defeat-panel-to-event", "source": "defeat-panel-display", "target": "on-defeat-event" },
+    { "id": "victory-to-illumination", "source": "victory-panel-display", "target": "illumination-before-panel" },
+    { "id": "defeat-to-illumination", "source": "defeat-panel-display", "target": "illumination-before-panel" }
+  ]
+}

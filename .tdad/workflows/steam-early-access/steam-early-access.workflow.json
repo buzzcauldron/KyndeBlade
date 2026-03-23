@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "title": "Steam / Early Access planning (Tier B)",
+  "description": "Planning-only milestones: no application code nodes. Start after Tier A Definition of Done from demo-vertical-slice (playable zip + automated tests + manual combat→map smoke), or run asset tasks in parallel only when they do not block the slice. Godot depot/build proofs layer on godot-steam-build + KyndeBlade_Godot/STEAM_BUILD.md. Expand milestones with .tdad/prompts/plan-steam-milestones.md. Store plumbing (Steamworks, depots, pricing) stays in human checklists—do not pretend milestones are single Unity features.",
+  "nodes": [
+    {
+      "id": "steam-milestone-scope-lock",
+      "workflowId": "steam-early-access",
+      "title": "Scope lock for EA",
+      "description": "Exit: written scope for Early Access (systems, content depth, known gaps vs demo). Risks and cut line documented. Depends on Tier A proving core loop.",
+      "nodeType": "feature",
+      "fileName": "steam-milestone-scope-lock",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": []
+    },
+    {
+      "id": "steam-milestone-store-identity",
+      "workflowId": "steam-early-access",
+      "title": "Store page and capsule art",
+      "description": "Exit: Steam store page draft (short description, tags), capsule / header / library art at required resolutions, age/content questionnaire started.",
+      "nodeType": "feature",
+      "fileName": "steam-milestone-store-identity",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": ["steam-milestone-scope-lock"]
+    },
+    {
+      "id": "steam-milestone-media",
+      "workflowId": "steam-early-access",
+      "title": "Trailer and screenshots",
+      "description": "Exit: trailer cut (or placeholder plan), 5+ in-game screenshots matching current build, no misleading capture.",
+      "nodeType": "feature",
+      "fileName": "steam-milestone-media",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": ["steam-milestone-store-identity"]
+    },
+    {
+      "id": "steam-milestone-build-depots",
+      "workflowId": "steam-early-access",
+      "title": "Depots and build branches",
+      "description": "Exit: Steam depots configured for chosen OS targets; build pipeline or manual recipe from Unity and/or Godot export (see godot-steam-build + STEAM_BUILD.md); version labeling; smoke install from depot on a clean machine.",
+      "nodeType": "feature",
+      "fileName": "steam-milestone-build-depots",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["steam-milestone-scope-lock"]
+    },
+    {
+      "id": "steam-milestone-playtest",
+      "workflowId": "steam-early-access",
+      "title": "Playtest wave",
+      "description": "Exit: external playtesters run Tier A path + one stretch path; feedback triaged; P0 blockers fixed or scoped out with store messaging.",
+      "nodeType": "feature",
+      "fileName": "steam-milestone-playtest",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["steam-milestone-build-depots", "steam-milestone-media"]
+    },
+    {
+      "id": "steam-milestone-pricing-release",
+      "workflowId": "steam-early-access",
+      "title": "Pricing and release window",
+      "description": "Exit: regional pricing draft, EA vs 1.0 messaging, release date or Coming Soon with wishlist CTA; legal/FAQ if needed.",
+      "nodeType": "feature",
+      "fileName": "steam-milestone-pricing-release",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["steam-milestone-playtest"]
+    }
+  ],
+  "edges": [
+    { "id": "scope-to-store", "source": "steam-milestone-scope-lock", "target": "steam-milestone-store-identity" },
+    { "id": "store-to-media", "source": "steam-milestone-store-identity", "target": "steam-milestone-media" },
+    { "id": "scope-to-depots", "source": "steam-milestone-scope-lock", "target": "steam-milestone-build-depots" },
+    { "id": "depots-media-to-playtest", "source": "steam-milestone-build-depots", "target": "steam-milestone-playtest" },
+    { "id": "media-to-playtest", "source": "steam-milestone-media", "target": "steam-milestone-playtest" },
+    { "id": "playtest-to-pricing", "source": "steam-milestone-playtest", "target": "steam-milestone-pricing-release" }
+  ]
+}

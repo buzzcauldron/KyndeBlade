@@ -1,0 +1,273 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "combat-core",
+      "workflowId": "root",
+      "title": "Combat Core",
+      "description": "Turn-based state machine: initialization, turn order, state transitions, combat end detection",
+      "nodeType": "folder",
+      "folderPath": "combat-core",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": []
+    },
+    {
+      "id": "combat-actions",
+      "workflowId": "root",
+      "title": "Combat Actions",
+      "description": "Each action type (Strike, Escapade, Ward, Counter, Rest, Heal, RangedStrike) execution and gating",
+      "nodeType": "folder",
+      "folderPath": "combat-actions",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": []
+    },
+    {
+      "id": "combat-damage",
+      "workflowId": "root",
+      "title": "Combat Damage",
+      "description": "Damage calculation formula, elemental multipliers, crit system, variance, broken multiplier",
+      "nodeType": "folder",
+      "folderPath": "combat-damage",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": []
+    },
+    {
+      "id": "combat-defense",
+      "workflowId": "root",
+      "title": "Combat Defense",
+      "description": "Real-time dodge, parry, counter windows with timing-based Kynde rewards",
+      "nodeType": "folder",
+      "folderPath": "combat-defense",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": []
+    },
+    {
+      "id": "combat-break",
+      "workflowId": "root",
+      "title": "Combat Break",
+      "description": "Break gauge depletion, stun state, recovery, broken damage multiplier",
+      "nodeType": "folder",
+      "folderPath": "combat-break",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": []
+    },
+    {
+      "id": "combat-status",
+      "workflowId": "root",
+      "title": "Combat Status Effects",
+      "description": "Status effect application, stacking, expiry, removal, and per-type creation (Hunger, Age, Frost, etc.)",
+      "nodeType": "folder",
+      "folderPath": "combat-status",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": []
+    },
+    {
+      "id": "combat-hazards",
+      "workflowId": "root",
+      "title": "Combat Hazards",
+      "description": "Piers-themed environmental hazards per turn (Exhaustion, Poverty, Labor, Hunger)",
+      "nodeType": "folder",
+      "folderPath": "combat-hazards",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": []
+    },
+    {
+      "id": "combat-kynde",
+      "workflowId": "root",
+      "title": "Kynde Resource",
+      "description": "Kynde generation, consumption, and modifier pipeline (Hunger, Age, Scar, Poverty)",
+      "nodeType": "folder",
+      "folderPath": "combat-kynde",
+      "position": { "x": 700, "y": 250 },
+      "dependencies": []
+    },
+    {
+      "id": "characters",
+      "workflowId": "root",
+      "title": "Characters",
+      "description": "Character class stats, identity, events, stamina restoration, fairy form",
+      "nodeType": "folder",
+      "folderPath": "characters",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": []
+    },
+    {
+      "id": "enemies",
+      "workflowId": "root",
+      "title": "Enemies and Boss AI",
+      "description": "Enemy character setup, movesets, SimpleEnemyAI, AdaptiveEnemyAI, boss-specific AI logic",
+      "nodeType": "folder",
+      "folderPath": "enemies",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": []
+    },
+    {
+      "id": "game-state",
+      "workflowId": "root",
+      "title": "Game State",
+      "description": "Victory/defeat handling, XP calculation, special outcomes (Orfeo, Green Chapel, death-of-old-age)",
+      "nodeType": "folder",
+      "folderPath": "game-state",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": []
+    },
+    {
+      "id": "map-progression",
+      "workflowId": "root",
+      "title": "Map and Progression",
+      "description": "World map navigation, location transitions, encounter spawning, story beat triggers",
+      "nodeType": "folder",
+      "folderPath": "map-progression",
+      "position": { "x": 700, "y": 400 },
+      "dependencies": []
+    },
+    {
+      "id": "narrative",
+      "workflowId": "root",
+      "title": "Narrative",
+      "description": "Story beats, dialogue choices, boss dialogue phases, manuscript-themed display",
+      "nodeType": "folder",
+      "folderPath": "narrative",
+      "position": { "x": 100, "y": 550 },
+      "dependencies": []
+    },
+    {
+      "id": "save-system",
+      "workflowId": "root",
+      "title": "Save System",
+      "description": "Save/load via PlayerPrefs, checkpoints, progress tracking, accrual counters",
+      "nodeType": "folder",
+      "folderPath": "save-system",
+      "position": { "x": 300, "y": 550 },
+      "dependencies": []
+    },
+    {
+      "id": "meta-progression",
+      "workflowId": "root",
+      "title": "Meta-Progression",
+      "description": "Aging, poverty, multi-run scaling, hidden effects, Wode-Wo passcode",
+      "nodeType": "folder",
+      "folderPath": "meta-progression",
+      "position": { "x": 500, "y": 550 },
+      "dependencies": []
+    },
+    {
+      "id": "input",
+      "workflowId": "root",
+      "title": "Input",
+      "description": "Combat dodge/parry/counter: ICombatWindowInput facade, tests, future Input Actions and rebinding",
+      "nodeType": "folder",
+      "folderPath": "input",
+      "position": { "x": 100, "y": 700 },
+      "dependencies": []
+    },
+    {
+      "id": "audio",
+      "workflowId": "root",
+      "title": "Audio",
+      "description": "MusicManager themes, crossfade, test hooks; future SFX director",
+      "nodeType": "folder",
+      "folderPath": "audio",
+      "position": { "x": 250, "y": 700 },
+      "dependencies": []
+    },
+    {
+      "id": "ui-shell",
+      "workflowId": "root",
+      "title": "UI Shell",
+      "description": "Menus, HUD, combat UI smoke flows",
+      "nodeType": "folder",
+      "folderPath": "ui-shell",
+      "position": { "x": 400, "y": 700 },
+      "dependencies": []
+    },
+    {
+      "id": "scenes",
+      "workflowId": "root",
+      "title": "Scenes and Bootstrap",
+      "description": "Build order, Main scene, GameRuntime wiring",
+      "nodeType": "folder",
+      "folderPath": "scenes",
+      "position": { "x": 550, "y": 700 },
+      "dependencies": []
+    },
+    {
+      "id": "perf",
+      "workflowId": "root",
+      "title": "Performance",
+      "description": "Frame budgets, GC-free hot paths, profiling",
+      "nodeType": "folder",
+      "folderPath": "perf",
+      "position": { "x": 700, "y": 700 },
+      "dependencies": []
+    },
+    {
+      "id": "a11y-l10n",
+      "workflowId": "root",
+      "title": "Accessibility and Localization",
+      "description": "Timing windows, text scaling, future locale tables",
+      "nodeType": "folder",
+      "folderPath": "a11y-l10n",
+      "position": { "x": 850, "y": 700 },
+      "dependencies": []
+    },
+    {
+      "id": "demo-vertical-slice",
+      "workflowId": "root",
+      "title": "Demo vertical slice (Tier A)",
+      "description": "Shippable playable demo: canonical path tour → fayre_felde combat → hub; tests + manual smoke per DEMO_RUN.md. Depends on core game folders.",
+      "nodeType": "folder",
+      "folderPath": "demo-vertical-slice",
+      "position": { "x": 100, "y": 850 },
+      "dependencies": [
+        "ui-shell",
+        "map-progression",
+        "narrative",
+        "save-system",
+        "scenes",
+        "combat-core"
+      ]
+    },
+    {
+      "id": "steam-early-access",
+      "workflowId": "root",
+      "title": "Steam / EA planning (Tier B)",
+      "description": "Milestone planning track only—execute after Tier A Definition of Done (or parallel non-blocking assets). See .tdad/workflows/steam-early-access/ and plan-steam-milestones.md.",
+      "nodeType": "folder",
+      "folderPath": "steam-early-access",
+      "position": { "x": 400, "y": 850 },
+      "dependencies": ["demo-vertical-slice"]
+    },
+    {
+      "id": "godot-full-port",
+      "workflowId": "root",
+      "title": "Godot full port + archive (gated)",
+      "description": "M1–M6 migration milestones; Unity demo-vertical-slice is oracle until M6. See .tdad/workflows/godot-full-port/ and prompts plan-godot-port-milestone.md, godot-archive-unity-snapshot.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-full-port",
+      "position": { "x": 100, "y": 1000 },
+      "dependencies": ["demo-vertical-slice"]
+    },
+    {
+      "id": "godot-parity-slice",
+      "workflowId": "root",
+      "title": "Godot parity slice",
+      "description": "Mirrors demo-vertical-slice behaviors with Godot proofs. See .tdad/workflows/godot-parity-slice/ and .tdad/bdd/godot-parity-slice.feature. Retail save paths, autosave, and Steam ship checklist: godot-steam-build.",
+      "nodeType": "folder",
+      "folderPath": "godot-parity-slice",
+      "position": { "x": 400, "y": 1000 },
+      "dependencies": ["demo-vertical-slice", "godot-full-port"]
+    },
+    {
+      "id": "godot-steam-build",
+      "workflowId": "root",
+      "title": "Godot Steam / retail build (TDAD)",
+      "description": "Shipping layer: user:// retail cfg names, autosave mirror, legacy demo migration, headless regression, export/Steamworks. Workflow: .tdad/workflows/godot-steam-build/. Depends on godot-parity-slice. Index: .tdad/README.md. Player/QA doc: KyndeBlade_Godot/STEAM_BUILD.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-steam-build",
+      "position": { "x": 700, "y": 1000 },
+      "dependencies": ["godot-parity-slice"]
+    }
+  ],
+  "edges": []
+}

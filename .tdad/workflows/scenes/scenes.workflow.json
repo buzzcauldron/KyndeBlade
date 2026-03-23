@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "bootstrap-managers",
+      "workflowId": "scenes",
+      "title": "Bootstrap managers",
+      "description": "Given Main.unity loads, when play starts, then KyndeBladeGameManager exists and core singletons (e.g. GameRuntime refs) wire in Awake/Start.",
+      "nodeType": "feature",
+      "fileName": "bootstrap-managers",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "scene-load-order",
+      "workflowId": "scenes",
+      "title": "Scene load order",
+      "description": "Given Editor build settings list scenes in order, when the player launches the build, then the first scene boots without missing references.",
+      "nodeType": "feature",
+      "fileName": "scene-load-order",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["bootstrap-managers"],
+      "testLayers": ["playmode"]
+    }
+  ],
+  "edges": []
+}

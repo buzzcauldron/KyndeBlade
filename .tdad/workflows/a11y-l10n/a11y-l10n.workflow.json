@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "timing-window-accessibility",
+      "workflowId": "a11y-l10n",
+      "title": "Timing window accessibility",
+      "description": "Given GameSettings.TimingWindowMultiplier and difficulty, when GetAdjustedWindow is used, then dodge/parry windows scale for accessibility.",
+      "nodeType": "feature",
+      "fileName": "timing-window-accessibility",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["editmode"]
+    },
+    {
+      "id": "locale-switch",
+      "workflowId": "a11y-l10n",
+      "title": "Locale switch",
+      "description": "Given localized string tables (future Unity Localization), when the player changes language, then UI and dialogue use the selected locale without missing keys.",
+      "nodeType": "feature",
+      "fileName": "locale-switch",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    }
+  ],
+  "edges": []
+}

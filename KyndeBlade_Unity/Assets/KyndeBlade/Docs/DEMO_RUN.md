@@ -2,9 +2,37 @@
 
 This document describes the intended demo path and how to run and verify it in the editor.
 
+**Single-loop vertical slice (hub → combat → hub):** see [PLAYABLE_SLICE.md](PLAYABLE_SLICE.md).
+
+**TDAD (repo root):** Tier A workflow [`.tdad/workflows/demo-vertical-slice/demo-vertical-slice.workflow.json`](../../../../.tdad/workflows/demo-vertical-slice/demo-vertical-slice.workflow.json), Gherkin [`.tdad/bdd/demo-vertical-slice.feature`](../../../../.tdad/bdd/demo-vertical-slice.feature). Tier B planning: [`.tdad/workflows/steam-early-access/`](../../../../.tdad/workflows/steam-early-access/) — see also [TDAD_RELEASE_PATHS.md](../../../../docs/TDAD_RELEASE_PATHS.md) at repo root.
+
+## Definition of done (Tier A — mirrors TDAD `demo-vertical-slice`)
+
+Automated (EditMode / PlayMode): run the Unity Test Runner on `KyndeBlade.Tests`.
+
+| TDAD node (summary) | What passes |
+|---------------------|-------------|
+| Main scene map bootstraps at tour | `DemoVerticalSlicePlayModeTests.MainScene_SkipMenu_CurrentLocationId_IsTour` |
+| Tour lists Fair Field as next | `PlayableSliceEditModeTests.PlayableSlice_Tour_ListsFayreFeldeAsNext` |
+| Fair Field encounter wired | `PlayableSliceEditModeTests` (Fayre Felde + constants) |
+| Save checkpoint updates location | `MapSaveTest.SaveCheckpoint_UpdatesLocationAndUnlocks` |
+| Game progress JSON roundtrip | `MapSaveTest.GameProgress_ToJsonFromJson_Roundtrips` |
+| Pause overlay present | `DemoVerticalSlicePlayModeTests.MainScene_SkipMenu_PauseRoot_ExistsAndStartsHidden` |
+| Settings volume persists | `UiShellEditModeTests.KyndeBladeSettingsStore_MasterVolume_Persists` |
+| Continue when save exists | `UiShellEditModeTests.SaveManager_HasSavedGame_TrueWhenPrefsContainSave` |
+
+**Manual (required once per release candidate):** combat win → **Continue** → map at Fair Field with expected next locations — see [What to verify](#what-to-verify) below (TDAD node: *Combat win Continue returns to map (manual)*).
+
+## Build / zip (friends can run)
+
+1. **Build Settings:** `Main` (or your bootstrap scene) must be **first** in the list.
+2. **Targets:** ship at least one desktop target you can support (e.g. Windows, macOS); note known gaps in your store page or README.
+3. **Zip contents:** player executable + `*_Data` (and dependencies your Unity version requires); no Editor-only assets.
+4. **Player-facing blurb:** one short paragraph + one screenshot (map or combat) matching the path in this doc.
+
 ## Demo path (intended)
 
-1. **Start** — Game starts at the Tower on the Toft (first view): story beat (vista), then map.
+1. **Start** — **Main menu** (New Game / Continue if a save exists). After you start, the game proceeds to the Tower on the Toft (first view): story beat (vista), then map.
 2. **Navigate** — Open map; select next location (e.g. Fair Field / fayre_felde).
 3. **Narrative** — Story beat and/or dialogue may play on arrival or before combat.
 4. **Combat** — One encounter: turn-based + real-time parry/dodge window; clear success or fail.
@@ -25,6 +53,7 @@ This document describes the intended demo path and how to run and verify it in t
 Add a **DemoTestHelper** component to the scene (e.g. on the same GameObject as `KyndeBladeGameManager` or a dedicated debug object).
 
 - **Force Start Location Id** — e.g. `tour` or `tower_on_toft`. When set, the first time the map initializes it uses this location instead of the saved location or `WorldMapManager.StartLocation`. Use for testing “start at Tower” without changing save data.
+- **Skip Tower Intro Story** — if enabled, skips the Tower on the Toft arrival story beat so the map appears immediately (faster slice QA).
 - **Skip To Location Id** — e.g. `fayre_felde`. Use the context menu **Skip to Location** (right-click component in Inspector) to jump directly to that location for quick combat testing.
 - **Log World State** — Context menu **Log World State** prints to the console: current location, `EthicalMisstepCount`, `GreenKnightWillAppearRandomly`, `HasEverHadHunger`.
 

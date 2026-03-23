@@ -87,5 +87,29 @@ namespace KyndeBlade.Tests
                     Object.DestroyImmediate(o);
             }
         }
+
+        /// <summary>Clears default save + meta PlayerPrefs keys used by <see cref="SaveManager"/>.</summary>
+        public static void ClearSaveAndMetaPrefs()
+        {
+            PlayerPrefs.DeleteKey("KyndeBlade_Save");
+            PlayerPrefs.DeleteKey("KyndeBlade_Meta");
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>Minimal location for map / transition tests (no scene load, no encounter).</summary>
+        public static LocationNode CreateTestLocation(string locationId, params string[] nextIds)
+        {
+            var loc = ScriptableObject.CreateInstance<LocationNode>();
+            loc.LocationId = locationId;
+            loc.SceneName = "";
+            loc.Encounter = null;
+            if (nextIds != null)
+            {
+                foreach (var id in nextIds)
+                    if (!string.IsNullOrEmpty(id))
+                        loc.NextLocationIds.Add(id);
+            }
+            return loc;
+        }
     }
 }

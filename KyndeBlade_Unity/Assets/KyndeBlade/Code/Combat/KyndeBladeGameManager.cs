@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem.UI;
 using KyndeBlade.Combat;
 
 namespace KyndeBlade
@@ -82,6 +83,7 @@ namespace KyndeBlade
             GameRuntime.NarrativeManager = UnityEngine.Object.FindFirstObjectByType<NarrativeManager>();
             GameRuntime.MusicManager = UnityEngine.Object.FindFirstObjectByType<MusicManager>();
             GameRuntime.DialogueSystem = UnityEngine.Object.FindFirstObjectByType<DialogueSystem>();
+            GameRuntime.GameFlowController = UnityEngine.Object.FindFirstObjectByType<GameFlowController>();
         }
 
         void OnDestroy()
@@ -224,11 +226,11 @@ namespace KyndeBlade
                 var pos = e.Position != Vector3.zero ? e.Position : offset + new Vector3(0f, (i - enemies.Count * 0.5f) * spacing, 0f);
                 var prefab = e.Prefab ?? GetEnemyPrefabByType(e.CharacterTypeName);
                 if (prefab != null)
-                    SpawnEnemyFromPrefab(prefab, pos);
+                    SpawnEnemyFromPrefab(prefab, pos, e.LocalScaleMultiplier);
             }
             var bossPrefab = config.BossPrefab ?? GetEnemyPrefabByType(config.BossCharacterType);
             if (bossPrefab != null)
-                SpawnEnemyFromPrefab(bossPrefab, config.BossPosition);
+                SpawnEnemyFromPrefab(bossPrefab, config.BossPosition, 1f);
 
             var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
             bool atGreenChapel = location != null && string.Equals(location.LocationId, "green_chapel", System.StringComparison.OrdinalIgnoreCase);
@@ -240,7 +242,7 @@ namespace KyndeBlade
                 if (UnityEngine.Random.value < GreenKnightFirstAppearChanceInBuilding)
                 {
                     var gkPos = config.BossPosition + new Vector3(1.5f, 1.5f, 0f);
-                    SpawnEnemyFromPrefab(GreenKnightPrefab, gkPos);
+                    SpawnEnemyFromPrefab(GreenKnightPrefab, gkPos, 1f);
                     _lastEncounterHadGreenKnight = true;
                     saveManager.SetGreenKnightWillAppearRandomly(true);
                     if (saveManager.CurrentProgress != null)
@@ -253,7 +255,7 @@ namespace KyndeBlade
                 if (UnityEngine.Random.value < GreenKnightRandomAppearChance)
                 {
                     var gkPos = config.BossPosition + new Vector3(1.5f, 1.5f, 0f);
-                    SpawnEnemyFromPrefab(GreenKnightPrefab, gkPos);
+                    SpawnEnemyFromPrefab(GreenKnightPrefab, gkPos, 1f);
                     _lastEncounterHadGreenKnight = true;
                     if (saveManager.CurrentProgress != null)
                         saveManager.CurrentProgress.EncountersSinceLastGreenKnight = 0;
@@ -364,7 +366,7 @@ namespace KyndeBlade
 
             var prefab = GetEnemyPrefabBySin(sin);
             if (prefab != null)
-                SpawnEnemyFromPrefab(prefab, new Vector3(4f, 0f, 0f));
+                SpawnEnemyFromPrefab(prefab, new Vector3(4f, 0f, 0f), 1f);
 
             var hazardMgr = UnityEngine.Object.FindFirstObjectByType<CombatHazardManager>();
             if (hazardMgr != null && location != null && !location.SuppressCombatHazards && location.CombatHazards != null && location.CombatHazards.Count > 0)
@@ -410,9 +412,11 @@ namespace KyndeBlade
         }
 
         /// <summary>Instantiates enemy from prefab, applies boss movesets/AI by type, adds to enemy list.</summary>
-        void SpawnEnemyFromPrefab(MedievalCharacter prefab, Vector3 pos)
+        void SpawnEnemyFromPrefab(MedievalCharacter prefab, Vector3 pos, float localScaleMultiplier = 1f)
         {
             var c = Instantiate(prefab, pos, Quaternion.identity);
+            if (localScaleMultiplier > 0f && !Mathf.Approximately(localScaleMultiplier, 1f))
+                c.transform.localScale = c.transform.localScale * localScaleMultiplier;
             EnsureCharacterVisual(c.gameObject, false, prefab != null ? prefab.CharacterName ?? prefab.name : "Enemy");
             if (c.GetComponent<HungerCharacter>() != null)
             {
@@ -479,6 +483,16 @@ namespace KyndeBlade
                 nm.DialogueSystem = ds;
             if (StartWithMap)
             {
+                if (UnityEngine.Object.FindFirstObjectByType<GameFlowController>() == null)
+                {
+                    var menuCanvasGo = new GameObject("MenuCanvas");
+                    var menuCanvas = menuCanvasGo.AddComponent<Canvas>();
+                    menuCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                    menuCanvas.sortingOrder = 300;
+                    ConfigureCanvasScaler(menuCanvasGo.AddComponent<CanvasScaler>());
+                    menuCanvasGo.AddComponent<GraphicRaycaster>();
+                    menuCanvasGo.AddComponent<GameFlowController>();
+                }
                 if (UnityEngine.Object.FindFirstObjectByType<WorldMapManager>() == null)
                 {
                     var wmGo = new GameObject("WorldMapManager");
@@ -504,7 +518,7 @@ namespace KyndeBlade
             {
                 var es = new GameObject("EventSystem");
                 es.AddComponent<UnityEngine.EventSystems.EventSystem>();
-                es.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+                AddUiInputModule(es);
             }
             if (UnityEngine.Object.FindFirstObjectByType<CombatUI>() == null)
             {
@@ -568,7 +582,9 @@ namespace KyndeBlade
             go.transform.position = new Vector3(0f, 0f, 5f);
             var sr = go.AddComponent<SpriteRenderer>();
             sr.sprite = UnityEngine.Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), Vector2.one * 0.5f);
-            sr.color = new Color(ManuscriptUITheme.ParchmentAged.r, ManuscriptUITheme.ParchmentAged.g, ManuscriptUITheme.ParchmentAged.b, 0.9f);
+            var backdrop = Settings != null ? Settings.CombatBackdropColor
+                : new Color(0.06f, 0.07f, 0.1f, 0.96f);
+            sr.color = backdrop;
             var shader = GetFallbackColorShader();
             if (shader != null)
                 sr.material = new Material(shader);
@@ -584,6 +600,29 @@ namespace KyndeBlade
             {
                 go.transform.localScale = new Vector3(30f, 20f, 1f);
             }
+
+            if (Settings != null && Settings.ShowCombatForegroundHazardStrip && GameObject.Find("CombatForegroundHazard") == null)
+                EnsureCombatForegroundHazardStrip(cam);
+        }
+
+        void EnsureCombatForegroundHazardStrip(Camera cam)
+        {
+            var go = new GameObject("CombatForegroundHazard");
+            go.transform.position = new Vector3(0f, -4.2f, 2f);
+            var sr = go.AddComponent<SpriteRenderer>();
+            sr.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f));
+            sr.color = new Color(0.75f, 0.35f, 0.12f, 0.85f);
+            var shader = GetFallbackColorShader();
+            if (shader != null)
+                sr.material = new Material(shader);
+            sr.sortingOrder = 40;
+            if (cam != null && cam.orthographic)
+            {
+                float w = cam.orthographicSize * 2f * cam.aspect;
+                go.transform.localScale = new Vector3(w * 1.05f, 0.35f, 1f);
+            }
+            else
+                go.transform.localScale = new Vector3(22f, 0.35f, 1f);
         }
 
         /// <summary>Finds or creates main camera; sets orthographic, size, background for 16-bit side-view.</summary>
@@ -636,6 +675,14 @@ namespace KyndeBlade
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080);
             scaler.matchWidthOrHeight = 0.5f;
+        }
+
+        /// <summary>Prefer Input System UI module while Active Input is Both (see ARCHITECTURE.md).</summary>
+        static void AddUiInputModule(GameObject eventSystemGo)
+        {
+            if (eventSystemGo.GetComponent<InputSystemUIInputModule>() != null) return;
+            if (eventSystemGo.GetComponent<UnityEngine.EventSystems.StandaloneInputModule>() != null) return;
+            eventSystemGo.AddComponent<InputSystemUIInputModule>();
         }
     }
 }

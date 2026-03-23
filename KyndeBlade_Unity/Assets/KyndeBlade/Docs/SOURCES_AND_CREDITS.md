@@ -17,6 +17,12 @@ The game is explicitly based on Langland’s dream-vision poem. Direct borrowing
 
 **Credit:** *Piers Plowman* by William Langland; Middle English quotations and setting adapted for the game.
 
+**Electronic edition (dialogue authoring, line work):** The University of Michigan **Corpus of Middle English** publishes a searchable *Piers Plowman* witness suitable for writers and implementers aligning beats to the B-tradition text:
+
+- [PPlLan — full text (quod.lib)](https://quod.lib.umich.edu/c/cme/PPlLan?rgn=main;view=fulltext)
+
+Use alongside internal beat maps (e.g. `ProjectArchive/docs/DIALOGUE_SOURCE_TEXT_PLAN.md`). Cite the **scholarly edition** and this URL in credits or patch notes when substantial excerpts are used.
+
 ---
 
 ### Jos Charles, *feeld* (Milkweed Editions, 2018)

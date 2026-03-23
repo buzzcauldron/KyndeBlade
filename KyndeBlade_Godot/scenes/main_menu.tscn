@@ -1,0 +1,150 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8mainmenu001"]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_menu"]
+[ext_resource type="Texture2D" path="res://assets/lane_a_menu_backdrop.tres" id="2_lane_a"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_menu")
+
+[node name="MenuBackdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_lane_a")
+expand_mode = 1
+stretch_mode = 0
+
+[node name="VignetteOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.05, 0.09, 0.42)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.9, 0.82, 0.65, 1)
+text = "Kynde Blade"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.7, 0.6, 1)
+text = "Menu → Hub → Fair Field combat"
+horizontal_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="Center/VBox" groups=["menu_button"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Continue"
+
+[node name="NewGameButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "New Game"
+
+[node name="SettingsButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Settings"
+
+[node name="TinyLoopButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Tiny practice loop"
+
+[node name="HiBitBonusButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "High-bit medieval bonus"
+
+[node name="QuitButton" type="Button" parent="Center/VBox"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+text = "Quit"
+
+[node name="SettingsPanel" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.07, 0.1, 0.94)
+
+[node name="SettingsCenter" type="CenterContainer" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SettingsVBox" type="VBoxContainer" parent="SettingsPanel/SettingsCenter"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="SettingsTitle" type="Label" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="VolLabel" type="Label" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+layout_mode = 2
+text = "Master volume"
+
+[node name="VolumeSlider" type="HSlider" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="Fullscreen" type="CheckButton" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="CloseSettings" type="Button" parent="SettingsPanel/SettingsCenter/SettingsVBox"]
+layout_mode = 2
+text = "Close"
+
+[connection signal="pressed" from="Center/VBox/ContinueButton" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="Center/VBox/NewGameButton" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="Center/VBox/SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Center/VBox/TinyLoopButton" to="." method="_on_tiny_loop_pressed"]
+[connection signal="pressed" from="Center/VBox/HiBitBonusButton" to="." method="_on_hi_bit_bonus_pressed"]
+[connection signal="pressed" from="Center/VBox/QuitButton" to="." method="_on_quit_pressed"]
+[connection signal="value_changed" from="SettingsPanel/SettingsCenter/SettingsVBox/VolumeSlider" to="." method="_on_volume_changed"]
+[connection signal="toggled" from="SettingsPanel/SettingsCenter/SettingsVBox/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="pressed" from="SettingsPanel/SettingsCenter/SettingsVBox/CloseSettings" to="." method="_on_settings_close_pressed"]

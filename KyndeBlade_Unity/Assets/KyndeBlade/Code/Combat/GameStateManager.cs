@@ -354,7 +354,10 @@ namespace KyndeBlade
                     malvern = all[0];
             }
             if (saveManager != null)
+            {
+                saveManager.IncrementLifetimeRunCount();
                 saveManager.NewGame(GameWorldConstants.LocationMalvern);
+            }
             if (wm != null && malvern != null)
                 wm.TransitionTo(malvern);
             else
@@ -414,6 +417,11 @@ namespace KyndeBlade
 #if UNITY_EDITOR
             Debug.Log("[Demo] Combat outcome: Victory");
 #endif
+            if (isFinal)
+            {
+                var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();
+                saveManager?.IncrementLifetimeRunCount();
+            }
             if (VictoryPanel != null) VictoryPanel.SetActive(true);
             if (VictoryText != null)
                 VictoryText.text = isFinal ? "Thou hast reached the field. Continue." : $"Victory! +{xp} XP";

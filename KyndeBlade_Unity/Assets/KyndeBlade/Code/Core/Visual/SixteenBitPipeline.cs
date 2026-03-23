@@ -24,8 +24,7 @@ namespace KyndeBlade
         Material _pointMat;
         Material _manuscriptMat;
         RenderTexture _tempRT;
-        RenderTexture _blitTempSameSize;
-        static readonly int LowResRTId = Shader.PropertyToID("_SixteenBitLowRes");
+        RenderTexture _manuscriptScratch;
 
         void OnEnable()
         {
@@ -63,7 +62,7 @@ namespace KyndeBlade
                 _lowResRT = null;
             }
             if (_tempRT != null) { _tempRT.Release(); _tempRT = null; }
-            if (_blitTempSameSize != null) { _blitTempSameSize.Release(); _blitTempSameSize = null; }
+            if (_manuscriptScratch != null) { _manuscriptScratch.Release(); _manuscriptScratch = null; }
             if (_pointMat != null) { Destroy(_pointMat); _pointMat = null; }
             if (_manuscriptMat != null) { Destroy(_manuscriptMat); _manuscriptMat = null; }
         }
@@ -76,34 +75,56 @@ namespace KyndeBlade
                 return;
             }
 
-            // Avoid Blit(source, dest) when source and dest are the same RT (undefined behaviour).
-            bool destIsLowRes = dest != null && dest == _lowResRT;
-            if (destIsLowRes)
+            int w = Screen.width;
+            int h = Screen.height;
+            if (w <= 0 || h <= 0)
             {
-                EnsureBlitTempSameSize();
-                Graphics.Blit(_lowResRT, _blitTempSameSize);
-                Graphics.Blit(_blitTempSameSize, dest);
-            }
-            else
-            {
-                if (_pointMat != null)
-                    Graphics.Blit(_lowResRT, dest, _pointMat);
+                // Still satisfy Unity: non-null dest must receive a write.
+                if (dest != null)
+                    Graphics.Blit(src, dest);
+                else if (_pointMat != null)
+                    Graphics.Blit(_lowResRT, null as RenderTexture, _pointMat);
                 else
-                    Graphics.Blit(_lowResRT, dest);
+                    Graphics.Blit(_lowResRT, null as RenderTexture);
+                return;
             }
 
+            EnsureScreenSizedRT(ref _tempRT, w, h);
+            if (_pointMat != null)
+                Graphics.Blit(_lowResRT, _tempRT, _pointMat);
+            else
+                Graphics.Blit(_lowResRT, _tempRT);
+
+            RenderTexture composite;
             if (ApplyManuscriptOverlay && _manuscriptMat != null)
             {
-                int w = Screen.width, h = Screen.height;
-                if (_tempRT == null || _tempRT.width != w || _tempRT.height != h)
-                {
-                    if (_tempRT != null) _tempRT.Release();
-                    _tempRT = new RenderTexture(w, h, 0);
-                }
+                EnsureScreenSizedRT(ref _manuscriptScratch, w, h);
                 ManuscriptOverlayParams.ApplyToMaterial(_manuscriptMat, ParchmentTexture, ParchmentStrength, SepiaTint, SepiaStrength, Grain);
-                Graphics.Blit(dest != null ? dest : (RenderTexture)null, _tempRT, _manuscriptMat);
-                Graphics.Blit(_tempRT, dest);
+                Graphics.Blit(_tempRT, _manuscriptScratch, _manuscriptMat);
+                composite = _manuscriptScratch;
             }
+            else
+                composite = _tempRT;
+
+            // Unity requires a Blit into `dest` whenever dest is non-null ("possibly didn't write to destination").
+            // When dest is the camera's low-res target, that write does not reach the screen — also blit composite to null.
+            if (dest == null)
+                Graphics.Blit(composite, dest);
+            else if (dest == _lowResRT)
+            {
+                Graphics.Blit(src, dest);
+                Graphics.Blit(composite, null as RenderTexture);
+            }
+            else
+                Graphics.Blit(composite, dest);
+        }
+
+        static void EnsureScreenSizedRT(ref RenderTexture rt, int w, int h)
+        {
+            if (rt != null && rt.width == w && rt.height == h) return;
+            if (rt != null) rt.Release();
+            rt = new RenderTexture(w, h, 0) { filterMode = FilterMode.Point };
+            rt.Create();
         }
 
         void EnsureLowResRT()
@@ -115,16 +136,6 @@ namespace KyndeBlade
             _lowResRT = new RenderTexture(w, h, 24);
             _lowResRT.filterMode = FilterMode.Point;
             _lowResRT.Create();
-        }
-
-        void EnsureBlitTempSameSize()
-        {
-            if (_lowResRT == null || !_lowResRT.IsCreated()) return;
-            int w = _lowResRT.width, h = _lowResRT.height;
-            if (_blitTempSameSize != null && _blitTempSameSize.width == w && _blitTempSameSize.height == h) return;
-            if (_blitTempSameSize != null) _blitTempSameSize.Release();
-            _blitTempSameSize = new RenderTexture(w, h, 0);
-            _blitTempSameSize.Create();
         }
     }
 }

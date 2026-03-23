@@ -1,0 +1,123 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "calculate-base-damage",
+      "workflowId": "combat-damage",
+      "title": "Calculate Base Damage",
+      "description": "Given an attacker, target, and action, when CombatCalculator.CalculateDamage() is called, then damage = (basePower * agingMod) - (defense * DefenseMitigationFactor), floored at MinimumDamage (1f).",
+      "nodeType": "feature",
+      "fileName": "calculate-base-damage",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "damage-variance",
+      "workflowId": "combat-damage",
+      "title": "Damage Variance",
+      "description": "Given base damage is calculated, then final damage is multiplied by Random.Range(1-v, 1+v) where v = DamageVarianceHalfRange. Result varies within the expected range.",
+      "nodeType": "feature",
+      "fileName": "damage-variance",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": ["calculate-base-damage"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "elemental-multiplier",
+      "workflowId": "combat-damage",
+      "title": "Elemental Multiplier",
+      "description": "Given a target and an element type, when GetElementalMultiplier() is called, then returns 1f for None element. Future: returns 2f for weakness, 0.5f for resistance.",
+      "nodeType": "feature",
+      "fileName": "elemental-multiplier",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": ["calculate-base-damage"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "broken-damage-multiplier",
+      "workflowId": "combat-damage",
+      "title": "Broken Damage Multiplier",
+      "description": "Given a target that IsBroken(), when damage is applied via ApplyHitEffect, then damage is multiplied by GameWorldConstants.BrokenDamageMultiplier (1.5x).",
+      "nodeType": "feature",
+      "fileName": "broken-damage-multiplier",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["calculate-base-damage"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "counter-damage-multiplier",
+      "workflowId": "combat-damage",
+      "title": "Counter Damage Multiplier",
+      "description": "Given a Counter action type, when ApplyHitEffect is called, then damage is multiplied by 1.5x on top of normal calculation.",
+      "nodeType": "feature",
+      "fileName": "counter-damage-multiplier",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["calculate-base-damage"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "crit-pressure-build",
+      "workflowId": "combat-damage",
+      "title": "Crit Pressure Build",
+      "description": "Given the TurnManager, when RecordDamageDealt() is called, then crit pressure increases by CritBuildPerDeal (0.08) and is capped at CritPressureCap (0.4).",
+      "nodeType": "feature",
+      "fileName": "crit-pressure-build",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "crit-trigger-and-reset",
+      "workflowId": "combat-damage",
+      "title": "Crit Trigger and Reset",
+      "description": "Given crit pressure has built up, when ApplyCritToDamage() rolls below the pressure threshold, then damage is multiplied by CritDamageMultiplier (1.5), isCrit out-param is true, and pressure resets to 0.",
+      "nodeType": "feature",
+      "fileName": "crit-trigger-and-reset",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["crit-pressure-build"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "hunger-damage-amplify",
+      "workflowId": "combat-damage",
+      "title": "Hunger Damage Amplify",
+      "description": "Given a target with Hunger status effect, when ApplyCustomDamage is called, then actual damage is multiplied by (1 + stackCount * 0.2). E.g. 2 stacks = 1.4x damage.",
+      "nodeType": "feature",
+      "fileName": "hunger-damage-amplify",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "ethical-misstep-multiplier",
+      "workflowId": "combat-damage",
+      "title": "Ethical Misstep Multiplier",
+      "description": "Given a player character with PiersAppearanceData.IsPlayer true, when ApplyCustomDamage is called, then damage is multiplied by SaveManager.GetDamageTakenMultiplier() which increases with ethical misstep count.",
+      "nodeType": "feature",
+      "fileName": "ethical-misstep-multiplier",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "defense-window-damage",
+      "workflowId": "combat-damage",
+      "title": "Defense Window Damage",
+      "description": "Given a defender and attacker in a defense window, when ApplyDefenseWindowDamage() is called, then damage is calculated using the attacker's primary Strike/RangedStrike action via the full CalculateDamage formula, with crit applied.",
+      "nodeType": "feature",
+      "fileName": "defense-window-damage",
+      "position": { "x": 100, "y": 550 },
+      "dependencies": ["calculate-base-damage"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "base-to-variance", "source": "calculate-base-damage", "target": "damage-variance" },
+    { "id": "base-to-elemental", "source": "calculate-base-damage", "target": "elemental-multiplier" },
+    { "id": "base-to-broken", "source": "calculate-base-damage", "target": "broken-damage-multiplier" },
+    { "id": "base-to-counter", "source": "calculate-base-damage", "target": "counter-damage-multiplier" },
+    { "id": "crit-build-to-trigger", "source": "crit-pressure-build", "target": "crit-trigger-and-reset" },
+    { "id": "base-to-defense-window", "source": "calculate-base-damage", "target": "defense-window-damage" }
+  ]
+}

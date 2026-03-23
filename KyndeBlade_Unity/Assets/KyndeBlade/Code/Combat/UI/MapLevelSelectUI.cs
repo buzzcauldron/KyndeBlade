@@ -10,6 +10,8 @@ namespace KyndeBlade
     {
         [Header("References")]
         public WorldMapManager WorldMap;
+        [Tooltip("Optional palette for generated map UI.")]
+        public KyndeHudTheme HudTheme;
         public RectTransform LocationButtonsRoot;
         public GameObject LocationButtonPrefab;
 
@@ -53,6 +55,7 @@ namespace KyndeBlade
             titleText.fontSize = 20;
             titleText.alignment = TextAnchor.MiddleCenter;
             ManuscriptUITheme.ApplyToText(titleText, emphasis: true);
+            if (HudTheme != null) titleText.color = HudTheme.AccentTextColor;
             var current = new GameObject("CurrentLocation");
             current.transform.SetParent(root.transform, false);
             var currentRect = current.AddComponent<RectTransform>();

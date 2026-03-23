@@ -1,0 +1,90 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "set-hazards",
+      "workflowId": "combat-hazards",
+      "title": "Set Hazards",
+      "description": "Given a list of PiersHazardConfig objects, when SetHazards() is called, then the hazard list is stored and the internal turn counter resets to 0.",
+      "nodeType": "feature",
+      "fileName": "set-hazards",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "hazard-interval",
+      "workflowId": "combat-hazards",
+      "title": "Hazard Interval",
+      "description": "Given hazards are configured with IntervalTurns, when OnTurnChanged fires, then hazard only triggers when (turnCount % IntervalTurns == 0). Otherwise no effect.",
+      "nodeType": "feature",
+      "fileName": "hazard-interval",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["set-hazards"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "hazard-player-only",
+      "workflowId": "combat-hazards",
+      "title": "Hazard Player Only",
+      "description": "Given it is an enemy's turn, when OnTurnChanged fires, then no hazards are applied. Hazards only trigger when IsPlayerTurn() returns true.",
+      "nodeType": "feature",
+      "fileName": "hazard-player-only",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["set-hazards"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "exhaustion-hazard",
+      "workflowId": "combat-hazards",
+      "title": "Exhaustion Hazard",
+      "description": "Given an Exhaustion hazard is active and triggers, then all alive player characters lose (Strength * 5) stamina via ConsumeStamina.",
+      "nodeType": "feature",
+      "fileName": "exhaustion-hazard",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": ["hazard-interval"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "poverty-hazard",
+      "workflowId": "combat-hazards",
+      "title": "Poverty Hazard",
+      "description": "Given a Poverty hazard is active and triggers, then all alive player characters with CurrentKynde >= 1 lose Strength Kynde via ConsumeKynde.",
+      "nodeType": "feature",
+      "fileName": "poverty-hazard",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": ["hazard-interval"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "labor-hazard",
+      "workflowId": "combat-hazards",
+      "title": "Labor Hazard",
+      "description": "Given a Labor hazard is active and triggers, then all alive player characters lose (Strength * 3) stamina via ConsumeStamina.",
+      "nodeType": "feature",
+      "fileName": "labor-hazard",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["hazard-interval"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "hunger-hazard",
+      "workflowId": "combat-hazards",
+      "title": "Hunger Hazard",
+      "description": "Given a Hunger hazard is active and triggers, then all alive player characters receive 1 Hunger stack with 8-second duration via ApplyHunger(1, 8f).",
+      "nodeType": "feature",
+      "fileName": "hunger-hazard",
+      "position": { "x": 700, "y": 400 },
+      "dependencies": ["hazard-interval"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "set-to-interval", "source": "set-hazards", "target": "hazard-interval" },
+    { "id": "set-to-player-only", "source": "set-hazards", "target": "hazard-player-only" },
+    { "id": "interval-to-exhaustion", "source": "hazard-interval", "target": "exhaustion-hazard" },
+    { "id": "interval-to-poverty", "source": "hazard-interval", "target": "poverty-hazard" },
+    { "id": "interval-to-labor", "source": "hazard-interval", "target": "labor-hazard" },
+    { "id": "interval-to-hunger", "source": "hazard-interval", "target": "hunger-hazard" }
+  ]
+}

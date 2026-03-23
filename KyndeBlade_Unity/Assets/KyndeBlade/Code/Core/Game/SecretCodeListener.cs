@@ -36,6 +36,12 @@ namespace KyndeBlade
             }
         }
 
+        /// <summary>Automated tests: simulate completing the W-O-D-E sequence without input.</summary>
+        public void SimulatePasscodeEnteredForTests()
+        {
+            OnPasscodeEntered();
+        }
+
         void OnPasscodeEntered()
         {
             var saveManager = UnityEngine.Object.FindFirstObjectByType<SaveManager>();

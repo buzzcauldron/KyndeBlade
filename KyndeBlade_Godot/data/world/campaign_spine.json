@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "description": "High-level campaign order for writers — mirrors Unity WorldMapManager MVP linear vision + optional lanes. Not a runtime quest graph yet.",
+  "unity_reference": "KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/WorldMapManager.cs + Resources/Data/",
+  "default_start_location_id": "tour",
+  "playable_slice_first_combat_location_id": "fayre_felde",
+  "spine": {
+    "vision_0_fair_field_arc": {
+      "title": "Vision I — Malvern, Tower, Fair Field, dungeon, Piers, sins",
+      "ordered_locations": [
+        "malvern",
+        "tour",
+        "fayre_felde",
+        "dongeoun",
+        "piers_field",
+        "seven_sins"
+      ],
+      "optional_branches_from_fayre_felde": ["green_chapel", "boundary_tree"]
+    },
+    "vision_2_do_wel_arc": {
+      "title": "Vision II — Do-Wel, depths, years, Field of Grace",
+      "ordered_locations": [
+        "quest_do_wel",
+        "dongeoun_depths",
+        "years_pass",
+        "field_of_grace"
+      ]
+    },
+    "orfeo_alternate_lane": {
+      "title": "Sir Orfeo / boundary — into Otherworld",
+      "ordered_locations": ["boundary_tree", "otherworld"],
+      "notes": "boundary_tree also returns to fayre_felde in Unity MVP; otherworld is terminal."
+    },
+    "green_chapel_lane": {
+      "title": "Sir Gawain optional",
+      "ordered_locations": ["green_chapel"],
+      "notes": "Enters from fayre_felde; exits back to fayre_felde."
+    }
+  },
+  "godot_implementation": {
+    "wired_scenes": [
+      "res://scenes/main_menu.tscn",
+      "res://scenes/tower_intro.tscn",
+      "res://scenes/hub_map.tscn",
+      "res://scenes/combat.tscn",
+      "res://scenes/world/location_shell.tscn",
+      "res://scenes/world/world_atlas.tscn"
+    ],
+    "data_loaders": ["LocationRegistry", "UnityExportData", "MedievalTextCatalog"]
+  }
+}

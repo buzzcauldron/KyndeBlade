@@ -1,0 +1,173 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "new-game",
+      "workflowId": "save-system",
+      "title": "New Game",
+      "description": "Given SaveManager, when NewGame(startLocationId) is called, then a new GameProgress is created with CurrentLocationId set, startLocation added to VisitedLocationIds and UnlockedLocationIds.",
+      "nodeType": "feature",
+      "fileName": "new-game",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "save-checkpoint",
+      "workflowId": "save-system",
+      "title": "Save Checkpoint",
+      "description": "Given an active game, when SaveCheckpoint(locationId) is called, then CurrentLocationId updates, locationId is added to VisitedLocationIds and UnlockedLocationIds, and data persists to PlayerPrefs.",
+      "nodeType": "feature",
+      "fileName": "save-checkpoint",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "unlock-location",
+      "workflowId": "save-system",
+      "title": "Unlock Location",
+      "description": "Given an active game, when UnlockLocation(locationId) is called, then locationId is added to UnlockedLocationIds. IsUnlocked(locationId) returns true.",
+      "nodeType": "feature",
+      "fileName": "unlock-location",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "progress-json-roundtrip",
+      "workflowId": "save-system",
+      "title": "Progress JSON Roundtrip",
+      "description": "Given a GameProgress with various fields set, when ToJson() then FromJson() are called, then all fields (CurrentLocationId, VisionIndex, VisitedLocationIds, UnlockedLocationIds) are preserved.",
+      "nodeType": "feature",
+      "fileName": "progress-json-roundtrip",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "has-visited-query",
+      "workflowId": "save-system",
+      "title": "Has Visited Query",
+      "description": "Given locations have been visited via SaveCheckpoint, when HasVisited(locationId) is called, then returns true for visited locations and false for unvisited ones.",
+      "nodeType": "feature",
+      "fileName": "has-visited-query",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["save-checkpoint"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "mark-ever-had-hunger",
+      "workflowId": "save-system",
+      "title": "Mark Ever Had Hunger",
+      "description": "Given an active game, when MarkHasEverHadHunger() is called, then CurrentProgress.HasEverHadHunger is set to true and persists across saves.",
+      "nodeType": "feature",
+      "fileName": "mark-ever-had-hunger",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "increment-elde-hits",
+      "workflowId": "save-system",
+      "title": "Increment Elde Hits",
+      "description": "Given an active game, when IncrementEldeHitsAccrued() is called, then CurrentProgress.EldeHitsAccrued increases by 1.",
+      "nodeType": "feature",
+      "fileName": "increment-elde-hits",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "increment-green-chapel-bodies",
+      "workflowId": "save-system",
+      "title": "Increment Green Chapel Bodies",
+      "description": "Given an active game, when IncrementGreenChapelBodies() is called, then CurrentProgress.GreenChapelBodies increases by 1.",
+      "nodeType": "feature",
+      "fileName": "increment-green-chapel-bodies",
+      "position": { "x": 700, "y": 250 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "increment-otherworld-bodies",
+      "workflowId": "save-system",
+      "title": "Increment Otherworld Bodies",
+      "description": "Given an active game, when IncrementOtherworldBodiesFromDeath() is called, then CurrentProgress.OtherworldBodies increases by 1.",
+      "nodeType": "feature",
+      "fileName": "increment-otherworld-bodies",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "increment-otherworld-living",
+      "workflowId": "save-system",
+      "title": "Increment Otherworld Living",
+      "description": "Given an active game, when IncrementOtherworldLivingCharacters() is called, then CurrentProgress.OtherworldLivingCharacters increases by 1.",
+      "nodeType": "feature",
+      "fileName": "increment-otherworld-living",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "ethical-misstep-counter",
+      "workflowId": "save-system",
+      "title": "Ethical Misstep Counter",
+      "description": "Given an active game, when an ethical misstep occurs, then CurrentProgress.EthicalMisstepCount increases. This counter persists and affects the damage-taken multiplier.",
+      "nodeType": "feature",
+      "fileName": "ethical-misstep-counter",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "green-knight-flags",
+      "workflowId": "save-system",
+      "title": "Green Knight Flags",
+      "description": "Given an active game, when Green Knight appearance flags are set (GreenKnightWillAppearRandomly, etc.), then they persist across save/load cycles.",
+      "nodeType": "feature",
+      "fileName": "green-knight-flags",
+      "position": { "x": 700, "y": 400 },
+      "dependencies": ["new-game"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "damage-taken-multiplier",
+      "workflowId": "save-system",
+      "title": "Damage Taken Multiplier",
+      "description": "Given a player with ethical missteps, when GetDamageTakenMultiplier() is called, then returns a multiplier > 1.0 that increases with EthicalMisstepCount, making combat harder for morally compromised players.",
+      "nodeType": "feature",
+      "fileName": "damage-taken-multiplier",
+      "position": { "x": 500, "y": 550 },
+      "dependencies": ["ethical-misstep-counter"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "godot-save-service-steam-paths",
+      "workflowId": "save-system",
+      "title": "Godot SaveService (Steam retail paths)",
+      "description": "Cross-engine trace: same logical progress fields as Progress JSON roundtrip; Godot uses ConfigFile (kyndeblade_save.cfg + autosave + settings) with legacy kyndeblade_demo_* migration. Proof: KyndeBlade_Godot/tests/run_headless_tests.gd. TDAD workflow: godot-steam-build. Doc: KyndeBlade_Godot/STEAM_BUILD.md.",
+      "nodeType": "feature",
+      "fileName": "godot-save-service-steam-paths",
+      "position": { "x": 900, "y": 100 },
+      "dependencies": ["progress-json-roundtrip"],
+      "testLayers": ["godot_headless", "manual"]
+    }
+  ],
+  "edges": [
+    { "id": "new-to-checkpoint", "source": "new-game", "target": "save-checkpoint" },
+    { "id": "new-to-unlock", "source": "new-game", "target": "unlock-location" },
+    { "id": "checkpoint-to-visited", "source": "save-checkpoint", "target": "has-visited-query" },
+    { "id": "new-to-hunger-flag", "source": "new-game", "target": "mark-ever-had-hunger" },
+    { "id": "new-to-elde", "source": "new-game", "target": "increment-elde-hits" },
+    { "id": "new-to-chapel", "source": "new-game", "target": "increment-green-chapel-bodies" },
+    { "id": "new-to-ow-bodies", "source": "new-game", "target": "increment-otherworld-bodies" },
+    { "id": "new-to-ow-living", "source": "new-game", "target": "increment-otherworld-living" },
+    { "id": "new-to-misstep", "source": "new-game", "target": "ethical-misstep-counter" },
+    { "id": "new-to-gk-flags", "source": "new-game", "target": "green-knight-flags" },
+    { "id": "misstep-to-dmg-mult", "source": "ethical-misstep-counter", "target": "damage-taken-multiplier" },
+    { "id": "json-to-godot-save", "source": "progress-json-roundtrip", "target": "godot-save-service-steam-paths" }
+  ]
+}

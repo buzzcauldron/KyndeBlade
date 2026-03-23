@@ -74,6 +74,6 @@ When in doubt, ask: *Would this read as a Salome-like figure in a Lee-like world
 
 - **Salome image** + **Alan Lee art**: Primary artistic references (see above). Keep a Salome reference and Lee reference (e.g. LOTR/Hobbit/Faeries) visible when defining palettes, shaders, and character pose.
 - **BossPalette** (ScriptableObject): Sin-specific colors for Pride, Hunger, Green Knight, etc.
-- **ART_DIRECTION_GRIMDARK_MEDIEVAL.md**: Palette table, character notes, URP/post-processing.
+- **ART_DIRECTION_GRIMDARK_MEDIEVAL.md**: Palette table, character notes, Built-in RP + optional post (not URP unless you migrate).
 - **VISUAL_DESIGN_ALAN_LEE.md**: Full Lee + Pre-Raphaelite + manuscript game-world guide.
 - **ManuscriptUITheme** / **ManuscriptHealthBar**: Existing manuscript-style UI hooks.

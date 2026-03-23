@@ -29,15 +29,23 @@ Unity is component-oriented; adapt patterns (MVC/MVVM, Observer, Command, DI, Pu
 
 - **KyndeBladeGameManager** runs first (`DefaultExecutionOrder(-1000)`). In **Awake** it:
   1. Resolves or creates **TurnManager**
-  2. **EnsureCombatPipeline()**: EventSystem (StandaloneInputModule), CombatUI, CombatFeedback, CombatFeedbackManager, GameStateManager, IlluminationManager
-  3. **EnsureMapPipeline()**: SaveManager, MusicManager, AgingManager, PovertyManager, NarrativeManager, DialogueSystem, WorldMapManager, MapLevelSelectUI
-  4. **RegisterGameRuntime()**: assigns all of the above to the static **GameRuntime** registry
+  2. **EnsureCombatPipeline()**: EventSystem (**InputSystemUIInputModule** when the Input System package is present), CombatUI, CombatFeedback, CombatFeedbackManager, GameStateManager, IlluminationManager
+  3. **EnsureMapPipeline()**: SaveManager, MusicManager, AgingManager, PovertyManager, NarrativeManager, DialogueSystem, **MenuCanvas + GameFlowController** (when `StartWithMap`), WorldMapManager, MapLevelSelectUI
+  4. **RegisterGameRuntime()**: assigns all of the above (including **GameFlowController**) to the static **GameRuntime** registry
 - **Rule for other scripts**: Rely on **inspector refs** or **GameRuntime** for managers. Resolve once (e.g. in Start or first use), not every frame in Update. Prefer `GameRuntime.TurnManager` (or similar) over `FindFirstObjectByType<T>()` when the bootstrap has already run.
 - **Lifecycle**: GameRuntime is cleared when KyndeBladeGameManager is destroyed (e.g. scene unload) so the next scene does not see stale refs.
 
 ## Input
 
-- **Project setting**: **Active Input** must stay **Both** (legacy + new Input System) until the EventSystem is migrated. The built-in UI (EventSystem, StandaloneInputModule) uses the legacy `UnityEngine.Input` API; switching to "Input System package only" without replacing StandaloneInputModule with InputSystemUIInputModule causes runtime errors. Combat input (e.g. ParryDodgeInputHandler) uses the new Input System; UI continues to use legacy for now.
+- **Project setting**: **Active Input** must stay **Both** (legacy + new Input System) unless the entire stack (including UI) is verified on **Input System package only**. Runtime-created **EventSystem** uses **InputSystemUIInputModule** (see `KyndeBladeGameManager.AddUiInputModule`). Combat input (e.g. ParryDodgeInputHandler) uses the new Input System. Pause / main menu use `UnityEngine.Input` for Escape in `GameFlowController` (legacy).
+
+## Main menu, pause, and settings
+
+- **GameFlowController** on **MenuCanvas** (`sortingOrder` 300): blocks **WorldMapManager** lazy init until the player chooses **Continue** or **New Game**. **Continue** is enabled only when `SaveManager.HasSavedGame` is true (serialized data in `PlayerPrefs` key `KyndeBlade_Save`).
+- **Pause**: **Escape** while playing opens a pause overlay; **Time.timeScale = 0** while paused. **Resume** restores `timeScale` to 1.
+- **Return to main menu**: reloads the active scene (build index) for a clean state.
+- **Settings** (`KyndeBladeSettingsStore`): keys `KyndeBlade_Settings_MasterVolume` (float 0–1, applied via `AudioListener.volume`) and `KyndeBlade_Settings_Fullscreen` (0/1). Call `KyndeBladeSettingsStore.ApplyAllFromStorage()` on boot (handled from `GameFlowController`).
+- **Automated tests**: set `GameFlowController.SkipMainMenuForAutomatedTests = true` before loading **Main** so map/combat tests are not blocked by the menu.
 
 ## Design
 

@@ -53,3 +53,6 @@ ProjectArchive/legacy/Build/
 *.exe
 *.out
 docs/reference/
+
+# Unity test output (local)
+KyndeBlade_Unity/TestResults*.log

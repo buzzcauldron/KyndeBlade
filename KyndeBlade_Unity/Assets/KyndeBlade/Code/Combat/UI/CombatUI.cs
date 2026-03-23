@@ -12,6 +12,7 @@ namespace KyndeBlade
         [Header("References")]
         public TurnManager TurnManager;
         public GameSettings Settings;
+        public KyndeHudTheme HudTheme;
         public CombatFeedback Feedback;
         public ParryDodgeZoneIndicator ParryDodgeIndicator;
 
@@ -180,11 +181,22 @@ namespace KyndeBlade
 
         void ApplyManuscriptTheme()
         {
-            if (GoalText != null) ManuscriptUITheme.ApplyToText(GoalText);
-            if (StateText != null) ManuscriptUITheme.ApplyToText(StateText);
-            if (RealTimeWindowText != null) ManuscriptUITheme.ApplyToText(RealTimeWindowText);
-            if (StaminaText != null) ManuscriptUITheme.ApplyToText(StaminaText);
-            if (KyndeText != null) ManuscriptUITheme.ApplyToText(KyndeText);
+            if (HudTheme != null)
+            {
+                if (GoalText != null) { ManuscriptUITheme.ApplyToText(GoalText); GoalText.color = HudTheme.GoalTextColor; }
+                if (StateText != null) { ManuscriptUITheme.ApplyToText(StateText); StateText.color = HudTheme.StateTextColor; }
+                if (RealTimeWindowText != null) { ManuscriptUITheme.ApplyToText(RealTimeWindowText); RealTimeWindowText.color = HudTheme.AccentTextColor; }
+                if (StaminaText != null) { ManuscriptUITheme.ApplyToText(StaminaText); StaminaText.color = HudTheme.StateTextColor; }
+                if (KyndeText != null) { ManuscriptUITheme.ApplyToText(KyndeText); KyndeText.color = HudTheme.StateTextColor; }
+            }
+            else
+            {
+                if (GoalText != null) ManuscriptUITheme.ApplyToText(GoalText);
+                if (StateText != null) ManuscriptUITheme.ApplyToText(StateText);
+                if (RealTimeWindowText != null) ManuscriptUITheme.ApplyToText(RealTimeWindowText);
+                if (StaminaText != null) ManuscriptUITheme.ApplyToText(StaminaText);
+                if (KyndeText != null) ManuscriptUITheme.ApplyToText(KyndeText);
+            }
         }
 
         void EnsureParryDodgeIndicator()

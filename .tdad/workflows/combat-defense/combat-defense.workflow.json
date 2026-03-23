@@ -1,0 +1,184 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "start-dodge-window",
+      "workflowId": "combat-defense",
+      "title": "Start Dodge Window",
+      "description": "Given a character, when StartDodge(duration) is called, then IsDodging becomes true and DodgeWindowRemaining is set to duration.",
+      "nodeType": "feature",
+      "fileName": "start-dodge-window",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "dodge-window-countdown",
+      "workflowId": "combat-defense",
+      "title": "Dodge Window Countdown",
+      "description": "Given a character is dodging, when Update runs each frame, then DodgeWindowRemaining decreases by deltaTime. When it reaches <= 0, EndDodge() is called (IsDodging=false, DodgeWindowRemaining=0).",
+      "nodeType": "feature",
+      "fileName": "dodge-window-countdown",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": ["start-dodge-window"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "dodge-success",
+      "workflowId": "combat-defense",
+      "title": "Dodge Success",
+      "description": "Given a character is dodging with DodgeWindowRemaining > 0, when AttemptDodge() is called, then returns true. During ApplyCustomDamage, the dodge succeeds and all damage is avoided.",
+      "nodeType": "feature",
+      "fileName": "dodge-success",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["start-dodge-window"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "dodge-fail",
+      "workflowId": "combat-defense",
+      "title": "Dodge Fail",
+      "description": "Given a character's dodge window has expired (DodgeWindowRemaining <= 0), when AttemptDodge() is called, then returns false and full damage applies.",
+      "nodeType": "feature",
+      "fileName": "dodge-fail",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["dodge-window-countdown"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "dodge-grants-kynde",
+      "workflowId": "combat-defense",
+      "title": "Dodge Grants Kynde",
+      "description": "Given a successful dodge, then executor gains 1 Kynde. If perfect timing (DodgeWindowRemaining < 0.3s), gains 2 Kynde instead.",
+      "nodeType": "feature",
+      "fileName": "dodge-grants-kynde",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": ["dodge-success"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "start-parry-window",
+      "workflowId": "combat-defense",
+      "title": "Start Parry Window",
+      "description": "Given a character, when StartParry(duration) is called, then IsParrying becomes true and ParryWindowRemaining is set to duration.",
+      "nodeType": "feature",
+      "fileName": "start-parry-window",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "parry-window-countdown",
+      "workflowId": "combat-defense",
+      "title": "Parry Window Countdown",
+      "description": "Given a character is parrying, when Update runs each frame, then ParryWindowRemaining decreases by deltaTime. When it reaches <= 0, EndParry() is called (IsParrying=false, ParryWindowRemaining=0).",
+      "nodeType": "feature",
+      "fileName": "parry-window-countdown",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": ["start-parry-window"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "parry-reduces-damage",
+      "workflowId": "combat-defense",
+      "title": "Parry Reduces Damage",
+      "description": "Given a character is parrying (IsParrying=true), when ApplyCustomDamage is called, then actual damage is multiplied by 0.3 (70% reduction).",
+      "nodeType": "feature",
+      "fileName": "parry-reduces-damage",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["start-parry-window"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "parry-success-grants-kynde",
+      "workflowId": "combat-defense",
+      "title": "Parry Success Grants Kynde",
+      "description": "Given a successful parry (AttemptParry returns true), then executor gains 2 Kynde. If perfect timing (ParryWindowRemaining < 0.25s), gains 4 Kynde instead.",
+      "nodeType": "feature",
+      "fileName": "parry-success-grants-kynde",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["parry-reduces-damage"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "parry-opens-counter-window",
+      "workflowId": "combat-defense",
+      "title": "Parry Opens Counter Window",
+      "description": "Given a successful parry in ResolveDefenseWindow, then a 0.5s counter window is started via StartCounterWindow(defender, attacker).",
+      "nodeType": "feature",
+      "fileName": "parry-opens-counter-window",
+      "position": { "x": 700, "y": 250 },
+      "dependencies": ["parry-reduces-damage"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "counter-window-countdown",
+      "workflowId": "combat-defense",
+      "title": "Counter Window Countdown",
+      "description": "Given a counter window is active (IsCounterWindowActive=true), when Update runs, then CounterWindowRemaining decreases by deltaTime. At 0, EndCounterWindow + NextTurn are called.",
+      "nodeType": "feature",
+      "fileName": "counter-window-countdown",
+      "position": { "x": 700, "y": 400 },
+      "dependencies": ["parry-opens-counter-window"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "execute-counter-in-window",
+      "workflowId": "combat-defense",
+      "title": "Execute Counter In Window",
+      "description": "Given a counter window is active, when ExecuteCounter() is called, then the defender's Counter action is found from AvailableActions and executed on the attacker. Counter window ends and NextTurn is called.",
+      "nodeType": "feature",
+      "fileName": "execute-counter-in-window",
+      "position": { "x": 500, "y": 550 },
+      "dependencies": ["parry-opens-counter-window"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "perfect-timing-check",
+      "workflowId": "combat-defense",
+      "title": "Perfect Timing Check",
+      "description": "Given remainingTime and totalDuration, when IsPerfectTiming() is called, then returns true if (remainingTime / totalDuration) <= 0.15. Returns false if totalDuration <= 0.",
+      "nodeType": "feature",
+      "fileName": "perfect-timing-check",
+      "position": { "x": 100, "y": 550 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "real-time-window-resolve",
+      "workflowId": "combat-defense",
+      "title": "Real Time Window Resolve",
+      "description": "Given a real-time defense window expires, when ResolveDefenseWindow() runs, then: checks if parry succeeded (Ward + IsParrying + AttemptParry), checks dodge (Escapade + IsDodging + AttemptDodge), applies defense-window damage, starts counter window if parry succeeded.",
+      "nodeType": "feature",
+      "fileName": "real-time-window-resolve",
+      "position": { "x": 300, "y": 550 },
+      "dependencies": ["parry-reduces-damage", "dodge-success"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "game-settings-adjust-window",
+      "workflowId": "combat-defense",
+      "title": "Game Settings Adjust Window",
+      "description": "Given GameSettings is assigned on TurnManager, when StartRealTimeWindow is called, then duration is modified by Settings.GetAdjustedWindow() for accessibility scaling.",
+      "nodeType": "feature",
+      "fileName": "game-settings-adjust-window",
+      "position": { "x": 700, "y": 550 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "dodge-start-to-countdown", "source": "start-dodge-window", "target": "dodge-window-countdown" },
+    { "id": "dodge-start-to-success", "source": "start-dodge-window", "target": "dodge-success" },
+    { "id": "dodge-countdown-to-fail", "source": "dodge-window-countdown", "target": "dodge-fail" },
+    { "id": "dodge-success-to-kynde", "source": "dodge-success", "target": "dodge-grants-kynde" },
+    { "id": "parry-start-to-countdown", "source": "start-parry-window", "target": "parry-window-countdown" },
+    { "id": "parry-start-to-reduces", "source": "start-parry-window", "target": "parry-reduces-damage" },
+    { "id": "parry-reduces-to-kynde", "source": "parry-reduces-damage", "target": "parry-success-grants-kynde" },
+    { "id": "parry-reduces-to-counter", "source": "parry-reduces-damage", "target": "parry-opens-counter-window" },
+    { "id": "counter-open-to-countdown", "source": "parry-opens-counter-window", "target": "counter-window-countdown" },
+    { "id": "counter-open-to-execute", "source": "parry-opens-counter-window", "target": "execute-counter-in-window" },
+    { "id": "parry-to-resolve", "source": "parry-reduces-damage", "target": "real-time-window-resolve" },
+    { "id": "dodge-to-resolve", "source": "dodge-success", "target": "real-time-window-resolve" }
+  ]
+}

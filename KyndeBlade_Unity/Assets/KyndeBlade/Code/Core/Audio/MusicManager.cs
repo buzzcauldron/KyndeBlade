@@ -9,6 +9,15 @@ namespace KyndeBlade
     {
         public static MusicManager Instance { get; private set; }
 
+        /// <summary>Fired whenever <see cref="PlayTheme"/> is invoked with the resolved theme id (before clip lookup). Tests can subscribe without playing audio.</summary>
+        public event Action<string> OnMusicThemeChangeRequested;
+
+        /// <summary>When true, <see cref="PlayTheme"/> updates <see cref="ActiveThemeId"/> and fires <see cref="OnMusicThemeChangeRequested"/> but does not start audio coroutines. Use in automated tests.</summary>
+        public static bool SuppressAudioOutputForTests { get; set; }
+
+        /// <summary>Last theme id set by <see cref="PlayTheme"/> (including when suppressed).</summary>
+        public string ActiveThemeId => _currentThemeId ?? "";
+
         [Header("Themes (assign in Inspector)")]
         public AudioClip DefaultTheme;
         public AudioClip GreenKnightTheme;
@@ -64,15 +73,31 @@ namespace KyndeBlade
 
         public void PlayTheme(string themeId)
         {
+            string id = string.IsNullOrEmpty(themeId) ? "default" : themeId;
+            OnMusicThemeChangeRequested?.Invoke(id);
+
+            if (SuppressAudioOutputForTests)
+            {
+                _currentThemeId = id;
+                return;
+            }
+
             var clip = GetClipForTheme(themeId);
             if (clip == null) return;
-            _currentThemeId = themeId ?? "default";
+            _currentThemeId = id;
             StartCoroutine(CrossfadeTo(clip, _currentThemeId));
         }
 
         /// <summary>Play Green Knight theme as omen, then switch to Orfeo theme (before Otherworld).</summary>
         public void PlayOmenThenOrfeo(Action onOmenComplete)
         {
+            if (SuppressAudioOutputForTests)
+            {
+                OnMusicThemeChangeRequested?.Invoke("green_knight");
+                OnMusicThemeChangeRequested?.Invoke("orfeo");
+                onOmenComplete?.Invoke();
+                return;
+            }
             StartCoroutine(OmenThenOrfeoRoutine(onOmenComplete));
         }
 

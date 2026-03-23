@@ -14,6 +14,7 @@ namespace KyndeBlade
         public static NarrativeManager NarrativeManager { get; set; }
         public static MusicManager MusicManager { get; set; }
         public static DialogueSystem DialogueSystem { get; set; }
+        public static GameFlowController GameFlowController { get; set; }
 
         /// <summary>Clear all refs so the next scene does not use stale managers. Called by KyndeBladeGameManager.OnDestroy.</summary>
         public static void Clear()
@@ -27,6 +28,7 @@ namespace KyndeBlade
             NarrativeManager = null;
             MusicManager = null;
             DialogueSystem = null;
+            GameFlowController = null;
         }
     }
 }

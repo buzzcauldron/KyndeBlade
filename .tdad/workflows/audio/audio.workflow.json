@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "music-combat-transition",
+      "workflowId": "audio",
+      "title": "Music theme transitions",
+      "description": "Given MusicManager.PlayTheme(themeId), when audio is not suppressed, then crossfade runs; when SuppressAudioOutputForTests is true, OnMusicThemeChangeRequested fires and ActiveThemeId updates without playback.",
+      "nodeType": "feature",
+      "fileName": "music-combat-transition",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "sfx-strike-sync",
+      "workflowId": "audio",
+      "title": "SFX sync with strike",
+      "description": "Given a deferred melee hit, when OnAnimationHit fires, then strike SFX plays at impact (contract for future AudioDirector).",
+      "nodeType": "feature",
+      "fileName": "sfx-strike-sync",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    }
+  ],
+  "edges": []
+}

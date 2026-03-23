@@ -14,6 +14,12 @@ namespace KyndeBlade
         [Header("Difficulty")]
         public DifficultyMode Difficulty = DifficultyMode.Normal;
 
+        [Header("Presentation (combat)")]
+        [Tooltip("Full-screen combat backdrop (SNES-style dark void). Applied by KyndeBladeGameManager.EnsureCombatBackground.")]
+        public Color CombatBackdropColor = new Color(0.06f, 0.07f, 0.1f, 0.96f);
+        [Tooltip("Optional orange/brown strip at bottom of combat view (hazard read).")]
+        public bool ShowCombatForegroundHazardStrip;
+
         public float GetAdjustedWindow(float baseWindow)
         {
             float mult = TimingWindowMultiplier;

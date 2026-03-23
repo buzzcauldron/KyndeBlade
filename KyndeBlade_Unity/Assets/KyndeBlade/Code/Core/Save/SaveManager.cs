@@ -3,12 +3,26 @@ using UnityEngine;
 
 namespace KyndeBlade
 {
+    /// <summary>Cross-run meta progress (not cleared by NewGame). Serialized separately from <see cref="GameProgress"/>.</summary>
+    [Serializable]
+    public class MetaProgressState
+    {
+        public int LifetimeRunCount;
+    }
+
     /// <summary>Save/load game progress. Phase 1: checkpoint per location.</summary>
     public class SaveManager : MonoBehaviour
     {
         const string SaveKey = "KyndeBlade_Save";
+        const string MetaKey = "KyndeBlade_Meta";
+
+        /// <summary>True when a serialized game save exists in PlayerPrefs (enables Continue on main menu).</summary>
+        public bool HasSavedGame =>
+            PlayerPrefs.HasKey(SaveKey) && !string.IsNullOrEmpty(PlayerPrefs.GetString(SaveKey, null));
 
         public GameProgress CurrentProgress { get; private set; }
+
+        MetaProgressState _meta;
 
         public event Action<GameProgress> OnProgressLoaded;
         public event Action<GameProgress> OnProgressSaved;
@@ -16,6 +30,51 @@ namespace KyndeBlade
         void Awake()
         {
             Load();
+            LoadMeta();
+        }
+
+        void LoadMeta()
+        {
+            var json = PlayerPrefs.GetString(MetaKey, null);
+            if (string.IsNullOrEmpty(json))
+            {
+                _meta = new MetaProgressState();
+                return;
+            }
+            try
+            {
+                _meta = JsonUtility.FromJson<MetaProgressState>(json) ?? new MetaProgressState();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"SaveManager: Failed to load meta progress: {e.Message}");
+                _meta = new MetaProgressState();
+            }
+        }
+
+        void SaveMeta()
+        {
+            if (_meta == null) _meta = new MetaProgressState();
+            PlayerPrefs.SetString(MetaKey, JsonUtility.ToJson(_meta));
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>Number of completed runs (final victory, Green Chapel restart, death-of-old-age restart, etc.). Persists across <see cref="NewGame"/>.</summary>
+        public int LifetimeRunCount => _meta?.LifetimeRunCount ?? 0;
+
+        public void IncrementLifetimeRunCount()
+        {
+            if (_meta == null) LoadMeta();
+            _meta.LifetimeRunCount++;
+            SaveMeta();
+        }
+
+        /// <summary>Sample multi-run tuning factor: +2% per run, capped at 15 runs (see BUILDING_MECHANICS doc).</summary>
+        public float GetMultiRunScalingFactor()
+        {
+            if (_meta == null) LoadMeta();
+            int n = Mathf.Min(_meta.LifetimeRunCount, 15);
+            return 1f + 0.02f * n;
         }
 
         public void Load()

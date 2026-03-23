@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "spawn_lanes": {
+    "party_wille": "Grants modify Wille / dreamer slot (Unity: first party member; Godot: baseline strike/dodge/parry).",
+    "party_ally": "Reserved for Piers / Conscience when those allies exist in port.",
+    "fae_modifies": "Modifies fairy-transform ecology (Unity FaeAppearanceManager analogue).",
+    "green_knight_ecology": "Modifies Green Knight random spawn / post-chapel cycle tension."
+  },
+  "medieval_texts": [
+    {
+      "id": "tower_vista",
+      "unity_beat_id": "tower_vista",
+      "title": "Tower vista",
+      "spawn_lane": "party_wille",
+      "player_facing_name": "The tour upon the toft",
+      "grants_codes": ["dreamer_ledger_stride"],
+      "detrimental": false,
+      "hidden_drawback": null
+    },
+    {
+      "id": "hunger_reflection",
+      "unity_beat_id": "hunger_reflection",
+      "title": "Hunger reflection",
+      "spawn_lane": "party_wille",
+      "player_facing_name": "A lean rede from the feeld",
+      "grants_codes": ["hunger_strike_surge"],
+      "detrimental": true,
+      "hidden_drawback": "UI blurb stresses 'keen edge'; stamina tax on every strike is omitted until the player notices."
+    },
+    {
+      "id": "FayreFelde",
+      "unity_beat_id": "FayreFelde",
+      "title": "Fair Field arrival",
+      "spawn_lane": "party_wille",
+      "player_facing_name": "Ful of folke",
+      "grants_codes": ["crowd_surge"],
+      "detrimental": true,
+      "hidden_drawback": "Bonus damage; feint read skews one step (Mede-echo of the crowd)."
+    },
+    {
+      "id": "GreenChapelChallenge",
+      "unity_beat_id": "GreenChapelChallenge",
+      "title": "Green Chapel words",
+      "spawn_lane": "green_knight_ecology",
+      "player_facing_name": "The Grene Knyghtes covenant",
+      "grants_codes": ["ward_warden", "gk_pressure_trace"],
+      "detrimental": true,
+      "hidden_drawback": "Ward-warden taxes dodge stamina; GK trace slightly raises follow-up pressure (design hook)."
+    },
+    {
+      "id": "OtherworldArrival",
+      "unity_beat_id": "OtherworldArrival",
+      "title": "Fairy realm",
+      "spawn_lane": "fae_modifies",
+      "player_facing_name": "Fayerie cadence",
+      "grants_codes": ["fae_drift_step"],
+      "detrimental": true,
+      "hidden_drawback": "Player text: lighter step. World: higher fae transform chance on the field."
+    },
+    {
+      "id": "MalvernPrologue",
+      "unity_beat_id": "MalvernPrologue",
+      "title": "Malvern prologue",
+      "spawn_lane": "party_wille",
+      "player_facing_name": "Somer seson",
+      "grants_codes": ["drowse_guard"],
+      "detrimental": false,
+      "hidden_drawback": null
+    }
+  ],
+  "moveset_codes": {
+    "dreamer_ledger_stride": {
+      "apply_to_spawn_lane": "party_wille",
+      "strike_stamina_cost_delta": 5,
+      "strike_damage_delta": 4,
+      "feint_pattern_offset_delta": 0
+    },
+    "hunger_strike_surge": {
+      "apply_to_spawn_lane": "party_wille",
+      "strike_stamina_cost_delta": 3,
+      "strike_damage_delta": 6,
+      "feint_pattern_offset_delta": 0,
+      "parry_window_ms_penalty": 12,
+      "detrimental": true
+    },
+    "crowd_surge": {
+      "apply_to_spawn_lane": "party_wille",
+      "strike_damage_delta": 3,
+      "feint_pattern_offset_delta": 1,
+      "parry_window_ms_penalty": 8,
+      "detrimental": true
+    },
+    "ward_warden": {
+      "apply_to_spawn_lane": "party_wille",
+      "dodge_stamina_flat_extra": 5,
+      "feint_pattern_offset_delta": 0,
+      "parry_window_ms_penalty": 6,
+      "detrimental": true
+    },
+    "gk_pressure_trace": {
+      "apply_to_spawn_lane": "green_knight_ecology",
+      "green_knight_random_weight_delta": 0.03,
+      "detrimental": false
+    },
+    "fae_drift_step": {
+      "apply_to_spawn_lane": "fae_modifies",
+      "fae_chance_delta": 0.12,
+      "detrimental": true
+    },
+    "drowse_guard": {
+      "apply_to_spawn_lane": "party_wille",
+      "strike_stamina_cost_delta": -2,
+      "strike_damage_delta": -1,
+      "feint_pattern_offset_delta": 0
+    }
+  }
+}

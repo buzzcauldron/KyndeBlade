@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -90,6 +89,8 @@ namespace KyndeBlade
 
         void TryLazyInit()
         {
+            var flow = UnityEngine.Object.FindFirstObjectByType<GameFlowController>();
+            if (flow != null && flow.BlocksWorldInit) return;
             if (_lazyInitDone || CurrentLocation != null) return;
             LocationNode toSet = StartLocation;
             if (!string.IsNullOrEmpty(DemoTestHelper.OverrideStartLocationId))
@@ -111,7 +112,8 @@ namespace KyndeBlade
                         SaveManager.UnlockLocation(nextId);
                 }
                 // First view at tower: show vista story beat then map (demo: confined, lovely, spooky, overlooking fair field)
-                if (string.Equals(toSet.LocationId, GameWorldConstants.LocationTowerOnToft, StringComparison.OrdinalIgnoreCase)
+                if (!DemoTestHelper.SkipTowerIntroStoryActive
+                    && string.Equals(toSet.LocationId, GameWorldConstants.LocationTowerOnToft, StringComparison.OrdinalIgnoreCase)
                     && toSet.StoryBeatOnArrival != null && NarrativeManager != null)
                 {
                     var mapCanvas = GameObject.Find("MapCanvas");
@@ -169,6 +171,13 @@ namespace KyndeBlade
         public LocationNode GetLocation(string id)
         {
             return _locationById != null && _locationById.TryGetValue(id, out var loc) ? loc : null;
+        }
+
+        /// <summary>After main menu dismiss, allow <see cref="TryLazyInit"/> to run again from Update.</summary>
+        public void ResetLazyInitializationFromMenu()
+        {
+            _lazyInitDone = false;
+            CurrentLocation = null;
         }
 
         /// <summary>Transition to a location. Loads scene if set, or triggers encounter in current scene.</summary>
@@ -339,9 +348,6 @@ namespace KyndeBlade
         {
             var mapCanvas = GameObject.Find("MapCanvas");
             var combatCanvas = GameObject.Find("CombatCanvas");
-            // #region agent log
-            try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"WorldMapManager.cs:ShowMapHideCombat\",\"message\":\"show map\",\"data\":{\"mapFound\":" + (mapCanvas != null ? "true" : "false") + ",\"combatFound\":" + (combatCanvas != null ? "true" : "false") + ",\"locId\":" + (CurrentLocation != null ? "\"" + CurrentLocation.LocationId + "\"" : "null") + "},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H2\"}\n"); } catch { }
-            // #endregion
             if (mapCanvas != null) mapCanvas.SetActive(true);
             if (combatCanvas != null) combatCanvas.SetActive(false);
             var mapUI = UnityEngine.Object.FindFirstObjectByType<MapLevelSelectUI>();

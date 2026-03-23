@@ -1,0 +1,99 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "display-story-beat",
+      "workflowId": "narrative",
+      "title": "Display Story Beat",
+      "description": "Given a StoryBeat ScriptableObject with text, speaker, optional portrait, and display duration, when DialogueSystem.ShowStoryBeat() is called, then the text is displayed in manuscript-themed UI for the specified duration.",
+      "nodeType": "feature",
+      "fileName": "display-story-beat",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "story-beat-sequence",
+      "workflowId": "narrative",
+      "title": "Story Beat Sequence",
+      "description": "Given a list of StoryBeats, when NarrativeManager.PlayStoryBeats() is called, then each beat is displayed in sequence with its duration, and a completion callback fires after the last beat.",
+      "nodeType": "feature",
+      "fileName": "story-beat-sequence",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["display-story-beat"],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "dialogue-choice-present",
+      "workflowId": "narrative",
+      "title": "Dialogue Choice Present",
+      "description": "Given a DialogueChoiceBeat with multiple choices, when DialogueSystem presents it, then choice buttons appear in manuscript-themed UI with the choice text labels.",
+      "nodeType": "feature",
+      "fileName": "dialogue-choice-present",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "dialogue-choice-resolve",
+      "workflowId": "narrative",
+      "title": "Dialogue Choice Resolve",
+      "description": "Given a DialogueChoiceBeat is presented, when the player selects the correct choice then it triggers a location transition. When the wrong choice is selected (and a sin miniboss is configured), then a sin miniboss encounter starts.",
+      "nodeType": "feature",
+      "fileName": "dialogue-choice-resolve",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["dialogue-choice-present"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "boss-dialogue-entry",
+      "workflowId": "narrative",
+      "title": "Boss Dialogue Entry",
+      "description": "Given a boss encounter with entry dialogue configured, when combat starts and BossDialogueManager processes entry, then the entry dialogue lines are displayed in manuscript UI.",
+      "nodeType": "feature",
+      "fileName": "boss-dialogue-entry",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "boss-dialogue-midpoint",
+      "workflowId": "narrative",
+      "title": "Boss Dialogue Midpoint",
+      "description": "Given a boss in combat whose HP crosses the midpoint threshold (e.g. 50%), when BossDialogueManager checks, then midpoint dialogue lines are triggered.",
+      "nodeType": "feature",
+      "fileName": "boss-dialogue-midpoint",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["boss-dialogue-entry"],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "boss-dialogue-desperation",
+      "workflowId": "narrative",
+      "title": "Boss Dialogue Desperation",
+      "description": "Given a boss in combat whose HP crosses the desperation threshold (e.g. 20%), when BossDialogueManager checks, then desperation dialogue lines are triggered.",
+      "nodeType": "feature",
+      "fileName": "boss-dialogue-desperation",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["boss-dialogue-midpoint"],
+      "testLayers": ["ui"]
+    },
+    {
+      "id": "manuscript-theme-display",
+      "workflowId": "narrative",
+      "title": "Manuscript Theme Display",
+      "description": "Given BossDialogueDisplay, when text is shown, then ManuscriptUITheme styling is applied: parchment background, ink text color, gold emphasis, rubrication for key words.",
+      "nodeType": "feature",
+      "fileName": "manuscript-theme-display",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["ui"]
+    }
+  ],
+  "edges": [
+    { "id": "story-to-sequence", "source": "display-story-beat", "target": "story-beat-sequence" },
+    { "id": "choice-to-resolve", "source": "dialogue-choice-present", "target": "dialogue-choice-resolve" },
+    { "id": "entry-to-midpoint", "source": "boss-dialogue-entry", "target": "boss-dialogue-midpoint" },
+    { "id": "midpoint-to-desperation", "source": "boss-dialogue-midpoint", "target": "boss-dialogue-desperation" }
+  ]
+}

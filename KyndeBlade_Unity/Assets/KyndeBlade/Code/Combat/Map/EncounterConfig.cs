@@ -32,6 +32,8 @@ namespace KyndeBlade
             public MedievalCharacter Prefab;
             public string CharacterTypeName;
             public Vector3 Position;
+            [Tooltip("Multiply instantiated enemy lossy scale (e.g. 1.4 for imposing boss). 1 = default.")]
+            public float LocalScaleMultiplier = 1f;
         }
     }
 }

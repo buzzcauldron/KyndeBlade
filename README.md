@@ -1,6 +1,6 @@
-# Kynde Blade 16 Bit
+# Kynde Blade
 
-A **16-bit style** turn-based RPG with real-time combat mechanics, built in **Unity**. Merged from KyndeBlade + kyndeblade-5.7 into a single Unity-first project. Named after "Kynde" (Nature) from the medieval poem Piers Plowman.
+A **high-bit style** turn-based RPG with real-time combat mechanics, built in **Unity**. Merged from KyndeBlade + kyndeblade-5.7 into a single Unity-first project. Named after "Kynde" (Nature) from the medieval poem Piers Plowman.
 
 ## Quick Start
 
@@ -15,20 +15,16 @@ A **16-bit style** turn-based RPG with real-time combat mechanics, built in **Un
 ## Project Structure
 
 ```
-Kynde Blade 16 Bit/             # Repo root
+Kynde Blade/                    # Repo root
 ├── KyndeBlade_Unity/          # Unity project root (open this in Unity Hub)
 │   ├── Assets/
-│   │   ├── _Project/          # Feature-based layout
-│   │   │   ├── Code/          # Core, Combat, UI assemblies
-│   │   │   ├── Art/           # Sprites, animations
-│   │   │   └── Data/          # ScriptableObjects (enemy stats, etc.)
-│   │   └── Scenes/
+│   │   └── KyndeBlade/        # Game code, docs, resources
 │   ├── ProjectSettings/
 │   └── Packages/
-├── ProjectArchive/            # Docs + non-Unity (keeps root clean for Unity Hub)
-│   ├── docs/                  # Design documents
-│   ├── legacy/                # Unreal Engine 5.7
-│   └── GodotPrototype/        # Godot prototype
+├── KyndeBlade_Godot/          # Godot 4 port (sibling to Unity; open this in Godot)
+├── ProjectArchive/            # Docs + legacy engines
+│   ├── docs/
+│   └── legacy/                # Unreal Engine 5.7 (historical)
 └── README.md
 ```
 
@@ -40,13 +36,33 @@ Kynde Blade 16 Bit/             # Repo root
 - **Status effects** — Hunger (worst), Frost, Burning, Poison
 - **Piers Plowman** — Enemies: False, Lady Mede, Wrath; themes of work, poverty, spiritual seeking
 
+## Planning canon (combat + world + structure)
+
+- **Single map of careful work:** [docs/KYNDEBLADE_CAREFUL_CANON.md](docs/KYNDEBLADE_CAREFUL_CANON.md) — worldbuilding, combat planning, TDAD/oracle, links to leaf docs (including UMich *Piers Plowman* full text for dialogue).
+
+## TDAD: demo vs Steam
+
+- **Tier A (playable demo):** [docs/TDAD_RELEASE_PATHS.md](docs/TDAD_RELEASE_PATHS.md) — links to `.tdad/workflows/demo-vertical-slice/`, BDD feature file, and `KyndeBlade_Unity/.../DEMO_RUN.md`.
+- **Tier B (Steam / EA planning):** same doc — `.tdad/workflows/steam-early-access/` and `plan-steam-milestones.md` prompt.
+
+## TDAD: Godot full port (gated) + Unity archive
+
+- **Milestones M1–M6:** [`.tdad/workflows/godot-full-port/godot-full-port.workflow.json`](.tdad/workflows/godot-full-port/godot-full-port.workflow.json) — Unity **demo-vertical-slice** is the oracle until M6 sign-off.
+- **Parity slice (Godot):** [`.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json`](.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json) and [`.tdad/bdd/godot-parity-slice.feature`](.tdad/bdd/godot-parity-slice.feature).
+- **Godot project:** [`KyndeBlade_Godot/`](KyndeBlade_Godot/README.md) — headless tests: [`docs/CI_GODOT_TESTS.md`](docs/CI_GODOT_TESTS.md).
+- **Unity archive slot (after M6 only):** [`ProjectArchive/UnityKyndeBlade/README.md`](ProjectArchive/UnityKyndeBlade/README.md) — `KyndeBlade_Unity/` stays at repo root until then.
+
+## Cult-ship, coauthorship, voice
+
+- **[docs/CULT_AND_COAUTHORSHIP.md](docs/CULT_AND_COAUTHORSHIP.md)** — index to ship bar, commission riders, community poetry gate, authorial override, release-note voice template (`KyndeBlade_Godot/docs/`).
+
 ## Design Docs
 
 Design docs live in **ProjectArchive/docs/** so the repo root stays clean (Unity Hub sees only KyndeBlade_Unity).
 
 | Doc | Description |
 |-----|-------------|
-| `ProjectArchive/docs/VISUAL_DESIGN_ALAN_LEE.md` | 16-bit art direction, palettes, sprites |
+| `ProjectArchive/docs/VISUAL_DESIGN_ALAN_LEE.md` | High-bit art direction, palettes, sprites |
 | `ProjectArchive/docs/GAMEPLAY_DESIGN.md` | Combat mechanics, Haunting Actions |
 | `ProjectArchive/docs/CODE_ARCHITECTURE.md` | One-script-one-job, refactor plan |
 
@@ -55,7 +71,7 @@ Design docs live in **ProjectArchive/docs/** so the repo root stays clean (Unity
 Non-Unity work and docs live in **ProjectArchive/** so Unity Hub recognizes the project from **KyndeBlade_Unity/** only.
 
 - **ProjectArchive/legacy/** — Unreal Engine 5.7 C++. To build: `cd ProjectArchive/legacy && ./build_5.7.sh [path/to/UnrealEngine]`
-- **ProjectArchive/GodotPrototype/** — Godot prototype
+- **KyndeBlade_Godot/** — Godot port (sibling to `KyndeBlade_Unity/`)
 - **ProjectArchive/docs/** — Design and architecture docs
 
 ## License

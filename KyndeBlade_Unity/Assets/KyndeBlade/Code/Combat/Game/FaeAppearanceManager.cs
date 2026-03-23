@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 namespace KyndeBlade
@@ -87,9 +86,6 @@ namespace KyndeBlade
                 return;
 
             var pick = all[UnityEngine.Random.Range(0, all.Count)];
-            // #region agent log
-            try { var _p = "/Users/halxiii/KyndeBlade/.cursor/debug.log"; var _d = Path.GetDirectoryName(_p); if (!string.IsNullOrEmpty(_d)) Directory.CreateDirectory(_d); File.AppendAllText(_p, "{\"location\":\"FaeAppearanceManager.cs:TryApplyFairy\",\"message\":\"apply fae\",\"data\":{\"pick\":" + (pick != null ? "\"" + pick.name + "\"" : "null") + ",\"hadCurrent\":" + (_currentFairyCharacter != null ? "true" : "false") + "},\"timestamp\":" + (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds + ",\"hypothesisId\":\"H4\"}\n"); } catch { }
-            // #endregion
             if (_currentFairyCharacter != null)
                 _currentFairyCharacter.RemoveFairyForm();
             pick.ApplyFairyForm(FairyFormDuration);

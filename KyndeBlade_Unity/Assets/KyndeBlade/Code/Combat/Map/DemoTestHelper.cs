@@ -11,8 +11,16 @@ namespace KyndeBlade
         [Tooltip("Target location for Skip To Location (e.g. fayre_felde).")]
         public string SkipToLocationId;
 
+        [Tooltip("If true, Tower on the Toft arrival story beat is skipped and the map shows immediately (faster slice QA).")]
+        public bool SkipTowerIntroStory;
+
         /// <summary>When non-null, WorldMapManager uses this in TryLazyInit instead of saved/StartLocation for initial location.</summary>
         public static string OverrideStartLocationId { get; private set; }
+
+        /// <summary>When true, <see cref="WorldMapManager"/> skips the tour/tower narrative on first load.</summary>
+        public static bool SkipTowerIntroStoryActive { get; private set; }
+
+        static int _skipTowerIntroRefCount;
 
         void Awake()
         {
@@ -20,12 +28,22 @@ namespace KyndeBlade
                 OverrideStartLocationId = ForceStartLocationId;
             else
                 OverrideStartLocationId = null;
+            if (SkipTowerIntroStory)
+            {
+                _skipTowerIntroRefCount++;
+                SkipTowerIntroStoryActive = true;
+            }
         }
 
         void OnDestroy()
         {
             if (OverrideStartLocationId == ForceStartLocationId)
                 OverrideStartLocationId = null;
+            if (SkipTowerIntroStory)
+            {
+                _skipTowerIntroRefCount = Mathf.Max(0, _skipTowerIntroRefCount - 1);
+                SkipTowerIntroStoryActive = _skipTowerIntroRefCount > 0;
+            }
         }
 
         [ContextMenu("Skip to Location")]

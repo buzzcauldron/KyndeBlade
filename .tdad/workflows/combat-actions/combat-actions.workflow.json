@@ -1,0 +1,162 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "execute-strike",
+      "workflowId": "combat-actions",
+      "title": "Execute Strike",
+      "description": "Given a character with sufficient stamina, when Strike action is executed on a target, then target takes damage (via CombatCalculator), executor loses StaminaCost stamina, executor gains KyndeGenerated Kynde, and target takes BreakDamage to break gauge.",
+      "nodeType": "feature",
+      "fileName": "execute-strike",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "execute-rest",
+      "workflowId": "combat-actions",
+      "title": "Execute Rest",
+      "description": "Given a character's turn, when Rest action is executed, then executor restores 20 stamina via RestoreStamina(), removes 1 hunger stack via RemoveHungerStack(), and costs 0 stamina.",
+      "nodeType": "feature",
+      "fileName": "execute-rest",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "execute-heal",
+      "workflowId": "combat-actions",
+      "title": "Execute Heal",
+      "description": "Given a character with a Heal action, when executed on a target (or self if no target), then target heals by ActionData.Damage amount and one hunger stack is removed.",
+      "nodeType": "feature",
+      "fileName": "execute-heal",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "execute-ranged-strike",
+      "workflowId": "combat-actions",
+      "title": "Execute Ranged Strike",
+      "description": "Given a character with a RangedStrike action, when executed on a target, then target takes damage identical to Strike path (deferred hit if Animator present), executor loses stamina, break damage applied.",
+      "nodeType": "feature",
+      "fileName": "execute-ranged-strike",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "execute-escapade",
+      "workflowId": "combat-actions",
+      "title": "Execute Escapade",
+      "description": "Given a character with sufficient stamina, when Escapade action is executed, then the TurnManager enters RealTimeWindow state with SuccessWindow duration for dodge.",
+      "nodeType": "feature",
+      "fileName": "execute-escapade",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "execute-ward",
+      "workflowId": "combat-actions",
+      "title": "Execute Ward",
+      "description": "Given a character with sufficient stamina, when Ward action is executed, then the TurnManager enters RealTimeWindow state with SuccessWindow duration for parry.",
+      "nodeType": "feature",
+      "fileName": "execute-ward",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "execute-counter",
+      "workflowId": "combat-actions",
+      "title": "Execute Counter",
+      "description": "Given a counter window is active after successful parry, when Counter action is executed, then target takes 1.5x calculated damage.",
+      "nodeType": "feature",
+      "fileName": "execute-counter",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "action-stamina-gate",
+      "workflowId": "combat-actions",
+      "title": "Action Stamina Gate",
+      "description": "Given a character with current stamina less than an action's StaminaCost, when CanExecute() is checked, then it returns false and the action does not execute.",
+      "nodeType": "feature",
+      "fileName": "action-stamina-gate",
+      "position": { "x": 700, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "action-kynde-gate",
+      "workflowId": "combat-actions",
+      "title": "Action Kynde Gate",
+      "description": "Given a character with current Kynde less than an action's KyndeCost, when the action is executed, then ConsumeKynde returns false and the action does not proceed.",
+      "nodeType": "feature",
+      "fileName": "action-kynde-gate",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "action-kynde-generation",
+      "workflowId": "combat-actions",
+      "title": "Action Kynde Generation",
+      "description": "Given a Strike action with KyndeGenerated > 0, when the action is executed, then the executor gains KyndeGenerated amount of Kynde via GainKynde().",
+      "nodeType": "feature",
+      "fileName": "action-kynde-generation",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": ["execute-strike"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "deferred-hit-animation",
+      "workflowId": "combat-actions",
+      "title": "Deferred Hit Animation",
+      "description": "Given a character with an Animator component, when a Strike/Counter/RangedStrike is executed, then WillDeferHitToAnimation() returns true, RegisterPendingHit stores the action and target, and OnAnimationHit() applies the hit and clears pending state.",
+      "nodeType": "feature",
+      "fileName": "deferred-hit-animation",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "create-default-actions",
+      "workflowId": "combat-actions",
+      "title": "Create Default Actions",
+      "description": "Given a MedievalCharacter with no available actions, when DefaultCombatActions.AddDefaultsTo() is called, then AvailableActions contains Strike (15dmg, 15stam, 2kynde, 10break), Rest (0stam), Escapade (20stam), and Ward (25stam).",
+      "nodeType": "feature",
+      "fileName": "create-default-actions",
+      "position": { "x": 700, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "action-cast-time",
+      "workflowId": "combat-actions",
+      "title": "Action Cast Time",
+      "description": "Given an action with CastTime > 0, when ExecuteAction is called, then ActionCastTimeRemaining is set and ProcessActionCast is deferred until the timer elapses.",
+      "nodeType": "feature",
+      "fileName": "action-cast-time",
+      "position": { "x": 100, "y": 550 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "action-execution-time",
+      "workflowId": "combat-actions",
+      "title": "Action Execution Time",
+      "description": "Given an action with ExecutionTime > 0, when ProcessActionCast completes, then ActionExecutionTimeRemaining is set and ProcessActionExecution is deferred until the timer elapses.",
+      "nodeType": "feature",
+      "fileName": "action-execution-time",
+      "position": { "x": 300, "y": 550 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "strike-to-kynde-gen", "source": "execute-strike", "target": "action-kynde-generation" }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "set-current-location",
+      "workflowId": "map-progression",
+      "title": "Set Current Location",
+      "description": "Given a WorldMapManager with locations loaded, when SetCurrentLocation(loc) is called, then CurrentLocation is updated and OnLocationChanged event fires with the new location.",
+      "nodeType": "feature",
+      "fileName": "set-current-location",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "get-next-locations",
+      "workflowId": "map-progression",
+      "title": "Get Next Locations",
+      "description": "Given a current location with NextLocationIds ['b', 'c'], when GetNextLocations() is called, then it returns the LocationNode objects for 'b' and 'c' from the index.",
+      "nodeType": "feature",
+      "fileName": "get-next-locations",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": ["set-current-location"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "transition-to-location",
+      "workflowId": "map-progression",
+      "title": "Transition To Location",
+      "description": "Given a target LocationNode, when TransitionTo() is called, then story beats are triggered, dialogue choices are presented if configured, and encounter starts if the location has an EncounterConfig.",
+      "nodeType": "feature",
+      "fileName": "transition-to-location",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["set-current-location"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "location-story-beats",
+      "workflowId": "map-progression",
+      "title": "Location Story Beats",
+      "description": "Given a LocationNode with configured StoryBeats, when TransitionTo is called, then NarrativeManager.PlayStoryBeats is called with the location's beats before combat starts.",
+      "nodeType": "feature",
+      "fileName": "location-story-beats",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["transition-to-location"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "location-dialogue-choices",
+      "workflowId": "map-progression",
+      "title": "Location Dialogue Choices",
+      "description": "Given a LocationNode with a DialogueChoiceBeat, when TransitionTo is called, then NarrativeManager presents choices. Correct choice triggers next location; wrong choice may trigger sin miniboss encounter.",
+      "nodeType": "feature",
+      "fileName": "location-dialogue-choices",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["transition-to-location"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "encounter-config-spawn",
+      "workflowId": "map-progression",
+      "title": "Encounter Config Spawn",
+      "description": "Given an EncounterConfig ScriptableObject, when combat starts from that config, then enemy characters and boss are spawned as configured, and hazard configs are passed to CombatHazardManager.",
+      "nodeType": "feature",
+      "fileName": "encounter-config-spawn",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "rebuild-location-index",
+      "workflowId": "map-progression",
+      "title": "Rebuild Location Index",
+      "description": "Given AllLocations list on WorldMapManager, when RebuildLocationIndex() is called, then a dictionary mapping LocationId to LocationNode is built for O(1) lookups via GetLocation(id).",
+      "nodeType": "feature",
+      "fileName": "rebuild-location-index",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "scene-transition",
+      "workflowId": "map-progression",
+      "title": "Scene Transition",
+      "description": "Given a SceneTransition component with a target location, when its button is clicked, then WorldMapManager.TransitionTo() is called with the configured LocationNode.",
+      "nodeType": "feature",
+      "fileName": "scene-transition",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": ["transition-to-location"],
+      "testLayers": ["ui"]
+    }
+  ],
+  "edges": [
+    { "id": "set-to-next", "source": "set-current-location", "target": "get-next-locations" },
+    { "id": "set-to-transition", "source": "set-current-location", "target": "transition-to-location" },
+    { "id": "transition-to-story", "source": "transition-to-location", "target": "location-story-beats" },
+    { "id": "transition-to-choices", "source": "transition-to-location", "target": "location-dialogue-choices" },
+    { "id": "transition-to-scene", "source": "transition-to-location", "target": "scene-transition" }
+  ]
+}

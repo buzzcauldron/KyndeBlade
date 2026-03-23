@@ -22,5 +22,9 @@ namespace KyndeBlade
         [Header("Campaign")]
         public int VisionIndex;
         public int PassusIndex;
+
+        [Header("Presentation (vista lane)")]
+        [Tooltip("Optional full-screen image behind the dialogue panel while this beat is shown.")]
+        public Texture2D StoryBackdrop;
     }
 }

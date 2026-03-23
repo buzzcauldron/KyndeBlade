@@ -15,6 +15,9 @@ namespace KyndeBlade
         public const string LocationFairField = "fayre_felde";
         /// <summary>Default start location for new game (demo: Tower on the Toft).</summary>
         public const string DefaultStartLocationId = "tour";
+
+        /// <summary>Canonical first combat in the vertical slice: Fair Field (FayreFeldeEncounter — one False).</summary>
+        public const string PlayableSliceFirstCombatLocationId = "fayre_felde";
         public const string LocationGreenChapel = "green_chapel";
         public const string LocationOtherworld = "otherworld";
         public const string LocationFieldOfGrace = "field_of_grace";

@@ -1,0 +1,271 @@
+[gd_scene load_steps=9 format=3 uid="uid://c8combat001"]
+
+[ext_resource type="Script" path="res://scripts/combat_root.gd" id="1_root"]
+[ext_resource type="Script" path="res://scripts/combat_manager.gd" id="2_combat"]
+[ext_resource type="Script" path="res://scripts/combat_presentation.gd" id="3_pres"]
+[ext_resource type="PackedScene" path="res://scenes/parry_dodge_eye.tscn" id="4_eye"]
+[ext_resource type="Script" path="res://scripts/dreamer_ink_physics.gd" id="5_ink"]
+[ext_resource type="Script" path="res://scripts/combat_manuscript_backdrop.gd" id="6_backdrop"]
+[ext_resource type="Shader" path="res://shaders/kill_desaturate.gdshader" id="7_kill_shader"]
+
+[sub_resource type="ShaderMaterial" id="KillDesatMat"]
+shader = ExtResource("7_kill_shader")
+shader_parameter/desat_strength = 0.0
+
+[sub_resource type="RectangleShape2D" id="InkFloorShape"]
+size = Vector2(920, 32)
+
+[node name="Combat" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_root")
+
+[node name="BackdropLayer" type="CanvasLayer" parent="."]
+layer = -10
+
+[node name="ManuscriptBackdrop" type="Control" parent="BackdropLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("6_backdrop")
+
+[node name="CombatManager" type="Node" parent="."]
+process_mode = 1
+script = ExtResource("2_combat")
+
+[node name="WindowSfx" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
+[node name="KillSfx" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
+
+[node name="KillFxLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 45
+visible = false
+
+[node name="DesatRect" type="ColorRect" parent="KillFxLayer"]
+material = SubResource("KillDesatMat")
+layout_mode = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
+
+[node name="CombatStage" type="Node2D" parent="."]
+position = Vector2(480, 270)
+script = ExtResource("3_pres")
+
+[node name="Camera2D" type="Camera2D" parent="CombatStage"]
+
+[node name="InkFloor" type="StaticBody2D" parent="CombatStage"]
+position = Vector2(0, 178)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CombatStage/InkFloor"]
+shape = SubResource("InkFloorShape")
+
+[node name="DreamerInkPhysics" type="Node2D" parent="CombatStage"]
+z_index = 2
+script = ExtResource("5_ink")
+
+[node name="HazardStrip" type="Polygon2D" parent="CombatStage"]
+visible = false
+z_index = -2
+color = Color(0.75, 0.35, 0.12, 0.85)
+polygon = PackedVector2Array(-520, 188, 520, 188, 520, 230, -520, 230)
+
+[node name="PlayerRoot" type="Node2D" parent="CombatStage"]
+position = Vector2(-200, 24)
+
+[node name="Body" type="Polygon2D" parent="CombatStage/PlayerRoot"]
+color = Color(0.32, 0.48, 0.72, 1)
+polygon = PackedVector2Array(-22, -52, 26, -46, 30, 42, -24, 48)
+
+[node name="EnemyRoot" type="Node2D" parent="CombatStage"]
+position = Vector2(208, 8)
+
+[node name="Body" type="Polygon2D" parent="CombatStage/EnemyRoot"]
+color = Color(0.78, 0.24, 0.22, 1)
+polygon = PackedVector2Array(-38, -88, 42, -82, 36, 78, -40, 82)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="RootVBox" type="VBoxContainer" parent="UI"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 280.0
+grow_horizontal = 2
+theme_override_constants/separation = 8
+
+[node name="TurnLabel" type="Label" parent="UI/RootVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.92, 0.86, 0.72, 1)
+text = "Combat"
+
+[node name="TelegraphLabel" type="Label" parent="UI/RootVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.85, 0.55, 0.45, 1)
+text = ""
+
+[node name="FieldSubtitle" type="Label" parent="UI/RootVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.68, 0.62, 0.52, 1)
+text = ""
+
+[node name="MovesetRubric" type="Label" parent="UI/RootVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.55, 0.5, 0.42, 1)
+autowrap_mode = 3
+
+[node name="ParryDodgeEye" parent="UI/RootVBox" instance=ExtResource("4_eye")]
+layout_mode = 2
+
+[node name="Bars" type="VBoxContainer" parent="UI/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="PHLabel" type="Label" parent="UI/RootVBox/Bars"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Player HP"
+
+[node name="PlayerHP" type="ProgressBar" parent="UI/RootVBox/Bars"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="EHLabel" type="Label" parent="UI/RootVBox/Bars"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Enemy HP (False)"
+
+[node name="EnemyHP" type="ProgressBar" parent="UI/RootVBox/Bars"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+max_value = 80.0
+value = 80.0
+show_percentage = false
+
+[node name="StLabel" type="Label" parent="UI/RootVBox/Bars"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Stamina"
+
+[node name="Stamina" type="ProgressBar" parent="UI/RootVBox/Bars"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="PauseLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 50
+visible = false
+
+[node name="PauseBg" type="ColorRect" parent="PauseLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="PauseCenter" type="CenterContainer" parent="PauseLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseVBox" type="VBoxContainer" parent="PauseLayer/PauseCenter"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PausedTitle" type="Label" parent="PauseLayer/PauseCenter/PauseVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Paused"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PauseLayer/PauseCenter/PauseVBox"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Resume"
+
+[node name="MainMenuButton" type="Button" parent="PauseLayer/PauseCenter/PauseVBox"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Main menu"
+
+[node name="OutcomeLayer" type="CanvasLayer" parent="."]
+process_mode = 3
+layer = 60
+visible = false
+
+[node name="OutcomeBg" type="ColorRect" parent="OutcomeLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.08, 0.92)
+
+[node name="OutcomeCenter" type="CenterContainer" parent="OutcomeLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OutcomeVBox" type="VBoxContainer" parent="OutcomeLayer/OutcomeCenter"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="OutcomeTitle" type="Label" parent="OutcomeLayer/OutcomeCenter/OutcomeVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Outcome"
+horizontal_alignment = 1
+
+[node name="OutcomeBody" type="Label" parent="OutcomeLayer/OutcomeCenter/OutcomeVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "—"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ToHubButton" type="Button" parent="OutcomeLayer/OutcomeCenter/OutcomeVBox"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+text = "Continue to hub"
+
+[node name="RetryButton" type="Button" parent="OutcomeLayer/OutcomeCenter/OutcomeVBox"]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+text = "Retry fight"
+
+[connection signal="pressed" from="PauseLayer/PauseCenter/PauseVBox/ResumeButton" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PauseLayer/PauseCenter/PauseVBox/MainMenuButton" to="." method="_on_pause_main_menu_pressed"]
+[connection signal="pressed" from="OutcomeLayer/OutcomeCenter/OutcomeVBox/ToHubButton" to="." method="_on_outcome_hub_pressed"]
+[connection signal="pressed" from="OutcomeLayer/OutcomeCenter/OutcomeVBox/RetryButton" to="." method="_on_outcome_retry_pressed"]

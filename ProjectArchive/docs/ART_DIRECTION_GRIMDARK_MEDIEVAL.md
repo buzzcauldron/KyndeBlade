@@ -31,7 +31,24 @@ Use **BossPalette** asset (Create → KyndeBlade → Boss Palette) in code for h
 - **Typography:** Blackletter / Gothic for boss names; clean serif for numbers (readable damage).
 - **Status effects:** Hunger = e.g. ghostly teeth over character or grayscale shift as vitality drops; not just icons.
 
-## Engine (URP + Post-Processing)
+## Engine (KyndeBlade_Unity: Built-in RP — not URP)
+
+The **shipping Unity project** ([`KyndeBlade_Unity`](../../KyndeBlade_Unity)) uses the **Built-in Render Pipeline** (no `com.unity.render-pipelines.universal` in [`Packages/manifest.json`](../../KyndeBlade_Unity/Packages/manifest.json)). Do **not** assume URP/HDRP unless you migrate the project.
+
+**Art-adjacent packages actually in use (UPM ids):**
+
+| Package id | Role |
+|------------|------|
+| `com.unity.feature.2d` | 2D feature set (sprites, etc.) |
+| `com.unity.ugui` | uGUI (Canvas, legacy Text; project also uses built-in fonts in places) |
+| `com.unity.inputsystem` | New Input System (combat UI module on EventSystem) |
+| `com.unity.modules.ui` / `uielements` | Core UI modules |
+
+**Post-processing / mood (Built-in):**
+
+- Combat presentation is driven by code paths such as **`SixteenBitPipeline`** / manuscript-style effects on the **Main Camera**, not URP volumes. See [`KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) (Lane A/B) and [`ARCHITECTURE.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/ARCHITECTURE.md).
+- If you add **stack-style** post FX for Built-in, the historical UPM package is **`com.unity.postprocessing`** (verify compatibility with your Unity 6.x version in Package Manager). **Vista / hub** only: keep combat readable (Lane B = dark void, high contrast; avoid fighting the 16-bit pass).
+- **Vignette / grain / bloom** as *design intent* below still apply as **goals**—implement via Built-in-compatible stack, shader, or `RawImage` overlays, not URP Volume assets unless you port the pipeline.
 
 - **Vignette:** Claustrophobic focus on center (combat).
 - **Film grain:** Old poem / ancient record feel.

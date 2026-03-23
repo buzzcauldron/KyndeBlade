@@ -1,0 +1,138 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "knight-class-stats",
+      "workflowId": "characters",
+      "title": "Knight Class Stats",
+      "description": "Given a MedievalCharacter with CharacterClassType=Knight, when Start() runs, then stats are: MaxHealth=150, MaxStamina=120, AttackPower=15, Defense=10, Speed=8. CurrentHealth and CurrentStamina equal max values.",
+      "nodeType": "feature",
+      "fileName": "knight-class-stats",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "mage-class-stats",
+      "workflowId": "characters",
+      "title": "Mage Class Stats",
+      "description": "Given a MedievalCharacter with CharacterClassType=Mage, when Start() runs, then stats are: MaxHealth=80, MaxStamina=150, AttackPower=20, Defense=3, Speed=10.",
+      "nodeType": "feature",
+      "fileName": "mage-class-stats",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "archer-class-stats",
+      "workflowId": "characters",
+      "title": "Archer Class Stats",
+      "description": "Given a MedievalCharacter with CharacterClassType=Archer, when Start() runs, then stats are: MaxHealth=100, MaxStamina=130, AttackPower=12, Defense=5, Speed=12.",
+      "nodeType": "feature",
+      "fileName": "archer-class-stats",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "rogue-class-stats",
+      "workflowId": "characters",
+      "title": "Rogue Class Stats",
+      "description": "Given a MedievalCharacter with CharacterClassType=Rogue, when Start() runs, then stats are: MaxHealth=90, MaxStamina=140, AttackPower=14, Defense=4, Speed=15.",
+      "nodeType": "feature",
+      "fileName": "rogue-class-stats",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "dreamer-class-stats",
+      "workflowId": "characters",
+      "title": "Dreamer Class Stats",
+      "description": "Given a MedievalCharacter with CharacterClassType=Dreamer, when Start() runs, then stats are: MaxHealth=120, MaxStamina=130, AttackPower=14, Defense=6, Speed=9.",
+      "nodeType": "feature",
+      "fileName": "dreamer-class-stats",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "set-identity",
+      "workflowId": "characters",
+      "title": "Set Identity",
+      "description": "Given a MedievalCharacter, when SetIdentity(classType, displayName, soundTheme) is called, then CharacterClassType, CharacterName, and SoundTheme are updated to the provided values.",
+      "nodeType": "feature",
+      "fileName": "set-identity",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "set-stats-override",
+      "workflowId": "characters",
+      "title": "Set Stats Override",
+      "description": "Given a MedievalCharacter, when SetStats(maxHealth, maxStamina, attackPower, defense, speed) is called, then all stat fields are set and CurrentHealth/CurrentStamina are set to their max values.",
+      "nodeType": "feature",
+      "fileName": "set-stats-override",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "health-change-event",
+      "workflowId": "characters",
+      "title": "Health Change Event",
+      "description": "Given a character, when ApplyCustomDamage or Heal is called, then OnHealthChanged fires with (currentHealth, maxHealth).",
+      "nodeType": "feature",
+      "fileName": "health-change-event",
+      "position": { "x": 700, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "stamina-change-event",
+      "workflowId": "characters",
+      "title": "Stamina Change Event",
+      "description": "Given a character, when ConsumeStamina or RestoreStamina is called, then OnStaminaChanged fires with (currentStamina, maxStamina).",
+      "nodeType": "feature",
+      "fileName": "stamina-change-event",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "character-defeated-event",
+      "workflowId": "characters",
+      "title": "Character Defeated Event",
+      "description": "Given a character, when ApplyCustomDamage reduces health to 0, then IsAlive() returns false and OnCharacterDefeated fires with the defeated character.",
+      "nodeType": "feature",
+      "fileName": "character-defeated-event",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "restore-stamina-modifiers",
+      "workflowId": "characters",
+      "title": "Restore Stamina Modifiers",
+      "description": "Given a character with Hunger, Age, HungerScar effects and a PovertyManager, when RestoreStamina(amount) is called, then the amount is multiplied by each active modifier's StaminaRegenModifier and PovertyManager.GetStaminaRegenMultiplier() before adding to CurrentStamina.",
+      "nodeType": "feature",
+      "fileName": "restore-stamina-modifiers",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "fairy-form-apply-remove",
+      "workflowId": "characters",
+      "title": "Fairy Form Apply Remove",
+      "description": "Given a character, when ApplyFairyForm(duration) is called, then IsFairyForm returns true and FairyFormRemaining >= duration. When the timer elapses (via Update), RemoveFairyForm restores original appearance and IsFairyForm returns false.",
+      "nodeType": "feature",
+      "fileName": "fairy-form-apply-remove",
+      "position": { "x": 700, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": []
+}
