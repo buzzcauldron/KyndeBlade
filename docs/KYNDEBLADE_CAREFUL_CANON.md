@@ -6,6 +6,8 @@ This document **recreates in one place** the careful framing that otherwise live
 
 ## 1. North star and oracle
 
+**Git default branch:** **`main`** — Godot shipping slice + Unity sibling in-tree; see [`docs/BRANCH_POLICY.md`](BRANCH_POLICY.md). This does not by itself change the **Tier A behaviour oracle** (Unity slice + BDD) until you explicitly adopt a new policy at M6 or equivalent.
+
 | Idea | Where it lives |
 |------|----------------|
 | **What we’re building** | A **Piers Plowman**–rooted, **Middle English / archaic-modern** RPG: turn-based flow with **real-time defensive windows**, **Kynde** and **Break**-style depth (Expedition 33–inspired), high-bit Lane B combat read + manuscript-style UI. |

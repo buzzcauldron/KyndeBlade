@@ -2,6 +2,8 @@
 
 This folder is the **Godot 4 shipping target** for the current vertical slice: same player-facing bar as the Unity Tier A slice, packaged for **Steam and desktop** (saves, autosave, settings, headless CI).
 
+Clone from repo root branch **`main`** (Godot-first default); see [`docs/BRANCH_POLICY.md`](../docs/BRANCH_POLICY.md).
+
 **Unity** authoring and oracle docs live under `KyndeBlade_Unity/` until M6 archive policy changes.
 
 **Primary doc:** **[STEAM_BUILD.md](STEAM_BUILD.md)** — scope, `user://` save paths (including migration from legacy `kyndeblade_demo_*` files), QA checklist, export / depot notes, Steam Cloud caveats.

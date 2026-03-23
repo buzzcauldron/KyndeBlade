@@ -1,16 +1,26 @@
 # Kynde Blade
 
-A **high-bit style** turn-based RPG with real-time combat mechanics, built in **Unity**. Merged from KyndeBlade + kyndeblade-5.7 into a single Unity-first project. Named after "Kynde" (Nature) from the medieval poem Piers Plowman.
+A **high-bit style** turn-based RPG with real-time combat mechanics (Expedition 33–inspired defensive windows). **Default branch `main` is Godot-first:** the shipping slice lives in **`KyndeBlade_Godot/`**; **`KyndeBlade_Unity/`** remains for parity, export-to-Godot, and TDAD oracle workflows until M6 archive policy changes. Named after "Kynde" (Nature) from the medieval poem *Piers Plowman*.
+
+**Branching:** [`docs/BRANCH_POLICY.md`](docs/BRANCH_POLICY.md) — use `main`; the old integration branch `unity` is superseded.
 
 ## Quick Start
 
-1. **Open in Unity** — Unity 6.3 LTS (6000.3) or Unity 2022.3 LTS
-   - File → Open Project → Select the **KyndeBlade_Unity** folder (the Unity project root, inside this repo)
-2. **Create a scene** — File → New Scene
-3. **Add GameManager** — Create empty GameObject, add `KyndeBladeGameManager` component
-4. **Press Play** — Characters auto-spawn, combat starts, UI and feedback auto-create
+### Godot (shipping slice — recommended)
 
-**Book-aligned features** (Hodent + Beginner's Guide): CombatUI, TutorialManager, CombatFeedback, GameStateManager, GameSettings (timing accessibility), SimpleEnemyAI.
+1. Install **Godot 4.2+** (project notes: [`KyndeBlade_Godot/README.md`](KyndeBlade_Godot/README.md)).
+2. **Project → Open** → select the **`KyndeBlade_Godot`** folder.
+3. **Run** the main menu scene (`scenes/main_menu.tscn`).
+4. **Headless tests:** [`docs/CI_GODOT_TESTS.md`](docs/CI_GODOT_TESTS.md).
+
+### Unity (authoring / oracle / export)
+
+1. **Open in Unity** — Unity 6.3 LTS (6000.3) or Unity 2022.3 LTS  
+   - File → Open Project → **`KyndeBlade_Unity`** (Unity project root inside this repo)
+2. Use **KyndeBlade → Export Slice Data for Godot** when updating `KyndeBlade_Godot/data/exported_from_unity.json`.
+3. **Play** and tests per [`KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md`](KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) and [`docs/CI_UNITY_TESTS.md`](docs/CI_UNITY_TESTS.md).
+
+**Book-aligned features** (Unity reference implementation): CombatUI, TutorialManager, CombatFeedback, GameStateManager, GameSettings (timing accessibility), SimpleEnemyAI.
 
 ## Project Structure
 
@@ -47,7 +57,7 @@ Kynde Blade/                    # Repo root
 
 ## TDAD: Godot full port (gated) + Unity archive
 
-- **Milestones M1–M6:** [`.tdad/workflows/godot-full-port/godot-full-port.workflow.json`](.tdad/workflows/godot-full-port/godot-full-port.workflow.json) — Unity **demo-vertical-slice** is the oracle until M6 sign-off.
+- **Milestones M1–M6:** [`.tdad/workflows/godot-full-port/godot-full-port.workflow.json`](.tdad/workflows/godot-full-port/godot-full-port.workflow.json) — Unity **demo-vertical-slice** remains the behaviour oracle for Tier A until M6 sign-off (see canon); **default git branch** is still `main`, now tracking the Godot integration line.
 - **Parity slice (Godot):** [`.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json`](.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json) and [`.tdad/bdd/godot-parity-slice.feature`](.tdad/bdd/godot-parity-slice.feature).
 - **Godot project:** [`KyndeBlade_Godot/`](KyndeBlade_Godot/README.md) — headless tests: [`docs/CI_GODOT_TESTS.md`](docs/CI_GODOT_TESTS.md).
 - **Unity archive slot (after M6 only):** [`ProjectArchive/UnityKyndeBlade/README.md`](ProjectArchive/UnityKyndeBlade/README.md) — `KyndeBlade_Unity/` stays at repo root until then.
