@@ -1,6 +1,16 @@
 # Future — full-screen 3D voxel combat stage
 
-**Status:** not implemented; combat uses a **2D** `CombatStage` + `Camera2D` until this migration.
+**Status:** **partial** — combat ships a **procedural voxel grid** (floor + perimeter columns) built at runtime by [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd) under `CombatArena3D` in [`combat.tscn`](../scenes/combat.tscn). The classic single `Ground` mesh is hidden when the voxel arena is enabled. **Imported** MagicaVoxel / GLTF sets, rim/outline polish, and ortho tuning remain future work.
+
+## Shipped prototype (this slice)
+
+| Piece | Role |
+|--------|------|
+| **`VoxelArena`** | `Node3D` + `MultiMeshInstance3D` floor + wall ring; palette-aligned albedo, low spec |
+| **Actors** | Existing `PlayerActor` / `EnemyActor` capsules + box; unchanged |
+| **Camera** | Existing `CombatCamera` in [`combat_presentation_3d.gd`](../scripts/combat_presentation_3d.gd) |
+
+Toggle or resize via `VoxelArena` **Inspector** exports (`enabled`, `grid_half`, `voxel_size`, `wall_height_blocks`, `hide_classic_ground`).
 
 ## Scene architecture (target)
 
@@ -20,4 +30,5 @@
 
 - [`VISION_CRAWL_NOITA_E33.md`](VISION_CRAWL_NOITA_E33.md)  
 - [`TDAD_COMBAT_PRESENTATION_PLAN.md`](TDAD_COMBAT_PRESENTATION_PLAN.md) — current 2D presentation segments  
+- [`docs/GODOT_PLANS_INDEX.md`](GODOT_PLANS_INDEX.md)  
 - [`docs/CI_GODOT_TESTS.md`](../../docs/CI_GODOT_TESTS.md)

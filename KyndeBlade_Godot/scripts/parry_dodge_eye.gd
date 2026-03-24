@@ -17,8 +17,49 @@ var _combat: CombatManager
 
 
 func setup(combat: CombatManager) -> void:
+	_disconnect_presentation_tick()
 	_combat = combat
 	visible = false
+	if is_instance_valid(_combat):
+		_combat.presentation_tick.connect(_on_presentation_tick)
+
+
+func _disconnect_presentation_tick() -> void:
+	if is_instance_valid(_combat) and _combat.presentation_tick.is_connected(_on_presentation_tick):
+		_combat.presentation_tick.disconnect(_on_presentation_tick)
+
+
+func _exit_tree() -> void:
+	_disconnect_presentation_tick()
+
+
+func _on_presentation_tick(combat_state: CombatManager.State, t: float) -> void:
+	if not is_instance_valid(_combat) or combat_state != CombatManager.State.REAL_TIME_WINDOW:
+		return
+	_apply_reactive_window_phase(t)
+
+
+func _apply_reactive_window_phase(t: float) -> void:
+	var open_end: float = OPEN_PHASE_END
+	if _combat.window_duration > 0.0001:
+		open_end = minf(OPEN_PHASE_END, _combat.window_duration * 0.4)
+	var pupil_scale := PUPIL_START_SCALE
+	var close_norm := 0.0
+	if t < open_end:
+		var o := smoothstep(0.0, 1.0, t / open_end) if open_end > 0.0001 else 1.0
+		pupil_scale = lerpf(PUPIL_OPEN_SCALE, PUPIL_START_SCALE, o)
+	if t >= IMMINENT_PHASE_START:
+		var denom := 1.0 - IMMINENT_PHASE_START
+		var span := (t - IMMINENT_PHASE_START) / denom
+		var imminent_t := smoothstep(0.0, 1.0, span) if denom > 0.0001 else 1.0
+		pupil_scale = lerpf(pupil_scale, PUPIL_STRIKE_SCALE, imminent_t)
+		close_norm = imminent_t
+	var close := close_norm * EYELID_CLOSE_AMOUNT
+	pupil_root.scale = Vector2(pupil_scale, pupil_scale)
+	var lid_px := close * 20.0
+	eyelid_top.offset_bottom = 14.0 + lid_px
+	eyelid_bottom.offset_top = -14.0 - lid_px
+	react_label.text = "React! %.1fs" % maxf(0.0, _combat.window_remaining)
 
 
 func _process(_delta: float) -> void:
@@ -34,27 +75,4 @@ func _process(_delta: float) -> void:
 		eyelid_top.offset_bottom = 14.0 + lid * 20.0
 		eyelid_bottom.offset_top = -14.0 - lid * 20.0
 		return
-	var active := _combat.state == CombatManager.State.REAL_TIME_WINDOW
-	visible = active
-	if not active:
-		return
-	var t: float = _combat.window_phase_t()
-	var open_end: float = OPEN_PHASE_END
-	if _combat.window_duration > 0.0001:
-		open_end = minf(OPEN_PHASE_END, _combat.window_duration * 0.4)
-	var pupil_scale := PUPIL_START_SCALE
-	var close_norm := 0.0
-	if t < open_end:
-		var o := smoothstep(0.0, 1.0, t / open_end) if open_end > 0.0001 else 1.0
-		pupil_scale = lerpf(PUPIL_OPEN_SCALE, PUPIL_START_SCALE, o)
-	if t >= IMMINENT_PHASE_START:
-		var denom := 1.0 - IMMINENT_PHASE_START
-		var imminent_t := smoothstep(0.0, 1.0, (t - IMMINENT_PHASE_START) / denom) if denom > 0.0001 else 1.0
-		pupil_scale = lerpf(pupil_scale, PUPIL_STRIKE_SCALE, imminent_t)
-		close_norm = imminent_t
-	var close := close_norm * EYELID_CLOSE_AMOUNT
-	pupil_root.scale = Vector2(pupil_scale, pupil_scale)
-	var lid_px := close * 20.0
-	eyelid_top.offset_bottom = 14.0 + lid_px
-	eyelid_bottom.offset_top = -14.0 - lid_px
-	react_label.text = "React! %.1fs" % maxf(0.0, _combat.window_remaining)
+	visible = _combat.state == CombatManager.State.REAL_TIME_WINDOW

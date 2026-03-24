@@ -26,6 +26,14 @@ The project ships [`tests/run_headless_tests.gd`](../KyndeBlade_Godot/tests/run_
 
 **Wireframe combat:** deterministic rows ↔ tests are mapped in [`KyndeBlade_Godot/docs/WIREFRAME_COMBAT_CHECKLIST.md`](../KyndeBlade_Godot/docs/WIREFRAME_COMBAT_CHECKLIST.md) §2.
 
+## TDAD `godot-parity-slice` presentation nodes
+
+| Node | Proof |
+|------|--------|
+| `gparity-combat-stage` | `combat.tscn` + presentation scripts; `_test_scene_transition_smoke` mounts combat; manual STEAM_BUILD |
+| `gparity-parry-dodge-eye` | `parry_dodge_eye.tscn` + `CombatManager.presentation_tick`; manual / BDD `@manual` wireframe rows |
+| *(combat voxel prototype)* | `combat_voxel_arena.gd` in `combat.tscn` — no extra headless assert; GPU/visual smoke optional per [`COMBAT_VOXEL_STAGE_FUTURE.md`](../KyndeBlade_Godot/docs/COMBAT_VOXEL_STAGE_FUTURE.md) |
+
 ## TDAD `godot-demo-components` traceability
 
 Each row maps a node in [`.tdad/workflows/godot-demo-components/godot-demo-components.workflow.json`](../.tdad/workflows/godot-demo-components/godot-demo-components.workflow.json) to BDD ([`.tdad/bdd/godot-parity-slice.feature`](../.tdad/bdd/godot-parity-slice.feature)), headless proof in `run_headless_tests.gd` / `combat_scenarios.gd`, and manual QA in [`STEAM_BUILD.md`](../KyndeBlade_Godot/STEAM_BUILD.md) (checklist numbering).

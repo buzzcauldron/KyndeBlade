@@ -15,6 +15,8 @@ signal defensive_window_started(is_real_swing: bool)
 signal defensive_windup_started(is_real_swing: bool)
 ## Dreamer (Wille) presentation: strike / dodge / parry committed after stamina gate passes.
 signal dreamer_move_committed(move_kind: DreamerMoveKind)
+## Emitted each frame while [constant State.REAL_TIME_WINDOW] ticks (after [member window_remaining] updates). [param phase_t] is [method window_phase_t]; use instead of polling from UI.
+signal presentation_tick(combat_state: State, phase_t: float)
 
 enum State { WAITING_PLAYER, EXECUTING, REAL_TIME_WINDOW, ENEMY_TURN, DEFENSE_WINDUP, ENDED }
 
@@ -284,6 +286,7 @@ func _begin_defensive_window(duration: float) -> void:
 	_emit_stats()
 	turn_changed.emit()
 	defensive_window_started.emit(_enemy_will_hit)
+	presentation_tick.emit(state, window_phase_t())
 
 
 func tick_window(delta: float) -> void:
@@ -292,6 +295,8 @@ func tick_window(delta: float) -> void:
 	window_remaining -= delta
 	if window_remaining <= 0:
 		_resolve_window()
+		return
+	presentation_tick.emit(state, window_phase_t())
 
 
 func _resolve_window() -> void:

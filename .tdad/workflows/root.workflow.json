@@ -593,7 +593,9 @@
         "gparity-pause-overlay",
         "gparity-settings-volume",
         "gparity-continue-save",
-        "gparity-victory-hub-manual"
+        "gparity-victory-hub-manual",
+        "gparity-combat-stage",
+        "gparity-parry-dodge-eye"
       ]
     },
     {

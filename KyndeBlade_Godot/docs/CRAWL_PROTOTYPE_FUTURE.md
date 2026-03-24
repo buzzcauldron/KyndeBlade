@@ -1,6 +1,6 @@
 # Future — overworld crawl prototype (fake voxels)
 
-**Status:** not implemented; hub + Fair Field stand in until this phase ships.
+**Status:** not implemented; hub + Fair Field stand in until this phase ships. **Note:** [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd) covers **combat** voxel read only; this doc’s **overworld crawl** layer is still separate.
 
 ## Goals
 

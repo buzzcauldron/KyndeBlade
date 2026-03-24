@@ -14,7 +14,7 @@ This document **recreates in one place** the careful framing that otherwise live
 | **Shippable loop (Tier A)** | Unity: [`PLAYABLE_SLICE.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md), [`DEMO_RUN.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md). TDAD: [`.tdad/workflows/demo-vertical-slice/`](../.tdad/workflows/demo-vertical-slice/demo-vertical-slice.workflow.json), [`.tdad/bdd/demo-vertical-slice.feature`](../.tdad/bdd/demo-vertical-slice.feature). |
 | **Godot Steam / retail slice** | [`KyndeBlade_Godot/STEAM_BUILD.md`](../KyndeBlade_Godot/STEAM_BUILD.md), [`KyndeBlade_Godot/docs/GODOT_TARGET_EXPERIENCE.md`](../KyndeBlade_Godot/docs/GODOT_TARGET_EXPERIENCE.md) (north star), [`KyndeBlade_Godot/docs/VISION_CRAWL_NOITA_E33.md`](../KyndeBlade_Godot/docs/VISION_CRAWL_NOITA_E33.md) (short vision: fake-voxel crawl, 3D combat target, Noita mood, E33, oracle), [`.tdad/workflows/godot-parity-slice/`](../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json), [`.tdad/bdd/godot-parity-slice.feature`](../.tdad/bdd/godot-parity-slice.feature). |
 | **Oracle rule** | Until **M6 archive** sign-off: if behaviour disagrees, **Unity slice + DEMO_RUN** win unless you **update both sides** and BDD. See [`KyndeBlade_Godot/PARITY_GAPS.md`](../KyndeBlade_Godot/PARITY_GAPS.md) for intentional differences. |
-| **Dual engines** | **Unity** — full game and authoring (`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`). **Godot** — cheaper second target, headless tests, export-driven text (`KyndeBlade_Godot/`). Map: [`UNITY_GODOT_MODULE_MAP.md`](UNITY_GODOT_MODULE_MAP.md). |
+| **Dual engines** | **Godot** — primary slice ship target (`KyndeBlade_Godot/`): headless tests, retail saves, combat/hub implementation. **Unity** — **reference archive** under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/` for export + historical oracle ([`UNITY_REFERENCE_ARCHIVE.md`](../ProjectArchive/UnityKyndeBlade/UNITY_REFERENCE_ARCHIVE.md)). Map: [`UNITY_GODOT_MODULE_MAP.md`](UNITY_GODOT_MODULE_MAP.md). |
 | **Unity story / spawn digest** | Single reference crawl (party spawn, encounters, faerie, Green Knight): [`UNITY_STORY_AND_SPAWN_DIGEST.md`](UNITY_STORY_AND_SPAWN_DIGEST.md). |
 | **Medieval texts → Godot movesets** | Data + design: [`KyndeBlade_Godot/data/medieval_text_unlocks.json`](../KyndeBlade_Godot/data/medieval_text_unlocks.json), [`KyndeBlade_Godot/docs/MEDIEVAL_TEXT_MOVESET_DESIGN.md`](../KyndeBlade_Godot/docs/MEDIEVAL_TEXT_MOVESET_DESIGN.md). |
 | **TDAD repo map** | [`.tdad/README.md`](../.tdad/README.md) — workflows, root graph, BDD, prompts; Godot ship layer [`godot-steam-build`](../.tdad/workflows/godot-steam-build/godot-steam-build.workflow.json). |
@@ -68,7 +68,7 @@ Pair this with [`DIALOGUE_SOURCE_TEXT_PLAN.md`](../ProjectArchive/docs/DIALOGUE_
 |------|-------|--------|
 | Hub / map → **Fair Field** | `Loc_tour` → `fayre_felde`, `StoryBeatOnArrival` | `hub_map.tscn`, `exported_from_unity.json`, `slice_locations.json` |
 | **Encounter False** | `FayreFeldeEncounter` | `encounter_fair_field.tres`, `CombatManager` |
-| **Strike / dodge / parry / feint** | `TurnManager`, real-time window, `ParryDodgeZoneIndicator` | Deterministic swing pattern; `window_duration`, `window_phase_t()`; [`TDAD_COMBAT_PRESENTATION_PLAN.md`](../KyndeBlade_Godot/docs/TDAD_COMBAT_PRESENTATION_PLAN.md) |
+| **Strike / dodge / parry / feint** | `TurnManager`, real-time window, `ParryDodgeZoneIndicator` | Deterministic swing pattern; `window_duration`, `window_phase_t()`, `presentation_tick`; [`TDAD_COMBAT_PRESENTATION_PLAN.md`](../KyndeBlade_Godot/docs/TDAD_COMBAT_PRESENTATION_PLAN.md) |
 | **Save on victory** | `SaveManager`, `GameStateManager` | `SaveService`, `GameState` |
 
 **Design depth (full game target):** [`EXPEDITION_33_COMBAT_DESIGN.md`](../ProjectArchive/docs/EXPEDITION_33_COMBAT_DESIGN.md) — hybrid turn + real-time, **Kynde** economy, **Break** gauge, elements, Escapade/Ward analogues → mapped in Unity; many systems **stubbed or partial** in the Godot Steam slice (see `PARITY_GAPS.md`).
@@ -85,7 +85,8 @@ Pair this with [`DIALOGUE_SOURCE_TEXT_PLAN.md`](../ProjectArchive/docs/DIALOGUE_
 
 | Piece | Location |
 |-------|----------|
-| Stage + placeholders + motion | `scenes/combat.tscn`, `scripts/combat_presentation.gd` |
+| Stage + placeholders + motion | `scenes/combat.tscn`, `scripts/combat_presentation.gd`, `scripts/combat_presentation_3d.gd` |
+| Voxel arena (procedural grid) | `scripts/combat_voxel_arena.gd` — [`COMBAT_VOXEL_STAGE_FUTURE.md`](../KyndeBlade_Godot/docs/COMBAT_VOXEL_STAGE_FUTURE.md) |
 | Parry/dodge eye + **React!** | `scenes/parry_dodge_eye.tscn`, `scripts/parry_dodge_eye.gd` |
 | Headless scenarios | `tests/combat_scenarios.gd`, `tests/run_headless_tests.gd` |
 

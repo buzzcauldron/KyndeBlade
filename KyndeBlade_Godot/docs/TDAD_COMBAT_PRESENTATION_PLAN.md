@@ -91,7 +91,7 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
   - **E33 / wireframe review:** [`COMBAT_REVIEW_WIREFRAME_E33.md`](COMBAT_REVIEW_WIREFRAME_E33.md) — checklist vs CP-01–CP-05 and follow-ups for CI / `godot-demo-components`.
   - [`STEAM_BUILD.md`](../STEAM_BUILD.md): manual QA steps for CP-02–CP-05.
   - This file: mark segments **DONE** with PR links when executed.
-  - Optional: add nodes to [`.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json`](../../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json) (`gparity-combat-stage`, `gparity-parry-dodge-eye`) for TDAD graph truth.
+  - **Done:** nodes [`gparity-combat-stage`](../../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json), [`gparity-parry-dodge-eye`](../../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json) on `godot-parity-slice` + root `children`; [`CombatManager.presentation_tick`](../scripts/combat_manager.gd) drives window-phase UI without polling.
 
 ---
 
@@ -138,10 +138,10 @@ flowchart TD
 
 ## 7. Definition of done (whole initiative)
 
-- [ ] All CP segments marked complete with tests listed above satisfied.
-- [ ] `HEADLESS_TESTS: PASS` from repo root Godot command (see [`CI_GODOT_TESTS.md`](../../docs/CI_GODOT_TESTS.md)).
-- [ ] Manual slice: hub → combat → dodge/parry sees **eye** + stage motion + readable bars.
-- [ ] `PARITY_GAPS.md` and BDD updated; no undocumented drift vs Unity oracle.
+- [x] CP-01–CP-06 baseline delivered (see §Implementation status); optional TDAD parity nodes + `presentation_tick` landed.
+- [ ] `HEADLESS_TESTS: PASS` maintained on every change (see [`CI_GODOT_TESTS.md`](../../docs/CI_GODOT_TESTS.md)).
+- [ ] Manual slice: hub → combat → dodge/parry sees **eye** + stage motion + readable bars (regress before ship).
+- [x] `PARITY_GAPS.md` and BDD updated for slice band; drift vs Unity oracle tracked in [`COMBAT_REVIEW_WIREFRAME_E33.md`](COMBAT_REVIEW_WIREFRAME_E33.md).
 
 ---
 
@@ -158,9 +158,9 @@ flowchart TD
 
 ### Implementation status (baseline delivered)
 
-- **CP-01** — `window_duration`, `window_phase_t()`, `defensive_window_started(is_real_swing)`, `feint_pattern_offset` / `enemy_swing_is_hit_for_window_index(..., pattern_offset)` on [`CombatManager`](../scripts/combat_manager.gd); headless asserts in [`combat_scenarios.gd`](../tests/combat_scenarios.gd) (incl. misstep invert).
+- **CP-01** — `window_duration`, `window_phase_t()`, `presentation_tick(state, phase_t)` on window open + each `tick_window` frame, `defensive_window_started(is_real_swing)`, `feint_pattern_offset` / `enemy_swing_is_hit_for_window_index(..., pattern_offset)` on [`CombatManager`](../scripts/combat_manager.gd); headless asserts in [`combat_scenarios.gd`](../tests/combat_scenarios.gd) (incl. misstep invert).
 - **CP-02** — [`CombatStage`](../scenes/combat.tscn) + hazard strip (`show_foreground_hazard`, default off).
 - **CP-03** — [`combat_presentation.gd`](../scripts/combat_presentation.gd) (idle, window telegraph, strike punch, player hit flash + `Camera2D` shake on heavy damage).
-- **CP-04** — [`parry_dodge_eye.tscn`](../scenes/parry_dodge_eye.tscn) + [`combat_root.gd`](../scripts/combat_root.gd) `setup(combat)`.
+- **CP-04** — [`parry_dodge_eye.tscn`](../scenes/parry_dodge_eye.tscn) + [`combat_root.gd`](../scripts/combat_root.gd) `setup(combat)`; eye subscribes to `presentation_tick` for reactive window phase (wind-up still uses `_process`).
 - **CP-05** — Procedural window tones: [`combat_window_tone.gd`](../scripts/combat_window_tone.gd) + `WindowSfx` on [`combat.tscn`](../scenes/combat.tscn) (SFX bus); [`docs/ASSET_LICENSES.md`](../../docs/ASSET_LICENSES.md) row.
 - **CP-06** — [`PARITY_GAPS.md`](../PARITY_GAPS.md), [`STEAM_BUILD.md`](../STEAM_BUILD.md), [`.tdad/bdd/godot-parity-slice.feature`](../../.tdad/bdd/godot-parity-slice.feature) updated.

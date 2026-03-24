@@ -101,12 +101,36 @@
       "position": { "x": 500, "y": 400 },
       "dependencies": ["gparity-fayre-felde-false", "gparity-hub-starts-tour"],
       "testLayers": ["godot_headless", "godot_manual", "parity_unity_ref", "bdd"]
+    },
+    {
+      "id": "gparity-combat-stage",
+      "workflowId": "godot-parity-slice",
+      "title": "Combat Lane B + arena presentation (CP-02/03)",
+      "description": "Parity: side-view stage + 3D arena in combat.tscn; combat_presentation*.gd + combat_voxel_arena.gd (procedural voxel grid). Proof: manual STEAM_BUILD + _test_scene_transition_smoke; TDAD_COMBAT_PRESENTATION_PLAN CP-02/03.",
+      "nodeType": "feature",
+      "fileName": "gparity-combat-stage",
+      "position": { "x": 300, "y": 550 },
+      "dependencies": ["gparity-fayre-felde-false"],
+      "testLayers": ["godot_headless", "godot_manual", "bdd"]
+    },
+    {
+      "id": "gparity-parry-dodge-eye",
+      "workflowId": "godot-parity-slice",
+      "title": "Parry/dodge eye + presentation_tick (CP-04/01)",
+      "description": "Parity: parry_dodge_eye.tscn, CombatManager.presentation_tick during REAL_TIME_WINDOW. Proof: manual wireframe checklist; BDD @manual combat scenarios; godot-demo-components gdc-combat-scenarios.",
+      "nodeType": "feature",
+      "fileName": "gparity-parry-dodge-eye",
+      "position": { "x": 500, "y": 550 },
+      "dependencies": ["gparity-combat-stage"],
+      "testLayers": ["godot_manual", "bdd"]
     }
   ],
   "edges": [
     { "id": "gf", "source": "gparity-tour-to-fayre-felde", "target": "gparity-fayre-felde-false" },
     { "id": "rt", "source": "gparity-save-roundtrip", "target": "gparity-continue-save" },
     { "id": "vh1", "source": "gparity-hub-starts-tour", "target": "gparity-victory-hub-manual" },
-    { "id": "vh2", "source": "gparity-fayre-felde-false", "target": "gparity-victory-hub-manual" }
+    { "id": "vh2", "source": "gparity-fayre-felde-false", "target": "gparity-victory-hub-manual" },
+    { "id": "st1", "source": "gparity-fayre-felde-false", "target": "gparity-combat-stage" },
+    { "id": "st2", "source": "gparity-combat-stage", "target": "gparity-parry-dodge-eye" }
   ]
 }

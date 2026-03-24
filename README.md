@@ -1,6 +1,6 @@
 # Kynde Blade 16 Bit
 
-A **hi-bit style** turn-based RPG with real-time combat mechanics (Expedition 33–inspired defensive windows). The **shipping slice** is **Godot 4** under `KyndeBlade_Godot/`; **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`** remains for parity, export-to-Godot, and TDAD oracle workflows until M6 archive policy changes. Named after "Kynde" (Nature) from the medieval poem *Piers Plowman*.
+A **hi-bit style** turn-based RPG with real-time combat mechanics (Expedition 33–inspired defensive windows). The **shipping slice** is **Godot 4** under `KyndeBlade_Godot/`. **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`** is a **reference archive** for export-to-Godot, historical parity, and TDAD oracle workflows — see [`ProjectArchive/UnityKyndeBlade/UNITY_REFERENCE_ARCHIVE.md`](ProjectArchive/UnityKyndeBlade/UNITY_REFERENCE_ARCHIVE.md). Formal M6 “Godot-only oracle” cutover remains human-gated. Named after "Kynde" (Nature) from the medieval poem *Piers Plowman*.
 
 **Branching:** [`docs/BRANCH_POLICY.md`](docs/BRANCH_POLICY.md) — use `main`; the old integration branch `unity` is superseded.
 
@@ -10,12 +10,13 @@ A **hi-bit style** turn-based RPG with real-time combat mechanics (Expedition 33
 
 1. Open **`KyndeBlade_Godot/`** in **Godot 4.6.x** — see [`KyndeBlade_Godot/README.md`](KyndeBlade_Godot/README.md).
 
-### Unity (oracle / export)
+### Unity (archived reference / export only)
 
-1. **Open in Unity** — Unity 6.3 LTS (6000.3) or Unity 2022.3 LTS  
-   - File → Open Project → **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`** (Unity project root inside this repo)
-2. Use **KyndeBlade → Export Slice Data for Godot** when updating `KyndeBlade_Godot/data/exported_from_unity.json`.
-3. **Play** and tests per [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md`](ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) and [`docs/CI_UNITY_TESTS.md`](docs/CI_UNITY_TESTS.md).
+1. **Policy:** [`ProjectArchive/UnityKyndeBlade/UNITY_REFERENCE_ARCHIVE.md`](ProjectArchive/UnityKyndeBlade/UNITY_REFERENCE_ARCHIVE.md).
+2. **Open in Unity** — Unity 6.3 LTS (6000.3) or Unity 2022.3 LTS  
+   - File → Open Project → **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`**
+3. Use **KyndeBlade → Export Slice Data for Godot** when updating `KyndeBlade_Godot/data/exported_from_unity.json`.
+4. **Play** and tests per [`DEMO_RUN.md`](ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) and [`docs/CI_UNITY_TESTS.md`](docs/CI_UNITY_TESTS.md) when validating the archive tree.
 
 **Book-aligned features** (Hodent + Beginner's Guide): CombatUI, TutorialManager, CombatFeedback, GameStateManager, GameSettings (timing accessibility), SimpleEnemyAI.
 
@@ -38,7 +39,7 @@ Kynde Blade 16 Bit/             # Repo root
 └── README.md
 ```
 
-**Merge note:** Root-level `ProjectSettings` (e.g. EditorBuildSettings, app-ui config) have been merged into `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/ProjectSettings`. The Unity project is the single source of truth.
+**Merge note:** Root-level `ProjectSettings` have been merged into `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/ProjectSettings`. **Godot** owns the shipping slice; Unity settings remain authoritative **for the Unity editor project only**.
 
 ## Game Overview
 

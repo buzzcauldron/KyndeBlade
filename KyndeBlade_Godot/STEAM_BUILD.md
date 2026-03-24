@@ -34,7 +34,7 @@ This is **not** a line-by-line port of Unity. It mirrors **names and flow** from
 
 **Port tracking:** [`PARITY_GAPS.md`](PARITY_GAPS.md), [`PORT_WAVE.md`](PORT_WAVE.md). **Unity ↔ Godot map:** [`docs/UNITY_GODOT_MODULE_MAP.md`](../docs/UNITY_GODOT_MODULE_MAP.md). **Licenses:** [`docs/ASSET_LICENSES.md`](../docs/ASSET_LICENSES.md). **Art → Godot theme:** [`docs/ART_DIRECTION_GODOT.md`](docs/ART_DIRECTION_GODOT.md).
 
-**TDAD — combat presentation:** [`docs/TDAD_COMBAT_PRESENTATION_PLAN.md`](docs/TDAD_COMBAT_PRESENTATION_PLAN.md).
+**TDAD — combat presentation:** [`docs/TDAD_COMBAT_PRESENTATION_PLAN.md`](docs/TDAD_COMBAT_PRESENTATION_PLAN.md). **`CombatManager.presentation_tick`** — fires on window open and each `tick_window` frame during `REAL_TIME_WINDOW` (ParryDodgeEye uses it; wind-up still updates in `_process`).
 
 **Cult-ship & coauthorship:** [`docs/CULT_SHIP_BAR.md`](docs/CULT_SHIP_BAR.md), [`docs/CULT_AND_COAUTHORSHIP.md`](../docs/CULT_AND_COAUTHORSHIP.md).
 

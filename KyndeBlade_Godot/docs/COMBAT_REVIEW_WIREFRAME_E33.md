@@ -31,7 +31,7 @@
 | **Feint vs real** read | **Partial** | `is_enemy_swing_real()`, eye phases, procedural window **beeps** (pitch); 3D albedo/telegraph tint where wired — verify per encounter in play |
 | **Bleed** / between-turn pressure | **Met (data)** | `enemy_turn_bleed_damage` on `EncounterDef`; **0** Fair Field, non-zero on stress encounters (e.g. Dongeoun gate) |
 | **Audio** supports read | **Met** | `CombatWindowTone` + `WindowSfx` on window open; kill thump + desat on victory (see [`PARITY_GAPS.md`](../PARITY_GAPS.md) audio row) |
-| Full-screen **voxel** production stage | **Not started** | Graybox primitives only; see [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) |
+| Full-screen **voxel** production stage | **Prototype** | Procedural voxel floor/wall grid [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd); imported art + rim/outline TBD — [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) |
 
 ---
 
@@ -39,7 +39,7 @@
 
 | Segment | Advance from wireframe slice | Still open / manual |
 |---------|------------------------------|---------------------|
-| **CP-01** API (`window_duration`, `window_remaining`, `window_phase_t`) | **Largely done** — manager exposes presentation timers | Optional `presentation_tick` signal if polling becomes painful |
+| **CP-01** API (`window_duration`, `window_remaining`, `window_phase_t`, `presentation_tick`) | **Done** — manager emits `presentation_tick` on window open + each `tick_window` frame | Subscribers should not duplicate phase work in `_process` unless ordering requires it |
 | **CP-02** Stage | **Done+** — Lane B 2D + **3D** graybox arena in same scene | Asset parity, hazard strip default off; orthographic/voxel “final” stage TBD |
 | **CP-03** Poses / motion | **Partial → strong** — lunge, telegraph snap, bob, hit feedback in 2D + 3D | Fine animation curves vs Unity `EnsureCharacterVisual` |
 | **CP-04** Parry/dodge eye + React label | **Done** — wired from `combat_root.gd` | BDD scenario may still be `@manual` for curve QA |

@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://c8combat001"]
+[gd_scene load_steps=16 format=3 uid="uid://c8combat001"]
 
 [ext_resource type="Script" path="res://scripts/combat_root.gd" id="1_root"]
 [ext_resource type="Script" path="res://scripts/combat_manager.gd" id="2_combat"]
 [ext_resource type="Script" path="res://scripts/combat_presentation_3d.gd" id="3_pres3d"]
+[ext_resource type="Script" path="res://scripts/combat_voxel_arena.gd" id="9_voxel"]
 [ext_resource type="PackedScene" path="res://scenes/parry_dodge_eye.tscn" id="4_eye"]
 [ext_resource type="Script" path="res://scripts/combat_manuscript_backdrop.gd" id="6_backdrop"]
 [ext_resource type="Shader" path="res://shaders/kill_desaturate.gdshader" id="7_kill_shader"]
@@ -73,6 +74,9 @@ script = ExtResource("2_combat")
 
 [node name="CombatArena3D" type="Node3D" parent="."]
 script = ExtResource("3_pres3d")
+
+[node name="VoxelArena" type="Node3D" parent="CombatArena3D"]
+script = ExtResource("9_voxel")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="CombatArena3D"]
 environment = SubResource("ArenaEnvironment")

@@ -1,5 +1,7 @@
 # Unity KyndeBlade (reference archive)
 
+**Roles and policy:** [`UNITY_REFERENCE_ARCHIVE.md`](UNITY_REFERENCE_ARCHIVE.md).
+
 The **Unity oracle / authoring project** lives here for parity, export-to-Godot, and TDAD workflows:
 
 `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`
