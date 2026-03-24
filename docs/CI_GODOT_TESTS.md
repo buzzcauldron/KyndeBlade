@@ -22,7 +22,7 @@ Then re-run the headless command below.
 
 ## Headless smoke (no addon)
 
-The project ships [`tests/run_headless_tests.gd`](../KyndeBlade_Godot/tests/run_headless_tests.gd). It runs save/settings/export checks (incl. **dongeoun gate** + **`combat_defense_tip_ack`** roundtrips, **`narrative_beats_skeleton_lines`**, and **`replay_moveset_matrix`** — parry/feint/hunger/misstep/read-text + `NarrativeContext` return visit), scene smokes (**main menu Continue**, **hub counsel gate**, **combat pause vs window tick**, **world atlas**, **location shell**, **`slice_open_yard_scene_smoke`**), **`_test_scene_transition_smoke`** (loads `hub_map.tscn` and `combat.tscn`, mounts each for one frame — future crawl pop-out path), **`hub_route_map_pin_geo_consistency`** (`lon`/`lat` vs normalized `x`/`y` under `basemap.bounds`), then **[`tests/combat_scenarios.gd`](../KyndeBlade_Godot/tests/combat_scenarios.gd)** (strike loop, dodge/parry **partial** + riposte, feint chip, **enemy-turn reaction** dodge/parry via `force_enemy_turn_reaction_window_in_tests`, stamina gate, defeat) via `CombatManager.use_instant_resolution_for_tests`, then exits.
+The project ships [`tests/run_headless_tests.gd`](../KyndeBlade_Godot/tests/run_headless_tests.gd). It runs save/settings/export checks (incl. **dongeoun gate** + **`combat_defense_tip_ack`** roundtrips, **`narrative_beats_skeleton_lines`**, and **`replay_moveset_matrix`** — parry/feint/hunger/misstep/read-text + `NarrativeContext` return visit), scene smokes (**main menu Continue**, **hub counsel gate**, **combat pause vs window tick**, **world atlas**, **location shell**, **`slice_open_yard_scene_smoke`**), **`_test_scene_transition_smoke`** (loads `hub_map.tscn` and `combat.tscn`, mounts each for one frame), **`crawl_overworld_scene_smoke`** ([`crawl_overworld.tscn`](../KyndeBlade_Godot/scenes/crawl_overworld.tscn) — crawl C0), **`hub_route_map_pin_geo_consistency`** (`lon`/`lat` vs normalized `x`/`y` under `basemap.bounds`), then **[`tests/combat_scenarios.gd`](../KyndeBlade_Godot/tests/combat_scenarios.gd)** (strike loop, dodge/parry **partial** + riposte, feint chip, **enemy-turn reaction** dodge/parry via `force_enemy_turn_reaction_window_in_tests`, stamina gate, defeat) via `CombatManager.use_instant_resolution_for_tests`, then exits.
 
 **Wireframe combat:** deterministic rows ↔ tests are mapped in [`KyndeBlade_Godot/docs/WIREFRAME_COMBAT_CHECKLIST.md`](../KyndeBlade_Godot/docs/WIREFRAME_COMBAT_CHECKLIST.md) §2.
 
@@ -103,6 +103,12 @@ jobs:
 ```
 
 Adjust the download URL to your pinned Godot version. If the action is overkill, use a plain `curl` + `unzip` step.
+
+## Optional GPU / 3D smoke (design)
+
+**Mandatory CI stays headless** (no GPU required for merge). GitHub Actions: [`.github/workflows/godot-ci.yml`](../.github/workflows/godot-ci.yml) runs **headless** on every push/PR and a second job under **`xvfb-run`** with **`continue-on-error: true`** (optional display path). Full matrix and future frame-capture notes: [`KyndeBlade_Godot/docs/DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md`](../KyndeBlade_Godot/docs/DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md) §4.
+
+**Crawl C0 smoke:** `run_headless_tests.gd` step `crawl_overworld_scene_smoke` loads [`crawl_overworld.tscn`](../KyndeBlade_Godot/scenes/crawl_overworld.tscn).
 
 ## Unity vs Godot CI
 

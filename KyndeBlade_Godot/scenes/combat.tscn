@@ -36,15 +36,25 @@ radius = 0.32
 height = 1.5
 
 [sub_resource type="StandardMaterial3D" id="PlayerMat"]
-shading_mode = 0
+shading_mode = 1
 albedo_color = Color(0.36, 0.29, 0.22, 1)
+roughness = 0.88
+metallic = 0.02
+rim_enabled = true
+rim = 0.22
+rim_tint = Color(0.82, 0.78, 0.72, 1)
 
 [sub_resource type="BoxMesh" id="EnemyBoxMesh"]
 size = Vector3(1.15, 1.95, 1.05)
 
 [sub_resource type="StandardMaterial3D" id="EnemyMat"]
-shading_mode = 0
+shading_mode = 1
 albedo_color = Color(0.48, 0.13, 0.11, 1)
+roughness = 0.85
+metallic = 0.04
+rim_enabled = true
+rim = 0.35
+rim_tint = Color(1, 0.55, 0.45, 1)
 
 [node name="Combat" type="Node"]
 process_mode = 1

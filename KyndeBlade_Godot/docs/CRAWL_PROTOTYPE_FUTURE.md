@@ -1,6 +1,6 @@
 # Future — overworld crawl prototype (fake voxels)
 
-**Status:** not implemented; hub + Fair Field stand in until this phase ships. **Note:** [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd) covers **combat** voxel read only; this doc’s **overworld crawl** layer is still separate.
+**Status:** **C0 stub** — [`scenes/crawl_overworld.tscn`](../scenes/crawl_overworld.tscn) + headless `crawl_overworld_scene_smoke`; hub + Fair Field remain the playable overworld until C1+. **Note:** [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd) is **combat** only.
 
 ## Goals
 
@@ -17,6 +17,7 @@
 
 ## Related
 
+- **Unified design (crawl + voxels + shaders + GPU CI + M6):** [`DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md`](DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md)  
 - [`GODOT_TARGET_EXPERIENCE.md`](GODOT_TARGET_EXPERIENCE.md)  
 - [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md)  
 - [`docs/CI_GODOT_TESTS.md`](../../docs/CI_GODOT_TESTS.md)

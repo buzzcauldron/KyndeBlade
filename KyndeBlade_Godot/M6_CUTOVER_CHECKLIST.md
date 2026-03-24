@@ -2,6 +2,8 @@
 
 Use this when TDAD milestone **godot-m6-cutover-archive** is formally approved. **Do not** remove or restructure [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity) without explicit sign-off.
 
+**Design (evidence bundle, RACI, TDAD wording):** [`docs/DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md`](docs/DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md) §5. **Sign-off template:** [`docs/M6_SIGNOFF_TEMPLATE.md`](docs/M6_SIGNOFF_TEMPLATE.md).
+
 ## Preconditions
 
 - [ ] Headless tests pass: `godot4 --path KyndeBlade_Godot --headless res://tests/headless_main.tscn` (or `--headless --script res://tests/run_headless_tests.gd` if your runner uses that entry)

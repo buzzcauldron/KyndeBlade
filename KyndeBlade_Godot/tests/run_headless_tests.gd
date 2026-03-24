@@ -82,6 +82,7 @@ func _kickoff() -> void:
 			"slice_open_yard_scene_smoke", await _test_slice_open_yard_scene_smoke(), ok
 	)
 	ok = _headless_step("scene_transition_smoke", await _test_scene_transition_smoke(), ok)
+	ok = _headless_step("crawl_overworld_scene_smoke", await _test_crawl_overworld_scene_smoke(), ok)
 	ok = _headless_step("nav_test_yard_smoke", await _test_nav_test_yard_smoke(), ok)
 	ok = _headless_step("hub_route_map_pin_geo_consistency", _test_hub_route_map_pin_geo_consistency(), ok)
 	if not ok:
@@ -775,6 +776,32 @@ func _test_scene_transition_smoke() -> bool:
 	get_tree().root.add_child(combat_inst)
 	await get_tree().process_frame
 	combat_inst.queue_free()
+	await get_tree().process_frame
+	return true
+
+
+func _test_crawl_overworld_scene_smoke() -> bool:
+	## Phase C0 — fake-voxel crawl shell loads headless (DESIGN_CRAWL_VOXEL_SHADER_CI_M6 §1).
+	var path := "res://scenes/crawl_overworld.tscn"
+	if not FileAccess.file_exists(path):
+		push_error("crawl overworld smoke: missing tscn")
+		return false
+	var ps: PackedScene = load(path) as PackedScene
+	if ps == null:
+		push_error("crawl overworld smoke: PackedScene load failed")
+		return false
+	var inst: Node = ps.instantiate()
+	if inst == null:
+		return false
+	var label: Label = inst.get_node_or_null("CrawlShellLabel") as Label
+	if label == null:
+		push_error("crawl overworld smoke: CrawlShellLabel missing")
+		inst.queue_free()
+		await get_tree().process_frame
+		return false
+	get_tree().root.add_child(inst)
+	await get_tree().process_frame
+	inst.queue_free()
 	await get_tree().process_frame
 	return true
 

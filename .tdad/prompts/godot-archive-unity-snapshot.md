@@ -2,7 +2,7 @@
 
 **Repo state:** The Unity project already lives at **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`**. Use this checklist for **M6 sign-off** (frozen SHA, Unity version, README/TDAD/CI updates), not for a first-time `git mv` unless you are recovering from a legacy layout.
 
-Run this **only after** `godot-m6-cutover-archive` exit criteria are met: `godot-parity-slice` green, exported Godot build smoke OK, lead sign-off.
+Run this **only after** `godot-m6-cutover-archive` exit criteria are met: `godot-parity-slice` green, exported Godot build smoke OK, lead sign-off. **Evidence bundle / RACI:** [`KyndeBlade_Godot/docs/DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md`](../../KyndeBlade_Godot/docs/DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md) §5.
 
 ## Pre-flight
 

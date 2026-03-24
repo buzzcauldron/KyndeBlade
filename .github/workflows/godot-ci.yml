@@ -1,0 +1,59 @@
+# Godot — headless regression (required) + optional Xvfb smoke.
+# See docs/CI_GODOT_TESTS.md and KyndeBlade_Godot/docs/DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md §4.
+
+name: Godot CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  GODOT_VERSION: "4.6.1"
+  GODOT_ZIP: "Godot_v4.6.1-stable_linux.x86_64.zip"
+  GODOT_BIN: "Godot_v4.6.1-stable_linux.x86_64"
+
+jobs:
+  godot-headless:
+    name: Headless tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Godot
+        run: |
+          set -euxo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq unzip
+          curl -sLO "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/${GODOT_ZIP}"
+          unzip -o "${GODOT_ZIP}"
+          chmod +x "${GODOT_BIN}"
+
+      - name: Import project
+        run: ./${{ env.GODOT_BIN }} --path KyndeBlade_Godot --import
+
+      - name: Run headless suite
+        run: ./${{ env.GODOT_BIN }} --path KyndeBlade_Godot --headless res://tests/headless_main.tscn
+
+  godot-display-smoke:
+    name: Optional display smoke (xvfb)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Godot + xvfb
+        run: |
+          set -euxo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq unzip xvfb
+          curl -sLO "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/${GODOT_ZIP}"
+          unzip -o "${GODOT_ZIP}"
+          chmod +x "${GODOT_BIN}"
+
+      - name: Import + headless under Xvfb
+        run: |
+          set -euxo pipefail
+          xvfb-run -a ./${GODOT_BIN} --path KyndeBlade_Godot --import
+          xvfb-run -a ./${GODOT_BIN} --path KyndeBlade_Godot --headless res://tests/headless_main.tscn

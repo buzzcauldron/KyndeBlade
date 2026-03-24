@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://crawl0verworld"]
+
+[ext_resource type="Script" path="res://scripts/crawl_overworld.gd" id="1_crawl"]
+
+[node name="CrawlOverworld" type="Node2D"]
+script = ExtResource("1_crawl")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(480, 270)
+
+[node name="CrawlShellLabel" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 32.0
+offset_top = 24.0
+offset_right = 920.0
+offset_bottom = 120.0
+theme_override_colors/font_color = Color(0.75, 0.72, 0.65, 1)
+theme_override_font_sizes/font_size = 18
+text = "Crawl overworld (stub)"
+autowrap_mode = 2

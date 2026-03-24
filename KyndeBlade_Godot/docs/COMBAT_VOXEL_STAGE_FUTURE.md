@@ -28,6 +28,7 @@ Toggle or resize via `VoxelArena` **Inspector** exports (`enabled`, `grid_half`,
 
 ## Related
 
+- **Unified design (imported voxels, rim/outline, GPU CI, crawl, M6):** [`DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md`](DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md)  
 - [`VISION_CRAWL_NOITA_E33.md`](VISION_CRAWL_NOITA_E33.md)  
 - [`TDAD_COMBAT_PRESENTATION_PLAN.md`](TDAD_COMBAT_PRESENTATION_PLAN.md) — current 2D presentation segments  
 - [`docs/GODOT_PLANS_INDEX.md`](GODOT_PLANS_INDEX.md)  

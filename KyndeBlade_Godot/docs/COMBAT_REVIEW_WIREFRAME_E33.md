@@ -31,7 +31,7 @@
 | **Feint vs real** read | **Partial** | `is_enemy_swing_real()`, eye phases, procedural window **beeps** (pitch); 3D albedo/telegraph tint where wired — verify per encounter in play |
 | **Bleed** / between-turn pressure | **Met (data)** | `enemy_turn_bleed_damage` on `EncounterDef`; **0** Fair Field, non-zero on stress encounters (e.g. Dongeoun gate) |
 | **Audio** supports read | **Met** | `CombatWindowTone` + `WindowSfx` on window open; kill thump + desat on victory (see [`PARITY_GAPS.md`](../PARITY_GAPS.md) audio row) |
-| Full-screen **voxel** production stage | **Prototype** | Procedural voxel floor/wall grid [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd); imported art + rim/outline TBD — [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) |
+| Full-screen **voxel** production stage | **Prototype** | Procedural voxel floor/wall grid [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd); **rim** on player/enemy `StandardMaterial3D` in `combat.tscn`; imported art + outline shader TBD — [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) |
 
 ---
 
