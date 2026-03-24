@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "hud-turn-indicator",
+      "workflowId": "ui-shell",
+      "title": "HUD turn indicator",
+      "description": "Given combat is active, when the current turn changes, then Combat UI reflects player vs enemy turn state.",
+      "nodeType": "feature",
+      "fileName": "hud-turn-indicator",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "menu-new-game-flow",
+      "workflowId": "ui-shell",
+      "title": "Main menu new game flow",
+      "description": "Given the main menu, when New Game is chosen, then save initializes and the first scene or map state loads.",
+      "nodeType": "feature",
+      "fileName": "menu-new-game-flow",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    }
+  ],
+  "edges": []
+}

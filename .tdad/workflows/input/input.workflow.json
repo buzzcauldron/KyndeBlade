@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "input-actions-resolve",
+      "workflowId": "input",
+      "title": "Combat window input resolves",
+      "description": "Given a real-time defense window, when ICombatWindowInput reports dodge/parry/counter this frame, then ParryDodgeInputHandler invokes OnDodgePressed/OnParryPressed or TurnManager.ExecuteCounter as appropriate.",
+      "nodeType": "feature",
+      "fileName": "input-actions-resolve",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "rebinding-persist",
+      "workflowId": "input",
+      "title": "Rebinding persistence",
+      "description": "Given custom key bindings for dodge/parry/counter, when the player saves settings, then bindings load on next session (future Input Actions asset).",
+      "nodeType": "feature",
+      "fileName": "rebinding-persist",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["input-actions-resolve"],
+      "testLayers": ["playmode"]
+    }
+  ],
+  "edges": []
+}

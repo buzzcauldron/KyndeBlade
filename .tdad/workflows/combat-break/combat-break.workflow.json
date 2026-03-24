@@ -1,0 +1,78 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "take-break-damage",
+      "workflowId": "combat-break",
+      "title": "Take Break Damage",
+      "description": "Given a character with a break gauge, when TakeBreakDamage(amount) is called, then CurrentBreakGauge decreases by amount (floored at 0) and OnBreakGaugeChanged fires with (current, max).",
+      "nodeType": "feature",
+      "fileName": "take-break-damage",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "break-triggers-at-zero",
+      "workflowId": "combat-break",
+      "title": "Break Triggers At Zero",
+      "description": "Given CurrentBreakGauge reaches 0 via TakeBreakDamage, then BreakCharacter() is called: IsBroken=true, BrokenStunRemaining set to GameWorldConstants.BreakStunDurationSeconds, OnCharacterBroken fires.",
+      "nodeType": "feature",
+      "fileName": "break-triggers-at-zero",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["take-break-damage"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "broken-stun-timer",
+      "workflowId": "combat-break",
+      "title": "Broken Stun Timer",
+      "description": "Given a broken character (IsBroken=true, BrokenStunRemaining > 0), when Update runs, then BrokenStunRemaining decreases by deltaTime. When it reaches <= 0, RecoverFromBreak() is called.",
+      "nodeType": "feature",
+      "fileName": "broken-stun-timer",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["break-triggers-at-zero"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "recover-from-break",
+      "workflowId": "combat-break",
+      "title": "Recover From Break",
+      "description": "Given RecoverFromBreak() is called, then IsBroken=false, BrokenStunRemaining=0, CurrentBreakGauge resets to MaxBreakGauge, and OnBreakGaugeChanged fires.",
+      "nodeType": "feature",
+      "fileName": "recover-from-break",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": ["broken-stun-timer"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "already-broken-ignores",
+      "workflowId": "combat-break",
+      "title": "Already Broken Ignores",
+      "description": "Given a character that is already IsBroken, when TakeBreakDamage() is called, then it returns immediately with no change to break gauge.",
+      "nodeType": "feature",
+      "fileName": "already-broken-ignores",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["break-triggers-at-zero"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "on-character-broken-event",
+      "workflowId": "combat-break",
+      "title": "On Character Broken Event",
+      "description": "Given a character's break gauge reaches 0, when BreakCharacter() executes, then OnCharacterBroken event fires with the broken character as parameter.",
+      "nodeType": "feature",
+      "fileName": "on-character-broken-event",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["break-triggers-at-zero"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "break-to-triggers", "source": "take-break-damage", "target": "break-triggers-at-zero" },
+    { "id": "triggers-to-stun", "source": "break-triggers-at-zero", "target": "broken-stun-timer" },
+    { "id": "stun-to-recover", "source": "broken-stun-timer", "target": "recover-from-break" },
+    { "id": "triggers-to-ignores", "source": "break-triggers-at-zero", "target": "already-broken-ignores" },
+    { "id": "triggers-to-event", "source": "break-triggers-at-zero", "target": "on-character-broken-event" }
+  ]
+}

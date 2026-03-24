@@ -1,0 +1,27 @@
+QUICK REFERENCE: How to Place Characters
+=========================================
+
+EASIEST METHOD:
+1. Press Shift+1 (opens Place Actors)
+2. Search: "Test Level Setup"
+3. Drag it into level
+4. Press Play
+Done!
+
+CONSOLE COMMAND (if actor doesn't work):
+1. Press Play
+2. Press ` (backtick) to open console
+3. Type: SpawnTestCharacters
+4. Press Enter
+
+MANUAL PLACEMENT:
+1. Shift+1 → Search for "Knight Character"
+2. Drag into level
+3. Repeat for "Mage Character", "False Character", etc.
+4. Position them manually
+
+KEYBOARD SHORTCUTS:
+- Shift+1 = Place Actors panel
+- ` = Console (in Play mode)
+- Alt+P = Play
+- F = Focus on selected

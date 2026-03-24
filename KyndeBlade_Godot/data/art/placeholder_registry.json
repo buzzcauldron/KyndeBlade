@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "bible": {
+    "lanes": "KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md — Lane A vista vs Lane B combat void",
+    "godot": "KyndeBlade_Godot/docs/ART_DIRECTION_GODOT.md",
+    "jewel": "ProjectArchive/docs/ART_DIRECTION_VISUAL_BIBLE.md — Salome / jewel contamination"
+  },
+  "color_tokens": {
+    "INK_PRIMARY": "palette",
+    "INK_SECONDARY": "palette",
+    "PARCHMENT_LIGHT": "palette",
+    "PARCHMENT": "palette",
+    "PARCHMENT_AGED": "palette",
+    "GOLD": "palette",
+    "GOLD_DARK": "palette",
+    "RUBRICATION": "palette",
+    "BORDER_RED": "palette",
+    "LAPIS": "palette",
+    "COMBAT_VOID": "palette",
+    "COMBAT_VOID_COOL": "palette",
+    "HUB_TWILIGHT": "palette",
+    "HUB_MIST": "palette",
+    "HI_BIT_SKY_TEAL": "palette",
+    "HI_BIT_SKY_MIST": "palette",
+    "HI_BIT_SKY_PEACH": "palette",
+    "HI_BIT_SILHOUETTE_FAR": "palette",
+    "HI_BIT_SILHOUETTE_MID": "palette",
+    "HI_BIT_TERRACOTTA": "palette",
+    "HI_BIT_SAGE": "palette",
+    "HI_BIT_TEAL_SHADOW": "palette",
+    "BOSS_GREEN_KNIGHT": "palette",
+    "BOSS_HUNGER": "palette",
+    "BOSS_PRIDE": "palette",
+    "JEWEL_CRIMSON": "palette",
+    "JEWEL_EMERALD": "palette",
+    "JEWEL_ULTRAMARINE": "palette",
+    "JEWEL_VIOLET_SHADOW": "palette",
+    "VISTA_GOLD_TITLE": "palette",
+    "VISTA_BODY": "palette"
+  },
+  "characters": {
+    "will_dreamer": {
+      "silhouette": "wille_laborer",
+      "bible_lane": "B",
+      "inspiration": "Manuscript labourer / dreamer; Lane B small readable silhouette"
+    },
+    "langage_false": {
+      "silhouette": "margin_beast_false",
+      "bible_lane": "B",
+      "inspiration": "Margin beast, rubric + jewel crimson mix; large vs player"
+    },
+    "green_knight": {
+      "silhouette": "green_knight_boss",
+      "bible_lane": "B",
+      "inspiration": "ART_DIRECTION boss scale; BOSS_GREEN_KNIGHT + void"
+    },
+    "lady_mede": {
+      "silhouette": "lady_mede_robes",
+      "bible_lane": "B",
+      "inspiration": "Jewel crimson / gold drape; Pre-Raphaelite pathos"
+    },
+    "wrath_sin": {
+      "silhouette": "wrath_spike_burst",
+      "bible_lane": "B",
+      "inspiration": "Angular SNES-boss read; rubric + sick highlight"
+    },
+    "hunger_person": {
+      "silhouette": "hunger_tall_thin",
+      "bible_lane": "B",
+      "inspiration": "BOSS_HUNGER palette; worst status silhouette"
+    },
+    "piers_ploughman": {
+      "silhouette": "piers_field_labourer",
+      "bible_lane": "A",
+      "inspiration": "Fair field / labour passus; earth + lapis staff"
+    },
+    "orfeo_threshold": {
+      "silhouette": "boundary_wanderer",
+      "bible_lane": "A",
+      "inspiration": "Orfeo lane; violet–teal mist figure"
+    },
+    "crowd_silhouette": {
+      "silhouette": "field_of_folk_dots",
+      "bible_lane": "A",
+      "inspiration": "Fair field full of folk — abstract many"
+    },
+    "grace_waiting": {
+      "silhouette": "still_kneeler",
+      "bible_lane": "A",
+      "inspiration": "Field of Grace terminal stillness"
+    }
+  },
+  "levels": {
+    "malvern": { "preset": "malvern_dawn_band", "lane": "A", "jewel_wash": 0.04, "preview_character": "will_dreamer" },
+    "tour": { "preset": "twilight_tower_mist", "lane": "A", "jewel_wash": 0.06, "preview_character": "will_dreamer" },
+    "fayre_felde": { "preset": "fair_field_hi_bit", "lane": "A", "jewel_wash": 0.07, "preview_character": "crowd_silhouette" },
+    "dongeoun": { "preset": "dungeon_cool_depth", "lane": "B", "jewel_wash": 0.12, "preview_character": "hunger_person" },
+    "piers_field": { "preset": "labour_earth_stripes", "lane": "A", "jewel_wash": 0.05, "preview_character": "piers_ploughman" },
+    "seven_sins": { "preset": "sin_gathering_red", "lane": "B", "jewel_wash": 0.18, "preview_character": "langage_false" },
+    "green_chapel": { "preset": "green_void_chapel", "lane": "B", "jewel_wash": 0.1, "preview_character": "green_knight" },
+    "boundary_tree": { "preset": "orfeo_violet_tree", "lane": "A", "jewel_wash": 0.14, "preview_character": "orfeo_threshold" },
+    "quest_do_wel": { "preset": "vision2_gold_search", "lane": "A", "jewel_wash": 0.08, "preview_character": "lady_mede" },
+    "dongeoun_depths": { "preset": "depths_hunger_teal", "lane": "B", "jewel_wash": 0.15, "preview_character": "hunger_person" },
+    "years_pass": { "preset": "time_dust_parchment", "lane": "A", "jewel_wash": 0.06, "preview_character": "will_dreamer" },
+    "field_of_grace": { "preset": "grace_pale_terminal", "lane": "A", "jewel_wash": 0.03, "preview_character": "grace_waiting" },
+    "otherworld": { "preset": "fairy_terminal_mist", "lane": "A", "jewel_wash": 0.2, "preview_character": "orfeo_threshold" }
+  }
+}

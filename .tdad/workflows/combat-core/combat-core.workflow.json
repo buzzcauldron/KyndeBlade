@@ -1,0 +1,137 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "initialize-combat",
+      "workflowId": "combat-core",
+      "title": "Initialize Combat",
+      "description": "Given a list of player characters and enemy characters, when InitializeCombat() is called, then PlayerCharacters and EnemyCharacters are set, TurnOrder is computed by descending Speed, and nulls are excluded.",
+      "nodeType": "feature",
+      "fileName": "initialize-combat",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "start-combat",
+      "workflowId": "combat-core",
+      "title": "Start Combat",
+      "description": "Given combat is initialized, when StartCombat() is called, then State becomes WaitingForInput, TurnNumber is 1, crit pressure resets to 0, CurrentCharacter is first in TurnOrder, and OnTurnChanged fires.",
+      "nodeType": "feature",
+      "fileName": "start-combat",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["initialize-combat"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "calculate-turn-order",
+      "workflowId": "combat-core",
+      "title": "Calculate Turn Order",
+      "description": "Given characters with varying Speed stats, when CalculateTurnOrder runs, then characters are sorted descending by Speed. Nulls are handled gracefully (Speed treated as 0).",
+      "nodeType": "feature",
+      "fileName": "calculate-turn-order",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "next-turn-skips-dead",
+      "workflowId": "combat-core",
+      "title": "Next Turn Skips Dead",
+      "description": "Given combat with some dead characters, when NextTurn() is called, then dead characters are skipped and the next alive character becomes CurrentCharacter. Wraps around the turn order list.",
+      "nodeType": "feature",
+      "fileName": "next-turn-skips-dead",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["initialize-combat"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "next-turn-increments",
+      "workflowId": "combat-core",
+      "title": "Next Turn Increments",
+      "description": "Given combat is running, when NextTurn() is called, then TurnNumber increments by 1 and OnTurnChanged fires with the new CurrentCharacter.",
+      "nodeType": "feature",
+      "fileName": "next-turn-increments",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["initialize-combat"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "end-turn-fires-event",
+      "workflowId": "combat-core",
+      "title": "End Turn Fires Event",
+      "description": "Given a character's turn is active, when EndTurn() is called, then the character's OnTurnEnd event is invoked.",
+      "nodeType": "feature",
+      "fileName": "end-turn-fires-event",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": ["start-combat"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "check-combat-end-victory",
+      "workflowId": "combat-core",
+      "title": "Check Combat End Victory",
+      "description": "Given all enemy characters have 0 health, when CheckCombatEnd runs (via NextTurn), then State becomes CombatEnded and OnCombatEnded fires.",
+      "nodeType": "feature",
+      "fileName": "check-combat-end-victory",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": ["initialize-combat"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "check-combat-end-defeat",
+      "workflowId": "combat-core",
+      "title": "Check Combat End Defeat",
+      "description": "Given all player characters have 0 health, when CheckCombatEnd runs (via NextTurn), then State becomes CombatEnded and OnCombatEnded fires.",
+      "nodeType": "feature",
+      "fileName": "check-combat-end-defeat",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["initialize-combat"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "is-player-turn",
+      "workflowId": "combat-core",
+      "title": "Is Player Turn",
+      "description": "Given combat is running, when IsPlayerTurn() is called, then returns true if CurrentCharacter is in PlayerCharacters list, false otherwise.",
+      "nodeType": "feature",
+      "fileName": "is-player-turn",
+      "position": { "x": 100, "y": 550 },
+      "dependencies": ["start-combat"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "add-character-mid-combat",
+      "workflowId": "combat-core",
+      "title": "Add Character Mid Combat",
+      "description": "Given combat is running, when AddCharacterToCombat() is called with a character and isPlayer flag, then character is added to the correct list, added to TurnOrder, and turn order is re-sorted by Speed.",
+      "nodeType": "feature",
+      "fileName": "add-character-mid-combat",
+      "position": { "x": 300, "y": 550 },
+      "dependencies": ["start-combat"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "on-action-executed-event",
+      "workflowId": "combat-core",
+      "title": "On Action Executed Event",
+      "description": "Given combat is running, when an action is executed via ExecuteAction(), then OnActionExecuted event fires with (executor, target, action) parameters.",
+      "nodeType": "feature",
+      "fileName": "on-action-executed-event",
+      "position": { "x": 500, "y": 550 },
+      "dependencies": ["start-combat"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "init-to-start", "source": "initialize-combat", "target": "start-combat" },
+    { "id": "init-to-skip-dead", "source": "initialize-combat", "target": "next-turn-skips-dead" },
+    { "id": "init-to-increments", "source": "initialize-combat", "target": "next-turn-increments" },
+    { "id": "start-to-end-turn", "source": "start-combat", "target": "end-turn-fires-event" },
+    { "id": "init-to-victory", "source": "initialize-combat", "target": "check-combat-end-victory" },
+    { "id": "init-to-defeat", "source": "initialize-combat", "target": "check-combat-end-defeat" },
+    { "id": "start-to-player-turn", "source": "start-combat", "target": "is-player-turn" },
+    { "id": "start-to-add-char", "source": "start-combat", "target": "add-character-mid-combat" },
+    { "id": "start-to-action-event", "source": "start-combat", "target": "on-action-executed-event" }
+  ]
+}

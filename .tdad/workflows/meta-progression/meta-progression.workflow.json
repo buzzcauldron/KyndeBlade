@@ -1,0 +1,142 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "aging-speed-multiplier",
+      "workflowId": "meta-progression",
+      "title": "Aging Speed Multiplier",
+      "description": "Given a SaveManager with TotalPlayTimeSeconds, when AgingManager.GetSpeedMultiplier() is called, then returns a value < 1.0 that decreases with more play time. Returns 1.0 for 0 play time.",
+      "nodeType": "feature",
+      "fileName": "aging-speed-multiplier",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "aging-apply-to-party",
+      "workflowId": "meta-progression",
+      "title": "Aging Apply To Party",
+      "description": "Given play time has accumulated, when ApplyAgeToParty(partyList) is called, then each character receives an Age status effect with tier based on play time. Speed decreases, defense increases.",
+      "nodeType": "feature",
+      "fileName": "aging-apply-to-party",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["aging-speed-multiplier"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "aging-apply-to-character",
+      "workflowId": "meta-progression",
+      "title": "Aging Apply To Character",
+      "description": "Given a specific aging tier, when ApplyAgeToCharacter(character, tier) is called, then an Age status effect of that tier is applied to the single character.",
+      "nodeType": "feature",
+      "fileName": "aging-apply-to-character",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "poverty-stamina-regen",
+      "workflowId": "meta-progression",
+      "title": "Poverty Stamina Regen",
+      "description": "Given PovertyManager at various levels, when GetStaminaRegenMultiplier() is called, then returns 1.0 at level 0 and progressively lower values at higher poverty levels.",
+      "nodeType": "feature",
+      "fileName": "poverty-stamina-regen",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "poverty-kynde-gen",
+      "workflowId": "meta-progression",
+      "title": "Poverty Kynde Gen",
+      "description": "Given PovertyManager at various levels, when GetKyndeGenMultiplier() is called, then returns 1.0 at level 0 and progressively lower values at higher poverty levels.",
+      "nodeType": "feature",
+      "fileName": "poverty-kynde-gen",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "poverty-level-clamp",
+      "workflowId": "meta-progression",
+      "title": "Poverty Level Clamp",
+      "description": "Given PovertyManager, when SetPovertyLevel() is called with values outside [0, 5], then the level is clamped: values > 5 become 5, values < 0 become 0.",
+      "nodeType": "feature",
+      "fileName": "poverty-level-clamp",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "death-of-old-age-trigger",
+      "workflowId": "meta-progression",
+      "title": "Death Of Old Age Trigger",
+      "description": "Given player is at Field of Grace and aging tier is high enough, when the condition is met, then AgingManager fires OnDeathOfOldAgeRequested and GameStateManager handles the special death sequence.",
+      "nodeType": "feature",
+      "fileName": "death-of-old-age-trigger",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": ["aging-apply-to-party"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "green-knight-random-appear",
+      "workflowId": "meta-progression",
+      "title": "Green Knight Random Appear",
+      "description": "Given GreenKnightWillAppearRandomly flag is true in SaveManager, then when entering certain buildings, there is a percentage chance (15% initially, 25% later) the Green Knight boss spawns.",
+      "nodeType": "feature",
+      "fileName": "green-knight-random-appear",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "suppress-combat-hazards",
+      "workflowId": "meta-progression",
+      "title": "Suppress Combat Hazards",
+      "description": "Given SuppressCombatHazards hidden flag is true, then combat hazards from CombatHazardManager are suppressed (not applied).",
+      "nodeType": "feature",
+      "fileName": "suppress-combat-hazards",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "wode-wo-passcode",
+      "workflowId": "meta-progression",
+      "title": "Wode Wo Passcode",
+      "description": "Given SecretCodeListener is active, when the player inputs the sequence W-O-D-E, then the Wode-Wo arc is triggered (install-permanent death mechanic).",
+      "nodeType": "feature",
+      "fileName": "wode-wo-passcode",
+      "position": { "x": 700, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "meta-progress-lifetime",
+      "workflowId": "meta-progression",
+      "title": "Meta Progress Lifetime",
+      "description": "Given MetaProgress tracking, then LifetimeRunCount persists across NewGame calls and is never reset. Each NewGame increments the count.",
+      "nodeType": "feature",
+      "fileName": "meta-progress-lifetime",
+      "position": { "x": 100, "y": 550 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "multi-run-scaling",
+      "workflowId": "meta-progression",
+      "title": "Multi Run Scaling",
+      "description": "Given LifetimeRunCount has accumulated over 15+ runs, then crit chance, damage taken, Kynde gain, and other parameters scale according to the multi-run progression table.",
+      "nodeType": "feature",
+      "fileName": "multi-run-scaling",
+      "position": { "x": 300, "y": 550 },
+      "dependencies": ["meta-progress-lifetime"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "aging-to-party", "source": "aging-speed-multiplier", "target": "aging-apply-to-party" },
+    { "id": "aging-to-death", "source": "aging-apply-to-party", "target": "death-of-old-age-trigger" },
+    { "id": "lifetime-to-scaling", "source": "meta-progress-lifetime", "target": "multi-run-scaling" }
+  ]
+}

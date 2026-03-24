@@ -1,0 +1,112 @@
+{
+  "version": "1.0",
+  "title": "Demo vertical slice (Tier A)",
+  "description": "Playable zip path: hub → narrative → combat → victory → hub. Depends on ui-shell, map-progression, narrative, save-system, scenes, combat-core. Automated coverage: PlayMode/EditMode tests listed per node; full loop timing and victory Continue → map remain manual per DEMO_RUN.md.",
+  "nodes": [
+    {
+      "id": "demo-main-map-bootstraps-tour",
+      "workflowId": "demo-vertical-slice",
+      "title": "Main scene map bootstraps at tour",
+      "description": "Given Main.unity loads with main menu skipped for tests, when WorldMapManager finishes lazy init, then CurrentLocation.LocationId equals GameWorldConstants.DefaultStartLocationId (tour). Covered by DemoVerticalSlicePlayModeTests.MainScene_SkipMenu_CurrentLocationId_IsTour.",
+      "nodeType": "feature",
+      "fileName": "demo-main-map-bootstraps-tour",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "demo-map-graph-tour-to-fayre-felde",
+      "workflowId": "demo-vertical-slice",
+      "title": "Tour location lists Fair Field as next",
+      "description": "Given Loc_tour asset, when NextLocationIds is read, then it contains GameWorldConstants.PlayableSliceFirstCombatLocationId (fayre_felde). Covered by PlayableSliceEditModeTests.PlayableSlice_Tour_ListsFayreFeldeAsNext.",
+      "nodeType": "feature",
+      "fileName": "demo-map-graph-tour-to-fayre-felde",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["editmode"]
+    },
+    {
+      "id": "demo-fayre-felde-encounter-wired",
+      "workflowId": "demo-vertical-slice",
+      "title": "Fair Field encounter wired to False",
+      "description": "Given Loc_fayre_felde asset, when encounter config is inspected, then combat can start with expected slice enemy (False). Covered by PlayableSliceEditModeTests.PlayableSlice_FayreFelde_HasEncounter_WithFalseEnemy and PlayableSliceConstants_FirstCombatLocation_MatchesFayreFeldeAsset.",
+      "nodeType": "feature",
+      "fileName": "demo-fayre-felde-encounter-wired",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": ["demo-map-graph-tour-to-fayre-felde"],
+      "testLayers": ["editmode"]
+    },
+    {
+      "id": "demo-checkpoint-updates-location",
+      "workflowId": "demo-vertical-slice",
+      "title": "Save checkpoint updates current location",
+      "description": "Given SaveManager after NewGame, when SaveCheckpoint(fayre_felde) is called, then CurrentProgress.CurrentLocationId is fayre_felde and location is visited/unlocked. Covered by MapSaveTest.SaveCheckpoint_UpdatesLocationAndUnlocks.",
+      "nodeType": "feature",
+      "fileName": "demo-checkpoint-updates-location",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "demo-progress-json-roundtrip",
+      "workflowId": "demo-vertical-slice",
+      "title": "Game progress JSON roundtrip",
+      "description": "Given GameProgress with visited/unlocked locations, when ToJson then FromJson, then fields match. Supports save/load integrity for slice. Covered by MapSaveTest.GameProgress_ToJsonFromJson_Roundtrips.",
+      "nodeType": "feature",
+      "fileName": "demo-progress-json-roundtrip",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "demo-pause-overlay-present",
+      "workflowId": "demo-vertical-slice",
+      "title": "Pause overlay present after bootstrap",
+      "description": "Given Main.unity with GameFlowController, when UI is built, then a PauseRoot exists under the menu canvas and starts inactive (Escape opens pause in play). Covered by DemoVerticalSlicePlayModeTests.MainScene_SkipMenu_PauseRoot_ExistsAndStartsHidden.",
+      "nodeType": "feature",
+      "fileName": "demo-pause-overlay-present",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["playmode"]
+    },
+    {
+      "id": "demo-settings-volume-persists",
+      "workflowId": "demo-vertical-slice",
+      "title": "Settings master volume persists",
+      "description": "Given KyndeBladeSettingsStore, when MasterVolume is set, then PlayerPrefs reflects the value. Covered by UiShellEditModeTests.KyndeBladeSettingsStore_MasterVolume_Persists.",
+      "nodeType": "feature",
+      "fileName": "demo-settings-volume-persists",
+      "position": { "x": 700, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["editmode"]
+    },
+    {
+      "id": "demo-continue-available-when-save-exists",
+      "workflowId": "demo-vertical-slice",
+      "title": "Continue when save exists",
+      "description": "Given PlayerPrefs contains KyndeBlade save JSON, when SaveManager loads, then HasSavedGame is true. Covered by UiShellEditModeTests.SaveManager_HasSavedGame_TrueWhenPrefsContainSave.",
+      "nodeType": "feature",
+      "fileName": "demo-continue-available-when-save-exists",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": ["demo-progress-json-roundtrip"],
+      "testLayers": ["editmode"]
+    },
+    {
+      "id": "demo-slice-combat-victory-to-map-manual",
+      "workflowId": "demo-vertical-slice",
+      "title": "Combat win Continue returns to map (manual)",
+      "description": "Manual smoke: from Fair Field combat, on victory tap Continue and confirm map shows Fair Field as current and next locations match design. See DEMO_RUN.md table. Automated: ParryDodgeInputHandler and combat stack covered separately under combat-* workflows.",
+      "nodeType": "feature",
+      "fileName": "demo-slice-combat-victory-to-map-manual",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["demo-fayre-felde-encounter-wired", "demo-main-map-bootstraps-tour"],
+      "testLayers": ["manual"]
+    }
+  ],
+  "edges": [
+    { "id": "graph-to-encounter", "source": "demo-map-graph-tour-to-fayre-felde", "target": "demo-fayre-felde-encounter-wired" },
+    { "id": "boot-to-victory-manual", "source": "demo-main-map-bootstraps-tour", "target": "demo-slice-combat-victory-to-map-manual" },
+    { "id": "encounter-to-victory-manual", "source": "demo-fayre-felde-encounter-wired", "target": "demo-slice-combat-victory-to-map-manual" },
+    { "id": "progress-to-continue", "source": "demo-progress-json-roundtrip", "target": "demo-continue-available-when-save-exists" }
+  ]
+}

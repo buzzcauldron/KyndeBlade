@@ -1,0 +1,10 @@
+{
+  "tour": {
+    "display": "Tower on the Toft",
+    "next": ["dongeoun", "fayre_felde"]
+  },
+  "fayre_felde": {
+    "display": "Fair Field",
+    "next": ["tour"]
+  }
+}

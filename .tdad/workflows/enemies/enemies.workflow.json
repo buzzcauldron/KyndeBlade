@@ -1,0 +1,201 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "hunger-character-setup",
+      "workflowId": "enemies",
+      "title": "Hunger Character Setup",
+      "description": "Given a HungerCharacter GameObject, when Start() runs, then stats are set (identity: Hunger/Gluttony, SoundTheme: Creaking), HungerMoveset is applied, and AvailableActions is populated.",
+      "nodeType": "feature",
+      "fileName": "hunger-character-setup",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "hunger-moveset",
+      "workflowId": "enemies",
+      "title": "Hunger Moveset",
+      "description": "Given a HungerCharacter after Start(), then AvailableActions contains 'Hunger's Grip' and other thematic actions with appropriate damage, stamina costs, and element types.",
+      "nodeType": "feature",
+      "fileName": "hunger-moveset",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["hunger-character-setup"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "false-character-setup",
+      "workflowId": "enemies",
+      "title": "False Character Setup",
+      "description": "Given a FalseCharacter GameObject, when Start() runs, then stats are set for the Deceit enemy with identity and appropriate moveset.",
+      "nodeType": "feature",
+      "fileName": "false-character-setup",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "lady-mede-character-setup",
+      "workflowId": "enemies",
+      "title": "Lady Mede Character Setup",
+      "description": "Given a LadyMedeCharacter GameObject, when Start() runs, then stats are set for the Greed enemy with identity (SoundTheme: Greed) and appropriate moveset.",
+      "nodeType": "feature",
+      "fileName": "lady-mede-character-setup",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "wrath-character-setup",
+      "workflowId": "enemies",
+      "title": "Wrath Character Setup",
+      "description": "Given a WrathCharacter GameObject, when Start() runs, then stats are set for the Wrath enemy with identity (SoundTheme: Wrath) and appropriate moveset.",
+      "nodeType": "feature",
+      "fileName": "wrath-character-setup",
+      "position": { "x": 700, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "pride-character-setup",
+      "workflowId": "enemies",
+      "title": "Pride Character Setup",
+      "description": "Given a PrideCharacter GameObject, when Start() runs, then stats are set for the Pride enemy with identity (SoundTheme: Pride) and appropriate moveset.",
+      "nodeType": "feature",
+      "fileName": "pride-character-setup",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "green-knight-character-setup",
+      "workflowId": "enemies",
+      "title": "Green Knight Character Setup",
+      "description": "Given a GreenKnightCharacter GameObject, when Start() runs, then boss-level stats are set with identity and GreenKnightMoveset is applied.",
+      "nodeType": "feature",
+      "fileName": "green-knight-character-setup",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "elde-character-setup",
+      "workflowId": "enemies",
+      "title": "Elde Character Setup",
+      "description": "Given an EldeCharacter GameObject, when Start() runs, then stats are set for the Old Age boss with EldeMoveset applied.",
+      "nodeType": "feature",
+      "fileName": "elde-character-setup",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "elde-aging-on-hit",
+      "workflowId": "enemies",
+      "title": "Elde Aging On Hit",
+      "description": "Given an EldeCharacter attacks a player, when ApplyCustomDamage detects attacker is EldeCharacter, then SaveManager.IncrementEldeHitsAccrued() is called and AgingManager.ApplyAgeToCharacter() applies the new aging tier.",
+      "nodeType": "feature",
+      "fileName": "elde-aging-on-hit",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["elde-character-setup"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "simple-enemy-ai-decision",
+      "workflowId": "enemies",
+      "title": "Simple Enemy AI Decision",
+      "description": "Given a SimpleEnemyAI component on an enemy, when it is the enemy's turn, then the AI selects an action from AvailableActions and a target from the player list.",
+      "nodeType": "feature",
+      "fileName": "simple-enemy-ai-decision",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "adaptive-ai-targets-broken",
+      "workflowId": "enemies",
+      "title": "Adaptive AI Targets Broken",
+      "description": "Given an AdaptiveEnemyAI component, when selecting a target, then broken (IsBroken) and low-HP characters are prioritized via weighted scoring.",
+      "nodeType": "feature",
+      "fileName": "adaptive-ai-targets-broken",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "adaptive-ai-counters-dodge",
+      "workflowId": "enemies",
+      "title": "Adaptive AI Counters Dodge",
+      "description": "Given player frequently dodges or parries (observed via OnActionExecuted), when AdaptiveEnemyAI selects an action, then it adapts strategy (e.g. multi-hit, area attacks) to counter frequent dodging.",
+      "nodeType": "feature",
+      "fileName": "adaptive-ai-counters-dodge",
+      "position": { "x": 300, "y": 550 },
+      "dependencies": ["adaptive-ai-targets-broken"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "boss-ai-dialogue-phases",
+      "workflowId": "enemies",
+      "title": "Boss AI Dialogue Phases",
+      "description": "Given a BaseBossAI subclass, when boss HP crosses entry/midpoint/desperation thresholds, then the corresponding dialogue is triggered via BossDialogueManager.",
+      "nodeType": "feature",
+      "fileName": "boss-ai-dialogue-phases",
+      "position": { "x": 500, "y": 550 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "boss-ai-narrative-pause",
+      "workflowId": "enemies",
+      "title": "Boss AI Narrative Pause",
+      "description": "Given a boss uses a special action, when BaseBossAI processes the action, then a narrative pause is triggered (combat paused briefly for dialogue display).",
+      "nodeType": "feature",
+      "fileName": "boss-ai-narrative-pause",
+      "position": { "x": 700, "y": 550 },
+      "dependencies": ["boss-ai-dialogue-phases"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "green-knight-boss-logic",
+      "workflowId": "enemies",
+      "title": "Green Knight Boss Logic",
+      "description": "Given a GreenKnightBossAI, when processing turns, then phase transitions and actions follow GreenKnight-specific patterns (beheading game, regeneration, chapel mechanics).",
+      "nodeType": "feature",
+      "fileName": "green-knight-boss-logic",
+      "position": { "x": 100, "y": 700 },
+      "dependencies": ["boss-ai-dialogue-phases"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "hunger-boss-logic",
+      "workflowId": "enemies",
+      "title": "Hunger Boss Logic",
+      "description": "Given a HungerBossAI, when processing turns, then Hunger-specific behavior is applied (e.g. applying hunger stacks to players, ethereal attacks).",
+      "nodeType": "feature",
+      "fileName": "hunger-boss-logic",
+      "position": { "x": 300, "y": 700 },
+      "dependencies": ["boss-ai-dialogue-phases"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "pride-boss-logic",
+      "workflowId": "enemies",
+      "title": "Pride Boss Logic",
+      "description": "Given a PrideBossAI, when processing turns, then Pride-specific behavior and phase transitions are applied.",
+      "nodeType": "feature",
+      "fileName": "pride-boss-logic",
+      "position": { "x": 500, "y": 700 },
+      "dependencies": ["boss-ai-dialogue-phases"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "hunger-setup-to-moveset", "source": "hunger-character-setup", "target": "hunger-moveset" },
+    { "id": "elde-setup-to-aging", "source": "elde-character-setup", "target": "elde-aging-on-hit" },
+    { "id": "adaptive-to-counters", "source": "adaptive-ai-targets-broken", "target": "adaptive-ai-counters-dodge" },
+    { "id": "boss-to-narrative", "source": "boss-ai-dialogue-phases", "target": "boss-ai-narrative-pause" },
+    { "id": "boss-to-green-knight", "source": "boss-ai-dialogue-phases", "target": "green-knight-boss-logic" },
+    { "id": "boss-to-hunger", "source": "boss-ai-dialogue-phases", "target": "hunger-boss-logic" },
+    { "id": "boss-to-pride", "source": "boss-ai-dialogue-phases", "target": "pride-boss-logic" }
+  ]
+}

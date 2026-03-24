@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12908b64532fe45fe818aa1b16d9862f, type: 3}
+  m_Name: GreenChapelChoice
+  m_EditorClassIdentifier: KyndeBlade.Core::KyndeBlade.DialogueChoiceBeat
+  BeatId: GreenChapelChallenge
+  Text: "I am the Knyght of the Grene Chapel. I offre thee a pley: smyte me ones,
+    and in a yeer and a day I shal quyte the stroke. Woltow holden the covenant?"
+  SpeakerName: The Green Knight
+  Portrait: {fileID: 0}
+  Choices:
+  - Text: I acorde. I shal meten thee at the Grene Chapel.
+    IsCorrectChoice: 1
+    TransitionToLocationId: 
+    AssociatedSin: 0
+    NextDialogueBeat: {fileID: 0}
+  - Text: I refusen. I nil pleyen thy game.
+    IsCorrectChoice: 0
+    TransitionToLocationId: 
+    AssociatedSin: 1
+    NextDialogueBeat: {fileID: 0}
+  - Text: I fleen. Hier is no stede for me.
+    IsCorrectChoice: 0
+    TransitionToLocationId: 
+    AssociatedSin: 4
+    NextDialogueBeat: {fileID: 0}
+  VisionIndex: 0

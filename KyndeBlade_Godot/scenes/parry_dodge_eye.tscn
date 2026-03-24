@@ -1,0 +1,95 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8parryeye01"]
+
+[ext_resource type="Script" path="res://scripts/parry_dodge_eye.gd" id="1_eye"]
+
+[node name="ParryDodgeEye" type="Control"]
+custom_minimum_size = Vector2(280, 72)
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("1_eye")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="EyeBox" type="Control" parent="HBox"]
+custom_minimum_size = Vector2(120, 56)
+layout_mode = 2
+
+[node name="Sclera" type="ColorRect" parent="HBox/EyeBox"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.96, 0.9, 0.78, 1)
+
+[node name="EyeInner" type="Control" parent="HBox/EyeBox"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.05
+anchor_top = 0.07
+anchor_right = 0.95
+anchor_bottom = 0.93
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EyelidTop" type="ColorRect" parent="HBox/EyeBox/EyeInner"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 14.0
+color = Color(0.29, 0.23, 0.18, 0.92)
+
+[node name="EyelidBottom" type="ColorRect" parent="HBox/EyeBox/EyeInner"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -14.0
+anchor_right = 1.0
+color = Color(0.29, 0.23, 0.18, 0.92)
+
+[node name="PupilRoot" type="Control" parent="HBox/EyeBox/EyeInner"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 12.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(12, 12)
+
+[node name="Pupil" type="ColorRect" parent="HBox/EyeBox/EyeInner/PupilRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.09, 0.07, 1)
+
+[node name="ReactLabel" type="Label" parent="HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.83, 0.72, 0.35, 1)
+theme_override_font_sizes/font_size = 17
+text = "React! 0.0s"
+vertical_alignment = 1

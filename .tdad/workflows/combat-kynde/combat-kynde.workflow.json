@@ -1,0 +1,77 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "gain-kynde",
+      "workflowId": "combat-kynde",
+      "title": "Gain Kynde",
+      "description": "Given a character, when GainKynde(amount) is called, then CurrentKynde increases by amount (clamped to MaxKynde) and OnKyndeChanged fires with (current, max).",
+      "nodeType": "feature",
+      "fileName": "gain-kynde",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "consume-kynde",
+      "workflowId": "combat-kynde",
+      "title": "Consume Kynde",
+      "description": "Given a character with CurrentKynde, when ConsumeKynde(amount) is called, then: if CurrentKynde < amount, returns false and Kynde unchanged. Otherwise deducts amount, fires OnKyndeChanged, returns true.",
+      "nodeType": "feature",
+      "fileName": "consume-kynde",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "kynde-hunger-modifier",
+      "workflowId": "combat-kynde",
+      "title": "Kynde Hunger Modifier",
+      "description": "Given a character with Hunger status effect, when GainKynde is called, then the amount is multiplied by the Hunger effect's KyndeGenerationModifier (1 - stacks * 0.25, min 0).",
+      "nodeType": "feature",
+      "fileName": "kynde-hunger-modifier",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["gain-kynde"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "kynde-age-modifier",
+      "workflowId": "combat-kynde",
+      "title": "Kynde Age Modifier",
+      "description": "Given a character with Age status effect, when GainKynde is called, then the amount is multiplied by the Age effect's KyndeGenerationModifier (1.02^tier, increases with age).",
+      "nodeType": "feature",
+      "fileName": "kynde-age-modifier",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["gain-kynde"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "kynde-scar-modifier",
+      "workflowId": "combat-kynde",
+      "title": "Kynde Scar Modifier",
+      "description": "Given a character with HungerScar status effect, when GainKynde is called, then the amount is multiplied by 1.03 (HungerScar KyndeGenerationModifier).",
+      "nodeType": "feature",
+      "fileName": "kynde-scar-modifier",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["gain-kynde"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "kynde-poverty-modifier",
+      "workflowId": "combat-kynde",
+      "title": "Kynde Poverty Modifier",
+      "description": "Given a PovertyManager exists, when GainKynde is called, then the amount is multiplied by PovertyManager.GetKyndeGenMultiplier() which decreases with higher poverty levels.",
+      "nodeType": "feature",
+      "fileName": "kynde-poverty-modifier",
+      "position": { "x": 700, "y": 250 },
+      "dependencies": ["gain-kynde"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "gain-to-hunger", "source": "gain-kynde", "target": "kynde-hunger-modifier" },
+    { "id": "gain-to-age", "source": "gain-kynde", "target": "kynde-age-modifier" },
+    { "id": "gain-to-scar", "source": "gain-kynde", "target": "kynde-scar-modifier" },
+    { "id": "gain-to-poverty", "source": "gain-kynde", "target": "kynde-poverty-modifier" }
+  ]
+}

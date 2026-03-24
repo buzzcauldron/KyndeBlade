@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EncounterDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/encounter_def.gd" id="1_enc"]
+
+[resource]
+script = ExtResource("1_enc")
+encounter_id = "fayre_felde"
+enemy_id = "false"
+enemy_display_name = "False (Langage fals)"
+enemy_max_hp = 80.0
+player_strike_damage = 15.0
+strike_stamina_cost = 15.0
+enemy_turn_damage = 18.0
+book_intro_theme = "langage_fals"

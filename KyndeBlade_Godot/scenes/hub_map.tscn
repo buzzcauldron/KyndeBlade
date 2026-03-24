@@ -1,0 +1,173 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8hubmap001"]
+
+[ext_resource type="Script" path="res://scripts/hub_map.gd" id="1_hub"]
+[ext_resource type="Script" path="res://scripts/hub_crawl_parallax.gd" id="2_crawl_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui_manuscript/historiated_margin_crowned_figure.png" id="3_hist"]
+
+[node name="HubMap" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hub")
+
+[node name="CrawlParallaxBackdrop" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_crawl_bg")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.92, 0.84, 0.65, 1)
+text = "Heere the weyes parte — thi drem"
+
+[node name="LocationLabel" type="RichTextLabel" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 16
+text = "Current: —"
+
+[node name="HintLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7, 0.66, 0.58, 1)
+text = "Chuse whither thou goest. In this slice the Fayr Feeld lieth open; othir stedes bide locked."
+
+[node name="FairFieldButton" type="Button" parent="Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Travel to Fair Field"
+
+[node name="LockedButton" type="Button" parent="Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+disabled = true
+text = "Dongeoun (locked)"
+
+[node name="WorldAtlasButton" type="Button" parent="Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "World atlas — all stedes (skeleton)"
+
+[node name="BackButton" type="Button" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Back to main menu"
+
+[node name="FlavorPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -200.0
+offset_right = 260.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FVBox" type="VBoxContainer" parent="FlavorPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HistoriatedMotif" type="TextureRect" parent="FlavorPanel/FVBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(64, 96)
+texture = ExtResource("3_hist")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FlavorText" type="Label" parent="FlavorPanel/FVBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+text = "A fair feeld ful of folke… (slice flavor)
+
+You step toward Fair Field. False waits in the encounter ahead."
+autowrap_mode = 3
+
+[node name="CounselLabel" type="Label" parent="FlavorPanel/FVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Or ever thou goest in — whose rede wilt thou heede?"
+autowrap_mode = 3
+
+[node name="CounselRow" type="HBoxContainer" parent="FlavorPanel/FVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CounselTrewthe" type="Button" parent="FlavorPanel/FVBox/CounselRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Trewthe"
+
+[node name="CounselMede" type="Button" parent="FlavorPanel/FVBox/CounselRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mede"
+
+[node name="CounselHunger" type="Button" parent="FlavorPanel/FVBox/CounselRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Name hunger"
+
+[node name="EnterCombat" type="Button" parent="FlavorPanel/FVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Proceed unto the fecht"
+
+[node name="CancelFlavor" type="Button" parent="FlavorPanel/FVBox"]
+layout_mode = 2
+text = "Cancel"
+
+[connection signal="pressed" from="Margin/VBox/FairFieldButton" to="." method="_on_fair_field_pressed"]
+[connection signal="pressed" from="Margin/VBox/LockedButton" to="." method="_on_locked_pressed"]
+[connection signal="pressed" from="Margin/VBox/WorldAtlasButton" to="." method="_on_world_atlas_pressed"]
+[connection signal="pressed" from="Margin/VBox/BackButton" to="." method="_on_back_menu_pressed"]
+[connection signal="pressed" from="FlavorPanel/FVBox/CounselRow/CounselTrewthe" to="." method="_on_counsel_trewthe_pressed"]
+[connection signal="pressed" from="FlavorPanel/FVBox/CounselRow/CounselMede" to="." method="_on_counsel_mede_pressed"]
+[connection signal="pressed" from="FlavorPanel/FVBox/CounselRow/CounselHunger" to="." method="_on_counsel_hunger_pressed"]
+[connection signal="pressed" from="FlavorPanel/FVBox/EnterCombat" to="." method="_on_flavor_continue_pressed"]
+[connection signal="pressed" from="FlavorPanel/FVBox/CancelFlavor" to="." method="_on_cancel_flavor_pressed"]

@@ -1,0 +1,157 @@
+{
+  "version": "1.0",
+  "nodes": [
+    {
+      "id": "apply-status-effect",
+      "workflowId": "combat-status",
+      "title": "Apply Status Effect",
+      "description": "Given a character and a StatusEffect, when ApplyStatusEffect() is called, then the effect is added to ActiveStatusEffects and its stat modifiers (AttackPower, Defense, Speed) are multiplied into the character's Stats.",
+      "nodeType": "feature",
+      "fileName": "apply-status-effect",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "stack-existing-effect",
+      "workflowId": "combat-status",
+      "title": "Stack Existing Effect",
+      "description": "Given a character already has a status effect of the same type, when ApplyStatusEffect() is called with a matching type, then StackEffect is called instead of adding a duplicate. For Hunger, modifiers recalculate based on new stack count.",
+      "nodeType": "feature",
+      "fileName": "stack-existing-effect",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": ["apply-status-effect"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "remove-status-effect",
+      "workflowId": "combat-status",
+      "title": "Remove Status Effect",
+      "description": "Given a character has a status effect, when RemoveStatusEffect(type) is called, then the effect's modifiers are reversed (stats divided by modifiers) and the effect is removed from ActiveStatusEffects.",
+      "nodeType": "feature",
+      "fileName": "remove-status-effect",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": ["apply-status-effect"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "effect-expiry",
+      "workflowId": "combat-status",
+      "title": "Effect Expiry",
+      "description": "Given a status effect with Duration > 0, when UpdateEffect is called with deltaTime, then RemainingTime decreases. When RemainingTime <= 0, IsExpired() returns true and the effect is auto-removed. Effects with Duration=0 never expire.",
+      "nodeType": "feature",
+      "fileName": "effect-expiry",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["apply-status-effect"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "damage-over-time",
+      "workflowId": "combat-status",
+      "title": "Damage Over Time",
+      "description": "Given a status effect with DamagePerSecond > 0, when ApplyDamageOverTime is called each frame, then target takes (DamagePerSecond * deltaTime) damage via ApplyCustomDamage.",
+      "nodeType": "feature",
+      "fileName": "damage-over-time",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["apply-status-effect"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "create-hunger-effect",
+      "workflowId": "combat-status",
+      "title": "Create Hunger Effect",
+      "description": "Given CreateHungerEffect(duration, stacks) is called, then returns a StatusEffect with: EffectType=Hunger, -12% atk/def/speed per stack, -20% stamina regen per stack, -25% Kynde gen per stack, DamagePerSecond = 1 * stacks.",
+      "nodeType": "feature",
+      "fileName": "create-hunger-effect",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "hunger-stack-remove",
+      "workflowId": "combat-status",
+      "title": "Hunger Stack Remove",
+      "description": "Given a character with Hunger (multiple stacks), when RemoveHungerStack() is called, then stack count decreases by 1 and modifiers recalculate. If 1 stack, Hunger is fully removed. Returns true if hunger was reduced.",
+      "nodeType": "feature",
+      "fileName": "hunger-stack-remove",
+      "position": { "x": 500, "y": 400 },
+      "dependencies": ["create-hunger-effect"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "hunger-marks-save",
+      "workflowId": "combat-status",
+      "title": "Hunger Marks Save",
+      "description": "Given a player character, when ApplyHunger() is called and the character is in TurnManager.PlayerCharacters, then SaveManager.MarkHasEverHadHunger() is called to set the persistent flag.",
+      "nodeType": "feature",
+      "fileName": "hunger-marks-save",
+      "position": { "x": 700, "y": 400 },
+      "dependencies": ["create-hunger-effect"],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "create-hunger-scar",
+      "workflowId": "combat-status",
+      "title": "Create Hunger Scar",
+      "description": "Given CreateHungerScarEffect() is called, then returns a permanent StatusEffect (Duration=0) with: EffectType=HungerScar, 0.95 atk, 0.93 def, 0.94 speed, 0.96 stamina regen, 1.03 Kynde gen.",
+      "nodeType": "feature",
+      "fileName": "create-hunger-scar",
+      "position": { "x": 100, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "create-age-effect",
+      "workflowId": "combat-status",
+      "title": "Create Age Effect",
+      "description": "Given CreateAgeEffect(tier) is called with tier > 0, then returns a permanent StatusEffect with: EffectType=Age, SpeedModifier=0.97^tier, DefenseModifier=1+tier*0.1, KyndeGenModifier=1.02^tier, StaminaRegenModifier=0.98^tier. Returns null for tier <= 0.",
+      "nodeType": "feature",
+      "fileName": "create-age-effect",
+      "position": { "x": 300, "y": 400 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "create-frost-effect",
+      "workflowId": "combat-status",
+      "title": "Create Frost Effect",
+      "description": "Given a Frost status effect is created, then it has EffectType=Frost with appropriate speed reduction and duration.",
+      "nodeType": "feature",
+      "fileName": "create-frost-effect",
+      "position": { "x": 100, "y": 550 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "create-burning-effect",
+      "workflowId": "combat-status",
+      "title": "Create Burning Effect",
+      "description": "Given a Burning status effect is created, then it has EffectType=Burning with DamagePerSecond > 0 for damage over time and appropriate duration.",
+      "nodeType": "feature",
+      "fileName": "create-burning-effect",
+      "position": { "x": 300, "y": 550 },
+      "dependencies": [],
+      "testLayers": ["api"]
+    },
+    {
+      "id": "stat-modifier-apply-remove",
+      "workflowId": "combat-status",
+      "title": "Stat Modifier Apply Remove",
+      "description": "Given a status effect with stat modifiers, when ApplyEffect is called then stats are multiplied (e.g. AttackPower *= modifier). When RemoveEffect is called, stats are divided (AttackPower /= modifier). Division by zero is guarded (modifier > 0 check).",
+      "nodeType": "feature",
+      "fileName": "stat-modifier-apply-remove",
+      "position": { "x": 500, "y": 550 },
+      "dependencies": ["apply-status-effect"],
+      "testLayers": ["api"]
+    }
+  ],
+  "edges": [
+    { "id": "apply-to-stack", "source": "apply-status-effect", "target": "stack-existing-effect" },
+    { "id": "apply-to-remove", "source": "apply-status-effect", "target": "remove-status-effect" },
+    { "id": "apply-to-expiry", "source": "apply-status-effect", "target": "effect-expiry" },
+    { "id": "apply-to-dot", "source": "apply-status-effect", "target": "damage-over-time" },
+    { "id": "hunger-to-stack-remove", "source": "create-hunger-effect", "target": "hunger-stack-remove" },
+    { "id": "hunger-to-marks-save", "source": "create-hunger-effect", "target": "hunger-marks-save" },
+    { "id": "apply-to-modifiers", "source": "apply-status-effect", "target": "stat-modifier-apply-remove" }
+  ]
+}

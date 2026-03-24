@@ -1,0 +1,80 @@
+{
+  "version": "1.0",
+  "title": "Godot full port + Unity archive (gated)",
+  "description": "Engine migration milestones. Oracle until M6: Unity demo-vertical-slice + PLAYABLE_SLICE/DEMO_RUN. Each milestone exits with godot_gut and/or godot_manual proof. Do not physically archive KyndeBlade_Unity until M6 sign-off—see .tdad/prompts/godot-archive-unity-snapshot.md.",
+  "nodes": [
+    {
+      "id": "godot-m1-foundation",
+      "workflowId": "godot-full-port",
+      "title": "M1 Foundation",
+      "description": "Exit: Godot project layout, autoloads, input, scene flow menu→hub→combat; STEAM_BUILD.md QA checklist passes. Proof: manual + KyndeBlade_Godot runnable.",
+      "nodeType": "feature",
+      "fileName": "godot-m1-foundation",
+      "position": { "x": 100, "y": 100 },
+      "dependencies": [],
+      "testLayers": ["godot_manual", "parity_unity_ref"]
+    },
+    {
+      "id": "godot-m2-combat-parity",
+      "workflowId": "godot-full-port",
+      "title": "M2 Combat parity core",
+      "description": "Exit: Encounter data as Resource; deterministic defensive windows; scripted False-class encounter win/lose. Proof: tests/run_headless_tests.gd combat section + manual strike loop. Maps TDAD combat-core/actions/defense concepts incrementally.",
+      "nodeType": "feature",
+      "fileName": "godot-m2-combat-parity",
+      "position": { "x": 300, "y": 100 },
+      "dependencies": ["godot-m1-foundation"],
+      "testLayers": ["godot_gut", "parity_unity_ref"]
+    },
+    {
+      "id": "godot-m3-save-ui-parity",
+      "workflowId": "godot-full-port",
+      "title": "M3 Save menu pause settings",
+      "description": "Exit: Continue/New, save keys documented vs Unity in STEAM_BUILD parity table; pause freezes window. Proof: godot-parity-slice nodes + headless save roundtrip.",
+      "nodeType": "feature",
+      "fileName": "godot-m3-save-ui-parity",
+      "position": { "x": 500, "y": 100 },
+      "dependencies": ["godot-m2-combat-parity"],
+      "testLayers": ["godot_gut", "godot_manual"]
+    },
+    {
+      "id": "godot-m4-map-narrative",
+      "workflowId": "godot-full-port",
+      "title": "M4 Map and narrative slice path",
+      "description": "Exit: tour→fayre_felde path in data (Resource/JSON); story beat before combat; victory returns to hub with location. Proof: manual PLAYABLE_SLICE-aligned run + parity node coverage.",
+      "nodeType": "feature",
+      "fileName": "godot-m4-map-narrative",
+      "position": { "x": 100, "y": 250 },
+      "dependencies": ["godot-m3-save-ui-parity"],
+      "testLayers": ["godot_manual", "parity_unity_ref"]
+    },
+    {
+      "id": "godot-m5-systems-depth",
+      "workflowId": "godot-full-port",
+      "title": "M5 Post-slice systems",
+      "description": "Exit: Kynde/break/hazards/AI mapped from Unity TDAD folders to Godot milestones with behavior-subset tests (not line parity). Proof: per-subsystem checklist in milestone prompt expansion.",
+      "nodeType": "feature",
+      "fileName": "godot-m5-systems-depth",
+      "position": { "x": 300, "y": 250 },
+      "dependencies": ["godot-m4-map-narrative"],
+      "testLayers": ["godot_gut", "parity_unity_ref"]
+    },
+    {
+      "id": "godot-m6-cutover-archive",
+      "workflowId": "godot-full-port",
+      "title": "M6 Cutover archive Unity",
+      "description": "Exit: godot-parity-slice green + exported Godot build signed off vs DEMO_RUN equivalent. Actions: run godot-archive-unity-snapshot prompt; move KyndeBlade_Unity to ProjectArchive/UnityKyndeBlade/; update root README; TDAD notes Godot as live oracle. Human-gated only.",
+      "nodeType": "feature",
+      "fileName": "godot-m6-cutover-archive",
+      "position": { "x": 500, "y": 250 },
+      "dependencies": ["godot-m5-systems-depth"],
+      "testLayers": ["godot_manual", "parity_unity_ref"]
+    }
+  ],
+  "edges": [
+    { "id": "m1-m2", "source": "godot-m1-foundation", "target": "godot-m2-combat-parity" },
+    { "id": "m2-m3", "source": "godot-m2-combat-parity", "target": "godot-m3-save-ui-parity" },
+    { "id": "m3-m4", "source": "godot-m3-save-ui-parity", "target": "godot-m4-map-narrative" },
+    { "id": "m4-m5", "source": "godot-m4-map-narrative", "target": "godot-m5-systems-depth" },
+    { "id": "m5-m6", "source": "godot-m5-systems-depth", "target": "godot-m6-cutover-archive" }
+  ]
+}

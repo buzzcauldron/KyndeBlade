@@ -1,0 +1,60 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Kynde Blade"
+run/main_scene="res://scenes/main_menu.tscn"
+; Target editor: Godot 4.6.1 (4.6.x). Feature level stays "4.6".
+config/features=PackedStringArray("4.6")
+
+[autoload]
+
+AudioBusSetup="*res://scripts/audio_bus_setup.gd"
+InputMapSetup="*res://scripts/input_map_setup.gd"
+SaveService="*res://scripts/save_service.gd"
+GameState="*res://scripts/game_state.gd"
+WorldNav="*res://scripts/world/world_nav.gd"
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=540
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/kyndeblade_placeholders/plugin.cfg")
+
+[input]
+
+ui_cancel={
+"deadzone": 0.5,
+"events": []
+}
+strike={
+"deadzone": 0.5,
+"events": []
+}
+dodge={
+"deadzone": 0.5,
+"events": []
+}
+parry={
+"deadzone": 0.5,
+"events": []
+}
+pause={
+"deadzone": 0.5,
+"events": []
+}
+ui_confirm={
+"deadzone": 0.5,
+"events": []
+}
