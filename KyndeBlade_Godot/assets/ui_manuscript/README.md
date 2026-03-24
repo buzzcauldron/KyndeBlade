@@ -7,7 +7,7 @@
 1. **Source** — copy only **cleared** references into the repo (never commit **copyrighted modern trade covers** or unlicensed third-party game screenshots). Staging drops under editor/chat paths must be **vetted** before copy.
 2. **Crop** — isolate the motif (historiated letter, margin figure, tier ornament).
 3. **Downscale** — **nearest-neighbor** to target size (e.g. 64–256 px on the long edge).
-4. **Palette** — optional quantize toward colors in [`scripts/kyndeblade_art_palette.gd`](../../scripts/kyndeblade_art_palette.gd) (gold, lapis, rubrication, parchment ramp).
+4. **Palette** — optional quantize toward colors in [`scripts/ui/kyndeblade_art_palette.gd`](../../scripts/ui/kyndeblade_art_palette.gd) (gold, lapis, rubrication, parchment ramp).
 5. **Hand pass** — 1–2 px outlines if readability fails at game resolution.
 6. **Ship gate** — row in [`docs/ASSET_LICENSES.md`](../../../docs/ASSET_LICENSES.md) with **provenance** (institution, shelfmark, or “project-authored derivative”).
 

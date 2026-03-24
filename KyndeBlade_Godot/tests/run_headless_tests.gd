@@ -6,8 +6,8 @@ extends Node
 ## Uses [/root/…] lookups + preloaded autoload scripts as types so tooling works when the workspace
 ## root is the monorepo (not only [code]KyndeBlade_Godot[/code]).
 
-const PHeadlessSave := preload("res://scripts/save_service.gd")
-const PHeadlessState := preload("res://scripts/game_state.gd")
+const PHeadlessSave := preload("res://scripts/bootstrap/save_service.gd")
+const PHeadlessState := preload("res://scripts/bootstrap/game_state.gd")
 const PHeadlessWorldNav := preload("res://scripts/world/world_nav.gd")
 const _CombatScenarioRunner := preload("res://tests/combat_scenarios.gd")
 const _NarrativeBeats := preload("res://scripts/world/narrative_beats.gd")

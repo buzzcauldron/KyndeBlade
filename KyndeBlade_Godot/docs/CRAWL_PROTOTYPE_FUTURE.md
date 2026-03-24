@@ -1,6 +1,6 @@
 # Future — overworld crawl prototype (fake voxels)
 
-**Status:** **C0 stub** — [`scenes/crawl_overworld.tscn`](../scenes/crawl_overworld.tscn) + headless `crawl_overworld_scene_smoke`; hub + Fair Field remain the playable overworld until C1+. **Note:** [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd) is **combat** only.
+**Status:** **C0 stub** — [`scenes/crawl_overworld.tscn`](../scenes/crawl_overworld.tscn) + headless `crawl_overworld_scene_smoke`; hub + Fair Field remain the playable overworld until C1+. **Note:** [`combat_voxel_arena.gd`](../scripts/combat/combat_voxel_arena.gd) is **combat** only.
 
 ## Goals
 

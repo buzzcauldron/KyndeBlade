@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://c8hubmap001"]
 
-[ext_resource type="Script" path="res://scripts/hub_map.gd" id="1_hub"]
-[ext_resource type="Script" path="res://scripts/hub_crawl_parallax.gd" id="2_crawl_bg"]
+[ext_resource type="Script" path="res://scripts/hub/hub_map.gd" id="1_hub"]
+[ext_resource type="Script" path="res://scripts/hub/hub_crawl_parallax.gd" id="2_crawl_bg"]
 [ext_resource type="Texture2D" path="res://assets/ui_manuscript/historiated_margin_crowned_figure.png" id="3_hist"]
-[ext_resource type="Script" path="res://scripts/hub_route_map.gd" id="4_route"]
+[ext_resource type="Script" path="res://scripts/hub/hub_route_map.gd" id="4_route"]
 [ext_resource type="Texture2D" uid="uid://cbasemapwales1" path="res://assets/world/basemap_wales.png" id="5_basemap"]
 
 [node name="HubMap" type="Control"]

@@ -1,5 +1,5 @@
 extends Control
-## **Crawl** hub backdrop: layered twilight / mist bands with [`CrawlParallax`](crawl_parallax.gd) drift
+## **Crawl** hub backdrop: layered twilight / mist bands with [`CrawlParallax`](crawl_parallax.gd) drift.
 ## (preview of future route-map parallax). Renders behind UI.
 
 @export var parallax_speed_scale: float = 1.0

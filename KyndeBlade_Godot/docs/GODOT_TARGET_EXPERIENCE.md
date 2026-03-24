@@ -6,7 +6,7 @@ This doc captures the **intended** Godot-facing game shape beyond the current ve
 
 | Layer | Intent |
 |-------|--------|
-| **Crawl** | Pokémon-like **routes / dungeon / node map**; encounters from steps or tiles; **no combat resolution** on the crawl scene. **Parallax:** shared [`CrawlParallax`](../scripts/crawl_parallax.gd) drives hub [`hub_crawl_parallax.gd`](../scripts/hub_crawl_parallax.gd) and combat [`combat_manuscript_backdrop.gd`](../scripts/combat_manuscript_backdrop.gd) layer drift. |
+| **Crawl** | Pokémon-like **routes / dungeon / node map**; encounters from steps or tiles; **no combat resolution** on the crawl scene. **Parallax:** shared [`CrawlParallax`](../scripts/hub/crawl_parallax.gd) drives hub [`hub_crawl_parallax.gd`](../scripts/hub/hub_crawl_parallax.gd) and combat [`combat_manuscript_backdrop.gd`](../scripts/ui/combat_manuscript_backdrop.gd) layer drift. |
 | **Pop-out** | Transition into a **dedicated combat scene** (today: `combat.tscn`) with clear framing (iris, ink, manuscript — future). |
 | **Combat rules** | **Expedition 33–inspired**: turn-based actions + **real-time defensive windows** (`CombatManager`, feint pattern, eye/React!). |
 | **Art — map** | **Fake voxels**: 2D tiles / stacked sprites / oblique “block” read; cheap iteration. |

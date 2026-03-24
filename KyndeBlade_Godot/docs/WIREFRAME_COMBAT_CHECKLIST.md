@@ -8,7 +8,7 @@ Single repeatable pass for **rules**, **presentation/audio read**, and **regress
 
 | Rule | Value / behaviour | Where |
 |------|-------------------|--------|
-| Player-phase swing damage | `PLAYER_PHASE_SWING_DAMAGE` (**20**) | [`combat_manager.gd`](../scripts/combat_manager.gd) |
+| Player-phase swing damage | `PLAYER_PHASE_SWING_DAMAGE` (**20**) | [`combat_manager.gd`](../scripts/combat/combat_manager.gd) |
 | Dodge vs real swing | Partial chip: **20 × DODGE_REAL_SWING_FRACTION** (default **0.6 → 12**) | same |
 | Parry vs real swing | Smaller chip: **20 × PARRY_INCOMING_FRACTION** (default **0.3 → 6**) **+ riposte** | same |
 | Parry riposte multiplier | **0.3–0.7** × `_lowest_equipped_attack_damage()`, keyed by `_defense_windows_resolved` (window index) | `_parry_counterstrike_multiplier()` |
@@ -17,7 +17,7 @@ Single repeatable pass for **rules**, **presentation/audio read**, and **regress
 | Enemy-turn dodge/parry on real swing | Same fractions applied to **`enemy_turn_damage + hazard`** (hazard stub **0** until Piers hazards port) | `combat_manager.gd`, `apply_piers_hazard_damage()` |
 | Bleed between enemy strikes | `EncounterDef.enemy_turn_bleed_damage` (**0** Fair Field; non-zero e.g. Dongeoun gate) | encounter `.tres` |
 | Wind-up before window | `EncounterDef.defensive_windup_sec`; if **0**, playable gather uses `MIN_GATHER_WHEN_WINDUP_ZERO_SEC` | `combat_manager.gd` |
-| Real-time defense on enemy turn | `SaveService.load_enable_real_time_defense_on_enemy_turn()` — **false** skips reaction window (instant damage path after telegraph timers) | [`save_service.gd`](../scripts/save_service.gd) |
+| Real-time defense on enemy turn | `SaveService.load_enable_real_time_defense_on_enemy_turn()` — **false** skips reaction window (instant damage path after telegraph timers) | [`save_service.gd`](../scripts/bootstrap/save_service.gd) |
 | Headless resolution | `CombatManager.use_instant_resolution_for_tests` — no wall-clock timers; optional `force_enemy_turn_reaction_window_in_tests` for enemy-turn reaction path | `combat_manager.gd` |
 
 ---
@@ -60,10 +60,10 @@ Single repeatable pass for **rules**, **presentation/audio read**, and **regress
 
 | Check | Files |
 |-------|--------|
-| Lane B 2D stage (silhouettes, mist, hazard strip) | [`combat_presentation.gd`](../scripts/combat_presentation.gd), `combat.tscn` |
-| 3D graybox (telegraph, strike lunge, hit flash, sway) | [`combat_presentation_3d.gd`](../scripts/combat_presentation_3d.gd) |
-| Parry/dodge **eye**, **React** label, control hints, feint-read line | [`combat_root.gd`](../scripts/combat_root.gd), `ParryDodgeEye` |
-| Defensive window **beeps** (feint vs real pitch) | [`combat_window_tone.gd`](../scripts/combat_window_tone.gd) |
+| Lane B 2D stage (silhouettes, mist, hazard strip) | [`combat_presentation.gd`](../scripts/combat/combat_presentation.gd), `combat.tscn` |
+| 3D graybox (telegraph, strike lunge, hit flash, sway) | [`combat_presentation_3d.gd`](../scripts/combat/combat_presentation_3d.gd) |
+| Parry/dodge **eye**, **React** label, control hints, feint-read line | [`combat_root.gd`](../scripts/combat/combat_root.gd), `ParryDodgeEye` |
+| Defensive window **beeps** (feint vs real pitch) | [`combat_window_tone.gd`](../scripts/combat/combat_window_tone.gd) |
 | Wind-up line before reactive window | `combat_root.gd` (wind-up SFX / copy) |
 | Victory **kill thump** + desat | `combat_window_tone.gd` / victory path in `combat_root.gd` |
 

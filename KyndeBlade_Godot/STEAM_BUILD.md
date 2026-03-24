@@ -74,7 +74,7 @@ This is **not** a line-by-line port of Unity. It mirrors **names and flow** from
 | Pause | **Escape** | Combat pause / resume |
 | Menu | **Mouse** | Buttons |
 
-Gamepad: **A / B / X** and **Start** if actions had no keys (`scripts/input_map_setup.gd`).
+Gamepad: **A / B / X** and **Start** if actions had no keys (`scripts/bootstrap/input_map_setup.gd`).
 
 ## Save and settings files (vs Unity)
 

@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://hibitbonuslv01"]
 
-[ext_resource type="Script" path="res://scripts/hi_bit_bonus_level.gd" id="1_root"]
-[ext_resource type="Script" path="res://scripts/hi_bit_bonus_world.gd" id="2_world"]
-[ext_resource type="Script" path="res://scripts/hi_bit_bonus_player.gd" id="3_player"]
+[ext_resource type="Script" path="res://scripts/dev/hi_bit_bonus_level.gd" id="1_root"]
+[ext_resource type="Script" path="res://scripts/dev/hi_bit_bonus_world.gd" id="2_world"]
+[ext_resource type="Script" path="res://scripts/dev/hi_bit_bonus_player.gd" id="3_player"]
 
 [sub_resource type="RectangleShape2D" id="RectFloorL"]
 size = Vector2(104, 24)

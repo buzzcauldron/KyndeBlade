@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://c8towerintro01"]
 
-[ext_resource type="Script" path="res://scripts/story_arrival_screen.gd" id="1_intro"]
-[ext_resource type="Script" path="res://scripts/story_arrival_backdrop.gd" id="2_bg"]
+[ext_resource type="Script" path="res://scripts/ui/story_arrival_screen.gd" id="1_intro"]
+[ext_resource type="Script" path="res://scripts/ui/story_arrival_backdrop.gd" id="2_bg"]
 
 [node name="TowerIntro" type="Control"]
 layout_mode = 3

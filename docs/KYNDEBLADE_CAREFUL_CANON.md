@@ -85,9 +85,9 @@ Pair this with [`DIALOGUE_SOURCE_TEXT_PLAN.md`](../ProjectArchive/docs/DIALOGUE_
 
 | Piece | Location |
 |-------|----------|
-| Stage + placeholders + motion | `scenes/combat.tscn`, `scripts/combat_presentation.gd`, `scripts/combat_presentation_3d.gd` |
-| Voxel arena (procedural grid) | `scripts/combat_voxel_arena.gd` — [`COMBAT_VOXEL_STAGE_FUTURE.md`](../KyndeBlade_Godot/docs/COMBAT_VOXEL_STAGE_FUTURE.md) |
-| Parry/dodge eye + **React!** | `scenes/parry_dodge_eye.tscn`, `scripts/parry_dodge_eye.gd` |
+| Stage + placeholders + motion | `scenes/combat.tscn`, `scripts/combat/combat_presentation.gd`, `scripts/combat/combat_presentation_3d.gd` |
+| Voxel arena (procedural grid) | `scripts/combat/combat_voxel_arena.gd` — [`COMBAT_VOXEL_STAGE_FUTURE.md`](../KyndeBlade_Godot/docs/COMBAT_VOXEL_STAGE_FUTURE.md) |
+| Parry/dodge eye + **React!** | `scenes/parry_dodge_eye.tscn`, `scripts/combat/parry_dodge_eye.gd` |
 | Headless scenarios | `tests/combat_scenarios.gd`, `tests/run_headless_tests.gd` |
 
 ### 3.4 Art direction in combat

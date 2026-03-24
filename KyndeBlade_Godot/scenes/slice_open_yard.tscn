@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://sliceopenyard01"]
 
-[ext_resource type="Script" path="res://scripts/slice_open_yard.gd" id="1_yard"]
-[ext_resource type="Script" path="res://scripts/slice_open_yard_world.gd" id="2_world"]
-[ext_resource type="Script" path="res://scripts/slice_open_yard_player.gd" id="3_player"]
-[ext_resource type="Script" path="res://scripts/slice_open_yard_dream_fairies.gd" id="4_fairy"]
+[ext_resource type="Script" path="res://scripts/dev/slice_open_yard.gd" id="1_yard"]
+[ext_resource type="Script" path="res://scripts/dev/slice_open_yard_world.gd" id="2_world"]
+[ext_resource type="Script" path="res://scripts/dev/slice_open_yard_player.gd" id="3_player"]
+[ext_resource type="Script" path="res://scripts/dev/slice_open_yard_dream_fairies.gd" id="4_fairy"]
 
 [sub_resource type="RectangleShape2D" id="RectMeadow"]
 size = Vector2(768, 24)

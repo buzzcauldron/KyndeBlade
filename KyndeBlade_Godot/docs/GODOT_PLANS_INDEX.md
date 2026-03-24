@@ -2,11 +2,13 @@
 
 Single map of **planning docs** vs **implementation status**. “Done” here means a baseline exists in-tree; polish and parity rows may still be open in [`PARITY_GAPS.md`](../PARITY_GAPS.md).
 
+**Structure entry point (repo root):** [`docs/GAME_STRUCTURE.md`](../../docs/GAME_STRUCTURE.md) — autoloads, layer diagram, quality pillars, hub/combat audit notes.
+
 | Plan | Scope | Status |
 |------|--------|--------|
 | [`DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md`](DESIGN_CRAWL_VOXEL_SHADER_CI_M6.md) | Crawl, voxels, rim, GPU CI, M6 — unified design + **§8 status** | **Partial** — C0 crawl, rim mats, `assets/voxel/`, GitHub Actions |
 | [`TDAD_COMBAT_PRESENTATION_PLAN.md`](TDAD_COMBAT_PRESENTATION_PLAN.md) | CP-01–CP-06 Lane B + HUD + audio hooks | **Baseline done**; manual QA ongoing |
-| [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) | Full-screen 3D voxel arena + HUD overlay | **Partial** — [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd) procedural grid; imported voxel art TBD |
+| [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) | Full-screen 3D voxel arena + HUD overlay | **Partial** — [`combat_voxel_arena.gd`](../scripts/combat/combat_voxel_arena.gd) procedural grid; imported voxel art TBD |
 | [`COMBAT_REVIEW_WIREFRAME_E33.md`](COMBAT_REVIEW_WIREFRAME_E33.md) | E33-style read ledger | **Living** — tracks partial vs met |
 | [`CRAWL_PROTOTYPE_FUTURE.md`](CRAWL_PROTOTYPE_FUTURE.md) | Fake-voxel hub crawl → combat pop-out | **Not started** — hub + Fair Field stand in |
 | [`VISION_CRAWL_NOITA_E33.md`](VISION_CRAWL_NOITA_E33.md) | Vision capsule | **Design** |

@@ -26,7 +26,7 @@ JSON catalog: [`data/medieval_text_unlocks.json`](../data/medieval_text_unlocks.
 | `GameState.read_medieval_text_ids` | `PackedStringArray` of catalog `id` values the player has read (persisted in save). |
 | `MedievalTextCatalog` | Loads JSON; resolves grants and **aggregates** numeric deltas. |
 | `PlayerMovesetModifiers` | `aggregate_totals()` → strike cost/damage, feint offset, dodge extras; `parry_window_ms()` clamps **170–230 ms** using catalog penalties + **varying** hunger + misstep cap; `parry_stamina_total()` adds hunger whimsy to parry cost. |
-| `PiersCombatVoice` | [`scripts/piers_combat_voice.gd`](../scripts/piers_combat_voice.gd) — combat HUD copy (*Plouȝ-trewe stroke*, *Shelde of Conscience*, kennings per unlocked `moveset_codes` key). |
+| `PiersCombatVoice` | [`scripts/combat/piers_combat_voice.gd`](../scripts/combat/piers_combat_voice.gd) — combat HUD copy (*Plouȝ-trewe stroke*, *Shelde of Conscience*, kennings per unlocked `moveset_codes` key). |
 | `MedievalTextCatalog.list_granted_codes_in_order()` | Stable list of granted codes for rubric lines. |
 
 ### Recording a read

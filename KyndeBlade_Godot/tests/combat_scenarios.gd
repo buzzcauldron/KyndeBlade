@@ -5,7 +5,7 @@ extends RefCounted
 ## Requires `CombatManager.use_instant_resolution_for_tests` so turns do not depend on wall-clock
 ## timers.
 
-const PHeadlessState := preload("res://scripts/game_state.gd")
+const PHeadlessState := preload("res://scripts/bootstrap/game_state.gd")
 
 
 func _game_state(tree: SceneTree) -> PHeadlessState:
@@ -19,6 +19,11 @@ func run_all(p_root: Window) -> bool:
 	var ok := true
 	ok = _cs_step(
 			"victory_false_by_strikes_only", await victory_false_by_strikes_only(p_root), ok
+	)
+	ok = _cs_step(
+			"default_encounter_loads_when_null",
+			await default_encounter_loads_when_null(p_root),
+			ok,
 	)
 	ok = _cs_step("dodge_mitigates_first_swing", await dodge_mitigates_first_swing(p_root), ok)
 	ok = _cs_step("parry_reduces_swing_damage", await parry_reduces_swing_damage(p_root), ok)
@@ -64,6 +69,16 @@ func _spawn_cm(p_root: Window, enc: EncounterDef = null) -> CombatManager:
 		c.encounter = enc
 	p_root.add_child(c)
 	return c
+
+
+func default_encounter_loads_when_null(p_root: Window) -> bool:
+	var c := _spawn_cm(p_root, null)
+	await p_root.get_tree().process_frame
+	var ok := c.encounter != null and c.encounter.encounter_id == "fayre_felde"
+	ok = ok and is_equal_approx(c.enemy_max_hp, 80.0)
+	ok = ok and is_equal_approx(c.player_strike_damage, 15.0)
+	_fail_cleanup(c)
+	return ok
 
 
 func victory_false_by_strikes_only(p_root: Window) -> bool:
@@ -123,9 +138,9 @@ func parry_reduces_swing_damage(p_root: Window) -> bool:
 		_fail_cleanup(c)
 		return false
 	c.tick_window(2.0)
-	# Real swing + parry: 20 × PARRY_INCOMING_FRACTION = 6 chip; riposte mult 0.3 on first window index.
-	const want_mult := 0.3
-	var want_enemy := c.enemy_max_hp - c.get_strike_damage_preview() * want_mult
+	# Real swing + parry: 20 × PARRY_INCOMING_FRACTION chip; riposte 0.3× on first window index.
+	const RIPOSTE_MULT_FIRST := 0.3
+	var want_enemy := c.enemy_max_hp - c.get_strike_damage_preview() * RIPOSTE_MULT_FIRST
 	if not is_equal_approx(c.player_hp, 94.0):
 		_fail_cleanup(c)
 		return false

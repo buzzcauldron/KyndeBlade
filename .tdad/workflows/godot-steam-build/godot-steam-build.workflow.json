@@ -7,7 +7,7 @@
       "id": "gsteam-retail-paths",
       "workflowId": "godot-steam-build",
       "title": "Retail save and settings paths",
-      "description": "Primary kyndeblade_save.cfg, mirror kyndeblade_autosave.cfg, settings kyndeblade_settings.cfg. Proof: scripts/save_service.gd constants; STEAM_BUILD.md § Save and settings.",
+      "description": "Primary kyndeblade_save.cfg, mirror kyndeblade_autosave.cfg, settings kyndeblade_settings.cfg. Proof: scripts/bootstrap/save_service.gd constants; STEAM_BUILD.md § Save and settings.",
       "nodeType": "feature",
       "fileName": "gsteam-retail-paths",
       "position": { "x": 100, "y": 100 },

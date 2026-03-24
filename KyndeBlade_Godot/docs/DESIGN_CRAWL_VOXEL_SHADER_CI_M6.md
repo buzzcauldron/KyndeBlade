@@ -49,7 +49,7 @@ Deliver a **structured overworld** (steps, tiles, or discrete nodes) that **feel
 
 ### 2.1 Intent
 
-Replace or augment **procedural** [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd) and crawl props with **authored** voxel meshes while keeping **combat rules** in `CombatManager`.
+Replace or augment **procedural** [`combat_voxel_arena.gd`](../scripts/combat/combat_voxel_arena.gd) and crawl props with **authored** voxel meshes while keeping **combat rules** in `CombatManager`.
 
 ### 2.2 Authoring pipeline
 
@@ -219,7 +219,7 @@ flowchart LR
 
 | Area | Shipped in repo | Next |
 |------|-----------------|------|
-| **Crawl C0** | [`scenes/crawl_overworld.tscn`](../scenes/crawl_overworld.tscn), [`crawl_overworld.gd`](../scripts/crawl_overworld.gd), headless `crawl_overworld_scene_smoke` | C1 TileMap corridor + movement |
+| **Crawl C0** | [`scenes/crawl_overworld.tscn`](../scenes/crawl_overworld.tscn), [`crawl_overworld.gd`](../scripts/hub/crawl_overworld.gd), headless `crawl_overworld_scene_smoke` | C1 TileMap corridor + movement |
 | **Imported voxels** | [`assets/voxel/README.md`](../assets/voxel/README.md) scaffold | First CC0 `.glb` + loader toggle in combat |
 | **Rim / outline** | `PlayerMat` / `EnemyMat` in [`combat.tscn`](../scenes/combat.tscn): **per-pixel shading + rim** | Pulse rim on defensive window in `combat_presentation_3d.gd` (optional) |
 | **GPU CI** | [`.github/workflows/godot-ci.yml`](../../.github/workflows/godot-ci.yml): required headless + **optional** `godot-display-smoke` (`continue-on-error`, `xvfb-run`) | Frame capture / artifact diff |

@@ -16,11 +16,11 @@ config/features=PackedStringArray("4.6")
 
 [autoload]
 
-AudioBusSetup="*res://scripts/audio_bus_setup.gd"
-InputMapSetup="*res://scripts/input_map_setup.gd"
-SaveService="*res://scripts/save_service.gd"
-GameState="*res://scripts/game_state.gd"
-ManuscriptNav="*res://scripts/manuscript_nav.gd"
+AudioBusSetup="*res://scripts/bootstrap/audio_bus_setup.gd"
+InputMapSetup="*res://scripts/bootstrap/input_map_setup.gd"
+SaveService="*res://scripts/bootstrap/save_service.gd"
+GameState="*res://scripts/bootstrap/game_state.gd"
+ManuscriptNav="*res://scripts/bootstrap/manuscript_nav.gd"
 WorldNav="*res://scripts/world/world_nav.gd"
 
 [display]

@@ -8,6 +8,10 @@ Clone from repo root branch **`main`** (Godot-first default); see [`docs/BRANCH_
 
 **Plans index:** [`docs/GODOT_PLANS_INDEX.md`](docs/GODOT_PLANS_INDEX.md).
 
+**Structure (layers, autoloads, quality pillars):** [`docs/GAME_STRUCTURE.md`](../docs/GAME_STRUCTURE.md).
+
+**Learning Godot:** [`docs/GODOT_LEARNING.md`](docs/GODOT_LEARNING.md) — corrective tutorial using this project, plus manual links and a main menu → hub trace. Practice scenes can live under [`scenes/learning/`](scenes/learning/).
+
 **Primary doc:** **[STEAM_BUILD.md](STEAM_BUILD.md)** — scope, `user://` save paths (including migration from legacy `kyndeblade_demo_*` files), QA checklist, export / depot notes, Steam Cloud caveats.
 
 **Full campaign skeleton (levels + text scaffolding):** **[docs/GAME_SKELETON.md](docs/GAME_SKELETON.md)** — mirrors Unity `LocationNode` / `GameWorldConstants`; hub → **World atlas**.
@@ -33,6 +37,8 @@ godot4 --path KyndeBlade_Godot --headless res://tests/headless_main.tscn
 
 See [docs/CI_GODOT_TESTS.md](../docs/CI_GODOT_TESTS.md).
 
+After large script path moves, open the project once in the Godot editor so `.godot/global_script_class_cache.cfg` refreshes (`class_name` resolution).
+
 **Godot ecosystem (showcase):** [RPG in a Box — Justin Arnold on Godot](https://godotengine.org/article/godot-showcase-justin-arnold-rpg-in-a-box/) (voxel/grid RPG tooling + editor UI in Godot).
 
 ## Controls
@@ -46,7 +52,7 @@ Full table: [STEAM_BUILD.md](STEAM_BUILD.md).
 | Path | Role |
 |------|------|
 | `scenes/` | Main menu, hub, combat, tower intro, extras |
-| `scripts/` | Autoloads, combat, save, UI theme, ink presentation |
+| `scripts/` | Domain folders: `bootstrap/` (autoloads), `combat/`, `hub/`, `ui/`, `dev/`, plus `world/`, `art/` |
 | `data/` | Encounters, slice JSON, Unity export, medieval text catalog, **`data/world/`** full location registry + campaign spine |
 | `scenes/world/` | `world_atlas.tscn`, `location_shell.tscn` — preview entire Unity-planned map |
 | `tests/` | Headless smoke + combat scenarios |

@@ -10,10 +10,10 @@
 
 | Layer | Role | Key files |
 |-------|------|-----------|
-| **3D arena** | Cosmetic motion: camera sway, telegraph hold, strike lunge, mesh hit flash, camera shake, HP-delta reactions | [`combat_presentation_3d.gd`](../scripts/combat_presentation_3d.gd), nodes under [`combat.tscn`](../scenes/combat.tscn) |
-| **2D Lane B stage** | Manuscript silhouettes, mist/canopy layers, optional hazard strip | [`combat_presentation.gd`](../scripts/combat_presentation.gd) |
-| **Scene shell** | Pause, outcome → hub, atmosphere from world, action bar, **ParryDodgeEye** setup, wind-up SFX line, defensive window tones | [`combat_root.gd`](../scripts/combat_root.gd) |
-| **Rules** | `DEFENSE_WINDUP` / window signals; wind-up + bleed on `EncounterDef`; **dodge** = partial real-swing damage (`DODGE_REAL_SWING_FRACTION`); **parry** = smaller partial chip (`PARRY_INCOMING_FRACTION`) **+** riposte (0.3–0.7× strike); feint + wasted defend = **5** chip | [`combat_manager.gd`](../scripts/combat_manager.gd), [`encounter_def.gd`](../data/encounter_def.gd) |
+| **3D arena** | Cosmetic motion: camera sway, telegraph hold, strike lunge, mesh hit flash, camera shake, HP-delta reactions | [`combat_presentation_3d.gd`](../scripts/combat/combat_presentation_3d.gd), nodes under [`combat.tscn`](../scenes/combat.tscn) |
+| **2D Lane B stage** | Manuscript silhouettes, mist/canopy layers, optional hazard strip | [`combat_presentation.gd`](../scripts/combat/combat_presentation.gd) |
+| **Scene shell** | Pause, outcome → hub, atmosphere from world, action bar, **ParryDodgeEye** setup, wind-up SFX line, defensive window tones | [`combat_root.gd`](../scripts/combat/combat_root.gd) |
+| **Rules** | `DEFENSE_WINDUP` / window signals; wind-up + bleed on `EncounterDef`; **dodge** = partial real-swing damage (`DODGE_REAL_SWING_FRACTION`); **parry** = smaller partial chip (`PARRY_INCOMING_FRACTION`) **+** riposte (0.3–0.7× strike); feint + wasted defend = **5** chip | [`combat_manager.gd`](../scripts/combat/combat_manager.gd), [`encounter_def.gd`](../data/encounter_def.gd) |
 
 **Binding:** Presentation scripts resolve `CombatManager` from the parent combat root, subscribe to `turn_changed`, `stats_changed`, and (where implemented) state transitions to drive motion. **No** presentation script applies damage; bleed, strikes, and parry riposte remain in `CombatManager` + encounter data.
 
@@ -31,7 +31,7 @@
 | **Feint vs real** read | **Partial** | `is_enemy_swing_real()`, eye phases, procedural window **beeps** (pitch); 3D albedo/telegraph tint where wired — verify per encounter in play |
 | **Bleed** / between-turn pressure | **Met (data)** | `enemy_turn_bleed_damage` on `EncounterDef`; **0** Fair Field, non-zero on stress encounters (e.g. Dongeoun gate) |
 | **Audio** supports read | **Met** | `CombatWindowTone` + `WindowSfx` on window open; kill thump + desat on victory (see [`PARITY_GAPS.md`](../PARITY_GAPS.md) audio row) |
-| Full-screen **voxel** production stage | **Prototype** | Procedural voxel floor/wall grid [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd); **rim** on player/enemy `StandardMaterial3D` in `combat.tscn`; imported art + outline shader TBD — [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) |
+| Full-screen **voxel** production stage | **Prototype** | Procedural voxel floor/wall grid [`combat_voxel_arena.gd`](../scripts/combat/combat_voxel_arena.gd); **rim** on player/enemy `StandardMaterial3D` in `combat.tscn`; imported art + outline shader TBD — [`COMBAT_VOXEL_STAGE_FUTURE.md`](COMBAT_VOXEL_STAGE_FUTURE.md) |
 
 ---
 

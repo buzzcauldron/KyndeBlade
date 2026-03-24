@@ -1,6 +1,6 @@
 # Future — full-screen 3D voxel combat stage
 
-**Status:** **partial** — combat ships a **procedural voxel grid** (floor + perimeter columns) built at runtime by [`combat_voxel_arena.gd`](../scripts/combat_voxel_arena.gd) under `CombatArena3D` in [`combat.tscn`](../scenes/combat.tscn). The classic single `Ground` mesh is hidden when the voxel arena is enabled. **Imported** MagicaVoxel / GLTF sets, rim/outline polish, and ortho tuning remain future work.
+**Status:** **partial** — combat ships a **procedural voxel grid** (floor + perimeter columns) built at runtime by [`combat_voxel_arena.gd`](../scripts/combat/combat_voxel_arena.gd) under `CombatArena3D` in [`combat.tscn`](../scenes/combat.tscn). The classic single `Ground` mesh is hidden when the voxel arena is enabled. **Imported** MagicaVoxel / GLTF sets, rim/outline polish, and ortho tuning remain future work.
 
 ## Shipped prototype (this slice)
 
@@ -8,7 +8,7 @@
 |--------|------|
 | **`VoxelArena`** | `Node3D` + `MultiMeshInstance3D` floor + wall ring; palette-aligned albedo, low spec |
 | **Actors** | Existing `PlayerActor` / `EnemyActor` capsules + box; unchanged |
-| **Camera** | Existing `CombatCamera` in [`combat_presentation_3d.gd`](../scripts/combat_presentation_3d.gd) |
+| **Camera** | Existing `CombatCamera` in [`combat_presentation_3d.gd`](../scripts/combat/combat_presentation_3d.gd) |
 
 Toggle or resize via `VoxelArena` **Inspector** exports (`enabled`, `grid_half`, `voxel_size`, `wall_height_blocks`, `hide_classic_ground`).
 

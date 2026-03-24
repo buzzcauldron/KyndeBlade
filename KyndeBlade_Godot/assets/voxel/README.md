@@ -6,7 +6,7 @@
 
 | Path | Use |
 |------|-----|
-| `combat/arena/` | Imported GLTF/GLB arena chunks to replace or layer on [`combat_voxel_arena.gd`](../../scripts/combat_voxel_arena.gd) |
+| `combat/arena/` | Imported GLTF/GLB arena chunks to replace or layer on [`combat_voxel_arena.gd`](../../scripts/combat/combat_voxel_arena.gd) |
 | `crawl/tiles/` | Orthographic renders or sprite sheets for fake-voxel `TileMapLayer` |
 
 ## Authoring

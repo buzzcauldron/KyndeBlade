@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The **hub route map** ([`hub_route_map.json`](../data/world/hub_route_map.json) + [`HubRouteMap`](../scripts/hub_route_map.gd)) stays a **graph**: nodes, edges, fog-of-war. The **basemap** is a **read** layer only — silhouette and mood, not GPS routing or crawl collision.
+The **hub route map** ([`hub_route_map.json`](../data/world/hub_route_map.json) + [`HubRouteMap`](../scripts/hub/hub_route_map.gd)) stays a **graph**: nodes, edges, fog-of-war. The **basemap** is a **read** layer only — silhouette and mood, not GPS routing or crawl collision.
 
 ## Wales crop and projection
 

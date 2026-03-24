@@ -42,7 +42,7 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
 - **Work:**
   - Add `window_duration: float` set when defensive window starts; document alongside `window_remaining`.
   - Optional: `signal presentation_tick(state, window_t)` where `window_t = 1.0 - remaining/max(duration,ε)` clamped — only if it reduces coupling vs polling in `_process`.
-- **Files:** [`scripts/combat_manager.gd`](../scripts/combat_manager.gd).
+- **Files:** [`scripts/combat/combat_manager.gd`](../scripts/combat/combat_manager.gd).
 - **Tests:** [`tests/combat_scenarios.gd`](../tests/combat_scenarios.gd) must still pass; add one scenario or small test func asserting `window_duration > 0` after `player_dodge()` if feasible without wall clock.
 - **Exit criteria:** No regression in headless suite; public fields documented in `STEAM_BUILD.md` “Combat internals (presentation)”.
 
@@ -50,7 +50,7 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
 
 - **Goal:** Match Unity **orthographic side-view** *read*: two opposing silhouettes, void backdrop (already partially present), optional **foreground hazard strip** ([`EnsureCombatForegroundHazardStrip`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs)).
 - **Work:**
-  - `Node2D` `CombatStage` under [`scenes/combat.tscn`](../scenes/combat.tscn): `PlayerActor`, `EnemyActor` roots (Polygon2D / `Sprite2D` + procedural texture or palette colors from [`KyndeBladeArtPalette`](../scripts/kyndeblade_art_palette.gd)).
+  - `Node2D` `CombatStage` under [`scenes/combat.tscn`](../scenes/combat.tscn): `PlayerActor`, `EnemyActor` roots (Polygon2D / `Sprite2D` + procedural texture or palette colors from [`KyndeBladeArtPalette`](../scripts/ui/kyndeblade_art_palette.gd)).
   - Camera: either fixed positions for 960×540 or embedded `SubViewport` (reuse pattern from [`hi_bit_bonus_level.tscn`](../scenes/hi_bit_bonus_level.tscn) if integer snap matters).
   - Hazard strip: bottom `ColorRect`/`Polygon2D`, toggled via export or `EncounterDef` flag later; default off for slice.
 - **Files:** `combat.tscn`, new `scripts/combat_stage.gd` (optional).
@@ -61,9 +61,9 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
 
 - **Goal:** **Dynamic** feel: actors react to `CombatManager` state, not static meshes.
 - **Work:**
-  - New `CombatPresentation` (or extend [`combat_root.gd`](../scripts/combat_root.gd)): subscribe `turn_changed`, `stats_changed`; on `REAL_TIME_WINDOW` set enemy “telegraph” tint (hit vs feint via `is_enemy_swing_real()`); on strike short player lunge tween; on enemy turn small recoil on damage application (signal from manager if missing — add **presentation-only** signal `enemy_received_damage(amount)` if needed).
+  - New `CombatPresentation` (or extend [`combat_root.gd`](../scripts/combat/combat_root.gd)): subscribe `turn_changed`, `stats_changed`; on `REAL_TIME_WINDOW` set enemy “telegraph” tint (hit vs feint via `is_enemy_swing_real()`); on strike short player lunge tween; on enemy turn small recoil on damage application (signal from manager if missing — add **presentation-only** signal `enemy_received_damage(amount)` if needed).
   - Keep all motion **cosmetic**; do not alter HP/stamina in presentation layer.
-- **Files:** `scripts/combat_presentation.gd`, `combat_manager.gd` (signals only if necessary), `combat.tscn`.
+- **Files:** `scripts/combat/combat_presentation.gd`, `combat_manager.gd` (signals only if necessary), `combat.tscn`.
 - **Tests:** Headless: if new signals fire, assert order in scenario; else manual only.
 - **Exit criteria:** Player can see difference between **feint** and **real swing** windows (color or pose).
 
@@ -71,9 +71,9 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
 
 - **Goal:** Parity with [`ParryDodgeZoneIndicator`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/ParryDodgeZoneIndicator.cs): show only in real-time window; phased **open → steady → imminent** (`OpenPhaseEnd` 0.15, `ImminentPhaseStart` 0.75); label **“React! X.Xs”** like [`CombatUI` Update](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/CombatUI.cs).
 - **Work:**
-  - New scene `scenes/parry_dodge_eye.tscn` + `scripts/parry_dodge_eye.gd` (`Control`: sclera, pupil scale, eyelid offsets — can simplify to one `TextureProgress` + mask if faster).
+  - New scene `scenes/parry_dodge_eye.tscn` + `scripts/combat/parry_dodge_eye.gd` (`Control`: sclera, pupil scale, eyelid offsets — can simplify to one `TextureProgress` + mask if faster).
   - Parent under combat `UI` `CanvasLayer`; `visible = false` when not `REAL_TIME_WINDOW`.
-- **Files:** new scene/script; [`combat_root.gd`](../scripts/combat_root.gd) wiring.
+- **Files:** new scene/script; [`combat_root.gd`](../scripts/combat/combat_root.gd) wiring.
 - **Tests:** Extend [`.tdad/bdd/godot-parity-slice.feature`](../../.tdad/bdd/godot-parity-slice.feature) with scenario *“Parry dodge indicator visible during defensive window”*; manual verification required for animation curve.
 - **Exit criteria:** BDD scenario green (visibility assertion via test hook or `CombatManager.use_instant_resolution_for_tests` + synthetic frame step — if too brittle, mark scenario `@manual` and keep headless strict).
 
@@ -91,7 +91,7 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
   - **E33 / wireframe review:** [`COMBAT_REVIEW_WIREFRAME_E33.md`](COMBAT_REVIEW_WIREFRAME_E33.md) — checklist vs CP-01–CP-05 and follow-ups for CI / `godot-demo-components`.
   - [`STEAM_BUILD.md`](../STEAM_BUILD.md): manual QA steps for CP-02–CP-05.
   - This file: mark segments **DONE** with PR links when executed.
-  - **Done:** nodes [`gparity-combat-stage`](../../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json), [`gparity-parry-dodge-eye`](../../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json) on `godot-parity-slice` + root `children`; [`CombatManager.presentation_tick`](../scripts/combat_manager.gd) drives window-phase UI without polling.
+  - **Done:** nodes [`gparity-combat-stage`](../../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json), [`gparity-parry-dodge-eye`](../../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json) on `godot-parity-slice` + root `children`; [`CombatManager.presentation_tick`](../scripts/combat/combat_manager.gd) drives window-phase UI without polling.
 
 ---
 
@@ -158,9 +158,9 @@ flowchart TD
 
 ### Implementation status (baseline delivered)
 
-- **CP-01** — `window_duration`, `window_phase_t()`, `presentation_tick(state, phase_t)` on window open + each `tick_window` frame, `defensive_window_started(is_real_swing)`, `feint_pattern_offset` / `enemy_swing_is_hit_for_window_index(..., pattern_offset)` on [`CombatManager`](../scripts/combat_manager.gd); headless asserts in [`combat_scenarios.gd`](../tests/combat_scenarios.gd) (incl. misstep invert).
+- **CP-01** — `window_duration`, `window_phase_t()`, `presentation_tick(state, phase_t)` on window open + each `tick_window` frame, `defensive_window_started(is_real_swing)`, `feint_pattern_offset` / `enemy_swing_is_hit_for_window_index(..., pattern_offset)` on [`CombatManager`](../scripts/combat/combat_manager.gd); headless asserts in [`combat_scenarios.gd`](../tests/combat_scenarios.gd) (incl. misstep invert).
 - **CP-02** — [`CombatStage`](../scenes/combat.tscn) + hazard strip (`show_foreground_hazard`, default off).
-- **CP-03** — [`combat_presentation.gd`](../scripts/combat_presentation.gd) (idle, window telegraph, strike punch, player hit flash + `Camera2D` shake on heavy damage).
-- **CP-04** — [`parry_dodge_eye.tscn`](../scenes/parry_dodge_eye.tscn) + [`combat_root.gd`](../scripts/combat_root.gd) `setup(combat)`; eye subscribes to `presentation_tick` for reactive window phase (wind-up still uses `_process`).
-- **CP-05** — Procedural window tones: [`combat_window_tone.gd`](../scripts/combat_window_tone.gd) + `WindowSfx` on [`combat.tscn`](../scenes/combat.tscn) (SFX bus); [`docs/ASSET_LICENSES.md`](../../docs/ASSET_LICENSES.md) row.
+- **CP-03** — [`combat_presentation.gd`](../scripts/combat/combat_presentation.gd) (idle, window telegraph, strike punch, player hit flash + `Camera2D` shake on heavy damage).
+- **CP-04** — [`parry_dodge_eye.tscn`](../scenes/parry_dodge_eye.tscn) + [`combat_root.gd`](../scripts/combat/combat_root.gd) `setup(combat)`; eye subscribes to `presentation_tick` for reactive window phase (wind-up still uses `_process`).
+- **CP-05** — Procedural window tones: [`combat_window_tone.gd`](../scripts/combat/combat_window_tone.gd) + `WindowSfx` on [`combat.tscn`](../scenes/combat.tscn) (SFX bus); [`docs/ASSET_LICENSES.md`](../../docs/ASSET_LICENSES.md) row.
 - **CP-06** — [`PARITY_GAPS.md`](../PARITY_GAPS.md), [`STEAM_BUILD.md`](../STEAM_BUILD.md), [`.tdad/bdd/godot-parity-slice.feature`](../../.tdad/bdd/godot-parity-slice.feature) updated.

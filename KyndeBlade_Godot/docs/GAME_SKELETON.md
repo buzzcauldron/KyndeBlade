@@ -46,4 +46,4 @@ If Unity data changes, update **`locations_registry.json`** and **`campaign_spin
 - Planning index: [`docs/KYNDEBLADE_CAREFUL_CANON.md`](../../docs/KYNDEBLADE_CAREFUL_CANON.md)
 - Module map: [`docs/UNITY_GODOT_MODULE_MAP.md`](../../docs/UNITY_GODOT_MODULE_MAP.md)
 - Story digest: [`docs/UNITY_STORY_AND_SPAWN_DIGEST.md`](../../docs/UNITY_STORY_AND_SPAWN_DIGEST.md)
-- Slice export: `data/exported_from_unity.json` + `scripts/unity_export_data.gd`
+- Slice export: `data/exported_from_unity.json` + `scripts/world/unity_export_data.gd`

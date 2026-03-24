@@ -11,7 +11,7 @@ Use this file for **mood boards**, **texture paint-over**, or (when licensed for
 ## Style notes (for artists & shaders)
 
 - **Read:** Modern hi-bit pixel — texture, atmospheric depth, side-on exploration framing (parallax-friendly).
-- **Palette (code):** [`KyndeBladeArtPalette`](../../scripts/kyndeblade_art_palette.gd) **`HI_BIT_*`** constants are a **high-contrast, higher-saturation** read of this PNG (coral clouds, vivid teal–mint sky, lime foliage, rich terracotta, deep slate shadows). Adjust there first; procedural backdrop uses the same ramps.
+- **Palette (code):** [`KyndeBladeArtPalette`](../../scripts/ui/kyndeblade_art_palette.gd) **`HI_BIT_*`** constants are a **high-contrast, higher-saturation** read of this PNG (coral clouds, vivid teal–mint sky, lime foliage, rich terracotta, deep slate shadows). Adjust there first; procedural backdrop uses the same ramps.
 - **Palette (art):** Sage greens, teals in mist; **terracotta / warm brick** on stone; sky **teal → peach/apricot** (dusk/dawn glow).
 - **Layers (4–5):** Distant pale-teal cliffs → misty mid-cliffs → main stonework (bridge/piers) → foreground foliage framing.
 - **Technique:** Soft dither in clouds and stone shading; diffused light from the glowing sky; no harsh cut shadows.
@@ -19,7 +19,7 @@ Use this file for **mood boards**, **texture paint-over**, or (when licensed for
 
 ## Code hook
 
-Procedural combat backdrop approximates these colors in [`scripts/combat_manuscript_backdrop.gd`](../../scripts/combat_manuscript_backdrop.gd) via [`KyndeBladeArtPalette`](../../scripts/kyndeblade_art_palette.gd) **`HI_BIT_*`** constants.
+Procedural combat backdrop approximates these colors in [`scripts/ui/combat_manuscript_backdrop.gd`](../../scripts/ui/combat_manuscript_backdrop.gd) via [`KyndeBladeArtPalette`](../../scripts/ui/kyndeblade_art_palette.gd) **`HI_BIT_*`** constants.
 
 ## License / provenance
 

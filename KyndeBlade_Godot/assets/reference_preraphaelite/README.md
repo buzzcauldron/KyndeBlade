@@ -14,7 +14,7 @@ Drop **cleared** reference images here when you want stable, in-repo mood boards
 
 ## Code hook
 
-Runtime colors are driven by [`JEWEL_*` constants in `scripts/kyndeblade_art_palette.gd`](../../scripts/kyndeblade_art_palette.gd), not by sampling these files automatically. When you lock a final plate, you may **manually** adjust those hex values to match.
+Runtime colors are driven by [`JEWEL_*` constants in `scripts/ui/kyndeblade_art_palette.gd`](../../scripts/ui/kyndeblade_art_palette.gd), not by sampling these files automatically. When you lock a final plate, you may **manually** adjust those hex values to match.
 
 The visual bible also links an external Salome reference from [`VISUAL_DESIGN_ALAN_LEE.md`](../../../ProjectArchive/docs/VISUAL_DESIGN_ALAN_LEE.md) — useful until vendored art lands here.
 
