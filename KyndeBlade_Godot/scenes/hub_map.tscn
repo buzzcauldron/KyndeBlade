@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://c8hubmap001"]
+[gd_scene load_steps=7 format=3 uid="uid://c8hubmap001"]
 
 [ext_resource type="Script" path="res://scripts/hub_map.gd" id="1_hub"]
 [ext_resource type="Script" path="res://scripts/hub_crawl_parallax.gd" id="2_crawl_bg"]
 [ext_resource type="Texture2D" path="res://assets/ui_manuscript/historiated_margin_crowned_figure.png" id="3_hist"]
 [ext_resource type="Script" path="res://scripts/hub_route_map.gd" id="4_route"]
+[ext_resource type="Texture2D" uid="uid://cbasemapwales1" path="res://assets/world/basemap_wales.png" id="5_basemap"]
 
 [node name="HubMap" type="Control"]
 layout_mode = 3
@@ -100,12 +101,32 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "Back to main menu"
 
-[node name="HubRouteMap" type="Control" parent="RouteColumns"]
-unique_name_in_owner = true
+[node name="HubMapStack" type="Control" parent="RouteColumns"]
 custom_minimum_size = Vector2(400, 280)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="WalesBasemap" type="TextureRect" parent="RouteColumns/HubMapStack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("5_basemap")
+
+[node name="HubRouteMap" type="Control" parent="RouteColumns/HubMapStack"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 0
 script = ExtResource("4_route")
 

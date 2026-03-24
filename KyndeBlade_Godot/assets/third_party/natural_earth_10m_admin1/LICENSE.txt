@@ -1,0 +1,9 @@
+Natural Earth (naturalearthdata.com) — Admin 1 cultural vectors (10m scale).
+
+Per https://www.naturalearthdata.com/about/terms-of-use/ (snapshot for shipping traceability):
+
+- Natural Earth Vector Data is in the public domain.
+- The authors request attribution: "Made with Natural Earth" and/or link to naturalearthdata.com.
+- NACIS (North American Cartographic Information Society) is the steward.
+
+Full terms: https://www.naturalearthdata.com/about/terms-of-use/

@@ -1,6 +1,9 @@
 class_name CombatManager
 extends Node
 ## Turn-based combat + real-time dodge/parry window. Deterministic enemy telegraph (no rand).
+## **Dodge** on a real swing takes **partial** incoming damage ([constant DODGE_REAL_SWING_FRACTION] of full swing).
+## **Parry** takes a **smaller partial** chip ([constant PARRY_INCOMING_FRACTION]) and deals a deterministic **riposte**
+## (0.3–0.7× lowest equipped attack — [method _strike_damage], keyed by defensive window index).
 ## Parry window duration is **170–230 ms** (see `PlayerMovesetModifiers.parry_window_ms()`); dodge window stays longer for readability.
 
 signal turn_changed
@@ -20,11 +23,20 @@ enum DreamerMoveKind { STRIKE, DODGE, PARRY }
 ## If `EncounterDef.defensive_windup_sec` is **0**, playable runs still use this gather so the eye / wind-up SFX read. **Headless** skips via [member use_instant_resolution_for_tests].
 const MIN_GATHER_WHEN_WINDUP_ZERO_SEC := 0.22
 
+## Full swing damage for **player-initiated** defensive windows (before encounter-specific enemy-turn scaling).
+const PLAYER_PHASE_SWING_DAMAGE := 20.0
+## Fraction of incoming damage applied when you **dodge** a real swing (rest is mitigated).
+const DODGE_REAL_SWING_FRACTION := 0.6
+## Fraction of incoming damage applied when you **parry** a real swing (smaller than dodge; you also riposte).
+const PARRY_INCOMING_FRACTION := 0.3
+
 ## Loaded from `data/encounter_fair_field.tres` if unset (parity: demo-fayre-felde-encounter-wired).
 @export var encounter: EncounterDef
 
 ## When **true**, strike → enemy phases resolve immediately (no `create_timer`). Used by headless combat scenario tests only.
 @export var use_instant_resolution_for_tests: bool = false
+## When **true** with [member use_instant_resolution_for_tests], enemy turn opens a reaction window instead of immediate damage (headless only).
+@export var force_enemy_turn_reaction_window_in_tests: bool = false
 
 ## Shifts the deterministic feint pattern (odd `GameState.ethical_misstep_count` inverts first read). Tests leave at 0.
 @export var feint_pattern_offset: int = 0
@@ -42,7 +54,7 @@ var enemy_max_hp: float = 80.0
 var player_dodging: bool = false
 var player_parrying: bool = false
 
-## Next defensive window: if true, enemy committed a real swing (mitigate with dodge/parry).
+## Next defensive window: if true, enemy committed a real swing (dodge/parry reduce damage; parry also ripostes).
 var _enemy_will_hit: bool = true
 var _defense_windows_resolved: int = 0
 ## When **true**, `REAL_TIME_WINDOW` is the enemy-turn reaction phase (dodge/parry before `enemy_turn_damage` applies).
@@ -130,6 +142,17 @@ func _strike_stamina_cost() -> float:
 func _strike_damage() -> float:
 	var base: float = encounter.player_strike_damage if encounter else 15.0
 	return maxf(1.0, base + PlayerMovesetModifiers.strike_damage_delta())
+
+
+## Slice: only strike exists; use this for parry counter scaling when more attacks are equipped.
+func _lowest_equipped_attack_damage() -> float:
+	return _strike_damage()
+
+
+## Deterministic multiplier in **[0.3, 0.7]** from the defensive window index (test-stable, no RNG).
+func _parry_counterstrike_multiplier() -> float:
+	var step := posmod(_defense_windows_resolved, 5)
+	return 0.3 + 0.4 * (float(step) / 4.0)
 
 
 func _dodge_stamina_cost() -> float:
@@ -288,11 +311,14 @@ func _resolve_window() -> void:
 		return
 
 	if _enemy_will_hit:
-		var mitigated: bool = was_dodging or was_parrying
-		var dmg: float = 12.0 if mitigated else 20.0
-		if was_parrying and mitigated:
-			dmg *= 0.3
-		player_hp = maxf(0, player_hp - dmg)
+		if was_dodging:
+			player_hp = maxf(0, player_hp - PLAYER_PHASE_SWING_DAMAGE * DODGE_REAL_SWING_FRACTION)
+		elif was_parrying:
+			player_hp = maxf(0, player_hp - PLAYER_PHASE_SWING_DAMAGE * PARRY_INCOMING_FRACTION)
+			var ctr: float = _lowest_equipped_attack_damage() * _parry_counterstrike_multiplier()
+			enemy_hp = maxf(0.0, enemy_hp - ctr)
+		else:
+			player_hp = maxf(0, player_hp - PLAYER_PHASE_SWING_DAMAGE)
 	else:
 		# Feint: wasting defensive stamina costs a little if you panicked.
 		if was_dodging or was_parrying:
@@ -301,9 +327,16 @@ func _resolve_window() -> void:
 	_defense_windows_resolved += 1
 	_emit_stats()
 
+	if enemy_hp <= 0.0:
+		state = State.ENDED
+		combat_ended.emit(true)
+		turn_changed.emit()
+		return
+
 	if player_hp <= 0:
 		state = State.ENDED
 		combat_ended.emit(false)
+		turn_changed.emit()
 		return
 	state = State.WAITING_PLAYER
 	turn_changed.emit()
@@ -313,16 +346,15 @@ func _resolve_enemy_turn_reaction_window(was_dodging: bool, was_parrying: bool) 
 	var base: float = encounter.enemy_turn_damage if encounter else 18.0
 	var hazard: float = apply_piers_hazard_damage()
 	if _enemy_will_hit:
-		var mitigated: bool = was_dodging or was_parrying
-		var dmg: float
-		if mitigated:
-			if was_parrying:
-				dmg = (base + hazard) * 0.3
-			else:
-				dmg = (base + hazard) * (12.0 / 20.0)
+		var full: float = base + hazard
+		if was_dodging:
+			player_hp = maxf(0, player_hp - full * DODGE_REAL_SWING_FRACTION)
+		elif was_parrying:
+			player_hp = maxf(0, player_hp - full * PARRY_INCOMING_FRACTION)
+			var ctr2: float = _lowest_equipped_attack_damage() * _parry_counterstrike_multiplier()
+			enemy_hp = maxf(0.0, enemy_hp - ctr2)
 		else:
-			dmg = base + hazard
-		player_hp = maxf(0, player_hp - dmg)
+			player_hp = maxf(0, player_hp - full)
 	else:
 		if was_dodging or was_parrying:
 			player_hp = maxf(0, player_hp - 5.0)
@@ -330,9 +362,16 @@ func _resolve_enemy_turn_reaction_window(was_dodging: bool, was_parrying: bool) 
 	_defense_windows_resolved += 1
 	_emit_stats()
 
+	if enemy_hp <= 0.0:
+		state = State.ENDED
+		combat_ended.emit(true)
+		turn_changed.emit()
+		return
+
 	if player_hp <= 0:
 		state = State.ENDED
 		combat_ended.emit(false)
+		turn_changed.emit()
 		return
 	player_stamina = minf(player_max_stamina, player_stamina + 15)
 	state = State.WAITING_PLAYER
@@ -341,7 +380,10 @@ func _resolve_enemy_turn_reaction_window(was_dodging: bool, was_parrying: bool) 
 
 
 func _run_enemy_damage_phase() -> void:
-	if use_instant_resolution_for_tests or not SaveService.load_enable_real_time_defense_on_enemy_turn():
+	if not SaveService.load_enable_real_time_defense_on_enemy_turn():
+		_apply_enemy_turn_damage_immediate()
+		return
+	if use_instant_resolution_for_tests and not force_enemy_turn_reaction_window_in_tests:
 		_apply_enemy_turn_damage_immediate()
 		return
 	_begin_enemy_turn_reaction_window()
@@ -370,6 +412,7 @@ func _apply_enemy_turn_damage_immediate() -> void:
 	if player_hp <= 0:
 		state = State.ENDED
 		combat_ended.emit(false)
+		turn_changed.emit()
 		return
 	player_stamina = minf(player_max_stamina, player_stamina + 15)
 	state = State.WAITING_PLAYER

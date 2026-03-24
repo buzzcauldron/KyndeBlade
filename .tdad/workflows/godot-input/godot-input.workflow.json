@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "title": "Godot input (mirror)",
+  "description": "InputMap setup, keyboard shortcuts in combat/hub.",
+  "nodes": [
+    {
+      "id": "gin-scope",
+      "workflowId": "godot-input",
+      "title": "input_map_setup.gd",
+      "description": "Project input actions; combat hotkeys documented STEAM_BUILD.",
+      "nodeType": "feature",
+      "fileName": "gin-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gin-tbd-remap-ui",
+      "workflowId": "godot-input",
+      "title": "TBD: remapping UI parity",
+      "description": "Unity input folder.",
+      "nodeType": "feature",
+      "fileName": "gin-tbd-remap-ui",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

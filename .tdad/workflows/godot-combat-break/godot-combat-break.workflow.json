@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "title": "Godot combat break (mirror)",
+  "description": "Break gauge / stun — not in current slice; stub for Unity combat-break trace.",
+  "nodes": [
+    {
+      "id": "gcbk-scope",
+      "workflowId": "godot-combat-break",
+      "title": "Stub — no break gauge in slice",
+      "description": "PARITY_GAPS: Kynde/break stack W6.",
+      "nodeType": "feature",
+      "fileName": "gcbk-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcbk-tbd-port",
+      "workflowId": "godot-combat-break",
+      "title": "TBD: port break when M5+ demands",
+      "description": "Link godot-full-port milestone.",
+      "nodeType": "feature",
+      "fileName": "gcbk-tbd-port",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

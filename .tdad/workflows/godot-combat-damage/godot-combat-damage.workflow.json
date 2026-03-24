@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot combat damage (mirror)",
+  "description": "Damage and pressure including encounter bleed; thin mirror of combat-damage.",
+  "nodes": [
+    {
+      "id": "gcd-scope",
+      "workflowId": "godot-combat-damage",
+      "title": "Damage application",
+      "description": "Player strike and enemy turn damage in CombatManager; proof: combat_scenarios.gd.",
+      "nodeType": "feature",
+      "fileName": "gcd-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcd-bleed-encounter",
+      "workflowId": "godot-combat-damage",
+      "title": "Enemy turn bleed (data)",
+      "description": "EncounterDef.enemy_turn_bleed_damage; Fair Field 0, Dongeoun gate authored. See COMBAT_REVIEW_WIREFRAME_E33.md.",
+      "nodeType": "feature",
+      "fileName": "gcd-bleed-encounter",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gcd-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcd-tbd-formula",
+      "workflowId": "godot-combat-damage",
+      "title": "TBD: Unity crit / variance / elemental stack",
+      "description": "PARITY_GAPS combat-damage row when porting.",
+      "nodeType": "feature",
+      "fileName": "gcd-tbd-formula",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

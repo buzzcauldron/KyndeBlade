@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot combat actions (mirror)",
+  "description": "Strike, dodge, parry, stamina gates; Godot action bar + CombatManager.",
+  "nodes": [
+    {
+      "id": "gca-scope",
+      "workflowId": "godot-combat-actions",
+      "title": "Player actions wired",
+      "description": "Action bar in combat_root.gd; strike/dodge/parry map to CombatManager. Manual: STEAM_BUILD combat drill.",
+      "nodeType": "feature",
+      "fileName": "gca-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gca-stamina-strike",
+      "workflowId": "godot-combat-actions",
+      "title": "Strike stamina gate",
+      "description": "EncounterDef strike_stamina_cost; headless scenarios cover basic paths.",
+      "nodeType": "feature",
+      "fileName": "gca-stamina-strike",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gca-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gca-tbd-full-moveset",
+      "workflowId": "godot-combat-actions",
+      "title": "TBD: Escapade, Ward, Counter, RangedStrike parity",
+      "description": "Unity combat-actions backlog; PARITY_GAPS.",
+      "nodeType": "feature",
+      "fileName": "gca-tbd-full-moveset",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

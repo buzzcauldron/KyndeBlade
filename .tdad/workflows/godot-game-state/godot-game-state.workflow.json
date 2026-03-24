@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot game state (mirror)",
+  "description": "GameState, ethical misstep, feint pattern, location flags.",
+  "nodes": [
+    {
+      "id": "ggs-scope",
+      "workflowId": "godot-game-state",
+      "title": "Core GameState fields",
+      "description": "game_state.gd; hub and combat read flags.",
+      "nodeType": "feature",
+      "fileName": "ggs-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "ggs-feint-misstep",
+      "workflowId": "godot-game-state",
+      "title": "Misstep → feint pattern",
+      "description": "gdc-combat-misstep-feint; STEAM_BUILD narrative coupling.",
+      "nodeType": "feature",
+      "fileName": "ggs-feint-misstep",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "ggs-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "ggs-save-bridge",
+      "workflowId": "godot-game-state",
+      "title": "Save roundtrip for meta fields",
+      "description": "gparity-save-roundtrip; SaveService SAVE_VERSION fields.",
+      "nodeType": "feature",
+      "fileName": "ggs-save-bridge",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

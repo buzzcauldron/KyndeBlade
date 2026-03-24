@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "title": "Godot accessibility + localization (mirror)",
+  "description": "Stub mirror of a11y-l10n; cult-ship copy intentional.",
+  "nodes": [
+    {
+      "id": "ga11-scope",
+      "workflowId": "godot-a11y-l10n",
+      "title": "Copy + contrast notes",
+      "description": "CULT_SHIP_BAR.md; PARITY_GAPS hub copy.",
+      "nodeType": "feature",
+      "fileName": "ga11-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "ga11-tbd-l10n-pipeline",
+      "workflowId": "godot-a11y-l10n",
+      "title": "TBD: localization pipeline",
+      "description": "Unity a11y-l10n.",
+      "nodeType": "feature",
+      "fileName": "ga11-tbd-l10n-pipeline",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

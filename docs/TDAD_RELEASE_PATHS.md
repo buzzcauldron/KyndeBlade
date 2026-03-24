@@ -42,4 +42,15 @@ Tier B **depends on** Tier A in the root graph (`steam-early-access` → `demo-v
 | Godot CI / headless tests | [`docs/CI_GODOT_TESTS.md`](CI_GODOT_TESTS.md) |
 | Unity archive target (populate at M6) | [`ProjectArchive/UnityKyndeBlade/README.md`](../ProjectArchive/UnityKyndeBlade/README.md) |
 
+## Godot subsystem mirrors (engineering lane)
+
+Parallel **`.tdad/workflows/godot-<subsystem>/`** workflows (21 folders) map each Unity subsystem folder to **Godot** code paths and proofs. They sit beside — not instead of — **`godot-parity-slice`**, **`godot-demo-components`**, and **`godot-steam-build`**.
+
+| Artifact | Path |
+|----------|------|
+| Conventions | [`.tdad/workflows/GODOT_SUBSYSTEM_CONVENTIONS.md`](../.tdad/workflows/GODOT_SUBSYSTEM_CONVENTIONS.md) |
+| Root graph entries | Folder nodes `godot-combat-core` … `godot-a11y-l10n` in [`.tdad/workflows/root.workflow.json`](../.tdad/workflows/root.workflow.json) |
+| Maintain prompt | [`.tdad/prompts/maintain-godot-subsystem-tdad.md`](../.tdad/prompts/maintain-godot-subsystem-tdad.md) |
+| Combat presentation / E33 wireframe ledger | [`KyndeBlade_Godot/docs/COMBAT_REVIEW_WIREFRAME_E33.md`](../KyndeBlade_Godot/docs/COMBAT_REVIEW_WIREFRAME_E33.md) |
+
 **Oracle:** Until M6 sign-off, Unity **demo-vertical-slice** + `PLAYABLE_SLICE.md` / `DEMO_RUN.md` (under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`) define expected behavior. Unity already lives under **`ProjectArchive/UnityKyndeBlade/`**; the **Godot** slice + headless tests are the live contract for the shipping build. After M6 sign-off, Godot parity tests become the primary live contract; Unity TDAD nodes remain as historical spec where noted.

@@ -1,0 +1,83 @@
+{
+  "version": "1.0",
+  "title": "Godot combat defense (mirror)",
+  "description": "Real-time windows, wind-up, feint pattern; presentation in 2D/3D scripts.",
+  "nodes": [
+    {
+      "id": "gcdf-scope",
+      "workflowId": "godot-combat-defense",
+      "title": "Defense windows",
+      "description": "REAL_TIME_WINDOW, reaction duration from EncounterDef; SaveService may disable real-time windows. gdc-combat-pause, gdc-combat-misstep-feint.",
+      "nodeType": "feature",
+      "fileName": "gcdf-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcdf-windup-signal",
+      "workflowId": "godot-combat-defense",
+      "title": "DEFENSE_WINDUP + defensive_windup_started",
+      "description": "EncounterDef.defensive_windup_sec; MIN_GATHER when zero. combat_manager.gd.",
+      "nodeType": "feature",
+      "fileName": "gcdf-windup-signal",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gcdf-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcdf-presentation-read",
+      "workflowId": "godot-combat-defense",
+      "title": "Presentation read (E33)",
+      "description": "combat_presentation.gd, combat_presentation_3d.gd, ParryDodgeEye; ledger docs/COMBAT_REVIEW_WIREFRAME_E33.md.",
+      "nodeType": "feature",
+      "fileName": "gcdf-presentation-read",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [
+        "gcdf-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcdf-tbd-zone-sfx-bank",
+      "workflowId": "godot-combat-defense",
+      "title": "TBD: ParryDodgeZoneSoundBank asset parity",
+      "description": "Unity-only assets; optional Godot bus stubs.",
+      "nodeType": "feature",
+      "fileName": "gcdf-tbd-zone-sfx-bank",
+      "position": {
+        "x": 100,
+        "y": 550
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

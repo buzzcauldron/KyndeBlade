@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "title": "Godot scenes (mirror)",
+  "description": "Scene graph for combat, hub, headless entry.",
+  "nodes": [
+    {
+      "id": "gscn-combat-scene",
+      "workflowId": "godot-scenes",
+      "title": "combat.tscn graph",
+      "description": "CombatManager + presentation 2D/3D + UI; COMBAT_REVIEW_WIREFRAME_E33.md.",
+      "nodeType": "feature",
+      "fileName": "gscn-combat-scene",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gscn-headless-main",
+      "workflowId": "godot-scenes",
+      "title": "Headless entry scene",
+      "description": "res://tests/headless_main.tscn; docs/CI_GODOT_TESTS.md.",
+      "nodeType": "feature",
+      "fileName": "gscn-headless-main",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gscn-transitions",
+      "workflowId": "godot-scenes",
+      "title": "Scene change smoke",
+      "description": "gdc-scene-transition.",
+      "nodeType": "feature",
+      "fileName": "gscn-transitions",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

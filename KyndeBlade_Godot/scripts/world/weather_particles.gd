@@ -92,9 +92,7 @@ static func rebuild_under(
 	if typeof(presets) != TYPE_DICTIONARY:
 		return
 	var preset: Variant = presets.get(preset_id.strip_edges(), null)
-	var used_fallback := false
 	if preset == null or typeof(preset) != TYPE_DICTIONARY:
-		used_fallback = true
 		preset = presets.get("mist_calm", {})
 	if typeof(preset) != TYPE_DICTIONARY:
 		return

@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot enemies (mirror)",
+  "description": "EncounterDef + encounter tres; enemy display in combat UI.",
+  "nodes": [
+    {
+      "id": "gen-scope",
+      "workflowId": "godot-enemies",
+      "title": "Encounter resources",
+      "description": "encounter_fair_field.tres, encounter_dongeoun_gate.tres; encounter_index.json.",
+      "nodeType": "feature",
+      "fileName": "gen-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gen-load-proof",
+      "workflowId": "godot-enemies",
+      "title": "Encounter load headless",
+      "description": "gdc-combat-encounter-load.",
+      "nodeType": "feature",
+      "fileName": "gen-load-proof",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gen-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gen-tbd-roster",
+      "workflowId": "godot-enemies",
+      "title": "TBD: full enemy roster / stats parity",
+      "description": "Unity enemies.",
+      "nodeType": "feature",
+      "fileName": "gen-tbd-roster",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

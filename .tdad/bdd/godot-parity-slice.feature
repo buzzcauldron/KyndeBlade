@@ -7,7 +7,7 @@ Feature: Godot Steam build mirrors Unity vertical slice behaviors
   @gdc-tower-intro @gdc-hub-slice-locations
   Scenario: Hub shows tour after New Game
     Given a new game was started in the Godot Steam build
-    When the player continues past the tower arrival beat
+    When the player confirms New Game from the main menu
     And the hub map scene loads
     Then current location id should be "tour"
 
@@ -59,6 +59,7 @@ Feature: Godot Steam build mirrors Unity vertical slice behaviors
     When the player opens pause
     Then the pause overlay is visible and the window timer stops
 
+  @manual @wireframe @gdc-combat-scenarios
   Scenario: Combat shows dynamic stage and parry dodge eye during defensive window
     Given the combat scene is running
     When the player triggers dodge or parry
@@ -114,3 +115,9 @@ Feature: Godot Steam build mirrors Unity vertical slice behaviors
     When SaveService load_save runs
     Then kyndeblade_save.cfg exists and the legacy demo save file is removed
     And loaded fields match the legacy content
+
+  @manual @wireframe @gdc-combat-scenarios
+  Scenario: Wireframe combat checklist audit in editor
+    Given KyndeBlade_Godot/docs/WIREFRAME_COMBAT_CHECKLIST.md
+    When the tester follows STEAM_BUILD.md wireframe combat pass after a combat or presentation change
+    Then partial dodge parry riposte feint chip presentation and audio rows in the checklist are satisfied

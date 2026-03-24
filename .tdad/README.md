@@ -15,6 +15,18 @@ This folder holds **workflows** (feature graphs), **BDD** (Gherkin), and **promp
 
 Full narrative for demos vs Steam vs Godot: **[`docs/TDAD_RELEASE_PATHS.md`](../docs/TDAD_RELEASE_PATHS.md)**.
 
+## Godot subsystem mirrors (engineering)
+
+Twenty-one parallel **`godot-*`** folders mirror each Unity subsystem row (combat stack, world, shell, quality) with **Godot** proofs and file paths. They **depend on** `godot-parity-slice` in the root graph. Use them for traceability when porting; **granular** test nodes remain in **`godot-demo-components`** (`gdc-*`).
+
+| Mirror folder | Unity counterpart |
+|---------------|-------------------|
+| `godot-combat-core` … `godot-combat-kynde` | `combat-*` (8) |
+| `godot-characters`, `godot-enemies`, `godot-game-state`, `godot-map-progression`, `godot-narrative` | `characters`, `enemies`, `game-state`, `map-progression`, `narrative` |
+| `godot-save-system`, `godot-meta-progression`, `godot-input`, `godot-audio`, `godot-ui-shell`, `godot-scenes`, `godot-perf`, `godot-a11y-l10n` | `save-system`, `meta-progression`, `input`, `audio`, `ui-shell`, `scenes`, `perf`, `a11y-l10n` |
+
+**Conventions:** [`workflows/GODOT_SUBSYSTEM_CONVENTIONS.md`](workflows/GODOT_SUBSYSTEM_CONVENTIONS.md) · **Maintain prompt:** [`prompts/maintain-godot-subsystem-tdad.md`](prompts/maintain-godot-subsystem-tdad.md) · **Combat wireframe review:** [`KyndeBlade_Godot/docs/COMBAT_REVIEW_WIREFRAME_E33.md`](../KyndeBlade_Godot/docs/COMBAT_REVIEW_WIREFRAME_E33.md).
+
 ## Root dependency graph
 
 **[`workflows/root.workflow.json`](workflows/root.workflow.json)** — all subsystem folders (combat-*, save-system, …) plus:
@@ -24,7 +36,8 @@ Full narrative for demos vs Steam vs Godot: **[`docs/TDAD_RELEASE_PATHS.md`](../
 - `godot-full-port` → depends on `demo-vertical-slice`  
 - `godot-parity-slice` → depends on `demo-vertical-slice`, `godot-full-port`  
 - **`godot-demo-components`** → depends on **`godot-parity-slice`** (granular test hooks; optional planning graph)  
-- **`godot-steam-build`** → depends on **`godot-parity-slice`** (shipping layer on top of parity proofs)
+- **`godot-steam-build`** → depends on **`godot-parity-slice`** (shipping layer on top of parity proofs)  
+- **`godot-*` subsystem mirrors** (21 folders) → each depends on **`godot-parity-slice`**; see table above
 
 ## Subsystem workflows (`workflows/<id>/`)
 
@@ -50,6 +63,7 @@ Full narrative for demos vs Steam vs Godot: **[`docs/TDAD_RELEASE_PATHS.md`](../
 | [`plan-godot-port-milestone.md`](prompts/plan-godot-port-milestone.md) | Expand `godot-full-port` milestones |
 | [`plan-steam-milestones.md`](prompts/plan-steam-milestones.md) | Expand `steam-early-access` |
 | [`godot-archive-unity-snapshot.md`](prompts/godot-archive-unity-snapshot.md) | M6 human gate |
+| [`maintain-godot-subsystem-tdad.md`](prompts/maintain-godot-subsystem-tdad.md) | Add/edit **`godot-*`** mirror nodes + root `children` |
 
 ## Conventions
 

@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "KyndeBlade (repo)"
+		},
+		{
+			"path": "KyndeBlade_Godot",
+			"name": "Godot project"
+		}
+	],
+	"settings": {
+		"godotTools.editorPath.godot4": "godot",
+		"files.watcherExclude": {
+			"**/.godot/**": true,
+			"**/KyndeBlade_Godot/.godot/**": true
+		}
+	},
+	"extensions": {
+		"recommendations": ["geequlim.godot-tools"]
+	}
+}

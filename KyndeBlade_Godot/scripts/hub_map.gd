@@ -8,6 +8,7 @@ const MENU := "res://scenes/main_menu.tscn"
 enum CounselChoice { NONE, TREWTHE, MEDE, HUNGER }
 
 @onready var route_map: HubRouteMap = %HubRouteMap
+@onready var wales_basemap: TextureRect = $RouteColumns/HubMapStack/WalesBasemap
 @onready var weather_root: Node2D = $WeatherFX/WeatherRoot
 @onready var counsel_row: HBoxContainer = %CounselRow
 @onready var location_label: RichTextLabel = %LocationLabel
@@ -36,10 +37,28 @@ func _ready() -> void:
 	_validate_unity_export()
 	GameState.hub_on_map_opened()
 	AtmosphereProfile.apply_to_hub_crawl($CrawlParallaxBackdrop, GameState.current_location_id)
+	_apply_hub_basemap()
 	route_map.travel_requested.connect(_on_route_travel_requested)
 	_update_ui()
 	route_map.refresh()
 	_apply_hub_weather()
+
+
+func _apply_hub_basemap() -> void:
+	var bm := HubRouteRegistry.basemap_config()
+	var tex_path := str(bm.get("texture", "")).strip_edges() if not bm.is_empty() else ""
+	if tex_path.is_empty():
+		tex_path = "res://assets/world/basemap_wales.png"
+	if not ResourceLoader.exists(tex_path):
+		push_warning("HubMap: basemap texture missing: %s" % tex_path)
+		wales_basemap.visible = false
+		return
+	var loaded: Variant = load(tex_path)
+	if loaded is Texture2D:
+		wales_basemap.texture = loaded as Texture2D
+		wales_basemap.visible = true
+	else:
+		wales_basemap.visible = false
 
 
 func _apply_hub_weather() -> void:

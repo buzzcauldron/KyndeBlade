@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "title": "Godot combat status (mirror)",
+  "description": "Status effects — stub mirror of combat-status.",
+  "nodes": [
+    {
+      "id": "gcst-scope",
+      "workflowId": "godot-combat-status",
+      "title": "Stub — minimal status in slice",
+      "description": "PARITY_GAPS status row.",
+      "nodeType": "feature",
+      "fileName": "gcst-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcst-tbd-port",
+      "workflowId": "godot-combat-status",
+      "title": "TBD: status stack port",
+      "description": "Unity combat-status.",
+      "nodeType": "feature",
+      "fileName": "gcst-tbd-port",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

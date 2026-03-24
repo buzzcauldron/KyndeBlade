@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot map progression (mirror)",
+  "description": "Hub route map, location shell, slice locations export.",
+  "nodes": [
+    {
+      "id": "gmp-scope",
+      "workflowId": "godot-map-progression",
+      "title": "Hub route map + fog",
+      "description": "hub_route_map.json, hub_map.gd, SaveService hub_revealed_nodes.",
+      "nodeType": "feature",
+      "fileName": "gmp-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gmp-location-shell",
+      "workflowId": "godot-map-progression",
+      "title": "Act-1 travel shell",
+      "description": "gdc-location-shell; location_shell.gd tour/fayre_felde/dongeoun.",
+      "nodeType": "feature",
+      "fileName": "gmp-location-shell",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gmp-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gmp-atlas",
+      "workflowId": "godot-map-progression",
+      "title": "World atlas export",
+      "description": "gdc-world-atlas; exported_from_unity / slice_locations.",
+      "nodeType": "feature",
+      "fileName": "gmp-atlas",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

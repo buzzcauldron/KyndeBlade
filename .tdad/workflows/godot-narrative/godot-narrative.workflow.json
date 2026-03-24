@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot narrative (mirror)",
+  "description": "NarrativeBeats, slice yard, tower intro, counsel gates.",
+  "nodes": [
+    {
+      "id": "gnar-scope",
+      "workflowId": "godot-narrative",
+      "title": "Narrative beats + fallbacks",
+      "description": "narrative_beats.gd, narrative_beats_skeleton.json.",
+      "nodeType": "feature",
+      "fileName": "gnar-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gnar-slice-yard",
+      "workflowId": "godot-narrative",
+      "title": "slice_open_yard / prologue slice",
+      "description": "scenes/slice_open_yard.tscn; beginner_loop.gd.",
+      "nodeType": "feature",
+      "fileName": "gnar-slice-yard",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gnar-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gnar-counsel",
+      "workflowId": "godot-narrative",
+      "title": "Pre-combat counsel gate",
+      "description": "gdc-hub-counsel-gate; Fair Field flow.",
+      "nodeType": "feature",
+      "fileName": "gnar-counsel",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

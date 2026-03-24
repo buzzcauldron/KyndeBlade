@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot save system (mirror)",
+  "description": "SaveService retail paths, autosave, migration; mirrors save-system Unity trace.",
+  "nodes": [
+    {
+      "id": "gss-save-service-roundtrip",
+      "workflowId": "godot-save-system",
+      "title": "Progress + settings roundtrip",
+      "description": "gparity-save-roundtrip, gparity-settings-volume; run_headless_tests.gd.",
+      "nodeType": "feature",
+      "fileName": "gss-save-service-roundtrip",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gss-autosave-mirror",
+      "workflowId": "godot-save-system",
+      "title": "Autosave retail cfg",
+      "description": "gsteam-autosave-mirror; STEAM_BUILD.md.",
+      "nodeType": "feature",
+      "fileName": "gss-autosave-mirror",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gss-save-service-roundtrip"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gss-version-fields",
+      "workflowId": "godot-save-system",
+      "title": "Save v2/v3 narrative + combat tip fields",
+      "description": "STEAM_BUILD; dongeoun_gate_cleared, combat_defense_tip_ack.",
+      "nodeType": "feature",
+      "fileName": "gss-version-fields",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

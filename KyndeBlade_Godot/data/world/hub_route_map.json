@@ -1,24 +1,39 @@
 {
   "schema_version": 1,
   "description": "Slice hub route graph + fog-of-war. Positions normalized 0–1 over hub map panel.",
+  "basemap": {
+    "texture": "res://assets/world/basemap_wales.png",
+    "bounds": {
+      "west": -5.55,
+      "east": -2.65,
+      "south": 51.35,
+      "north": 53.55
+    }
+  },
   "nodes": [
     {
       "id": "tour",
       "title": "Tour on the Toft",
       "x": 0.22,
-      "y": 0.38
+      "y": 0.38,
+      "lon": -4.912,
+      "lat": 52.714
     },
     {
       "id": "fayre_felde",
       "title": "Fayr Feeld",
       "x": 0.72,
-      "y": 0.52
+      "y": 0.52,
+      "lon": -3.462,
+      "lat": 52.406
     },
     {
       "id": "dongeoun",
       "title": "Dongeoun",
       "x": 0.48,
-      "y": 0.78
+      "y": 0.78,
+      "lon": -4.158,
+      "lat": 51.834
     }
   ],
   "edges": [

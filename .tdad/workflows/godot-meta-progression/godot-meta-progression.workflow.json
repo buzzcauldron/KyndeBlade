@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "title": "Godot meta progression (mirror)",
+  "description": "Whimsy / moveset modifiers, hunger, poverty hooks — partial.",
+  "nodes": [
+    {
+      "id": "gmeta-scope",
+      "workflowId": "godot-meta-progression",
+      "title": "PlayerMovesetModifiers + medieval text",
+      "description": "gdc-medieval-catalog; player_moveset_modifiers.gd.",
+      "nodeType": "feature",
+      "fileName": "gmeta-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gmeta-tbd-unity-meta",
+      "workflowId": "godot-meta-progression",
+      "title": "TBD: full GameStateManager meta parity",
+      "description": "PARITY_GAPS meta flags row.",
+      "nodeType": "feature",
+      "fileName": "gmeta-tbd-unity-meta",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

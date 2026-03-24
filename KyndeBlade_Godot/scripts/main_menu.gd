@@ -1,8 +1,6 @@
 extends Control
 ## Main menu — manuscript page layout: parchment field, framed panel, rubric + motif (`main_menu.tscn`).
 
-const SLICE_OPEN_YARD := "res://scenes/slice_open_yard.tscn"
-const TOWER_INTRO := "res://scenes/tower_intro.tscn"
 const HUB := "res://scenes/hub_map.tscn"
 const BEGINNER_LOOP := "res://scenes/beginner_loop.tscn"
 const HI_BIT_BONUS := "res://scenes/hi_bit_bonus_level.tscn"
@@ -72,8 +70,8 @@ func _refresh_continue() -> void:
 func _on_new_game_pressed() -> void:
 	SaveService.write_new_game()
 	GameState.reset_from_new_game()
-	# PLAYABLE_SLICE: manuscript-framed yard, then tower beat (Continue skips yard → hub).
-	await ManuscriptNav.turn_page_to(SLICE_OPEN_YARD)
+	# Opens directly on the hub route map (`slice_open_yard` / `tower_intro` remain as scenes for tests / future menu hooks).
+	await ManuscriptNav.turn_page_to(HUB)
 
 
 func _on_continue_pressed() -> void:

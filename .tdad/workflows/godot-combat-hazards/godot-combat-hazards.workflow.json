@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "title": "Godot combat hazards (mirror)",
+  "description": "Piers hazards hook — returns 0 until data wired.",
+  "nodes": [
+    {
+      "id": "gchz-scope",
+      "workflowId": "godot-combat-hazards",
+      "title": "apply_piers_hazard_damage hook",
+      "description": "CombatManager returns 0; PARITY_GAPS Piers hazards.",
+      "nodeType": "feature",
+      "fileName": "gchz-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gchz-tbd-data",
+      "workflowId": "godot-combat-hazards",
+      "title": "TBD: load PiersHazardConfig equivalent",
+      "description": "World/narrative integration.",
+      "nodeType": "feature",
+      "fileName": "gchz-tbd-data",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

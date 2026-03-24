@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot audio (mirror)",
+  "description": "AudioBusSetup, combat window tones, kill SFX.",
+  "nodes": [
+    {
+      "id": "gau-scope",
+      "workflowId": "godot-audio",
+      "title": "Buses + Master volume",
+      "description": "audio_bus_setup.gd; settings persist.",
+      "nodeType": "feature",
+      "fileName": "gau-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gau-combat-window-tone",
+      "workflowId": "godot-audio",
+      "title": "Defensive window + kill feedback",
+      "description": "CombatWindowTone; combat_root WindowSfx/KillSfx. See COMBAT_REVIEW_WIREFRAME_E33.md.",
+      "nodeType": "feature",
+      "fileName": "gau-combat-window-tone",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gau-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gau-tbd-streamed-music",
+      "workflowId": "godot-audio",
+      "title": "TBD: streamed themes",
+      "description": "PARITY_GAPS audio.",
+      "nodeType": "feature",
+      "fileName": "gau-tbd-streamed-music",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

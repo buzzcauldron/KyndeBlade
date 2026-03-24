@@ -650,6 +650,419 @@
         "gsteam-headless-suite",
         "gsteam-export-steamworks"
       ]
+    },
+    {
+      "id": "godot-combat-core",
+      "workflowId": "root",
+      "title": "Godot combat core (mirror)",
+      "description": "Mirrors combat-core TDAD; Godot: CombatManager. Depends godot-parity-slice. Workflow: .tdad/workflows/godot-combat-core/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-combat-core",
+      "position": {
+        "x": 100,
+        "y": 1180
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gcc-scope",
+        "gcc-headless-smoke",
+        "gcc-tbd-turn-parity"
+      ]
+    },
+    {
+      "id": "godot-combat-actions",
+      "workflowId": "root",
+      "title": "Godot combat actions (mirror)",
+      "description": "Mirrors combat-actions; strike/dodge/parry slice. Workflow: .tdad/workflows/godot-combat-actions/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-combat-actions",
+      "position": {
+        "x": 280,
+        "y": 1180
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gca-scope",
+        "gca-stamina-strike",
+        "gca-tbd-full-moveset"
+      ]
+    },
+    {
+      "id": "godot-combat-damage",
+      "workflowId": "root",
+      "title": "Godot combat damage (mirror)",
+      "description": "Mirrors combat-damage; bleed + strike damage. Workflow: .tdad/workflows/godot-combat-damage/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-combat-damage",
+      "position": {
+        "x": 460,
+        "y": 1180
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gcd-scope",
+        "gcd-bleed-encounter",
+        "gcd-tbd-formula"
+      ]
+    },
+    {
+      "id": "godot-combat-defense",
+      "workflowId": "root",
+      "title": "Godot combat defense (mirror)",
+      "description": "Mirrors combat-defense; windows, wind-up, presentation. See COMBAT_REVIEW_WIREFRAME_E33.md. Workflow: .tdad/workflows/godot-combat-defense/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-combat-defense",
+      "position": {
+        "x": 640,
+        "y": 1180
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gcdf-scope",
+        "gcdf-windup-signal",
+        "gcdf-presentation-read",
+        "gcdf-tbd-zone-sfx-bank"
+      ]
+    },
+    {
+      "id": "godot-combat-break",
+      "workflowId": "root",
+      "title": "Godot combat break (mirror)",
+      "description": "Mirrors combat-break; stub. Workflow: .tdad/workflows/godot-combat-break/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-combat-break",
+      "position": {
+        "x": 820,
+        "y": 1180
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gcbk-scope",
+        "gcbk-tbd-port"
+      ]
+    },
+    {
+      "id": "godot-combat-status",
+      "workflowId": "root",
+      "title": "Godot combat status (mirror)",
+      "description": "Mirrors combat-status; stub. Workflow: .tdad/workflows/godot-combat-status/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-combat-status",
+      "position": {
+        "x": 1000,
+        "y": 1180
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gcst-scope",
+        "gcst-tbd-port"
+      ]
+    },
+    {
+      "id": "godot-combat-hazards",
+      "workflowId": "root",
+      "title": "Godot combat hazards (mirror)",
+      "description": "Mirrors combat-hazards; Piers hook. Workflow: .tdad/workflows/godot-combat-hazards/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-combat-hazards",
+      "position": {
+        "x": 1180,
+        "y": 1180
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gchz-scope",
+        "gchz-tbd-data"
+      ]
+    },
+    {
+      "id": "godot-combat-kynde",
+      "workflowId": "root",
+      "title": "Godot combat Kynde (mirror)",
+      "description": "Mirrors combat-kynde; partial rewards. Workflow: .tdad/workflows/godot-combat-kynde/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-combat-kynde",
+      "position": {
+        "x": 1360,
+        "y": 1180
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gcky-scope",
+        "gcky-tbd-break-generation"
+      ]
+    },
+    {
+      "id": "godot-characters",
+      "workflowId": "root",
+      "title": "Godot characters (mirror)",
+      "description": "Mirrors characters; placeholders. Workflow: .tdad/workflows/godot-characters/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-characters",
+      "position": {
+        "x": 100,
+        "y": 1330
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gchr-scope",
+        "gchr-registry",
+        "gchr-tbd-medieval-character"
+      ]
+    },
+    {
+      "id": "godot-enemies",
+      "workflowId": "root",
+      "title": "Godot enemies (mirror)",
+      "description": "Mirrors enemies; EncounterDef. Workflow: .tdad/workflows/godot-enemies/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-enemies",
+      "position": {
+        "x": 280,
+        "y": 1330
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gen-scope",
+        "gen-load-proof",
+        "gen-tbd-roster"
+      ]
+    },
+    {
+      "id": "godot-game-state",
+      "workflowId": "root",
+      "title": "Godot game state (mirror)",
+      "description": "Mirrors game-state; GameState + save fields. Workflow: .tdad/workflows/godot-game-state/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-game-state",
+      "position": {
+        "x": 460,
+        "y": 1330
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "ggs-scope",
+        "ggs-feint-misstep",
+        "ggs-save-bridge"
+      ]
+    },
+    {
+      "id": "godot-map-progression",
+      "workflowId": "root",
+      "title": "Godot map progression (mirror)",
+      "description": "Mirrors map-progression; hub route map. Workflow: .tdad/workflows/godot-map-progression/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-map-progression",
+      "position": {
+        "x": 640,
+        "y": 1330
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gmp-scope",
+        "gmp-location-shell",
+        "gmp-atlas"
+      ]
+    },
+    {
+      "id": "godot-narrative",
+      "workflowId": "root",
+      "title": "Godot narrative (mirror)",
+      "description": "Mirrors narrative; beats + slice yard. Workflow: .tdad/workflows/godot-narrative/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-narrative",
+      "position": {
+        "x": 820,
+        "y": 1330
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gnar-scope",
+        "gnar-slice-yard",
+        "gnar-counsel"
+      ]
+    },
+    {
+      "id": "godot-save-system",
+      "workflowId": "root",
+      "title": "Godot save system (mirror)",
+      "description": "Mirrors save-system; SaveService. Workflow: .tdad/workflows/godot-save-system/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-save-system",
+      "position": {
+        "x": 1000,
+        "y": 1330
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gss-save-service-roundtrip",
+        "gss-autosave-mirror",
+        "gss-version-fields"
+      ]
+    },
+    {
+      "id": "godot-meta-progression",
+      "workflowId": "root",
+      "title": "Godot meta progression (mirror)",
+      "description": "Mirrors meta-progression; moveset modifiers. Workflow: .tdad/workflows/godot-meta-progression/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-meta-progression",
+      "position": {
+        "x": 1180,
+        "y": 1330
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gmeta-scope",
+        "gmeta-tbd-unity-meta"
+      ]
+    },
+    {
+      "id": "godot-input",
+      "workflowId": "root",
+      "title": "Godot input (mirror)",
+      "description": "Mirrors input; InputMap. Workflow: .tdad/workflows/godot-input/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-input",
+      "position": {
+        "x": 1360,
+        "y": 1330
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gin-scope",
+        "gin-tbd-remap-ui"
+      ]
+    },
+    {
+      "id": "godot-audio",
+      "workflowId": "root",
+      "title": "Godot audio (mirror)",
+      "description": "Mirrors audio; buses + combat SFX. Workflow: .tdad/workflows/godot-audio/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-audio",
+      "position": {
+        "x": 220,
+        "y": 1480
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gau-scope",
+        "gau-combat-window-tone",
+        "gau-tbd-streamed-music"
+      ]
+    },
+    {
+      "id": "godot-ui-shell",
+      "workflowId": "root",
+      "title": "Godot UI shell (mirror)",
+      "description": "Mirrors ui-shell; menus + HUD. Workflow: .tdad/workflows/godot-ui-shell/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-ui-shell",
+      "position": {
+        "x": 500,
+        "y": 1480
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "guis-main-menu",
+        "guis-pause-overlay",
+        "guis-combat-hud"
+      ]
+    },
+    {
+      "id": "godot-scenes",
+      "workflowId": "root",
+      "title": "Godot scenes (mirror)",
+      "description": "Mirrors scenes; combat.tscn, headless_main. Workflow: .tdad/workflows/godot-scenes/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-scenes",
+      "position": {
+        "x": 780,
+        "y": 1480
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gscn-combat-scene",
+        "gscn-headless-main",
+        "gscn-transitions"
+      ]
+    },
+    {
+      "id": "godot-perf",
+      "workflowId": "root",
+      "title": "Godot performance (mirror)",
+      "description": "Mirrors perf; stub baselines. Workflow: .tdad/workflows/godot-perf/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-perf",
+      "position": {
+        "x": 1060,
+        "y": 1480
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gpr-scope",
+        "gpr-tbd-baseline"
+      ]
+    },
+    {
+      "id": "godot-a11y-l10n",
+      "workflowId": "root",
+      "title": "Godot accessibility + localization (mirror)",
+      "description": "Mirrors a11y-l10n; stub. Workflow: .tdad/workflows/godot-a11y-l10n/. Conventions: GODOT_SUBSYSTEM_CONVENTIONS.md.",
+      "nodeType": "folder",
+      "folderPath": "godot-a11y-l10n",
+      "position": {
+        "x": 1340,
+        "y": 1480
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "ga11-scope",
+        "ga11-tbd-l10n-pipeline"
+      ]
     }
   ],
   "edges": []

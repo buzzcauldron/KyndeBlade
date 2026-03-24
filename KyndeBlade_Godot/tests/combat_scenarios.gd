@@ -24,6 +24,16 @@ func run_all(p_root: Window) -> bool:
 	ok = _cs_step("parry_reduces_swing_damage", await parry_reduces_swing_damage(p_root), ok)
 	ok = _cs_step("parry_window_ms_stays_in_band", parry_window_ms_stays_in_band(), ok)
 	ok = _cs_step("feint_chips_if_you_defend", await feint_chips_if_you_defend(p_root), ok)
+	ok = _cs_step(
+			"enemy_turn_reaction_dodge_partial",
+			await enemy_turn_reaction_dodge_partial(p_root),
+			ok,
+	)
+	ok = _cs_step(
+			"enemy_turn_reaction_parry_partial_and_riposte",
+			await enemy_turn_reaction_parry_partial_and_riposte(p_root),
+			ok,
+	)
 	ok = _cs_step("defeat_on_brutal_enemy_turn", await defeat_on_brutal_enemy_turn(p_root), ok)
 	ok = _cs_step(
 			"strike_ignored_during_defensive_window",
@@ -90,6 +100,7 @@ func dodge_mitigates_first_swing(p_root: Window) -> bool:
 		_fail_cleanup(c)
 		return false
 	c.tick_window(2.0)
+	# Real swing + dodge: partial chip (20 × DODGE_REAL_SWING_FRACTION = 12).
 	if not is_equal_approx(c.player_hp, 88.0):
 		_fail_cleanup(c)
 		return false
@@ -112,8 +123,13 @@ func parry_reduces_swing_damage(p_root: Window) -> bool:
 		_fail_cleanup(c)
 		return false
 	c.tick_window(2.0)
-	# Mitigated swing base is 12; parry applies ×0.3 → 3.6 damage (see CombatManager._resolve_window).
-	if not is_equal_approx(c.player_hp, 96.4):
+	# Real swing + parry: 20 × PARRY_INCOMING_FRACTION = 6 chip; riposte mult 0.3 on first window index.
+	const want_mult := 0.3
+	var want_enemy := c.enemy_max_hp - c.get_strike_damage_preview() * want_mult
+	if not is_equal_approx(c.player_hp, 94.0):
+		_fail_cleanup(c)
+		return false
+	if not is_equal_approx(c.enemy_hp, want_enemy):
 		_fail_cleanup(c)
 		return false
 	_fail_cleanup(c)
@@ -132,6 +148,7 @@ func feint_chips_if_you_defend(p_root: Window) -> bool:
 	if c.state != CombatManager.State.WAITING_PLAYER:
 		_fail_cleanup(c)
 		return false
+	# No defensive reaction on instant enemy phase: full enemy_turn_damage (18).
 	if not is_equal_approx(c.player_hp, 70.0):
 		_fail_cleanup(c)
 		return false
@@ -140,6 +157,7 @@ func feint_chips_if_you_defend(p_root: Window) -> bool:
 		_fail_cleanup(c)
 		return false
 	c.tick_window(2.0)
+	# Feint + wasted dodge: 5 chip
 	if not is_equal_approx(c.player_hp, 65.0):
 		_fail_cleanup(c)
 		return false
@@ -216,6 +234,62 @@ func strike_fails_when_stamina_too_low(p_root: Window) -> bool:
 		return false
 	c.player_strike()
 	if not is_equal_approx(c.enemy_hp, 9998.0):
+		_fail_cleanup(c)
+		return false
+	_fail_cleanup(c)
+	return true
+
+
+func enemy_turn_reaction_dodge_partial(p_root: Window) -> bool:
+	var c := CombatManager.new()
+	c.use_instant_resolution_for_tests = true
+	c.force_enemy_turn_reaction_window_in_tests = true
+	p_root.add_child(c)
+	await p_root.get_tree().process_frame
+	if c.state != CombatManager.State.WAITING_PLAYER:
+		_fail_cleanup(c)
+		return false
+	c.player_strike()
+	if c.state != CombatManager.State.REAL_TIME_WINDOW:
+		_fail_cleanup(c)
+		return false
+	if not c.is_enemy_swing_real():
+		_fail_cleanup(c)
+		return false
+	c.player_dodge()
+	c.tick_window(99.0)
+	# enemy_turn_damage 18 × DODGE_REAL_SWING_FRACTION
+	var want_hp := 100.0 - 18.0 * CombatManager.DODGE_REAL_SWING_FRACTION
+	if not is_equal_approx(c.player_hp, want_hp):
+		_fail_cleanup(c)
+		return false
+	if c.state != CombatManager.State.WAITING_PLAYER:
+		_fail_cleanup(c)
+		return false
+	_fail_cleanup(c)
+	return true
+
+
+func enemy_turn_reaction_parry_partial_and_riposte(p_root: Window) -> bool:
+	var c := CombatManager.new()
+	c.use_instant_resolution_for_tests = true
+	c.force_enemy_turn_reaction_window_in_tests = true
+	p_root.add_child(c)
+	await p_root.get_tree().process_frame
+	c.player_strike()
+	if not c.is_enemy_swing_real():
+		_fail_cleanup(c)
+		return false
+	var enemy_after_strike := c.enemy_hp
+	c.player_parry()
+	c.tick_window(99.0)
+	var riposte_mult := 0.3
+	var want_player := 100.0 - 18.0 * CombatManager.PARRY_INCOMING_FRACTION
+	var want_enemy := enemy_after_strike - c.get_strike_damage_preview() * riposte_mult
+	if not is_equal_approx(c.player_hp, want_player):
+		_fail_cleanup(c)
+		return false
+	if not is_equal_approx(c.enemy_hp, want_enemy):
 		_fail_cleanup(c)
 		return false
 	_fail_cleanup(c)

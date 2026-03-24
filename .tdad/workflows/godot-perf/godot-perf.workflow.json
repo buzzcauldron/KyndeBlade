@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "title": "Godot performance (mirror)",
+  "description": "Budget and profiling — stub until perf baselines exist.",
+  "nodes": [
+    {
+      "id": "gpr-scope",
+      "workflowId": "godot-perf",
+      "title": "No automated perf gate yet",
+      "description": "Document targets in STEAM_BUILD / future CI GPU note.",
+      "nodeType": "feature",
+      "fileName": "gpr-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gpr-tbd-baseline",
+      "workflowId": "godot-perf",
+      "title": "TBD: frame budget + RVO yard load",
+      "description": "nav_test_yard.tscn optional.",
+      "nodeType": "feature",
+      "fileName": "gpr-tbd-baseline",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

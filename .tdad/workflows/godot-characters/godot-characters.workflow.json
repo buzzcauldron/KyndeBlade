@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot characters (mirror)",
+  "description": "Placeholder visuals, art bible alignment; gdc-placeholder-art-registry.",
+  "nodes": [
+    {
+      "id": "gchr-scope",
+      "workflowId": "godot-characters",
+      "title": "Placeholder / palette-driven figures",
+      "description": "combat_presentation.gd manuscript figures; KyndeBladeArtPalette.",
+      "nodeType": "feature",
+      "fileName": "gchr-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gchr-registry",
+      "workflowId": "godot-characters",
+      "title": "Placeholder registry proof",
+      "description": "gdc-placeholder-art-registry; docs as listed in godot-demo-components.",
+      "nodeType": "feature",
+      "fileName": "gchr-registry",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gchr-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gchr-tbd-medieval-character",
+      "workflowId": "godot-characters",
+      "title": "TBD: MedievalCharacter parity",
+      "description": "Unity characters folder.",
+      "nodeType": "feature",
+      "fileName": "gchr-tbd-medieval-character",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

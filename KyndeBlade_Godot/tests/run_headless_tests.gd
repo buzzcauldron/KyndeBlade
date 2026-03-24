@@ -83,6 +83,7 @@ func _kickoff() -> void:
 	)
 	ok = _headless_step("scene_transition_smoke", await _test_scene_transition_smoke(), ok)
 	ok = _headless_step("nav_test_yard_smoke", await _test_nav_test_yard_smoke(), ok)
+	ok = _headless_step("hub_route_map_pin_geo_consistency", _test_hub_route_map_pin_geo_consistency(), ok)
 	if not ok:
 		_finish(false)
 		return
@@ -480,6 +481,32 @@ func _test_hub_revealed_save_roundtrip() -> bool:
 	_save.write_new_game()
 	_state.reset_from_new_game()
 	return ok
+
+
+func _test_hub_route_map_pin_geo_consistency() -> bool:
+	var bounds := HubGeoProject.basemap_bounds_from_registry()
+	if bounds.is_empty():
+		push_error("hub_route_map: basemap.bounds missing for pin geo check")
+		return false
+	var eps := 0.0001
+	for item in HubRouteRegistry.nodes():
+		if typeof(item) != TYPE_DICTIONARY:
+			continue
+		var row: Dictionary = item
+		if not row.has("lon") or not row.has("lat"):
+			continue
+		var v := HubGeoProject.lon_lat_to_normalized(
+				float(row["lon"]), float(row["lat"]), bounds
+		)
+		var ex := float(row.get("x", -1.0))
+		var ey := float(row.get("y", -1.0))
+		if absf(v.x - ex) > eps or absf(v.y - ey) > eps:
+			push_error(
+					"hub_route_map pin drift id=%s norm=(%s,%s) json xy=(%s,%s)"
+					% [row.get("id", "?"), v.x, v.y, ex, ey]
+			)
+			return false
+	return true
 
 
 func _test_placeholder_art_registry() -> bool:

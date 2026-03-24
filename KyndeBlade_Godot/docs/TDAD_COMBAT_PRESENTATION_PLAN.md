@@ -88,6 +88,7 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
 
 - **Work:**
   - [`PARITY_GAPS.md`](../PARITY_GAPS.md): row “Combat presentation — Unity full vs Godot staged (placeholders)”.
+  - **E33 / wireframe review:** [`COMBAT_REVIEW_WIREFRAME_E33.md`](COMBAT_REVIEW_WIREFRAME_E33.md) — checklist vs CP-01–CP-05 and follow-ups for CI / `godot-demo-components`.
   - [`STEAM_BUILD.md`](../STEAM_BUILD.md): manual QA steps for CP-02–CP-05.
   - This file: mark segments **DONE** with PR links when executed.
   - Optional: add nodes to [`.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json`](../../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json) (`gparity-combat-stage`, `gparity-parry-dodge-eye`) for TDAD graph truth.

@@ -1,0 +1,63 @@
+{
+  "version": "1.0",
+  "title": "Godot combat core (mirror)",
+  "description": "Turn state machine and combat lifecycle in Godot; oracle Unity combat-core until M6.",
+  "nodes": [
+    {
+      "id": "gcc-scope",
+      "workflowId": "godot-combat-core",
+      "title": "Slice scope",
+      "description": "CombatManager drives WAITING_PLAYER, EXECUTING, REAL_TIME_WINDOW, ENEMY_TURN, DEFENSE_WINDUP, ENDED. Proof: combat_scenarios.gd, gdc-combat-scenarios.",
+      "nodeType": "feature",
+      "fileName": "gcc-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcc-headless-smoke",
+      "workflowId": "godot-combat-core",
+      "title": "Headless combat scenarios",
+      "description": "run_headless_tests.gd combat section; no regression on instant resolution.",
+      "nodeType": "feature",
+      "fileName": "gcc-headless-smoke",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [
+        "gcc-scope"
+      ],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcc-tbd-turn-parity",
+      "workflowId": "godot-combat-core",
+      "title": "TBD: full Unity turn-order edge cases",
+      "description": "Document gaps in PARITY_GAPS when porting add_character_mid_combat etc.",
+      "nodeType": "feature",
+      "fileName": "gcc-tbd-turn-parity",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

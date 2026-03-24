@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "title": "Godot combat Kynde (mirror)",
+  "description": "Kynde rewards from defense timing — partial in slice.",
+  "nodes": [
+    {
+      "id": "gcky-scope",
+      "workflowId": "godot-combat-kynde",
+      "title": "Kynde from parry/dodge success",
+      "description": "CombatManager grants; combat_scenarios where covered.",
+      "nodeType": "feature",
+      "fileName": "gcky-scope",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "gcky-tbd-break-generation",
+      "workflowId": "godot-combat-kynde",
+      "title": "TBD: full Kynde generation parity",
+      "description": "Unity combat-kynde.",
+      "nodeType": "feature",
+      "fileName": "gcky-tbd-break-generation",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

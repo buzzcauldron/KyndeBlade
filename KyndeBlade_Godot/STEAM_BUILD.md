@@ -14,7 +14,7 @@
 
 This Godot 4 project is treated as the **shipping Steam (and desktop) build** for the slice: same scope as the Unity Tier A vertical slice, packaged for players — **not** an internal “demo-only” artifact. Unity remains the authoring oracle until M6 archive policy changes; see parity table below.
 
-**Player journey (current slice):** **main menu → slice open yard** (Malvern prologue crawl: grass, streme, **step the right bank** to rest — hi-bit door-style; [`scenes/slice_open_yard.tscn`](scenes/slice_open_yard.tscn)) **→ tower arrival beat → hub → Fair Field flavor (export story text) → counsel (Trewthe / Mede / Name hunger) → combat → outcome → hub**, then optionally **Dongeoun** on the map (unlocks after Fair Field victory; gate warden encounter with defensive wind-up telegraph), with **save / continue**, **autosave mirror**, **settings** (volume + fullscreen), and **pause** (freezes the real-time dodge/parry window). **Continue** loads the hub and **skips** the yard.
+**Player journey (current slice):** **main menu → hub route map** ([`scenes/hub_map.tscn`](scenes/hub_map.tscn)) **→ Fair Field flavor (export story text) → counsel (Trewthe / Mede / Name hunger) → combat → outcome → hub**, then optionally **Dongeoun** on the map (unlocks after Fair Field victory; gate warden encounter with defensive wind-up telegraph), with **save / continue**, **autosave mirror**, **settings** (volume + fullscreen), and **pause** (freezes the real-time dodge/parry window). **Malvern prologue yard** ([`scenes/slice_open_yard.tscn`](scenes/slice_open_yard.tscn)) and **tower arrival beat** ([`scenes/tower_intro.tscn`](scenes/tower_intro.tscn)) remain in the project for headless smokes and a future optional prologue path; they are **not** the default New Game opening. **Continue** loads the hub from save as before.
 
 **Pacing (mini-act):** Target **~12–18 minutes** for a first cold run through tower → Fair Field combat → Dongeoun gate combat (reading speed and counsel choice variance). [`data/world/narrative_beats_skeleton.json`](data/world/narrative_beats_skeleton.json) supplies arrival fallbacks when the Unity export row has no beat text.
 
@@ -51,7 +51,7 @@ This is **not** a line-by-line port of Unity. It mirrors **names and flow** from
 
 | Unity TDAD node (demo-vertical-slice) | Godot proof |
 |---------------------------------------|-------------|
-| Main scene map bootstraps at tour | **New Game** → `tower_intro.tscn` → hub; `GameState.current_location_id == tour`; manual #2 |
+| Main scene map bootstraps at tour | **New Game** → `hub_map.tscn`; `GameState.current_location_id == tour`; manual #2 |
 | Tour location lists Fair Field as next | `data/slice_locations.json` + hub **Travel to Fair Field**; headless `_test_slice_locations_json` |
 | Fair Field encounter wired to False | `data/encounter_fair_field.tres` (`enemy_id: false`); `CombatManager` loads it |
 | Dongeoun gate encounter (post–Fair Field) | `data/encounter_dongeoun_gate.tres`; hub travel + `GameState.pending_combat_encounter_path`; headless `encounter_resource` + `dongeoun_gate_save_roundtrip` |
@@ -90,17 +90,29 @@ Gamepad: **A / B / X** and **Start** if actions had no keys (`scripts/input_map_
 
 ## Combat (deterministic)
 
-See parity: `feint_pattern_offset`, `PlayerMovesetModifiers`, `MedievalTextCatalog`, *Piers* voice + ink (`piers_combat_voice.gd`, `dreamer_ink_physics.gd`). Lane B backdrop: **hi-bit ruin vista** procedural read (`combat_manuscript_backdrop.gd`, `KyndeBladeArtPalette.HI_BIT_*`, reference PNG [`assets/hi_bit_ruin_vista/`](assets/hi_bit_ruin_vista/README.md)). Headless [`tests/combat_scenarios.gd`](tests/combat_scenarios.gd).
+See parity: `feint_pattern_offset`, `PlayerMovesetModifiers`, `MedievalTextCatalog`, *Piers* voice + ink (`piers_combat_voice.gd`, `dreamer_ink_physics.gd`). Lane B backdrop: **hi-bit ruin vista** procedural read (`combat_manuscript_backdrop.gd`, `KyndeBladeArtPalette.HI_BIT_*`, reference PNG [`assets/hi_bit_ruin_vista/`](assets/hi_bit_ruin_vista/README.md)). Headless [`tests/combat_scenarios.gd`](tests/combat_scenarios.gd). **Rules matrix + automation map:** [`docs/WIREFRAME_COMBAT_CHECKLIST.md`](docs/WIREFRAME_COMBAT_CHECKLIST.md).
 
 ## Manual QA checklist
 
 1. **Cold run**: F5 → main menu; **Continue** disabled without save.
-2. **New Game** → **slice open yard** (walk the lea, ford the streme, **enter the right-bank rest** like the bonus door goal) → tower vista → hub (**tower_vista** read) → **Fair Field** (**FayreFelde** read) → counsel → combat.
-3. **Combat**: Lane B art, window SFX, eye UI (wind-up gather → open window phases), pause freezes window; **first defensive wind-up** clears the extra feint-vs-true line under the control hint (persisted as `combat_defense_tip_ack`).
+2. **New Game** → **hub** (route map at **tour**) → **Fair Field** (**FayreFelde** read) → counsel → combat. *(Optional later: re-chain Malvern yard → tower intro before hub.)*
+3. **Combat**: Lane B art, window SFX, eye UI (wind-up gather → open window phases), pause freezes window; **first defensive wind-up** clears the extra feint-vs-true line under the control hint (persisted as `combat_defense_tip_ack`). **Wireframe pass** (ordered greybox rules + feel): see [§ Wireframe combat pass](#wireframe-combat-pass-greybox) below.
 4. **Victory (Fair Field)** → hub; save state; **Continue** restores; **Dongeoun** should appear on the map with a hint in flavor copy.
 5. **Dongeoun**: travel → flavor → **Enter combat** → gate fight (wind-up phase before dodge/parry window; bleed ticks on enemy turns); **Victory** → cleared flavor on revisit.
 6. **Settings**: volume + fullscreen.
 7. **Defeat** → hunger flag + autosave.
+
+### Wireframe combat pass (greybox)
+
+Use [`docs/WIREFRAME_COMBAT_CHECKLIST.md`](docs/WIREFRAME_COMBAT_CHECKLIST.md) for the full matrix. Short ordered pass:
+
+1. Enter Fair Field combat (or gauntlet); confirm **first** defensive window matches feint/read expectations (misstep can invert).
+2. On a **real** swing: **Dodge** — HP should drop by **12** (partial of 20), not full 20.
+3. On the next **real** swing: **Parry** — HP chip should be **smaller** than dodge (**6** if 20 base), and **enemy** HP should drop from **riposte** (audible/visual feedback).
+4. On a **feint** with wasted defend: **5** chip only.
+5. **Pause** during an open defensive window; resume; timer should not have advanced while paused.
+6. **Settings:** toggle **real-time defense on enemy turn** off → strike → confirm **no** reaction window; toggle on → strike → **dodge** or **parry** during reaction; chip should follow **enemy_turn_damage** fractions (see checklist).
+7. Skim **2D + 3D** stage motion and **SFX** pitch (feint vs real) per checklist §4.
 
 ## Headless regression
 

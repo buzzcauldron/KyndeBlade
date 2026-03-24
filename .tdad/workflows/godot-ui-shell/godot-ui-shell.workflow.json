@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "title": "Godot UI shell (mirror)",
+  "description": "Main menu, pause, hub chrome, combat HUD shell.",
+  "nodes": [
+    {
+      "id": "guis-main-menu",
+      "workflowId": "godot-ui-shell",
+      "title": "Main menu bootstrap",
+      "description": "gdc-main-menu; main_menu.tscn.",
+      "nodeType": "feature",
+      "fileName": "guis-main-menu",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "guis-pause-overlay",
+      "workflowId": "godot-ui-shell",
+      "title": "Pause overlay combat + hub",
+      "description": "gparity-pause-overlay; Escape.",
+      "nodeType": "feature",
+      "fileName": "guis-pause-overlay",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    },
+    {
+      "id": "guis-combat-hud",
+      "workflowId": "godot-ui-shell",
+      "title": "Combat HUD layers",
+      "description": "combat_root.gd OutcomeLayer, PauseLayer, action bar.",
+      "nodeType": "feature",
+      "fileName": "guis-combat-hud",
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "testLayers": [
+        "godot_headless",
+        "godot_manual",
+        "bdd"
+      ]
+    }
+  ]
+}

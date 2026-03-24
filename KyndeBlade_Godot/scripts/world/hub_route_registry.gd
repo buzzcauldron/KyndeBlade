@@ -40,6 +40,12 @@ static func fog_config() -> Dictionary:
 	return f if typeof(f) == TYPE_DICTIONARY else {}
 
 
+static func basemap_config() -> Dictionary:
+	var d := document()
+	var b: Variant = d.get("basemap", {})
+	return b if typeof(b) == TYPE_DICTIONARY else {}
+
+
 static func node_by_id(node_id: String) -> Dictionary:
 	var want := node_id.strip_edges()
 	for item in nodes():

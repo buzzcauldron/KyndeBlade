@@ -15,8 +15,9 @@ Clone from repo root branch **`main`** (Godot-first default); see [`docs/BRANCH_
 ## Quick start
 
 1. Open this folder in **Godot 4.6.1** (or newer **4.6.x**). `project.godot` uses `config/features` **4.6**; match that line if the editor proposes a change when opening.
+   - **Cursor / VS Code:** Prefer opening the repo’s [`KyndeBlade.code-workspace`](../KyndeBlade.code-workspace) (or **this** folder only) so **Godot Tools** (`geequlim.godot-tools`) sees `project.godot`. Install the **recommended extension** when prompted; set **`godotTools.editorPath.godot4`** in `.vscode/settings.json` if `godot` is not on `PATH` (e.g. full path to the Godot 4.6 binary). In Godot: **Editor → Editor settings → Network → Language Server → Remote Host** can stay default; the extension starts the LSP or connects per [Godot docs](https://docs.godotengine.org/en/stable/engine_details/development/configuring_an_ide/visual_studio_code.html).
 2. **Run** the main scene (`scenes/main_menu.tscn`).
-3. **New vision** (main menu) → tower intro → hub → Fair Field → combat.
+3. **New Game** (main menu) → **hub** → Fair Field → combat. *(Tower intro / Malvern yard scenes still exist for smokes / future prologue.)*
 
 **Combat iteration:** In the **editor** or a **debug** export, the main menu shows **Combat drill** — jumps straight to `combat.tscn` with a fresh save. During combat, **Strike / Dodge / Parry** buttons and a control hint line mirror the keyboard bindings.
 
