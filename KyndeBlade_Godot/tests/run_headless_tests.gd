@@ -1,58 +1,109 @@
-extends SceneTree
+extends Node
 ## Headless smoke tests for TDAD godot-parity-slice / CI (see docs/CI_GODOT_TESTS.md).
+## Run via `res://tests/headless_main.tscn` (not `--script` on a SceneTree):
+## Godot 4.6 resolves autoload singletons after the main scene tree exists;
+## a SceneTree entry script compiles too early.
+## Uses [/root/…] lookups + preloaded autoload scripts as types so tooling works when the workspace
+## root is the monorepo (not only [code]KyndeBlade_Godot[/code]).
 
+const PHeadlessSave := preload("res://scripts/save_service.gd")
+const PHeadlessState := preload("res://scripts/game_state.gd")
+const PHeadlessWorldNav := preload("res://scripts/world/world_nav.gd")
 const _CombatScenarioRunner := preload("res://tests/combat_scenarios.gd")
+const _NarrativeBeats := preload("res://scripts/world/narrative_beats.gd")
+
+var _save: PHeadlessSave
+var _state: PHeadlessState
+var _world_nav: PHeadlessWorldNav
 
 
-func _init() -> void:
-	process_frame.connect(_kickoff, CONNECT_ONE_SHOT)
+func _ready() -> void:
+	var root := get_tree().root
+	_save = root.get_node("/root/SaveService") as PHeadlessSave
+	_state = root.get_node("/root/GameState") as PHeadlessState
+	_world_nav = root.get_node("/root/WorldNav") as PHeadlessWorldNav
+	get_tree().process_frame.connect(_kickoff, CONNECT_ONE_SHOT)
 
 
 func _kickoff() -> void:
 	var ok := true
-	ok = ok and _test_slice_locations_json()
-	ok = ok and _test_unity_export_json()
-	ok = ok and _test_save_roundtrip_service()
-	ok = ok and _test_meta_flags_roundtrip()
-	ok = ok and _test_settings_volume()
-	ok = ok and _test_audio_buses()
-	ok = ok and _test_encounter_resource()
-	ok = ok and _test_hazard_stub_damage()
-	ok = ok and _test_swing_pattern_static()
-	ok = ok and _test_game_state_tour()
-	ok = ok and _test_read_medieval_text_ids_roundtrip()
-	ok = ok and _test_medieval_catalog_aggregate()
-	ok = ok and _test_autosave_mirror_exists()
-	ok = ok and _test_load_fallback_autosave()
-	ok = ok and _test_legacy_demo_save_migrates()
-	ok = ok and _test_medieval_list_granted_codes()
-	ok = ok and _test_piers_symbol_catalog_fayre_felde()
-	ok = ok and _test_piers_state_save_roundtrip()
-	ok = ok and _test_narrative_context_arrival_variant()
-	ok = ok and _test_placeholder_art_registry()
-	ok = ok and _test_victory_fair_field_updates_gamestate()
-	ok = ok and _test_settings_fullscreen_roundtrip()
-	ok = ok and await _test_main_menu_continue_gated_smoke()
-	ok = ok and await _test_hub_counsel_gate_smoke()
-	ok = ok and await _test_combat_pause_freezes_window_tick_smoke()
-	ok = ok and await _test_world_atlas_scene_smoke()
-	ok = ok and await _test_location_shell_scene_smoke()
-	ok = ok and await _test_scene_transition_smoke()
+	ok = _headless_step("slice_locations_json", _test_slice_locations_json(), ok)
+	ok = _headless_step("unity_export_json", _test_unity_export_json(), ok)
+	ok = _headless_step("save_roundtrip_service", _test_save_roundtrip_service(), ok)
+	ok = _headless_step("dongeoun_gate_save_roundtrip", _test_dongeoun_gate_save_roundtrip(), ok)
+	ok = _headless_step("combat_defense_tip_save_roundtrip", _test_combat_defense_tip_save_roundtrip(), ok)
+	ok = _headless_step("narrative_beats_skeleton_lines", _test_narrative_beats_skeleton_lines(), ok)
+	ok = _headless_step("meta_flags_roundtrip", _test_meta_flags_roundtrip(), ok)
+	ok = _headless_step("settings_volume", _test_settings_volume(), ok)
+	ok = _headless_step("audio_buses", _test_audio_buses(), ok)
+	ok = _headless_step("encounter_resource", _test_encounter_resource(), ok)
+	ok = _headless_step("hazard_stub_damage", _test_hazard_stub_damage(), ok)
+	ok = _headless_step("swing_pattern_static", _test_swing_pattern_static(), ok)
+	ok = _headless_step("game_state_tour", _test_game_state_tour(), ok)
+	ok = _headless_step(
+			"read_medieval_text_ids_roundtrip", _test_read_medieval_text_ids_roundtrip(), ok
+	)
+	ok = _headless_step("medieval_catalog_aggregate", _test_medieval_catalog_aggregate(), ok)
+	ok = _headless_step("replay_moveset_matrix", _test_replay_moveset_matrix(), ok)
+	ok = _headless_step("autosave_mirror_exists", _test_autosave_mirror_exists(), ok)
+	ok = _headless_step("load_fallback_autosave", _test_load_fallback_autosave(), ok)
+	ok = _headless_step("legacy_demo_save_migrates", _test_legacy_demo_save_migrates(), ok)
+	ok = _headless_step("medieval_list_granted_codes", _test_medieval_list_granted_codes(), ok)
+	ok = _headless_step(
+			"piers_symbol_catalog_fayre_felde", _test_piers_symbol_catalog_fayre_felde(), ok
+	)
+	ok = _headless_step("piers_state_save_roundtrip", _test_piers_state_save_roundtrip(), ok)
+	ok = _headless_step(
+			"narrative_context_arrival_variant", _test_narrative_context_arrival_variant(), ok
+	)
+	ok = _headless_step(
+			"atmosphere_weather_presets_resolve", _test_atmosphere_weather_presets_resolve(), ok
+	)
+	ok = _headless_step("hub_revealed_save_roundtrip", _test_hub_revealed_save_roundtrip(), ok)
+	ok = _headless_step("placeholder_art_registry", _test_placeholder_art_registry(), ok)
+	ok = _headless_step(
+			"victory_fair_field_updates_gamestate", _test_victory_fair_field_updates_gamestate(), ok
+	)
+	ok = _headless_step("settings_fullscreen_roundtrip", _test_settings_fullscreen_roundtrip(), ok)
+	ok = _headless_step(
+			"main_menu_continue_gated_smoke", await _test_main_menu_continue_gated_smoke(), ok
+	)
+	ok = _headless_step("hub_counsel_gate_smoke", await _test_hub_counsel_gate_smoke(), ok)
+	ok = _headless_step(
+			"combat_pause_freezes_window_tick_smoke",
+			await _test_combat_pause_freezes_window_tick_smoke(),
+			ok,
+	)
+	ok = _headless_step("world_atlas_scene_smoke", await _test_world_atlas_scene_smoke(), ok)
+	ok = _headless_step(
+			"location_shell_scene_smoke", await _test_location_shell_scene_smoke(), ok
+	)
+	ok = _headless_step(
+			"slice_open_yard_scene_smoke", await _test_slice_open_yard_scene_smoke(), ok
+	)
+	ok = _headless_step("scene_transition_smoke", await _test_scene_transition_smoke(), ok)
+	ok = _headless_step("nav_test_yard_smoke", await _test_nav_test_yard_smoke(), ok)
 	if not ok:
 		_finish(false)
 		return
-	SaveService.write_new_game()
-	GameState.reset_from_new_game()
+	_save.write_new_game()
+	_state.reset_from_new_game()
 	var runner := _CombatScenarioRunner.new()
-	ok = await runner.run_all(root)
+	ok = _headless_step("combat_scenarios", await runner.run_all(get_tree().root), ok)
 	_finish(ok)
+
+
+func _headless_step(step_name: String, step_ok: bool, ok_so_far: bool) -> bool:
+	if not step_ok:
+		printerr("HEADLESS step failed: ", step_name)
+	return ok_so_far and step_ok
 
 
 func _finish(passed: bool) -> void:
 	print("HEADLESS_TESTS: ", "PASS" if passed else "FAIL")
-	SaveService.write_new_game()
-	GameState.reset_from_new_game()
-	quit(0 if passed else 1)
+	_save.write_new_game()
+	_state.reset_from_new_game()
+	get_tree().quit(0 if passed else 1)
 
 
 func _test_slice_locations_json() -> bool:
@@ -98,33 +149,61 @@ func _test_unity_export_json() -> bool:
 	return not str(tour.get("arrival_beat_text", "")).is_empty()
 
 
+func _test_dongeoun_gate_save_roundtrip() -> bool:
+	_save.write_new_game()
+	_state.reset_from_new_game()
+	_state.dongeoun_gate_cleared = true
+	_state.sync_to_save()
+	var d: Dictionary = _save.load_save()
+	return bool(d.get("dongeoun_gate_cleared", false))
+
+
+func _test_combat_defense_tip_save_roundtrip() -> bool:
+	_save.write_new_game()
+	_state.reset_from_new_game()
+	_state.combat_defense_tip_ack = true
+	_state.sync_to_save()
+	var d: Dictionary = _save.load_save()
+	if not bool(d.get("combat_defense_tip_ack", false)):
+		return false
+	_state.apply_loaded(d)
+	return _state.combat_defense_tip_ack
+
+
+func _test_narrative_beats_skeleton_lines() -> bool:
+	var f: String = _NarrativeBeats.player_facing_arrival_line("fayre_felde")
+	var dg: String = _NarrativeBeats.player_facing_arrival_line("dongeoun")
+	var tour_line: String = _NarrativeBeats.player_facing_arrival_line("tour")
+	return not f.is_empty() and not dg.is_empty() and not tour_line.is_empty()
+
+
 func _test_save_roundtrip_service() -> bool:
-	SaveService.write_new_game()
-	var d: Dictionary = SaveService.load_save()
+	_save.write_new_game()
+	var d: Dictionary = _save.load_save()
 	if str(d.get("location_id", "")) != "tour":
 		return false
 	if not FileAccess.file_exists("user://kyndeblade_save.cfg"):
 		return false
-	SaveService.save_progress("fayre_felde", true)
-	d = SaveService.load_save()
+	_save.save_progress("fayre_felde", true)
+	d = _save.load_save()
 	return str(d.get("location_id", "")) == "fayre_felde" and bool(d.get("fair_field_cleared", false))
 
 
 func _test_meta_flags_roundtrip() -> bool:
-	SaveService.write_new_game()
-	SaveService.save_progress("tour", false, 2, true)
-	var d: Dictionary = SaveService.load_save()
+	_save.write_new_game()
+	_save.save_progress("tour", false, 2, true)
+	var d: Dictionary = _save.load_save()
 	if int(d.get("ethical_misstep_count", -1)) != 2:
 		return false
 	if bool(d.get("has_ever_had_hunger", false)) != true:
 		return false
-	GameState.apply_loaded(d)
-	return GameState.ethical_misstep_count == 2 and GameState.has_ever_had_hunger
+	_state.apply_loaded(d)
+	return _state.ethical_misstep_count == 2 and _state.has_ever_had_hunger
 
 
 func _test_settings_volume() -> bool:
-	SaveService.save_master_volume(0.42)
-	return is_equal_approx(SaveService.load_master_volume(), 0.42)
+	_save.save_master_volume(0.42)
+	return is_equal_approx(_save.load_master_volume(), 0.42)
 
 
 func _test_audio_buses() -> bool:
@@ -135,11 +214,20 @@ func _test_encounter_resource() -> bool:
 	var enc := load("res://data/encounter_fair_field.tres") as EncounterDef
 	if enc == null:
 		return false
-	return (
+	var ok_ff: bool = (
 			enc.enemy_id == "false"
 			and enc.encounter_id == "fayre_felde"
 			and str(enc.enemy_display_name).findn("langage") >= 0
 	)
+	var dg := load("res://data/encounter_dongeoun_gate.tres") as EncounterDef
+	if dg == null:
+		return false
+	var ok_dg: bool = (
+			dg.encounter_id == "dongeoun_gate"
+			and dg.defensive_windup_sec > 0.0
+			and dg.enemy_turn_bleed_damage > 0.0
+	)
+	return ok_ff and ok_dg
 
 
 func _test_hazard_stub_damage() -> bool:
@@ -158,65 +246,120 @@ func _test_swing_pattern_static() -> bool:
 
 
 func _test_game_state_tour() -> bool:
-	GameState.reset_from_new_game()
-	var ok1 := GameState.current_location_id == "tour" and GameState.fair_field_cleared == false
-	GameState.read_medieval_text_ids.append("tower_vista")
-	GameState.reset_from_new_game()
-	var ok2 := GameState.read_medieval_text_ids.is_empty()
+	_state.reset_from_new_game()
+	var ok1 := _state.current_location_id == "tour" and _state.fair_field_cleared == false
+	_state.read_medieval_text_ids.append("tower_vista")
+	_state.reset_from_new_game()
+	var ok2 := _state.read_medieval_text_ids.is_empty()
 	return ok1 and ok2
 
 
 func _test_read_medieval_text_ids_roundtrip() -> bool:
-	SaveService.write_new_game()
-	SaveService.save_progress("tour", false, 0, false, "tower_vista|FayreFelde")
-	var d: Dictionary = SaveService.load_save()
+	_save.write_new_game()
+	_save.save_progress("tour", false, 0, false, "tower_vista|FayreFelde")
+	var d: Dictionary = _save.load_save()
 	if str(d.get("read_medieval_text_ids", "")) != "tower_vista|FayreFelde":
 		return false
-	GameState.apply_loaded(d)
+	_state.apply_loaded(d)
 	return (
-			GameState.read_medieval_text_ids.size() == 2
-			and GameState.read_medieval_text_ids.has("tower_vista")
-			and GameState.read_medieval_text_ids.has("FayreFelde")
+			_state.read_medieval_text_ids.size() == 2
+			and _state.read_medieval_text_ids.has("tower_vista")
+			and _state.read_medieval_text_ids.has("FayreFelde")
 	)
 
 
 func _test_medieval_catalog_aggregate() -> bool:
-	GameState.reset_from_new_game()
-	GameState.read_medieval_text_ids = PackedStringArray(["tower_vista"])
-	var t: Dictionary = MedievalTextCatalog.aggregate_totals(GameState.read_medieval_text_ids)
+	_state.reset_from_new_game()
+	_state.read_medieval_text_ids = PackedStringArray(["tower_vista"])
+	var t: Dictionary = MedievalTextCatalog.aggregate_totals(_state.read_medieval_text_ids)
 	# dreamer_ledger_stride: +5 stam cost, +4 damage
 	if not is_equal_approx(float(t.get("strike_stamina_cost_delta", 0.0)), 5.0):
 		return false
 	if not is_equal_approx(float(t.get("strike_damage_delta", 0.0)), 4.0):
 		return false
-	GameState.reset_from_new_game()
+	_state.reset_from_new_game()
+	return true
+
+
+func _mirror_combat_feint_pattern_offset() -> int:
+	var d: int = PlayerMovesetModifiers.feint_pattern_offset_delta()
+	return posmod(int(_state.ethical_misstep_count) + d, 2)
+
+
+func _test_replay_moveset_matrix() -> bool:
+	_state.reset_from_new_game()
+	var base_parry: int = PlayerMovesetModifiers.parry_window_ms()
+	if base_parry < 170 or base_parry > 230:
+		return false
+	if _mirror_combat_feint_pattern_offset() != 0:
+		return false
+	_state.has_ever_had_hunger = true
+	var hunger_parry: int = PlayerMovesetModifiers.parry_window_ms()
+	if hunger_parry > base_parry:
+		return false
+	var st1: float = PlayerMovesetModifiers.parry_stamina_total()
+	var st2: float = PlayerMovesetModifiers.parry_stamina_total()
+	if not is_equal_approx(st1, st2):
+		return false
+	_state.has_ever_had_hunger = false
+	_state.ethical_misstep_count = 1
+	if _mirror_combat_feint_pattern_offset() != 1:
+		return false
+	_state.ethical_misstep_count = 0
+	_state.read_medieval_text_ids = PackedStringArray(["FayreFelde"])
+	if PlayerMovesetModifiers.feint_pattern_offset_delta() != 1:
+		return false
+	if _mirror_combat_feint_pattern_offset() != 1:
+		return false
+	_state.ethical_misstep_count = 1
+	if _mirror_combat_feint_pattern_offset() != 0:
+		return false
+	_state.has_ever_had_hunger = true
+	_state.current_location_id = "fayre_felde"
+	_state.fair_field_return_count = 2
+	_state.dream_iteration = 3
+	var w1: int = PlayerMovesetModifiers.parry_window_ms()
+	var w2: int = PlayerMovesetModifiers.parry_window_ms()
+	if w1 != w2:
+		return false
+	_state.reset_from_new_game()
+	_state.record_location_visit("fayre_felde")
+	if NarrativeContext.arrival_variant_key("fayre_felde") != "first":
+		return false
+	_state.record_location_visit("fayre_felde")
+	if NarrativeContext.arrival_variant_key("fayre_felde") != "return_2":
+		return false
+	_state.reset_from_new_game()
 	return true
 
 
 func _test_autosave_mirror_exists() -> bool:
-	SaveService.write_new_game()
+	_save.write_new_game()
 	return FileAccess.file_exists("user://kyndeblade_save.cfg") and FileAccess.file_exists(
 			"user://kyndeblade_autosave.cfg"
 	)
 
 
 func _test_load_fallback_autosave() -> bool:
-	SaveService.write_new_game()
-	SaveService.save_progress("fayre_felde", true, 1, false, "")
+	_save.write_new_game()
+	_save.save_progress("fayre_felde", true, 1, false, "")
 	var d := DirAccess.open("user://")
 	if d == null:
 		return false
 	if d.file_exists("kyndeblade_save.cfg"):
 		d.remove("kyndeblade_save.cfg")
-	var loaded: Dictionary = SaveService.load_save()
-	var ok: bool = str(loaded.get("location_id", "")) == "fayre_felde" and bool(loaded.get("fair_field_cleared", false))
-	SaveService.write_new_game()
-	GameState.reset_from_new_game()
+	var loaded: Dictionary = _save.load_save()
+	var ok: bool = (
+			str(loaded.get("location_id", "")) == "fayre_felde"
+			and bool(loaded.get("fair_field_cleared", false))
+	)
+	_save.write_new_game()
+	_state.reset_from_new_game()
 	return ok
 
 
 func _test_legacy_demo_save_migrates() -> bool:
-	SaveService.delete_save()
+	_save.delete_save()
 	var d := DirAccess.open("user://")
 	if d != null:
 		for f: String in ["kyndeblade_save.cfg", "kyndeblade_autosave.cfg", "kyndeblade_demo_save.cfg"]:
@@ -231,19 +374,25 @@ func _test_legacy_demo_save_migrates() -> bool:
 	cfg.set_value("save", "read_medieval_text_ids", "tower_vista")
 	if cfg.save("user://kyndeblade_demo_save.cfg") != OK:
 		return false
-	var loaded: Dictionary = SaveService.load_save()
+	var loaded: Dictionary = _save.load_save()
 	if int(loaded.get("ethical_misstep_count", -1)) != 7:
-		SaveService.delete_save()
+		_save.delete_save()
 		return false
 	var has_new: bool = FileAccess.file_exists("user://kyndeblade_save.cfg")
 	var legacy_removed: bool = not FileAccess.file_exists("user://kyndeblade_demo_save.cfg")
-	SaveService.delete_save()
+	_save.delete_save()
 	return has_new and legacy_removed
 
 
 func _test_medieval_list_granted_codes() -> bool:
-	var codes := MedievalTextCatalog.list_granted_codes_in_order(PackedStringArray(["tower_vista", "FayreFelde"]))
-	return codes.size() == 2 and str(codes[0]) == "dreamer_ledger_stride" and str(codes[1]) == "crowd_surge"
+	var codes := MedievalTextCatalog.list_granted_codes_in_order(
+			PackedStringArray(["tower_vista", "FayreFelde"])
+	)
+	return (
+			codes.size() == 2
+			and str(codes[0]) == "dreamer_ledger_stride"
+			and str(codes[1]) == "crowd_surge"
+	)
 
 
 func _test_piers_symbol_catalog_fayre_felde() -> bool:
@@ -257,17 +406,17 @@ func _test_piers_symbol_catalog_fayre_felde() -> bool:
 
 
 func _test_piers_state_save_roundtrip() -> bool:
-	SaveService.write_new_game()
-	GameState.reset_from_new_game()
-	GameState.piers_text_edition = "C"
-	GameState.narrative_phase_id = "vita_dowel"
-	GameState.record_location_visit("tour")
-	GameState.record_location_visit("fayre_felde")
-	GameState.record_location_visit("fayre_felde")
-	GameState.fair_field_return_count = 2
-	GameState.dream_iteration = 4
-	GameState.sync_to_save()
-	var d: Dictionary = SaveService.load_save()
+	_save.write_new_game()
+	_state.reset_from_new_game()
+	_state.piers_text_edition = "C"
+	_state.narrative_phase_id = "vita_dowel"
+	_state.record_location_visit("tour")
+	_state.record_location_visit("fayre_felde")
+	_state.record_location_visit("fayre_felde")
+	_state.fair_field_return_count = 2
+	_state.dream_iteration = 4
+	_state.sync_to_save()
+	var d: Dictionary = _save.load_save()
 	if str(d.get("piers_text_edition", "")) != "C":
 		return false
 	if str(d.get("narrative_phase_id", "")) != "vita_dowel":
@@ -276,115 +425,155 @@ func _test_piers_state_save_roundtrip() -> bool:
 		return false
 	if int(d.get("dream_iteration", -1)) != 4:
 		return false
-	GameState.reset_from_new_game()
-	GameState.apply_loaded(d)
+	_state.reset_from_new_game()
+	_state.apply_loaded(d)
 	return (
-			GameState.piers_text_edition == "C"
-			and GameState.narrative_phase_id == "vita_dowel"
-			and int(GameState.location_visit_counts.get("tour", 0)) == 1
-			and int(GameState.location_visit_counts.get("fayre_felde", 0)) == 2
-			and GameState.fair_field_return_count == 2
-			and GameState.dream_iteration == 4
+			_state.piers_text_edition == "C"
+			and _state.narrative_phase_id == "vita_dowel"
+			and int(_state.location_visit_counts.get("tour", 0)) == 1
+			and int(_state.location_visit_counts.get("fayre_felde", 0)) == 2
+			and _state.fair_field_return_count == 2
+			and _state.dream_iteration == 4
 	)
 
 
 func _test_narrative_context_arrival_variant() -> bool:
-	GameState.reset_from_new_game()
+	_state.reset_from_new_game()
 	if NarrativeContext.arrival_variant_key("tour") != "first":
 		return false
-	GameState.record_location_visit("tour")
+	_state.record_location_visit("tour")
 	if NarrativeContext.arrival_variant_key("tour") != "first":
 		return false
-	GameState.record_location_visit("tour")
+	_state.record_location_visit("tour")
 	return NarrativeContext.arrival_variant_key("tour") == "return_2"
+
+
+func _test_atmosphere_weather_presets_resolve() -> bool:
+	if HubRouteRegistry.nodes().is_empty():
+		push_error("atmosphere: hub_route_map nodes missing")
+		return false
+	for lid in ["tour", "fayre_felde", "dongeoun", "nonexistent_slice_id"]:
+		var wx: Dictionary = AtmosphereProfile.weather_preset_for_location(lid)
+		var pid: String = str(wx.get("preset_id", ""))
+		if pid.is_empty():
+			push_error("atmosphere: empty weather preset for location %s" % lid)
+			return false
+		if not WeatherParticles.preset_exists(pid):
+			push_error("atmosphere: weather_presets.json missing %s (from %s)" % [pid, lid])
+			return false
+	return true
+
+
+func _test_hub_revealed_save_roundtrip() -> bool:
+	_save.write_new_game()
+	_state.reset_from_new_game()
+	_state.reveal_hub_node("fayre_felde")
+	_state.sync_to_save()
+	var d: Dictionary = _save.load_save()
+	if str(d.get("hub_revealed_nodes", "")).find("fayre_felde") < 0:
+		_save.write_new_game()
+		_state.reset_from_new_game()
+		return false
+	_state.reset_from_new_game()
+	_state.apply_loaded(d)
+	var ok := _state.is_hub_node_revealed("fayre_felde")
+	_save.write_new_game()
+	_state.reset_from_new_game()
+	return ok
 
 
 func _test_placeholder_art_registry() -> bool:
 	PlaceholderArtRegistry.clear_cache()
-	return PlaceholderArtRegistry.validate_coverage() and PlaceholderArtRegistry.validate_characters_known()
+	return (
+			PlaceholderArtRegistry.validate_coverage()
+			and PlaceholderArtRegistry.validate_characters_known()
+	)
 
 
 func _test_victory_fair_field_updates_gamestate() -> bool:
-	SaveService.write_new_game()
-	GameState.reset_from_new_game()
-	GameState.on_victory_fair_field()
-	if GameState.current_location_id != "fayre_felde" or not GameState.fair_field_cleared:
-		SaveService.write_new_game()
-		GameState.reset_from_new_game()
+	_save.write_new_game()
+	_state.reset_from_new_game()
+	_state.on_victory_fair_field()
+	if _state.current_location_id != "fayre_felde" or not _state.fair_field_cleared:
+		_save.write_new_game()
+		_state.reset_from_new_game()
 		return false
-	var d: Dictionary = SaveService.load_save()
-	var ok: bool = str(d.get("location_id", "")) == "fayre_felde" and bool(d.get("fair_field_cleared", false))
-	SaveService.write_new_game()
-	GameState.reset_from_new_game()
+	var d: Dictionary = _save.load_save()
+	var ok: bool = (
+			str(d.get("location_id", "")) == "fayre_felde"
+			and bool(d.get("fair_field_cleared", false))
+	)
+	_save.write_new_game()
+	_state.reset_from_new_game()
 	return ok
 
 
 func _test_settings_fullscreen_roundtrip() -> bool:
-	var before: bool = SaveService.load_fullscreen()
-	SaveService.save_fullscreen(not before)
-	if SaveService.load_fullscreen() != (not before):
-		SaveService.save_fullscreen(before)
+	var before: bool = _save.load_fullscreen()
+	_save.save_fullscreen(not before)
+	if _save.load_fullscreen() != (not before):
+		_save.save_fullscreen(before)
 		return false
-	SaveService.save_fullscreen(before)
-	return SaveService.load_fullscreen() == before
+	_save.save_fullscreen(before)
+	return _save.load_fullscreen() == before
 
 
 func _test_main_menu_continue_gated_smoke() -> bool:
-	SaveService.delete_save()
-	GameState.reset_from_new_game()
+	_save.delete_save()
+	_state.reset_from_new_game()
 	var menu_path := "res://scenes/main_menu.tscn"
 	if not FileAccess.file_exists(menu_path):
 		push_error("main menu smoke: missing tscn")
-		SaveService.write_new_game()
-		GameState.reset_from_new_game()
+		_save.write_new_game()
+		_state.reset_from_new_game()
 		return false
 	var ps: PackedScene = load(menu_path) as PackedScene
 	var mm: Control = ps.instantiate() as Control
 	if mm == null:
-		SaveService.write_new_game()
-		GameState.reset_from_new_game()
+		_save.write_new_game()
+		_state.reset_from_new_game()
 		return false
-	root.add_child(mm)
-	await process_frame
+	get_tree().root.add_child(mm)
+	await get_tree().process_frame
 	var cont: Button = mm.get_node("%ContinueButton") as Button
 	if cont == null:
 		push_error("main menu smoke: missing %ContinueButton")
 		mm.queue_free()
-		await process_frame
-		SaveService.write_new_game()
-		GameState.reset_from_new_game()
+		await get_tree().process_frame
+		_save.write_new_game()
+		_state.reset_from_new_game()
 		return false
 	if not cont.disabled:
 		push_error("main menu smoke: Continue should be disabled without save")
 		mm.queue_free()
-		await process_frame
-		SaveService.write_new_game()
-		GameState.reset_from_new_game()
+		await get_tree().process_frame
+		_save.write_new_game()
+		_state.reset_from_new_game()
 		return false
-	SaveService.write_new_game()
-	await process_frame
+	_save.write_new_game()
+	await get_tree().process_frame
 	if cont.disabled:
 		push_error("main menu smoke: Continue should enable after save")
 		mm.queue_free()
-		await process_frame
-		GameState.reset_from_new_game()
+		await get_tree().process_frame
+		_state.reset_from_new_game()
 		return false
 	mm.queue_free()
-	await process_frame
-	GameState.reset_from_new_game()
+	await get_tree().process_frame
+	_state.reset_from_new_game()
 	return true
 
 
 func _test_hub_counsel_gate_smoke() -> bool:
-	SaveService.write_new_game()
-	GameState.reset_from_new_game()
+	_save.write_new_game()
+	_state.reset_from_new_game()
 	var hub_path := "res://scenes/hub_map.tscn"
 	var ps: PackedScene = load(hub_path) as PackedScene
 	var hub: Control = ps.instantiate() as Control
 	if hub == null:
 		return false
-	root.add_child(hub)
-	await process_frame
+	get_tree().root.add_child(hub)
+	await get_tree().process_frame
 	var fair: Button = hub.get_node("%FairFieldButton") as Button
 	var proceed: Button = hub.get_node("%EnterCombat") as Button
 	var counsel: Button = hub.get_node("%CounselTrewthe") as Button
@@ -392,26 +581,29 @@ func _test_hub_counsel_gate_smoke() -> bool:
 	if fair == null or proceed == null or counsel == null or cancel == null:
 		push_error("hub counsel smoke: expected hub nodes missing")
 		hub.queue_free()
-		await process_frame
+		await get_tree().process_frame
 		return false
-	fair.pressed.emit()
-	await process_frame
+	if hub.has_method("travel_to_fair_field_for_tests"):
+		hub.call("travel_to_fair_field_for_tests")
+	else:
+		fair.pressed.emit()
+	await get_tree().process_frame
 	if not proceed.disabled:
 		push_error("hub counsel smoke: Proceed should stay disabled before counsel")
 		hub.queue_free()
-		await process_frame
+		await get_tree().process_frame
 		return false
 	counsel.pressed.emit()
-	await process_frame
+	await get_tree().process_frame
 	if proceed.disabled:
 		push_error("hub counsel smoke: Proceed should enable after counsel")
 		hub.queue_free()
-		await process_frame
+		await get_tree().process_frame
 		return false
 	cancel.pressed.emit()
-	await process_frame
+	await get_tree().process_frame
 	hub.queue_free()
-	await process_frame
+	await get_tree().process_frame
 	return true
 
 
@@ -426,32 +618,32 @@ func _test_combat_pause_freezes_window_tick_smoke() -> bool:
 		push_error("combat pause smoke: CombatManager missing")
 		return false
 	cm.use_instant_resolution_for_tests = true
-	root.add_child(combat_inst)
-	await process_frame
+	get_tree().root.add_child(combat_inst)
+	await get_tree().process_frame
 	if cm.state != CombatManager.State.WAITING_PLAYER:
 		push_error("combat pause smoke: expected WAITING_PLAYER")
 		combat_inst.queue_free()
-		await process_frame
+		await get_tree().process_frame
 		return false
 	cm.player_dodge()
 	if cm.state != CombatManager.State.REAL_TIME_WINDOW:
 		push_error("combat pause smoke: expected REAL_TIME_WINDOW after dodge")
 		combat_inst.queue_free()
-		await process_frame
+		await get_tree().process_frame
 		return false
 	var r0: float = cm.window_remaining
 	if r0 <= 0.0001:
 		push_error("combat pause smoke: expected positive window_remaining")
 		combat_inst.queue_free()
-		await process_frame
+		await get_tree().process_frame
 		return false
 	get_tree().paused = true
 	for _i in 5:
-		await process_frame
+		await get_tree().process_frame
 	var r1: float = cm.window_remaining
 	get_tree().paused = false
 	combat_inst.queue_free()
-	await process_frame
+	await get_tree().process_frame
 	if not is_equal_approx(r0, r1):
 		push_error("combat pause smoke: window_remaining changed while paused (%s vs %s)" % [r0, r1])
 		return false
@@ -467,21 +659,21 @@ func _test_world_atlas_scene_smoke() -> bool:
 	var inst: Control = ps.instantiate() as Control
 	if inst == null:
 		return false
-	root.add_child(inst)
-	await process_frame
+	get_tree().root.add_child(inst)
+	await get_tree().process_frame
 	var list: VBoxContainer = inst.get_node_or_null("%LocationList") as VBoxContainer
 	if list == null or list.get_child_count() < 1:
 		push_error("world atlas smoke: LocationList should list at least one location")
 		inst.queue_free()
-		await process_frame
+		await get_tree().process_frame
 		return false
 	inst.queue_free()
-	await process_frame
+	await get_tree().process_frame
 	return true
 
 
 func _test_location_shell_scene_smoke() -> bool:
-	WorldNav.pending_location_id = "tour"
+	_world_nav.pending_location_id = "tour"
 	var path := "res://scenes/world/location_shell.tscn"
 	if not FileAccess.file_exists(path):
 		push_error("location shell smoke: missing tscn")
@@ -490,16 +682,46 @@ func _test_location_shell_scene_smoke() -> bool:
 	var inst: Control = ps.instantiate() as Control
 	if inst == null:
 		return false
-	root.add_child(inst)
-	await process_frame
+	get_tree().root.add_child(inst)
+	await get_tree().process_frame
 	var title: Label = inst.get_node_or_null("%TitleLabel") as Label
 	if title == null or str(title.text).strip_edges().is_empty():
 		push_error("location shell smoke: title not populated for tour")
 		inst.queue_free()
-		await process_frame
+		await get_tree().process_frame
 		return false
 	inst.queue_free()
-	await process_frame
+	await get_tree().process_frame
+	return true
+
+
+func _test_slice_open_yard_scene_smoke() -> bool:
+	var path := "res://scenes/slice_open_yard.tscn"
+	if not FileAccess.file_exists(path):
+		push_error("slice open yard smoke: missing tscn")
+		return false
+	var ps: PackedScene = load(path) as PackedScene
+	var inst: Control = ps.instantiate() as Control
+	if inst == null:
+		return false
+	get_tree().root.add_child(inst)
+	await get_tree().process_frame
+	var yt: Label = inst.get_node_or_null("%YardTitle") as Label
+	if yt == null or str(yt.text).strip_edges().is_empty():
+		push_error("slice open yard smoke: title missing")
+		inst.queue_free()
+		await get_tree().process_frame
+		return false
+	var world: Node = inst.get_node_or_null(
+			"SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"
+	)
+	if world == null:
+		push_error("slice open yard smoke: world missing")
+		inst.queue_free()
+		await get_tree().process_frame
+		return false
+	inst.queue_free()
+	await get_tree().process_frame
 	return true
 
 
@@ -519,12 +741,71 @@ func _test_scene_transition_smoke() -> bool:
 	var combat_inst: Node = combat_ps.instantiate()
 	if hub_inst == null or combat_inst == null:
 		return false
-	root.add_child(hub_inst)
-	await process_frame
+	get_tree().root.add_child(hub_inst)
+	await get_tree().process_frame
 	hub_inst.queue_free()
-	await process_frame
-	root.add_child(combat_inst)
-	await process_frame
+	await get_tree().process_frame
+	get_tree().root.add_child(combat_inst)
+	await get_tree().process_frame
 	combat_inst.queue_free()
-	await process_frame
+	await get_tree().process_frame
 	return true
+
+
+func _test_nav_test_yard_smoke() -> bool:
+	var path := "res://scenes/nav_test_yard.tscn"
+	if not FileAccess.file_exists(path):
+		push_error("nav test yard smoke: missing tscn")
+		return false
+	var ps: PackedScene = load(path) as PackedScene
+	if ps == null:
+		return false
+	var inst: Node = ps.instantiate()
+	if inst == null:
+		return false
+	get_tree().root.add_child(inst)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	var agent: NavigationAgent3D = inst.get_node_or_null("%NavAgent") as NavigationAgent3D
+	var player: CharacterBody3D = inst.get_node_or_null("%Player") as CharacterBody3D
+	if agent == null or player == null:
+		push_error("nav test yard smoke: missing NavAgent or Player")
+		inst.queue_free()
+		await get_tree().process_frame
+		return false
+	# Short hop on the left island (gate closed): avoids long runs that stall in headless.
+	var target := Vector3(-3.5, 0.05, 0.0)
+	var d0: float = player.global_position.distance_to(target)
+	agent.target_position = target
+	for _j in 8:
+		await get_tree().physics_frame
+	var path_pts: PackedVector3Array = agent.get_current_navigation_path()
+	if path_pts.size() < 2:
+		push_error(
+				"nav test yard smoke: path too short (%s) finished=%s"
+				% [path_pts.size(), agent.is_navigation_finished()]
+		)
+		inst.queue_free()
+		await get_tree().process_frame
+		return false
+	var best: float = d0
+	for _i in 120:
+		await get_tree().physics_frame
+		best = minf(best, player.global_position.distance_to(target))
+	var ok_move: bool = best <= d0 - 0.06
+	if not ok_move:
+		push_error(
+				"nav test yard smoke: did not approach target (d0=%s best=%s finished=%s dist_tgt=%s next=%s pos=%s)"
+				% [
+						d0,
+						best,
+						agent.is_navigation_finished(),
+						agent.distance_to_target(),
+						agent.get_next_path_position(),
+						player.global_position,
+				]
+		)
+	inst.queue_free()
+	await get_tree().process_frame
+	return ok_move

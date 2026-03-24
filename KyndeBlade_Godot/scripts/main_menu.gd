@@ -1,14 +1,18 @@
 extends Control
 ## Main menu — manuscript page layout: parchment field, framed panel, rubric + motif (`main_menu.tscn`).
 
+const SLICE_OPEN_YARD := "res://scenes/slice_open_yard.tscn"
 const TOWER_INTRO := "res://scenes/tower_intro.tscn"
 const HUB := "res://scenes/hub_map.tscn"
 const BEGINNER_LOOP := "res://scenes/beginner_loop.tscn"
 const HI_BIT_BONUS := "res://scenes/hi_bit_bonus_level.tscn"
 const COMBAT := "res://scenes/combat.tscn"
+const NAV_TEST_YARD := "res://scenes/nav_test_yard.tscn"
 
 @onready var continue_btn: Button = %ContinueButton
+@onready var demo_gauntlet_btn: Button = %DemoGauntletButton
 @onready var combat_drill_btn: Button = %CombatDrillButton
+@onready var nav_test_btn: Button = %NavTestButton
 @onready var settings_panel: ColorRect = %SettingsPanel
 @onready var volume_slider: HSlider = %VolumeSlider
 @onready var fullscreen_toggle: CheckButton = %Fullscreen
@@ -22,6 +26,8 @@ func _ready() -> void:
 	fullscreen_toggle.button_pressed = SaveService.load_fullscreen()
 	_refresh_continue()
 	combat_drill_btn.visible = OS.is_debug_build() or Engine.is_editor_hint()
+	if nav_test_btn:
+		nav_test_btn.visible = OS.is_debug_build() or Engine.is_editor_hint()
 
 
 func _apply_manuscript_page() -> void:
@@ -63,8 +69,8 @@ func _refresh_continue() -> void:
 func _on_new_game_pressed() -> void:
 	SaveService.write_new_game()
 	GameState.reset_from_new_game()
-	# PLAYABLE_SLICE: tower arrival beat before map (Continue skips straight to hub).
-	get_tree().change_scene_to_file(TOWER_INTRO)
+	# PLAYABLE_SLICE: manuscript-framed yard, then tower beat (Continue skips yard → hub).
+	await ManuscriptNav.turn_page_to(SLICE_OPEN_YARD)
 
 
 func _on_continue_pressed() -> void:
@@ -81,17 +87,26 @@ func _on_settings_pressed() -> void:
 
 
 func _on_tiny_loop_pressed() -> void:
-	get_tree().change_scene_to_file(BEGINNER_LOOP)
+	await ManuscriptNav.turn_page_to(BEGINNER_LOOP)
 
 
 func _on_hi_bit_bonus_pressed() -> void:
-	get_tree().change_scene_to_file(HI_BIT_BONUS)
+	await ManuscriptNav.turn_page_to(HI_BIT_BONUS)
+
+
+func _on_demo_gauntlet_pressed() -> void:
+	GameState.begin_demo_gauntlet()
+	await ManuscriptNav.turn_page_to(COMBAT, true)
 
 
 func _on_combat_drill_pressed() -> void:
 	SaveService.write_new_game()
 	GameState.reset_from_new_game()
-	get_tree().change_scene_to_file(COMBAT)
+	await ManuscriptNav.turn_page_to(COMBAT, true)
+
+
+func _on_nav_test_pressed() -> void:
+	await ManuscriptNav.turn_page_to(NAV_TEST_YARD)
 
 
 func _on_quit_pressed() -> void:

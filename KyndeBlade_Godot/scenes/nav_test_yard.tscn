@@ -1,0 +1,160 @@
+[gd_scene load_steps=10 format=3 uid="uid://c8navtest001"]
+
+[ext_resource type="Script" path="res://scripts/nav_test_yard.gd" id="1_nav"]
+
+[sub_resource type="Environment" id="NavEnv"]
+background_mode = 1
+background_color = Color(0.06, 0.07, 0.09, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.2, 0.22, 0.3, 1)
+ambient_light_energy = 0.5
+tonemap_mode = 2
+
+[sub_resource type="BoxShape3D" id="FloorShape"]
+size = Vector3(24, 0.12, 24)
+
+[sub_resource type="BoxMesh" id="FloorMesh"]
+size = Vector3(24, 0.08, 24)
+
+[sub_resource type="StandardMaterial3D" id="FloorMat"]
+shading_mode = 0
+albedo_color = Color(0.14, 0.16, 0.18, 1)
+
+[sub_resource type="BoxShape3D" id="GateShape"]
+size = Vector3(0.65, 2.2, 24)
+
+[sub_resource type="BoxMesh" id="GateMeshRes"]
+size = Vector3(0.65, 2.2, 24)
+
+[sub_resource type="StandardMaterial3D" id="GateMat"]
+shading_mode = 0
+albedo_color = Color(0.35, 0.22, 0.12, 1)
+
+[sub_resource type="CapsuleShape3D" id="PlayerCapsule"]
+radius = 0.35
+height = 1.5
+
+[sub_resource type="CapsuleMesh" id="PlayerMeshRes"]
+radius = 0.35
+height = 1.5
+
+[sub_resource type="StandardMaterial3D" id="PlayerMat"]
+shading_mode = 0
+albedo_color = Color(0.32, 0.55, 0.42, 1)
+
+[node name="NavTestYard" type="Node"]
+script = ExtResource("1_nav")
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World"]
+environment = SubResource("NavEnv")
+
+[node name="Sun" type="DirectionalLight3D" parent="World"]
+transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 8, 14, 10)
+light_energy = 1.05
+shadow_enabled = true
+
+[node name="NavRegion" type="NavigationRegion3D" parent="World"]
+unique_name_in_owner = true
+
+[node name="FloorBody" type="StaticBody3D" parent="World"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/FloorBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06, 0)
+shape = SubResource("FloorShape")
+
+[node name="FloorVisual" type="MeshInstance3D" parent="World/FloorBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.04, 0)
+mesh = SubResource("FloorMesh")
+surface_material_override/0 = SubResource("FloorMat")
+
+[node name="GateBody" type="StaticBody3D" parent="World"]
+unique_name_in_owner = true
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/GateBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+shape = SubResource("GateShape")
+
+[node name="GateMesh" type="MeshInstance3D" parent="World/GateBody"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("GateMeshRes")
+surface_material_override/0 = SubResource("GateMat")
+
+[node name="Player" type="CharacterBody3D" parent="World"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.75, 0)
+collision_layer = 4
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Player"]
+shape = SubResource("PlayerCapsule")
+
+[node name="PlayerVisual" type="MeshInstance3D" parent="World/Player"]
+mesh = SubResource("PlayerMeshRes")
+surface_material_override/0 = SubResource("PlayerMat")
+
+[node name="NavAgent" type="NavigationAgent3D" parent="World/Player"]
+unique_name_in_owner = true
+path_desired_distance = 0.65
+target_desired_distance = 0.45
+avoidance_enabled = true
+radius = 0.38
+height = 1.5
+
+[node name="YardCamera" type="Camera3D" parent="World"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.766, 0.643, 0, -0.643, 0.766, 0, 15, 16)
+fov = 48.0
+current = true
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Margin" type="MarginContainer" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="HUD/Margin"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 6
+
+[node name="HintLabel" type="Label" parent="HUD/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.9, 0.82, 1)
+theme_override_font_sizes/font_size = 12
+text = "—"
+autowrap_mode = 3
+
+[node name="DistLabel" type="Label" parent="HUD/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.82, 0.72, 1)
+theme_override_font_sizes/font_size = 11
+text = "—"
+
+[node name="GateCheck" type="CheckButton" parent="HUD/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Gate open (merge nav)"
+
+[node name="BackButton" type="Button" parent="HUD/Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Back to main menu"

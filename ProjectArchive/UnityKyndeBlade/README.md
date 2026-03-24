@@ -1,16 +1,22 @@
-# Unity KyndeBlade (archive slot)
+# Unity KyndeBlade (reference archive)
 
-This folder holds the **Unity project after M6 cutover** from the TDAD `godot-full-port` track.
+The **Unity oracle / authoring project** lives here for parity, export-to-Godot, and TDAD workflows:
 
-## Status
+`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`
 
-**Not archived yet.** The live Unity project is still at repo root: [`KyndeBlade_Unity/`](../../KyndeBlade_Unity/).
+Open that folder in **Unity Hub** (Unity 6.3 LTS per `ProjectSettings/ProjectVersion.txt` inside the project).
 
-When `godot-m6-cutover-archive` is signed off, follow [`.tdad/prompts/godot-archive-unity-snapshot.md`](../../.tdad/prompts/godot-archive-unity-snapshot.md) and move:
+## Repo-root Unity noise (optional)
 
-`KyndeBlade_Unity/` → `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`
+If Unity was ever opened from the **monorepo root**, generated files may appear under:
 
-## After move — fill in
+`ProjectArchive/UnityKyndeBlade/repo_root_unity_artifacts/`
+
+That folder is **not** the Unity project root; it is only a stash of stray `Library` / `Logs` / `UserSettings` / `ProjectSettings` fragments and any `.sln` / `.csproj` that landed next to `README.md`. Safe to delete locally if you only use the nested `KyndeBlade_Unity` project.
+
+## Snapshot checklist (M6 / cold storage)
+
+When `godot-m6-cutover-archive` is signed off, optionally record:
 
 | Field | Value |
 |-------|--------|
@@ -19,6 +25,8 @@ When `godot-m6-cutover-archive` is signed off, follow [`.tdad/prompts/godot-arch
 | Godot primary path | `KyndeBlade_Godot/` (repo root) |
 | Date | `________________` |
 
+See also [`.tdad/prompts/godot-archive-unity-snapshot.md`](../../.tdad/prompts/godot-archive-unity-snapshot.md).
+
 ## Why keep Unity in git?
 
-Historical **spec** for TDAD workflows under `.tdad/workflows/*` and parity until Godot fully replaces behavior tests.
+Historical **spec** for TDAD workflows under `.tdad/workflows/*` and parity until Godot fully replaces behaviour tests.

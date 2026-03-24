@@ -100,7 +100,7 @@ color = Color(0.72, 0.4, 0.12, 1)
 [node name="Subtitle" type="Label" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "Heere bigynneth the dreme — tour, feeld, and shelde-fray"
+text = "One codex holdeth the whole dreme: turne leves betwixt stedes; shelde-fray sinketh thee into the verso."
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -127,12 +127,18 @@ text = "Settynges of the book"
 [node name="TinyLoopButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
-text = "Tiny practice loop"
+text = "Reaction loop (greybox · B)"
 
 [node name="HiBitBonusButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 text = "High-bit medieval bonus"
+
+[node name="DemoGauntletButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+text = "Combat gauntlet (greybox · 3 fights)"
 
 [node name="CombatDrillButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
 unique_name_in_owner = true
@@ -140,6 +146,13 @@ visible = false
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 2
 text = "Combat drill (editor / debug)"
+
+[node name="NavTestButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+text = "3D nav test (greybox)"
 
 [node name="QuitButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/Center/VBox"]
 custom_minimum_size = Vector2(240, 0)
@@ -219,7 +232,9 @@ text = "Clos the leef"
 [connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/SettingsButton" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/TinyLoopButton" to="." method="_on_tiny_loop_pressed"]
 [connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/HiBitBonusButton" to="." method="_on_hi_bit_bonus_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/DemoGauntletButton" to="." method="_on_demo_gauntlet_pressed"]
 [connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/CombatDrillButton" to="." method="_on_combat_drill_pressed"]
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/NavTestButton" to="." method="_on_nav_test_pressed"]
 [connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/QuitButton" to="." method="_on_quit_pressed"]
 [connection signal="value_changed" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/VolumeSlider" to="." method="_on_volume_changed"]
 [connection signal="toggled" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/Fullscreen" to="." method="_on_fullscreen_toggled"]
