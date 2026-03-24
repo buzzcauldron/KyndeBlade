@@ -2,7 +2,7 @@
 
 **Purpose:** Segmented implementation plan to move Godot combat from **HUD-only** to **dynamic presentation** aligned with Unity’s combat pipeline (side-view stage, actor read, defensive window feedback), without changing combat **rules** unless a later wave explicitly ports them.
 
-**Oracle (until M6 archive):** Unity [`KyndeBladeGameManager`](../../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs), [`CombatUI`](../../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/CombatUI.cs), [`ParryDodgeZoneIndicator`](../../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/ParryDodgeZoneIndicator.cs), [`TurnManager`](../../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/TurnManager.cs) + [`ART_DIRECTION.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) Lane B.
+**Oracle (until M6 archive):** Unity [`KyndeBladeGameManager`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs), [`CombatUI`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/CombatUI.cs), [`ParryDodgeZoneIndicator`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/ParryDodgeZoneIndicator.cs), [`TurnManager`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/TurnManager.cs) + [`ART_DIRECTION.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) Lane B.
 
 **TDAD tracks touched:** `godot-parity-slice` (extend), `scenes`, `combat-defense` (presentation only), `ui-shell`, `audio` (optional SFX), `characters` (visual stub only). **Wave placement:** extends **W4 / W5** presentation layer; does not close W6 systems.
 
@@ -48,7 +48,7 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
 
 ### CP-02 — Combat stage (Lane B)
 
-- **Goal:** Match Unity **orthographic side-view** *read*: two opposing silhouettes, void backdrop (already partially present), optional **foreground hazard strip** ([`EnsureCombatForegroundHazardStrip`](../../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs)).
+- **Goal:** Match Unity **orthographic side-view** *read*: two opposing silhouettes, void backdrop (already partially present), optional **foreground hazard strip** ([`EnsureCombatForegroundHazardStrip`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs)).
 - **Work:**
   - `Node2D` `CombatStage` under [`scenes/combat.tscn`](../scenes/combat.tscn): `PlayerActor`, `EnemyActor` roots (Polygon2D / `Sprite2D` + procedural texture or palette colors from [`KyndeBladeArtPalette`](../scripts/kyndeblade_art_palette.gd)).
   - Camera: either fixed positions for 960×540 or embedded `SubViewport` (reuse pattern from [`hi_bit_bonus_level.tscn`](../scenes/hi_bit_bonus_level.tscn) if integer snap matters).
@@ -69,7 +69,7 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
 
 ### CP-04 — Parry/dodge zone indicator (Unity eye equivalent)
 
-- **Goal:** Parity with [`ParryDodgeZoneIndicator`](../../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/ParryDodgeZoneIndicator.cs): show only in real-time window; phased **open → steady → imminent** (`OpenPhaseEnd` 0.15, `ImminentPhaseStart` 0.75); label **“React! X.Xs”** like [`CombatUI` Update](../../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/CombatUI.cs).
+- **Goal:** Parity with [`ParryDodgeZoneIndicator`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/ParryDodgeZoneIndicator.cs): show only in real-time window; phased **open → steady → imminent** (`OpenPhaseEnd` 0.15, `ImminentPhaseStart` 0.75); label **“React! X.Xs”** like [`CombatUI` Update](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/UI/CombatUI.cs).
 - **Work:**
   - New scene `scenes/parry_dodge_eye.tscn` + `scripts/parry_dodge_eye.gd` (`Control`: sclera, pupil scale, eyelid offsets — can simplify to one `TextureProgress` + mask if faster).
   - Parent under combat `UI` `CanvasLayer`; `visible = false` when not `REAL_TIME_WINDOW`.
@@ -79,7 +79,7 @@ Dependencies: **CP-01 → CP-02 → CP-03 → CP-04**; **CP-05** parallel after 
 
 ### CP-05 — Audio / hit feedback (optional but recommended)
 
-- **Goal:** Unity [`CombatFeedback`](../../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/CombatFeedback.cs) parity **light**: play one-shots on dodge success/fail, parry, hit; respect Master volume.
+- **Goal:** Unity [`CombatFeedback`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/CombatFeedback.cs) parity **light**: play one-shots on dodge success/fail, parry, hit; respect Master volume.
 - **Work:**
   - `AudioStreamPlayer` nodes under combat; call from presentation or small `CombatFeedbackGodot` script; CC0 placeholders in [`assets/third_party/`](../assets/third_party/) + row in [`docs/ASSET_LICENSES.md`](../../docs/ASSET_LICENSES.md).
 - **Exit criteria:** No console errors; volume slider affects combat SFX.
@@ -130,7 +130,7 @@ flowchart TD
 | Risk | Mitigation |
 |------|------------|
 | Headless flakiness from animation/frame timing | Keep logic tests on `CombatManager` only; UI tests use instant flag or `@manual` BDD. |
-| SubViewport input / scaling | Prefer top-level `Node2D` stage + single window camera; match [`ART_DIRECTION`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) PPU note when swapping to sprites. |
+| SubViewport input / scaling | Prefer top-level `Node2D` stage + single window camera; match [`ART_DIRECTION`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) PPU note when swapping to sprites. |
 | Scope creep (full TurnManager port) | Explicit “presentation only” in PR template; reject rule changes in CP segments. |
 
 ---

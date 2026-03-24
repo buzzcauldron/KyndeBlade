@@ -1,6 +1,6 @@
 ---
 description: Organizing Unity game architecture – separation of concerns, modularity, readability (DEV.to guide)
-globs: KyndeBlade_Unity/**/*.cs
+globs: ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/**/*.cs
 ---
 
 # Organizing architecture (Unity games)

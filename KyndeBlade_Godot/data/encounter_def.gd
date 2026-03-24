@@ -9,6 +9,8 @@ extends Resource
 @export var player_strike_damage: float = 15.0
 @export var strike_stamina_cost: float = 15.0
 @export var enemy_turn_damage: float = 18.0
+## Duration of dodge/parry reaction window when enemy damage is gated (parity: Unity offensive `SuccessWindow`).
+@export var enemy_attack_reaction_window_seconds: float = 1.2
 ## `auto` picks from `enemy_id` (false → langage_fals; green → green_chapel). See [`CombatBookIntro`](../../scripts/combat_book_intro.gd).
 @export var book_intro_theme: String = "auto"
 

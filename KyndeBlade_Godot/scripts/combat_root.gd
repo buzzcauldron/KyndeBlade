@@ -223,7 +223,10 @@ func _on_turn_changed() -> void:
 			telegraph_label.text = ""
 		combat.State.REAL_TIME_WINDOW:
 			var ms_left: int = int(round(combat.window_remaining * 1000.0))
-			turn_label.text = "Window: %d ms — withdrawe o shelde!" % ms_left
+			if combat.is_enemy_turn_reaction_window_active():
+				turn_label.text = "React! %.1fs — withdrawe o shelde!" % combat.window_remaining
+			else:
+				turn_label.text = "Window: %d ms — withdrawe o shelde!" % ms_left
 			telegraph_label.text = PiersCombatVoice.defensive_telegraph(combat.is_enemy_swing_real())
 		combat.State.ENEMY_TURN:
 			turn_label.text = "False lasteth his tale in the feeld…"

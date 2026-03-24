@@ -1,6 +1,6 @@
 # Unity ↔ Godot parity gaps
 
-Living document for **intentional** or **known** differences between [`KyndeBlade_Unity`](../KyndeBlade_Unity) and this **Godot Steam / retail** build. If behavior disagrees and the row is **not** listed here, treat Unity + [`PLAYABLE_SLICE.md`](../KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md) / [`DEMO_RUN.md`](../KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) as oracle until updated.
+Living document for **intentional** or **known** differences between the **Unity oracle** ([`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity)) and this **Godot Steam / retail** build. If behavior disagrees and the row is **not** listed here, treat Unity + [`PLAYABLE_SLICE.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md) / [`DEMO_RUN.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) as oracle until updated.
 
 | Area | Unity | Godot (this project) | Notes |
 |------|--------|----------------------|-------|

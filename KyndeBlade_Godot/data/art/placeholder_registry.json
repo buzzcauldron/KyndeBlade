@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "bible": {
-    "lanes": "KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md — Lane A vista vs Lane B combat void",
+    "lanes": "ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md — Lane A vista vs Lane B combat void",
     "godot": "KyndeBlade_Godot/docs/ART_DIRECTION_GODOT.md",
     "jewel": "ProjectArchive/docs/ART_DIRECTION_VISUAL_BIBLE.md — Salome / jewel contamination"
   },

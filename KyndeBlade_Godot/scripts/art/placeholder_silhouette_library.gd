@@ -1,5 +1,5 @@
 class_name PlaceholderSilhouetteLibrary
-## Procedural **manuscript / Lane B** silhouettes derived from [`ART_DIRECTION_GODOT.md`](../../docs/ART_DIRECTION_GODOT.md) + Unity [`ART_DIRECTION.md`](../../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md). Used by [`PlaceholderActor2D`](placeholder_actor_2d.gd) and combat presentation.
+## Procedural **manuscript / Lane B** silhouettes derived from [`ART_DIRECTION_GODOT.md`](../../docs/ART_DIRECTION_GODOT.md) + Unity [`ART_DIRECTION.md`](../../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md). Used by [`PlaceholderActor2D`](placeholder_actor_2d.gd) and combat presentation.
 
 
 static func clear_and_build(character_id: String, root: Node2D) -> void:

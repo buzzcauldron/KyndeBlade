@@ -30,6 +30,10 @@ namespace KyndeBlade
         [Tooltip("Accept dodge/parry input shortly before real-time windows open.")]
         public float DefenseCoyoteSeconds = 0.08f;
 
+        [Header("Combat Flow")]
+        [Tooltip("When enabled, enemy attacks open dodge/parry reaction windows during their turn before damage resolves.")]
+        public bool EnableRealTimeDefenseWindows = true;
+
         [Header("Difficulty Scalars")]
         [Range(0.5f, 2f)]
         public float EnemyHealthMultiplierEasy = 0.85f;

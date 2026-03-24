@@ -1,6 +1,6 @@
 # Godot target experience (north star)
 
-This doc captures the **intended** Godot-facing game shape beyond the current vertical slice. The **shipping Godot slice** (Steam / desktop build) and tests remain authoritative for what is implemented today — see [`STEAM_BUILD.md`](../STEAM_BUILD.md), [`PARITY_GAPS.md`](../PARITY_GAPS.md), and Unity [`PLAYABLE_SLICE.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md) / [`DEMO_RUN.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) as oracle until M6 archive policy changes.
+This doc captures the **intended** Godot-facing game shape beyond the current vertical slice. The **shipping Godot slice** (Steam / desktop build) and tests remain authoritative for what is implemented today — see [`STEAM_BUILD.md`](../STEAM_BUILD.md), [`PARITY_GAPS.md`](../PARITY_GAPS.md), and Unity [`PLAYABLE_SLICE.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md) / [`DEMO_RUN.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) as oracle until M6 archive policy changes.
 
 ## Loop
 

@@ -223,6 +223,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Ful screne"
 
+[node name="EnemyDefenseWindows" type="CheckButton" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Enemy strok: reaction wyndowe (shelde ere hit)"
+
 [node name="CloseSettings" type="Button" parent="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox"]
 layout_mode = 2
 text = "Clos the leef"
@@ -238,4 +243,5 @@ text = "Clos the leef"
 [connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/Center/VBox/QuitButton" to="." method="_on_quit_pressed"]
 [connection signal="value_changed" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/VolumeSlider" to="." method="_on_volume_changed"]
 [connection signal="toggled" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="toggled" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/EnemyDefenseWindows" to="." method="_on_enemy_defense_windows_toggled"]
 [connection signal="pressed" from="SettingsPanel/SettingsCenter/SettingsFrame/SettingsInner/SettingsVBox/CloseSettings" to="." method="_on_settings_close_pressed"]

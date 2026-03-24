@@ -15,7 +15,7 @@ Do **not** implement code changes in this project without stability checks.
 ## After implementing
 
 1. **Linter**: Run ReadLints on all modified files (and any files that reference them if relevant). Fix any new linter/compiler errors before considering the change done.
-2. **Unity**: If the change affects Unity scripts (C# in `KyndeBlade_Unity`), treat a clean compile in the Unity Editor as the stability check when possible; if you cannot run the Editor, at least ensure no new CSxxxx errors are introduced (linter and any available build/compile step). When feasible, **enter Play mode in the main scene** briefly to confirm no runtime errors (bootstrap, UI, combat).
+2. **Unity**: If the change affects Unity scripts (C# in `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`), treat a clean compile in the Unity Editor as the stability check when possible; if you cannot run the Editor, at least ensure no new CSxxxx errors are introduced (linter and any available build/compile step). When feasible, **enter Play mode in the main scene** briefly to confirm no runtime errors (bootstrap, UI, combat).
 3. **Tests**: If the project has runnable tests (e.g. PlayMode or EditMode tests under `Assets/Tests`), run them after changes that could affect covered behaviour. If tests fail, fix the code or the tests before finishing.
 4. **Input**: Do not change Project Settings → Player → Active Input from **Both** to "Input System package only" unless EventSystem has been migrated to InputSystemUIInputModule; see ARCHITECTURE.md → Input.
 

@@ -40,10 +40,16 @@ var player_parrying: bool = false
 ## Next defensive window: if true, enemy committed a real swing (mitigate with dodge/parry).
 var _enemy_will_hit: bool = true
 var _defense_windows_resolved: int = 0
+## When **true**, `REAL_TIME_WINDOW` is the enemy-turn reaction phase (dodge/parry before `enemy_turn_damage` applies).
+var _enemy_turn_reaction_window: bool = false
 
 
 func is_enemy_swing_real() -> bool:
 	return _enemy_will_hit
+
+
+func is_enemy_turn_reaction_window_active() -> bool:
+	return _enemy_turn_reaction_window
 
 
 ## `t` in [0,1] for phased UI: 0 = window start, 1 = window end (matches Unity `1 - remaining/duration`).
@@ -89,6 +95,7 @@ func _start_combat() -> void:
 	enemy_hp = enemy_max_hp
 	_defense_windows_resolved = 0
 	_enemy_will_hit = true
+	_enemy_turn_reaction_window = false
 	state = State.WAITING_PLAYER
 	_emit_stats()
 	turn_changed.emit()
@@ -152,6 +159,16 @@ func player_strike() -> void:
 
 
 func player_dodge() -> void:
+	if state == State.REAL_TIME_WINDOW and _enemy_turn_reaction_window:
+		var ecost: float = _dodge_stamina_cost()
+		if player_stamina < ecost:
+			return
+		player_stamina -= ecost
+		player_dodging = true
+		player_parrying = false
+		dreamer_move_committed.emit(DreamerMoveKind.DODGE)
+		_emit_stats()
+		return
 	var dodge_cost: float = _dodge_stamina_cost()
 	if state != State.WAITING_PLAYER or player_stamina < dodge_cost:
 		return
@@ -163,6 +180,16 @@ func player_dodge() -> void:
 
 
 func player_parry() -> void:
+	if state == State.REAL_TIME_WINDOW and _enemy_turn_reaction_window:
+		var pc: float = get_parry_stamina_cost()
+		if player_stamina < pc:
+			return
+		player_stamina -= pc
+		player_parrying = true
+		player_dodging = false
+		dreamer_move_committed.emit(DreamerMoveKind.PARRY)
+		_emit_stats()
+		return
 	var pcost: float = get_parry_stamina_cost()
 	if state != State.WAITING_PLAYER or player_stamina < pcost:
 		return
@@ -195,11 +222,18 @@ func tick_window(delta: float) -> void:
 func _resolve_window() -> void:
 	window_duration = 0.0
 	window_remaining = 0.0
+	var was_enemy_reaction: bool = _enemy_turn_reaction_window
+	if was_enemy_reaction:
+		_enemy_turn_reaction_window = false
 	var was_dodging: bool = player_dodging
 	var was_parrying: bool = player_parrying
 	player_dodging = false
 	player_parrying = false
 	state = State.EXECUTING
+
+	if was_enemy_reaction:
+		_resolve_enemy_turn_reaction_window(was_dodging, was_parrying)
+		return
 
 	if _enemy_will_hit:
 		var mitigated: bool = was_dodging or was_parrying
@@ -223,7 +257,59 @@ func _resolve_window() -> void:
 	turn_changed.emit()
 
 
+func _resolve_enemy_turn_reaction_window(was_dodging: bool, was_parrying: bool) -> void:
+	var base: float = encounter.enemy_turn_damage if encounter else 18.0
+	var hazard: float = apply_piers_hazard_damage()
+	if _enemy_will_hit:
+		var mitigated: bool = was_dodging or was_parrying
+		var dmg: float
+		if mitigated:
+			if was_parrying:
+				dmg = (base + hazard) * 0.3
+			else:
+				dmg = (base + hazard) * (12.0 / 20.0)
+		else:
+			dmg = base + hazard
+		player_hp = maxf(0, player_hp - dmg)
+	else:
+		if was_dodging or was_parrying:
+			player_hp = maxf(0, player_hp - 5.0)
+
+	_defense_windows_resolved += 1
+	_emit_stats()
+
+	if player_hp <= 0:
+		state = State.ENDED
+		combat_ended.emit(false)
+		return
+	player_stamina = minf(player_max_stamina, player_stamina + 15)
+	state = State.WAITING_PLAYER
+	_emit_stats()
+	turn_changed.emit()
+
+
 func _run_enemy_damage_phase() -> void:
+	if use_instant_resolution_for_tests or not SaveService.load_enable_real_time_defense_on_enemy_turn():
+		_apply_enemy_turn_damage_immediate()
+		return
+	_begin_enemy_turn_reaction_window()
+
+
+func _begin_enemy_turn_reaction_window() -> void:
+	_enemy_turn_reaction_window = true
+	player_dodging = false
+	player_parrying = false
+	_enemy_will_hit = enemy_swing_is_hit_for_window_index(_defense_windows_resolved, feint_pattern_offset)
+	var dur: float = encounter.enemy_attack_reaction_window_seconds if encounter else 1.2
+	window_duration = dur
+	window_remaining = dur
+	state = State.REAL_TIME_WINDOW
+	_emit_stats()
+	turn_changed.emit()
+	defensive_window_started.emit(_enemy_will_hit)
+
+
+func _apply_enemy_turn_damage_immediate() -> void:
 	var dmg: float = encounter.enemy_turn_damage if encounter else 18.0
 	var hazard: float = apply_piers_hazard_damage()
 	player_hp = maxf(0, player_hp - dmg - hazard)

@@ -1,21 +1,22 @@
 # Archive Unity snapshot (M6 only — human-gated)
 
+**Repo state:** The Unity project already lives at **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`**. Use this checklist for **M6 sign-off** (frozen SHA, Unity version, README/TDAD/CI updates), not for a first-time `git mv` unless you are recovering from a legacy layout.
+
 Run this **only after** `godot-m6-cutover-archive` exit criteria are met: `godot-parity-slice` green, exported Godot build smoke OK, lead sign-off.
 
 ## Pre-flight
 
 - [ ] Record **git SHA**: `git rev-parse HEAD`
-- [ ] Record **Unity Editor version** last used on `KyndeBlade_Unity`
-- [ ] Optional: export **.unitypackage** or zip of `KyndeBlade_Unity` for cold storage (not required for git history)
+- [ ] Record **Unity Editor version** last used on `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`
+- [ ] Optional: export **.unitypackage** or zip of that folder for cold storage (not required for git history)
 
 ## Repository steps (destructive — confirm with team)
 
-1. Create `ProjectArchive/UnityKyndeBlade/` if missing.
-2. Move Unity project: `git mv KyndeBlade_Unity ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity` (or OS move + `git add -A`).
-3. Add/update [`ProjectArchive/UnityKyndeBlade/README.md`](../../ProjectArchive/UnityKyndeBlade/README.md): frozen SHA, Unity version, **reason** (Godot cutover), link to Godot project path.
-4. Update root [`README.md`](../../README.md): primary engine = Godot; Unity = archived under ProjectArchive.
-5. Update [`docs/TDAD_RELEASE_PATHS.md`](../../docs/TDAD_RELEASE_PATHS.md): note **live oracle** is Godot; Unity workflows remain as **historical spec**.
-6. Commit message suggestion: `chore: archive Unity under ProjectArchive after Godot M6 sign-off`
+1. If Unity is **not** yet under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`, create `ProjectArchive/UnityKyndeBlade/` if missing and move: `git mv KyndeBlade_Unity ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity` (or OS move + `git add -A`). *(Skip if already done.)*
+2. Add/update [`ProjectArchive/UnityKyndeBlade/README.md`](../../ProjectArchive/UnityKyndeBlade/README.md): frozen SHA, Unity version, **reason** (Godot cutover), link to Godot project path.
+3. Update root [`README.md`](../../README.md): primary engine = Godot; Unity = oracle under ProjectArchive.
+4. Update [`docs/TDAD_RELEASE_PATHS.md`](../../docs/TDAD_RELEASE_PATHS.md): note **live oracle** is Godot; Unity workflows remain as **historical spec** where applicable.
+5. Commit message suggestion: `chore: M6 Unity archive metadata and Godot oracle handoff`
 
 ## Do not
 

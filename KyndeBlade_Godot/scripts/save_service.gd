@@ -214,6 +214,23 @@ func save_fullscreen(on: bool) -> void:
 	)
 
 
+## When **false**, enemy turn applies damage immediately after telegraph timers (legacy). When **true**, enemy strike opens a reaction window first (parity: Unity `EnableRealTimeDefenseWindows`).
+func load_enable_real_time_defense_on_enemy_turn() -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(SETTINGS_PATH) != OK:
+		if cfg.load(LEGACY_SETTINGS_PATH) != OK:
+			return true
+	var v: Variant = cfg.get_value("combat", "enable_real_time_defense_on_enemy_turn", true)
+	return bool(v)
+
+
+func save_enable_real_time_defense_on_enemy_turn(on: bool) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(SETTINGS_PATH)
+	cfg.set_value("combat", "enable_real_time_defense_on_enemy_turn", on)
+	cfg.save(SETTINGS_PATH)
+
+
 func apply_stored_settings() -> void:
 	_apply_volume()
 	if load_fullscreen():

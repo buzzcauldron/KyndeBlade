@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "exported_at": "2026-03-22T00:00:00.0000000Z",
-  "unity_note": "Regenerate with Unity menu KyndeBlade → Export Slice Data for Godot",
+  "unity_note": "Regenerate from Unity oracle: ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity — menu KyndeBlade → Export Slice Data for Godot (writes KyndeBlade_Godot/data/)",
   "locations": [
     {
       "location_id": "tour",

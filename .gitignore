@@ -1,4 +1,4 @@
-# Kynde Blade 16 Bit - Unity-First (see KyndeBlade_Unity/)
+# Kynde Blade 16 Bit — Godot shipping slice + Unity oracle (ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity)
 
 # Unity - keeps repo thin; never commit generated/cache (Git Flow)
 [Ll]ibrary/
@@ -32,7 +32,7 @@ sysinfo.txt
 *.unitypackage
 *.app
 
-# ProjectArchive: Unreal Engine (ProjectArchive/legacy) — Unity Hub sees only KyndeBlade_Unity
+# ProjectArchive: Unreal Engine (ProjectArchive/legacy) — open Unity from ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity
 ProjectArchive/legacy/Binaries/
 ProjectArchive/legacy/DerivedDataCache/
 ProjectArchive/legacy/Intermediate/
@@ -55,4 +55,5 @@ ProjectArchive/legacy/Build/
 docs/reference/
 
 # Unity test output (local)
+ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/TestResults*.log
 KyndeBlade_Unity/TestResults*.log

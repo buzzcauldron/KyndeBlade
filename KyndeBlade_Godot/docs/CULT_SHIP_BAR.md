@@ -12,7 +12,7 @@ This doc turns **parity-and-port discipline** into **player-facing identity**. I
 |--------|---------|----------------|
 | **Voice** | Language + UI + tone feel like *one* mind | A stranger quotes **one line** without naming the engine |
 | **Weird rule** | One system they explain to a friend | “False **feints** so the **second** dodge…” (example) |
-| **Aesthetic coherence** | Cheap-on-purpose, never accidental | Lane A/B per [`ART_DIRECTION.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md); no generic fantasy pack mashup |
+| **Aesthetic coherence** | Cheap-on-purpose, never accidental | Lane A/B per [`ART_DIRECTION.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md); no generic fantasy pack mashup |
 
 ## Greatest risks in *this* build (keep visible)
 
@@ -44,7 +44,7 @@ This doc turns **parity-and-port discipline** into **player-facing identity**. I
 ### Playtests (two hostile audiences)
 
 - [ ] **Non-medieval** players: do they get the *feel* without footnotes?
-- [ ] **Medieval-adjacent** players: do you **earn** Langland / Charles debt (see [`SOURCES_AND_CREDITS.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/SOURCES_AND_CREDITS.md))?
+- [ ] **Medieval-adjacent** players: do you **earn** Langland / Charles debt (see [`SOURCES_AND_CREDITS.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/SOURCES_AND_CREDITS.md))?
 
 ### Distribution atom
 

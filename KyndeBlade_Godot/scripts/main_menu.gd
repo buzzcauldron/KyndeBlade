@@ -16,6 +16,7 @@ const NAV_TEST_YARD := "res://scenes/nav_test_yard.tscn"
 @onready var settings_panel: ColorRect = %SettingsPanel
 @onready var volume_slider: HSlider = %VolumeSlider
 @onready var fullscreen_toggle: CheckButton = %Fullscreen
+@onready var enemy_defense_toggle: CheckButton = %EnemyDefenseWindows
 
 
 func _ready() -> void:
@@ -24,6 +25,7 @@ func _ready() -> void:
 	SaveService.apply_stored_settings()
 	volume_slider.value = SaveService.load_master_volume()
 	fullscreen_toggle.button_pressed = SaveService.load_fullscreen()
+	enemy_defense_toggle.button_pressed = SaveService.load_enable_real_time_defense_on_enemy_turn()
 	_refresh_continue()
 	combat_drill_btn.visible = OS.is_debug_build() or Engine.is_editor_hint()
 	if nav_test_btn:
@@ -34,6 +36,7 @@ func _apply_manuscript_page() -> void:
 	theme = KyndeBladeManuscriptTheme.build_theme()
 	KyndeBladeManuscriptTheme.style_menu_volume_slider(volume_slider)
 	KyndeBladeManuscriptTheme.style_menu_checkbutton(fullscreen_toggle)
+	KyndeBladeManuscriptTheme.style_menu_checkbutton(enemy_defense_toggle)
 
 	var ink_faint := KyndeBladeArtPalette.INK_PRIMARY
 	ink_faint.a = 0.11
@@ -83,6 +86,7 @@ func _on_continue_pressed() -> void:
 func _on_settings_pressed() -> void:
 	volume_slider.value = SaveService.load_master_volume()
 	fullscreen_toggle.button_pressed = SaveService.load_fullscreen()
+	enemy_defense_toggle.button_pressed = SaveService.load_enable_real_time_defense_on_enemy_turn()
 	settings_panel.visible = true
 
 
@@ -123,3 +127,7 @@ func _on_volume_changed(value: float) -> void:
 
 func _on_fullscreen_toggled(pressed: bool) -> void:
 	SaveService.save_fullscreen(pressed)
+
+
+func _on_enemy_defense_windows_toggled(pressed: bool) -> void:
+	SaveService.save_enable_real_time_defense_on_enemy_turn(pressed)

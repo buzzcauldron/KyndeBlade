@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "description": "High-level campaign order for writers — mirrors Unity WorldMapManager MVP linear vision + optional lanes. Not a runtime quest graph yet.",
-  "unity_reference": "KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/WorldMapManager.cs + Resources/Data/",
+  "unity_reference": "ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/WorldMapManager.cs + Resources/Data/",
   "default_start_location_id": "tour",
   "playable_slice_first_combat_location_id": "fayre_felde",
   "spine": {

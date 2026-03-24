@@ -4,6 +4,8 @@ extends Node
 
 func _enter_tree() -> void:
 	_add_key("strike", KEY_X)
+	_add_key_if_absent("strike", KEY_1)
+	_add_key_if_absent("strike", KEY_KP_1)
 	_add_key("dodge", KEY_SPACE)
 	_add_key("parry", KEY_SHIFT)
 	_add_key("pause", KEY_ESCAPE)
@@ -37,6 +39,17 @@ func _add_key(action: String, keycode: Key) -> void:
 			break
 	if has_key:
 		return
+	var e := InputEventKey.new()
+	e.keycode = keycode
+	InputMap.action_add_event(action, e)
+
+
+func _add_key_if_absent(action: String, keycode: Key) -> void:
+	if not InputMap.has_action(action):
+		InputMap.add_action(action, 0.5)
+	for ev in InputMap.action_get_events(action):
+		if ev is InputEventKey and (ev as InputEventKey).keycode == keycode:
+			return
 	var e := InputEventKey.new()
 	e.keycode = keycode
 	InputMap.action_add_event(action, e)

@@ -1,6 +1,6 @@
 ---
 description: Keep Unity code simple; use patterns only when they fit (from Unity scaling guide)
-globs: KyndeBlade_Unity/**/*.cs
+globs: ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/**/*.cs
 ---
 
 # KISS for Unity (scaling guide)

@@ -57,6 +57,17 @@ namespace KyndeBlade
             }
             if (TurnManager != null && TurnManager.State == CombatState.RealTimeWindow && RealTimeWindowText != null)
                 RealTimeWindowText.text = $"React! {TurnManager.RealTimeWindowRemaining:F1}s";
+
+            // Guard against transient UI rebuild misses: repopulate actions when player can act.
+            if (TurnManager != null &&
+                TurnManager.State == CombatState.WaitingForInput &&
+                TurnManager.IsPlayerTurn() &&
+                _actionButtons.Count == 0)
+            {
+                RefreshActionButtons();
+            }
+
+            HandleActionHotkeys();
         }
 
         void TryLazyInit()
@@ -430,6 +441,46 @@ namespace KyndeBlade
             foreach (var b in _actionButtons)
                 if (b != null) Destroy(b.gameObject);
             _actionButtons.Clear();
+        }
+
+        void HandleActionHotkeys()
+        {
+            if (TurnManager == null ||
+                TurnManager.State != CombatState.WaitingForInput ||
+                !TurnManager.IsPlayerTurn() ||
+                TurnManager.CurrentCharacter == null)
+            {
+                return;
+            }
+
+            var actions = TurnManager.CurrentCharacter.AvailableActions;
+            if (actions == null || actions.Count == 0) return;
+
+            int selectedIndex = -1;
+            if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) selectedIndex = 0;
+            else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) selectedIndex = 1;
+            else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) selectedIndex = 2;
+            else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) selectedIndex = 3;
+            else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5)) selectedIndex = 4;
+            else if (Input.GetKeyDown(KeyCode.Alpha6) || Input.GetKeyDown(KeyCode.Keypad6)) selectedIndex = 5;
+            else if (Input.GetKeyDown(KeyCode.Alpha7) || Input.GetKeyDown(KeyCode.Keypad7)) selectedIndex = 6;
+            else if (Input.GetKeyDown(KeyCode.Alpha8) || Input.GetKeyDown(KeyCode.Keypad8)) selectedIndex = 7;
+            else if (Input.GetKeyDown(KeyCode.Alpha9) || Input.GetKeyDown(KeyCode.Keypad9)) selectedIndex = 8;
+
+            if (selectedIndex < 0 || selectedIndex >= actions.Count) return;
+
+            var action = actions[selectedIndex];
+            if (action == null || action.ActionData == null) return;
+
+            var actor = TurnManager.CurrentCharacter;
+            bool canAfford = actor.GetCurrentStamina() >= action.ActionData.StaminaCost &&
+                (action.ActionData.KyndeCost <= 0f || actor.GetCurrentKynde() >= action.ActionData.KyndeCost);
+            if (!canAfford) return;
+
+            var target = action.ActionData.ActionType == CombatActionType.Heal
+                ? actor
+                : GetFirstEnemy();
+            TurnManager.ExecuteAction(action, target);
         }
 
         void RefreshStateText()

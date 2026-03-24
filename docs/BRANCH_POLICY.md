@@ -5,7 +5,7 @@
 The **`main`** branch is the **integration default** for day-to-day work. It carries:
 
 - **`KyndeBlade_Godot/`** — primary shipping target for the slice (Steam / desktop); headless tests in CI.
-- **`KyndeBlade_Unity/`** — retained for parity, export pipeline (**Export Slice Data for Godot**), and TDAD/oracle workflows until archive policy changes.
+- **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`** — retained for parity, export pipeline (**Export Slice Data for Godot**), and TDAD/oracle workflows until archive policy changes.
 - **`.tdad/`**, **`docs/`**, **`ProjectArchive/`** — shared planning and history.
 
 **Behaviour oracle** for the Tier A demo slice is still defined in [`KYNDEBLADE_CAREFUL_CANON.md`](KYNDEBLADE_CAREFUL_CANON.md) (Unity `PLAYABLE_SLICE` / `DEMO_RUN` until M6 sign-off, unless you update both engines and BDD). Branch name does not change that rule.
@@ -35,4 +35,4 @@ git checkout main
 git pull origin main
 ```
 
-Open **`KyndeBlade_Godot/`** in **Godot 4.6.1** (or **4.6.x**) for the shipping slice; open **`KyndeBlade_Unity/`** in Unity when editing the oracle project or running the export menu.
+Open **`KyndeBlade_Godot/`** in **Godot 4.6.1** (or **4.6.x**) for the shipping slice; open **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`** in Unity when editing the oracle project or running the export menu.

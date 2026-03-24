@@ -37,7 +37,15 @@ namespace KyndeBlade.Editor
                 encs.Add(enc);
 
             string json = BuildJson(locs, encs);
-            string repoRoot = Directory.GetParent(Application.dataPath)!.FullName;
+            string unityProjectRoot = Directory.GetParent(Application.dataPath)!.FullName;
+            string? repoRoot = FindRepoRootContainingGodot(unityProjectRoot);
+            if (string.IsNullOrEmpty(repoRoot))
+            {
+                Debug.LogError(
+                    "ExportGodotSliceData: could not find repo root (walked up from Unity project; expected a parent folder containing KyndeBlade_Godot).");
+                return;
+            }
+
             string outDir = Path.Combine(repoRoot, "KyndeBlade_Godot", "data");
             Directory.CreateDirectory(outDir);
             string outPath = Path.Combine(outDir, "exported_from_unity.json");
@@ -131,5 +139,23 @@ namespace KyndeBlade.Editor
         }
 
         static string EscapeIso(string s) => Escape(s);
+
+        /// <summary>
+        /// Unity may live at repo root or under ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity;
+        /// Godot data always writes next to KyndeBlade_Godot at monorepo root.
+        /// </summary>
+        static string? FindRepoRootContainingGodot(string startDir)
+        {
+            var dir = new DirectoryInfo(startDir);
+            while (dir != null)
+            {
+                string candidate = Path.Combine(dir.FullName, "KyndeBlade_Godot");
+                if (Directory.Exists(candidate))
+                    return dir.FullName;
+                dir = dir.Parent;
+            }
+
+            return null;
+        }
     }
 }

@@ -11,8 +11,8 @@ Short map of **Test-Driven Agile Development (TDAD)** artifacts in this repo for
 | Dependency graph (root) | [`.tdad/workflows/root.workflow.json`](../.tdad/workflows/root.workflow.json) |
 | Demo workflow | [`.tdad/workflows/demo-vertical-slice/demo-vertical-slice.workflow.json`](../.tdad/workflows/demo-vertical-slice/demo-vertical-slice.workflow.json) |
 | Gherkin scenarios | [`.tdad/bdd/demo-vertical-slice.feature`](../.tdad/bdd/demo-vertical-slice.feature) |
-| Player / QA runbook | [`KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md`](../KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) |
-| Slice narrative path | [`KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md`](../KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md) |
+| Player / QA runbook | [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) |
+| Slice narrative path | [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md) |
 
 **Prompts:** [`.tdad/prompts/generate-bdd.md`](../.tdad/prompts/generate-bdd.md), [`.tdad/prompts/generate-tests.md`](../.tdad/prompts/generate-tests.md) — use when adding new Tier A nodes.
 
@@ -42,4 +42,4 @@ Tier B **depends on** Tier A in the root graph (`steam-early-access` → `demo-v
 | Godot CI / headless tests | [`docs/CI_GODOT_TESTS.md`](CI_GODOT_TESTS.md) |
 | Unity archive target (populate at M6) | [`ProjectArchive/UnityKyndeBlade/README.md`](../ProjectArchive/UnityKyndeBlade/README.md) |
 
-**Oracle:** Until M6 sign-off, Unity **demo-vertical-slice** + `PLAYABLE_SLICE.md` / `DEMO_RUN.md` define expected behavior. After moving `KyndeBlade_Unity` under `ProjectArchive/`, Godot parity tests become the live contract; Unity TDAD nodes remain as historical spec.
+**Oracle:** Until M6 sign-off, Unity **demo-vertical-slice** + `PLAYABLE_SLICE.md` / `DEMO_RUN.md` (under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`) define expected behavior. Unity already lives under **`ProjectArchive/UnityKyndeBlade/`**; the **Godot** slice + headless tests are the live contract for the shipping build; Unity TDAD nodes remain as historical spec where noted.

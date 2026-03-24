@@ -13,7 +13,7 @@ Use **one paragraph** of in-world or archaizing voice per release, then bullet t
 - CHANGELOG bullets (engines, deps, crash fixes)
 - Link to [`docs/ASSET_LICENSES.md`](../../docs/ASSET_LICENSES.md) if new art/audio
 
-**Credits** — see [`SOURCES_AND_CREDITS.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/SOURCES_AND_CREDITS.md) + in-game credits.
+**Credits** — see [`SOURCES_AND_CREDITS.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/SOURCES_AND_CREDITS.md) + in-game credits.
 
 ## Example stub (replace before ship)
 

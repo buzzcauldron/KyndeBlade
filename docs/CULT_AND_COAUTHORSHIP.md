@@ -10,6 +10,6 @@ Authorial and collaboration plans for **KyndeBlade** live next to the Godot slic
 | [`KyndeBlade_Godot/docs/AUTHORIAL_OVERRIDE.md`](../KyndeBlade_Godot/docs/AUTHORIAL_OVERRIDE.md) | **One non-parity scene** process + PARITY_GAPS linkage |
 | [`KyndeBlade_Godot/docs/RELEASE_NOTES_VOICE_TEMPLATE.md`](../KyndeBlade_Godot/docs/RELEASE_NOTES_VOICE_TEMPLATE.md) | **Changelog as fiction** template |
 
-**Art / license hygiene:** [`ASSET_LICENSES.md`](ASSET_LICENSES.md), [`KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md`](../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md), [`ProjectArchive/docs/MUSIC_SOURCES.md`](../ProjectArchive/docs/MUSIC_SOURCES.md).
+**Art / license hygiene:** [`ASSET_LICENSES.md`](ASSET_LICENSES.md), [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md), [`ProjectArchive/docs/MUSIC_SOURCES.md`](../ProjectArchive/docs/MUSIC_SOURCES.md).
 
-**Literary credits:** [`KyndeBlade_Unity/Assets/KyndeBlade/Docs/SOURCES_AND_CREDITS.md`](../KyndeBlade_Unity/Assets/KyndeBlade/Docs/SOURCES_AND_CREDITS.md).
+**Literary credits:** [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/SOURCES_AND_CREDITS.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/SOURCES_AND_CREDITS.md).

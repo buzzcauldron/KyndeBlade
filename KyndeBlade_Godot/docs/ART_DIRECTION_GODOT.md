@@ -6,7 +6,7 @@ Godot mirrors the **markdown art bibles** in this repo using **code-driven color
 
 | Doc | Role |
 |-----|------|
-| [`KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) | **Lane A** — vista / hub mood. **Lane B** — combat void, SNES-style contrast. |
+| [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) | **Lane A** — vista / hub mood. **Lane B** — combat void, SNES-style contrast. |
 | [`ProjectArchive/docs/UI_MANUSCRIPT_THEME.md`](../../ProjectArchive/docs/UI_MANUSCRIPT_THEME.md) | Manuscript UI: parchment, ink, gold, rubrication, lapis, borders. |
 | [`ProjectArchive/docs/ART_DIRECTION_GRIMDARK_MEDIEVAL.md`](../../ProjectArchive/docs/ART_DIRECTION_GRIMDARK_MEDIEVAL.md) | Boss palette hints (exposed as constants for future bars / chips). |
 | [`ProjectArchive/docs/VISUAL_DESIGN_ALAN_LEE.md`](../../ProjectArchive/docs/VISUAL_DESIGN_ALAN_LEE.md) | High-level Salome + Lee pairing (narrative direction; Godot uses Lane + manuscript first). |

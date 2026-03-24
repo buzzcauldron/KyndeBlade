@@ -1,6 +1,6 @@
 ---
 description: Use Assembly Definitions to scale the Unity project and avoid full recompiles
-globs: KyndeBlade_Unity/**/*.asmdef, KyndeBlade_Unity/**/Code/**/*.cs
+globs: ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/**/*.asmdef, ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/**/Code/**/*.cs
 ---
 
 # Assembly Definitions (scaling guide)

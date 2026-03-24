@@ -59,6 +59,6 @@ If one system breaks, it’s harder to debug when everything lives in one script
 ## Git Flow (thin repo)
 
 - **.gitignore** already excludes Unity-generated folders: `Library/`, `Temp/`, `Logs/`, `UserSettings/`, and `*.csproj`, `*.sln`. Don’t force-add them.
-- Use the **KyndeBlade_Unity** folder as the Unity project root so Hub and the editor see a clean project; non-Unity work lives under **Archive/**.
+- Use **`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`** as the Unity project root so Hub and the editor see a clean project; non-Unity work lives under **ProjectArchive/** (and Godot under **`KyndeBlade_Godot/`** at repo root).
 
 See also: README (project structure), PHASE3_PLAN.md, NEXT_MOVES.md.

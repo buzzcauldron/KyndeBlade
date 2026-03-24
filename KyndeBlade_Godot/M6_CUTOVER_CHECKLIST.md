@@ -1,6 +1,6 @@
 # M6 cutover checklist (human-gated)
 
-Use this when TDAD milestone **godot-m6-cutover-archive** is formally approved. **Do not** move or archive [`KyndeBlade_Unity`](../KyndeBlade_Unity) without explicit sign-off.
+Use this when TDAD milestone **godot-m6-cutover-archive** is formally approved. **Do not** remove or restructure [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity) without explicit sign-off.
 
 ## Preconditions
 
@@ -11,9 +11,9 @@ Use this when TDAD milestone **godot-m6-cutover-archive** is formally approved. 
 
 ## Actions (after sign-off only)
 
-1. Run [`.tdad/prompts/godot-archive-unity-snapshot.md`](../.tdad/prompts/godot-archive-unity-snapshot.md) process.
-2. Move Unity tree to [`ProjectArchive/UnityKyndeBlade/`](../ProjectArchive/UnityKyndeBlade/README.md) per team convention.
-3. Update root [`README.md`](../README.md) and CI paths; declare Godot the live oracle in TDAD docs.
+1. Run [`.tdad/prompts/godot-archive-unity-snapshot.md`](../.tdad/prompts/godot-archive-unity-snapshot.md) process (metadata, README, TDAD/CI wording).
+2. Confirm Unity already lives at [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity); only run a physical `git mv` if you are fixing a legacy layout.
+3. Update root [`README.md`](../README.md) and CI paths if needed; declare Godot the live oracle in TDAD docs.
 
 ## Rollback
 

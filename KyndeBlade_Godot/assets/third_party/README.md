@@ -10,7 +10,7 @@ assets/third_party/<pack_slug>/
 
 Then add a row to [repo `docs/ASSET_LICENSES.md`](../../../docs/ASSET_LICENSES.md).
 
-**Lane A** (menu, story, map interstitials): full-width backdrops, parchment-friendly contrast — see [`ART_DIRECTION.md`](../../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md).
+**Lane A** (menu, story, map interstitials): full-width backdrops, parchment-friendly contrast — see [`ART_DIRECTION.md`](../../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md).
 
 **Lane B** (combat): sprites, hazards — document **PPU** if pixel art; dark void backdrop per direction.
 

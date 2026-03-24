@@ -19,7 +19,7 @@ Maps the **careful full port** waves to TDAD root workflow folders. Authoritativ
 
 ## Checklist template (repeat per wave)
 
-- [ ] Inventory Unity paths under `KyndeBlade_Unity/Assets/KyndeBlade/`
+- [ ] Inventory Unity paths under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/`
 - [ ] One-page spec: inputs, outputs, state, edge cases
 - [ ] Data exported or versioned schema (`version` field)
 - [ ] Godot implementation + headless tests where applicable
@@ -41,4 +41,4 @@ Maps the **careful full port** waves to TDAD root workflow folders. Authoritativ
 
 ## Free-licensed assets
 
-Visual/audio drops: see [repo `docs/ASSET_LICENSES.md`](../docs/ASSET_LICENSES.md) and [`assets/third_party/README.md`](assets/third_party/README.md). Placement follows [`ART_DIRECTION.md`](../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) (Lane A vs B).
+Visual/audio drops: see [repo `docs/ASSET_LICENSES.md`](../docs/ASSET_LICENSES.md) and [`assets/third_party/README.md`](assets/third_party/README.md). Placement follows [`ART_DIRECTION.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md) (Lane A vs B).

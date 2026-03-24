@@ -1,25 +1,25 @@
 # Unity Kynde Blade — story, spawn, and combat mechanics (extracted digest)
 
-This document **re-derives** design facts from the **Unity** implementation under [`KyndeBlade_Unity/`](../KyndeBlade_Unity/) (C#, `LocationNode`, `EncounterConfig`, `StoryBeat` YAML, `GameProgress`). Use it as the **authoritative bridge** when porting narrative and encounter logic to Godot or when authoring **medieval-text → moveset** data in [`../KyndeBlade_Godot/data/medieval_text_unlocks.json`](../KyndeBlade_Godot/data/medieval_text_unlocks.json).
+This document **re-derives** design facts from the **Unity** implementation under [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/) (C#, `LocationNode`, `EncounterConfig`, `StoryBeat` YAML, `GameProgress`). Use it as the **authoritative bridge** when porting narrative and encounter logic to Godot or when authoring **medieval-text → moveset** data in [`../KyndeBlade_Godot/data/medieval_text_unlocks.json`](../KyndeBlade_Godot/data/medieval_text_unlocks.json).
 
 **Sources of truth in Unity**
 
 | System | Primary code / assets |
 |--------|------------------------|
-| Encounter spawn | [`KyndeBladeGameManager.StartEncounterFromConfig`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs), [`EncounterConfig`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/EncounterConfig.cs) |
+| Encounter spawn | [`KyndeBladeGameManager.StartEncounterFromConfig`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs), [`EncounterConfig`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/EncounterConfig.cs) |
 | Party spawn order | `SpawnPartyInPoemOrder` in same file |
-| Green Knight injection | Same file + [`SaveManager`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Save/SaveManager.cs) flags |
-| Fairy form | [`FaeAppearanceManager`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Game/FaeAppearanceManager.cs), [`MedievalCharacter.ApplyFairyForm`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Characters/MedievalCharacter.cs) |
-| Map / arrival flow | [`WorldMapManager`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/WorldMapManager.cs), [`LocationNode`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/LocationNode.cs) |
-| Progress / ethics / hunger | [`GameProgress`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Save/GameProgress.cs) |
-| Player + enemy moves | [`Expedition33Moveset`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Expedition33Moveset.cs), [`GreenKnightMoveset`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/GreenKnightMoveset.cs) |
-| World IDs / tuning | [`GameWorldConstants`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Game/GameWorldConstants.cs) |
+| Green Knight injection | Same file + [`SaveManager`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Save/SaveManager.cs) flags |
+| Fairy form | [`FaeAppearanceManager`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Game/FaeAppearanceManager.cs), [`MedievalCharacter.ApplyFairyForm`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Characters/MedievalCharacter.cs) |
+| Map / arrival flow | [`WorldMapManager`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/WorldMapManager.cs), [`LocationNode`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/LocationNode.cs) |
+| Progress / ethics / hunger | [`GameProgress`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Save/GameProgress.cs) |
+| Player + enemy moves | [`Expedition33Moveset`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Expedition33Moveset.cs), [`GreenKnightMoveset`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/GreenKnightMoveset.cs) |
+| World IDs / tuning | [`GameWorldConstants`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Game/GameWorldConstants.cs) |
 
 ---
 
 ## 1. Party (character) spawn
 
-**Rule (poem order):** [`SpawnPartyInPoemOrder`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs)
+**Rule (poem order):** [`SpawnPartyInPoemOrder`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs)
 
 | Slot | Character | Condition | Position (approx.) | Class |
 |------|-----------|-----------|-------------------|--------|
@@ -33,7 +33,7 @@ This document **re-derives** design facts from the **Unity** implementation unde
 
 ## 2. Enemy spawn (EncounterConfig)
 
-**Rule:** [`StartEncounterFromConfig`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs)
+**Rule:** [`StartEncounterFromConfig`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/KyndeBladeGameManager.cs)
 
 1. Clear party/enemy lists; spawn party (above).
 2. For each `EncounterConfig.EnemySpawnEntry`: instantiate `Prefab` or resolve `CharacterTypeName` via `GetEnemyPrefabByType`, place at `Position` or auto-formation around `EnemyFormationOffset` / `EnemySpacing`.
@@ -41,9 +41,9 @@ This document **re-derives** design facts from the **Unity** implementation unde
 4. Configure **Piers hazards** from encounter list or `LocationNode.CombatHazards` (unless location `SuppressCombatHazards`).
 5. `ApplyHungerScarToParty`, ensure **FaeAppearanceManager**, then start combat.
 
-**Example — vertical slice (Fair Field):** [`FayreFeldeEncounter.asset`](../KyndeBlade_Unity/Assets/Resources/Data/Vision1/FayreFeldeEncounter.asset) — one row: `CharacterTypeName: False`, position `(4, -0.75, 0)`.
+**Example — vertical slice (Fair Field):** [`FayreFeldeEncounter.asset`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/Resources/Data/Vision1/FayreFeldeEncounter.asset) — one row: `CharacterTypeName: False`, position `(4, -0.75, 0)`.
 
-**Example — Green Chapel:** [`GreenChapelEncounter.asset`](../KyndeBlade_Unity/Assets/Resources/Data/GreenChapel/GreenChapelEncounter.asset) — `BossCharacterType: GreenKnight`, empty `Enemies` list.
+**Example — Green Chapel:** [`GreenChapelEncounter.asset`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/Resources/Data/GreenChapel/GreenChapelEncounter.asset) — `BossCharacterType: GreenKnight`, empty `Enemies` list.
 
 ---
 
@@ -57,13 +57,13 @@ This document **re-derives** design facts from the **Unity** implementation unde
 | Subsequent | `GreenKnightWillAppearRandomly`, not at `green_chapel`, random `< GreenKnightRandomAppearChance` (default **0.25**) | Same spawn; resets encounter counter |
 | Counter | Any encounter without GK | `EncountersSinceLastGreenKnight++` |
 
-**Narrative / dialogue:** Wrong choices at Green Chapel (and dialogue consequences) tie into `SetGreenKnightWillAppearRandomly` (see [`DialogueTreeGenerator`](../KyndeBlade_Unity/Assets/Editor/DialogueTreeGenerator.cs) patterns).
+**Narrative / dialogue:** Wrong choices at Green Chapel (and dialogue consequences) tie into `SetGreenKnightWillAppearRandomly` (see [`DialogueTreeGenerator`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/Editor/DialogueTreeGenerator.cs) patterns).
 
 ---
 
 ## 4. Faerie (fairy form) spawn / transform
 
-**Component:** [`FaeAppearanceManager`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Game/FaeAppearanceManager.cs)
+**Component:** [`FaeAppearanceManager`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Game/FaeAppearanceManager.cs)
 
 - On a timer (after `InitialDelay`, then every `MinIntervalBetweenFae`), rolls **base** chance `BaseFaeChance` (**0.15**).
 - **Bonus** `NearGreenKnightFaeBonus` (**0.25**) if `GreenKnightWillAppearRandomly` **or** `EncountersSinceLastGreenKnight <= 2`.
@@ -102,7 +102,7 @@ This document **re-derives** design facts from the **Unity** implementation unde
 
 ## 6. Save / progression (mechanical fields)
 
-From [`GameProgress`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Save/GameProgress.cs):
+From [`GameProgress`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Save/GameProgress.cs):
 
 - `CurrentLocationId`, `VisitedLocationIds`, `UnlockedLocationIds`, `VisionIndex`
 - `GreenKnightWillAppearRandomly`, `EncountersSinceLastGreenKnight`
@@ -123,7 +123,7 @@ From [`GameProgress`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Save/GameP
 
 ### Green Knight (boss)
 
-[`GreenKnightMoveset`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/GreenKnightMoveset.cs): **Beheading Blow**, **Wild Nature's Wrath** (AoE party), **The Green Chapel's Curse** (self heal + defense buff), plus Melee Strike + Rest.
+[`GreenKnightMoveset`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/GreenKnightMoveset.cs): **Beheading Blow**, **Wild Nature's Wrath** (AoE party), **The Green Chapel's Curse** (self heal + defense buff), plus Melee Strike + Rest.
 
 ---
 

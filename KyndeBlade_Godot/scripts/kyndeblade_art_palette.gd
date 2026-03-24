@@ -7,7 +7,7 @@ class_name KyndeBladeArtPalette
 ## **Salome / Pre-Raphaelite layer** (`JEWEL_*` constants): jewel accents for figures, UI contamination, fog—see [ART_DIRECTION_VISUAL_BIBLE.md](../../../ProjectArchive/docs/ART_DIRECTION_VISUAL_BIBLE.md). Layers on top of **HI_BIT_*** ruin vista, not a replacement.
 ##
 ## Also aligned with repo docs:
-## - [ART_DIRECTION.md](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md)
+## - [ART_DIRECTION.md](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md)
 ## - [UI_MANUSCRIPT_THEME.md](../../ProjectArchive/docs/UI_MANUSCRIPT_THEME.md)
 ## - [ART_DIRECTION_GRIMDARK_MEDIEVAL.md](../../ProjectArchive/docs/ART_DIRECTION_GRIMDARK_MEDIEVAL.md)
 

@@ -37,7 +37,7 @@ Copy a section into an email/contract; fill **CAPS**. All paid collaborators: de
 
 ## C. Illustrator (Lane A + one Lane B read)
 
-**Lead:** [`ART_DIRECTION.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md), visual bibles under `ProjectArchive/docs/`.
+**Lead:** [`ART_DIRECTION.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/ART_DIRECTION.md), visual bibles under `ProjectArchive/docs/`.
 
 | Field | Detail |
 |--------|--------|

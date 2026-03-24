@@ -34,6 +34,7 @@ namespace KyndeBlade
         internal void SetRealTimeWindowRemainingForTests(float seconds) => RealTimeWindowRemaining = seconds;
         public float ActionCastTimeRemaining { get; private set; }
         public float ActionExecutionTimeRemaining { get; private set; }
+        public bool IsRealTimeDefenseEnabled => Settings == null || Settings.EnableRealTimeDefenseWindows;
         /// <summary>Attacker whose strike is imminent (for strike-warning sound theme).</summary>
         public MedievalCharacter CurrentAttackerDuringWindow { get; private set; }
         /// <summary>Defender (player) who used Escapade/Ward.</summary>
@@ -214,6 +215,23 @@ namespace KyndeBlade
                 return;
             }
 
+            // Turn-based reaction flow: enemy offensive actions open the window first,
+            // then resolve the hit after player reaction input.
+            if (IsRealTimeDefenseEnabled &&
+                EnemyCharacters.Contains(CurrentCharacter) &&
+                IsOffensiveAction(_currentAction.ActionData.ActionType))
+            {
+                var defender = _currentTarget != null && PlayerCharacters.Contains(_currentTarget) && _currentTarget.IsAlive()
+                    ? _currentTarget
+                    : GetFirstAlivePlayer();
+                if (defender != null)
+                {
+                    _currentTarget = defender;
+                    StartRealTimeWindow(_currentAction.ActionData.SuccessWindow, CurrentCharacter, defender, CombatActionType.Ward);
+                    return;
+                }
+            }
+
             CurrentCharacter.PlayActionAnimation(_currentAction);
             CurrentCharacter.ExecuteCombatAction(_currentAction, _currentTarget);
             OnActionExecuted?.Invoke(CurrentCharacter, _currentTarget, _currentAction);
@@ -243,22 +261,6 @@ namespace KyndeBlade
                     ? _currentTarget
                     : GetFirstAliveEnemy();
                 StartRealTimeWindow(_currentAction.ActionData.SuccessWindow, attacker, defender, _currentAction.ActionData.ActionType);
-            }
-            else if (_currentAction != null &&
-                     EnemyCharacters.Contains(CurrentCharacter) &&
-                     IsOffensiveAction(_currentAction.ActionData.ActionType))
-            {
-                // Enemy offense opens the player reaction window so parry/dodge eye always appears for incoming hits.
-                var defender = _currentTarget != null && PlayerCharacters.Contains(_currentTarget) && _currentTarget.IsAlive()
-                    ? _currentTarget
-                    : GetFirstAlivePlayer();
-                if (defender != null)
-                    StartRealTimeWindow(_currentAction.ActionData.SuccessWindow, CurrentCharacter, defender, CombatActionType.Ward);
-                else
-                {
-                    State = CombatState.ProcessingResults;
-                    StartCoroutine(TransitionToNextTurn());
-                }
             }
             else
             {
@@ -378,7 +380,6 @@ namespace KyndeBlade
         {
             var defender = DefenderDuringWindow;
             var attacker = CurrentAttackerDuringWindow;
-            var actionType = ActionTypeDuringWindow;
             DefenderDuringWindow = null;
             ActionTypeDuringWindow = CombatActionType.Rest;
 
@@ -396,12 +397,28 @@ namespace KyndeBlade
                 // Trigger specific 'Perfect' feedback or rewards (e.g. extra Kynde, VFX) can be wired here.
             }
 
-            CombatCalculator.ApplyDefenseWindowDamage(defender, attacker);
+            bool pendingEnemyOffense = _currentAction != null &&
+                CurrentCharacter != null &&
+                EnemyCharacters.Contains(CurrentCharacter) &&
+                IsOffensiveAction(_currentAction.ActionData.ActionType);
+
+            if (pendingEnemyOffense)
+            {
+                // Resolve the pending enemy attack once reaction input has been captured.
+                CurrentCharacter.PlayActionAnimation(_currentAction);
+                CurrentCharacter.ExecuteCombatAction(_currentAction, defender);
+                OnActionExecuted?.Invoke(CurrentCharacter, defender, _currentAction);
+            }
 
             if (parrySucceeded && defender.IsAlive() && attacker != null && attacker.IsAlive())
                 StartCounterWindow(defender, attacker);
             else
                 State = CombatState.ProcessingResults;
+
+            _currentAction = null;
+            _currentTarget = null;
+            ActionCastTimeRemaining = 0f;
+            ActionExecutionTimeRemaining = 0f;
         }
 
         float _counterWindowRemaining;

@@ -6,7 +6,7 @@ You are expanding **one milestone node** from [`.tdad/workflows/godot-full-port/
 
 ## Rules
 
-1. **Oracle**: Until M6 archive, read Unity behavior from [`.tdad/workflows/demo-vertical-slice/`](../workflows/demo-vertical-slice/demo-vertical-slice.workflow.json), [`PLAYABLE_SLICE.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md), and relevant C# under `KyndeBlade_Unity/`. Do not delete or move Unity in this prompt unless the user explicitly requested **M6**.
+1. **Oracle**: Until M6 archive, read Unity behavior from [`.tdad/workflows/demo-vertical-slice/`](../workflows/demo-vertical-slice/demo-vertical-slice.workflow.json), [`PLAYABLE_SLICE.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md), and relevant C# under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`. Do not delete or move Unity in this prompt unless the user explicitly requested **M6**.
 2. **Godot code** lives under [`KyndeBlade_Godot/`](../../KyndeBlade_Godot/).
 3. **Output** for the chosen milestone:
    - **Tasks** (ordered, small)

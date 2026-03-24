@@ -1,6 +1,6 @@
 # Unity → Godot module map (starter)
 
-High-level map of [`KyndeBlade_Unity/Assets/KyndeBlade/Code/`](../KyndeBlade_Unity/Assets/KyndeBlade/Code/) assemblies to Godot folders under [`KyndeBlade_Godot/`](../KyndeBlade_Godot/). Extend as waves advance; asmdefs: `KyndeBlade.Core`, `KyndeBlade.Combat`, `KyndeBlade.Editor` (export tooling only), `EditModeTests`, `PlayModeTests` (see `.asmdef` files under `Code/` and `Assets/Tests/`).
+High-level map of [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/) assemblies to Godot folders under [`KyndeBlade_Godot/`](../KyndeBlade_Godot/). Extend as waves advance; asmdefs: `KyndeBlade.Core`, `KyndeBlade.Combat`, `KyndeBlade.Editor` (export tooling only), `EditModeTests`, `PlayModeTests` (see `.asmdef` files under `Code/` and `Assets/Tests/`).
 
 | Unity area | Typical paths | Godot target (suggested) |
 |------------|---------------|---------------------------|

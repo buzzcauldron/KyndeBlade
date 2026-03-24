@@ -4,8 +4,8 @@ Use the Unity Editor in **batch mode** with the **Test Framework** to run Edit M
 
 ## Prerequisites
 
-- Unity **6000.x** (match [ProjectVersion.txt](../KyndeBlade_Unity/ProjectSettings/ProjectVersion.txt)).
-- Project path: `KyndeBlade_Unity` (this repo).
+- Unity **6000.x** (match [ProjectVersion.txt](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/ProjectSettings/ProjectVersion.txt)).
+- Project path: `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity` (this repo).
 - On macOS/Linux, the editor binary is typically:
   - macOS: `/Applications/Unity/Hub/Editor/<version>/Unity.app/Contents/MacOS/Unity`
   - Windows: `C:\Program Files\Unity\Hub\Editor\<version>\Editor\Unity.exe`
@@ -14,7 +14,7 @@ Use the Unity Editor in **batch mode** with the **Test Framework** to run Edit M
 
 ```bash
 UNITY="/Applications/Unity/Hub/Editor/6000.3.9f1/Unity.app/Contents/MacOS/Unity"
-PROJECT="$(pwd)/KyndeBlade_Unity"
+PROJECT="$(pwd)/ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity"
 
 "$UNITY" -batchmode -nographics -quit \
   -projectPath "$PROJECT" \

@@ -22,7 +22,7 @@ This Godot 4 project is treated as the **shipping Steam (and desktop) build** fo
 
 **Extra modes (menu):** **Tiny practice loop** → `scenes/beginner_loop.tscn`. **High-bit medieval bonus** → `scenes/hi_bit_bonus_level.tscn` — **320×180** faux-pixel view (integer scaled), procedural art only.
 
-This is **not** a line-by-line port of Unity. It mirrors **names and flow** from [`PLAYABLE_SLICE.md`](../KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md). TDAD parity: [`.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json`](../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json).
+This is **not** a line-by-line port of Unity. It mirrors **names and flow** from [`PLAYABLE_SLICE.md`](../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/PLAYABLE_SLICE.md). TDAD parity: [`.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json`](../.tdad/workflows/godot-parity-slice/godot-parity-slice.workflow.json).
 
 **Engine / language:** GDScript (**Godot 4.6.1** recommended; **4.6.x** compatible — see `project.godot` `config/features` and [`docs/CI_GODOT_TESTS.md`](../docs/CI_GODOT_TESTS.md)).
 

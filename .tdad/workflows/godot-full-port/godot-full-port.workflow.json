@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "title": "Godot full port + Unity archive (gated)",
-  "description": "Engine migration milestones. Oracle until M6: Unity demo-vertical-slice + PLAYABLE_SLICE/DEMO_RUN. Each milestone exits with godot_gut and/or godot_manual proof. Do not physically archive KyndeBlade_Unity until M6 sign-off—see .tdad/prompts/godot-archive-unity-snapshot.md.",
+  "description": "Engine migration milestones. Oracle until M6: Unity demo-vertical-slice + PLAYABLE_SLICE/DEMO_RUN (Unity tree: ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity). Each milestone exits with godot_gut and/or godot_manual proof. Do not delete that Unity tree without M6 sign-off—see .tdad/prompts/godot-archive-unity-snapshot.md.",
   "nodes": [
     {
       "id": "godot-m1-foundation",
@@ -62,7 +62,7 @@
       "id": "godot-m6-cutover-archive",
       "workflowId": "godot-full-port",
       "title": "M6 Cutover archive Unity",
-      "description": "Exit: godot-parity-slice green + exported Godot build signed off vs DEMO_RUN equivalent. Actions: run godot-archive-unity-snapshot prompt; move KyndeBlade_Unity to ProjectArchive/UnityKyndeBlade/; update root README; TDAD notes Godot as live oracle. Human-gated only.",
+      "description": "Exit: godot-parity-slice green + exported Godot build signed off vs DEMO_RUN equivalent. Actions: run godot-archive-unity-snapshot prompt (metadata/CI only if Unity already under ProjectArchive/UnityKyndeBlade/); confirm root README + TDAD note Godot as live oracle. Human-gated only.",
       "nodeType": "feature",
       "fileName": "godot-m6-cutover-archive",
       "position": { "x": 500, "y": 250 },

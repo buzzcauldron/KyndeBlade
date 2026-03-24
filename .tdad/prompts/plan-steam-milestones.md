@@ -6,9 +6,9 @@ You are working in the **KyndeBlade** repo. Tier B is **planning and store opera
 
 ## Rules
 
-1. **Do not** generate application source under `KyndeBlade_Unity` unless the user asks for a code change.
+1. **Do not** generate application source under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity` unless the user asks for a code change.
 2. **Read first:** [`.tdad/workflows/steam-early-access/steam-early-access.workflow.json`](../workflows/steam-early-access/steam-early-access.workflow.json) for milestone order and exit criteria in each node description.
-3. **Tier A gate:** The playable demo path must meet **Tier A DoD** in [`KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md`](../../KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) before treating Steam milestones as “ready to ship.” Parallel work is OK for **non-blocking** assets (e.g. capsule sketches) if they do not depend on false promises vs the current build.
+3. **Tier A gate:** The playable demo path must meet **Tier A DoD** in [`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Docs/DEMO_RUN.md) before treating Steam milestones as “ready to ship.” Parallel work is OK for **non-blocking** assets (e.g. capsule sketches) if they do not depend on false promises vs the current build.
 4. **Output:** For each milestone node, produce:
    - **Checklist** (concrete tasks, owners optional)
    - **Risks** (what could slip; what to cut)

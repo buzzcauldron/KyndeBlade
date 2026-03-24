@@ -1,6 +1,6 @@
 # Game skeleton (Unity plan → Godot scaffold)
 
-This is the **authoring spine** for the full Kynde Blade campaign: same **location ids**, **graph edges**, and **Unity file paths** as `KyndeBlade_Unity/Assets/Resources/Data/`, so you can write text, drop encounters, and wire scenes without reverse‑engineering the C# project.
+This is the **authoring spine** for the full Kynde Blade campaign: same **location ids**, **graph edges**, and **Unity file paths** as `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/Resources/Data/`, so you can write text, drop encounters, and wire scenes without reverse‑engineering the C# project.
 
 ## Quick map
 
@@ -32,9 +32,9 @@ This is the **authoring spine** for the full Kynde Blade campaign: same **locati
 
 ## Unity source of truth (until M6)
 
-- Locations: `KyndeBlade_Unity/Assets/Resources/Data/Vision1|Vision2|GreenChapel|OrfeoOtherworld/Loc_*.asset`
-- Constants: `KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Game/GameWorldConstants.cs`
-- Map logic: `KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/WorldMapManager.cs`
+- Locations: `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/Resources/Data/Vision1|Vision2|GreenChapel|OrfeoOtherworld/Loc_*.asset`
+- Constants: `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Core/Game/GameWorldConstants.cs`
+- Map logic: `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Assets/KyndeBlade/Code/Combat/Map/WorldMapManager.cs`
 
 If Unity data changes, update **`locations_registry.json`** and **`campaign_spine.json`** in the same PR (or automate export later).
 
