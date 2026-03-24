@@ -1,6 +1,7 @@
 extends Node
 ## Persists save + settings under user:// (**Steam / retail** paths).
-## **Primary slot** + **autosave mirror** (same schema). One-time import from legacy **`kyndeblade_demo_*`** demo-era filenames.
+## **Primary slot** + **autosave mirror** (same schema). One-time import from legacy
+## **`kyndeblade_demo_*`** demo-era filenames.
 
 const SAVE_PATH := "user://kyndeblade_save.cfg"
 const SAVE_FILE := "kyndeblade_save.cfg"
@@ -13,7 +14,7 @@ const LEGACY_SAVE_PATH := "user://kyndeblade_demo_save.cfg"
 const LEGACY_SAVE_FILE := "kyndeblade_demo_save.cfg"
 const LEGACY_SETTINGS_PATH := "user://kyndeblade_demo_settings.cfg"
 const LEGACY_SETTINGS_FILE := "kyndeblade_demo_settings.cfg"
-const SAVE_VERSION := 2
+const SAVE_VERSION := 3
 const PERIODIC_AUTOSAVE_SEC := 90.0
 
 signal save_changed
@@ -73,6 +74,9 @@ func write_new_game() -> void:
 	cfg.set_value("save", "location_visit_counts", "")
 	cfg.set_value("save", "fair_field_return_count", 0)
 	cfg.set_value("save", "dream_iteration", 0)
+	cfg.set_value("save", "hub_revealed_nodes", "tour")
+	cfg.set_value("save", "dongeoun_gate_cleared", false)
+	cfg.set_value("save", "combat_defense_tip_ack", false)
 	_persist_save(cfg)
 	save_changed.emit()
 
@@ -94,6 +98,9 @@ func save_progress(
 		location_visit_counts_pipe: String = "",
 		fair_field_return_count: int = 0,
 		dream_iteration: int = 0,
+		hub_revealed_nodes_pipe: String = "",
+		dongeoun_gate_cleared: bool = false,
+		combat_defense_tip_ack: bool = false,
 ) -> void:
 	var cfg := ConfigFile.new()
 	var src: String = _try_load_save_cfg(cfg)
@@ -110,6 +117,12 @@ func save_progress(
 	cfg.set_value("save", "location_visit_counts", location_visit_counts_pipe)
 	cfg.set_value("save", "fair_field_return_count", fair_field_return_count)
 	cfg.set_value("save", "dream_iteration", dream_iteration)
+	var hub_nodes := hub_revealed_nodes_pipe
+	if hub_nodes.is_empty() and not src.is_empty():
+		hub_nodes = str(cfg.get_value("save", "hub_revealed_nodes", ""))
+	cfg.set_value("save", "hub_revealed_nodes", hub_nodes)
+	cfg.set_value("save", "dongeoun_gate_cleared", dongeoun_gate_cleared)
+	cfg.set_value("save", "combat_defense_tip_ack", combat_defense_tip_ack)
 	cfg.set_value("save", "last_save_unix", int(Time.get_unix_time_from_system()))
 	_persist_save(cfg)
 	if src == LEGACY_SAVE_PATH:
@@ -155,6 +168,9 @@ func load_save() -> Dictionary:
 		"location_visit_counts": str(cfg.get_value("save", "location_visit_counts", "")),
 		"fair_field_return_count": int(cfg.get_value("save", "fair_field_return_count", 0)),
 		"dream_iteration": int(cfg.get_value("save", "dream_iteration", 0)),
+		"hub_revealed_nodes": str(cfg.get_value("save", "hub_revealed_nodes", "")),
+		"dongeoun_gate_cleared": bool(cfg.get_value("save", "dongeoun_gate_cleared", false)),
+		"combat_defense_tip_ack": bool(cfg.get_value("save", "combat_defense_tip_ack", false)),
 	}
 	if src == LEGACY_SAVE_PATH:
 		_persist_save(cfg)

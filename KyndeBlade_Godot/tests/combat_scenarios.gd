@@ -1,24 +1,50 @@
 extends RefCounted
 ## Deterministic **combat scenario** suite for headless CI.
-## Mirrors `PLAYABLE_SLICE.md` / False encounter combat loop + `CombatManager` (strike, enemy turn, dodge/parry windows).
-## Requires `CombatManager.use_instant_resolution_for_tests` so turns do not depend on wall-clock timers.
+## Mirrors `PLAYABLE_SLICE.md` / False encounter combat loop + `CombatManager`
+## (strike, enemy turn, dodge/parry windows).
+## Requires `CombatManager.use_instant_resolution_for_tests` so turns do not depend on wall-clock
+## timers.
+
+const PHeadlessState := preload("res://scripts/game_state.gd")
+
+
+func _game_state(tree: SceneTree) -> PHeadlessState:
+	return tree.root.get_node("/root/GameState") as PHeadlessState
 
 
 func run_all(p_root: Window) -> bool:
-	GameState.reset_from_new_game()
+	_game_state(p_root.get_tree()).reset_from_new_game()
 	# One frame: CombatManager._ready + _start_combat after add_child
 	await p_root.get_tree().process_frame
 	var ok := true
-	ok = ok and await victory_false_by_strikes_only(p_root)
-	ok = ok and await dodge_mitigates_first_swing(p_root)
-	ok = ok and await parry_reduces_swing_damage(p_root)
-	ok = ok and parry_window_ms_stays_in_band()
-	ok = ok and await feint_chips_if_you_defend(p_root)
-	ok = ok and await defeat_on_brutal_enemy_turn(p_root)
-	ok = ok and await strike_ignored_during_defensive_window(p_root)
-	ok = ok and await strike_fails_when_stamina_too_low(p_root)
-	ok = ok and await misstep_inverts_first_defensive_window(p_root)
+	ok = _cs_step(
+			"victory_false_by_strikes_only", await victory_false_by_strikes_only(p_root), ok
+	)
+	ok = _cs_step("dodge_mitigates_first_swing", await dodge_mitigates_first_swing(p_root), ok)
+	ok = _cs_step("parry_reduces_swing_damage", await parry_reduces_swing_damage(p_root), ok)
+	ok = _cs_step("parry_window_ms_stays_in_band", parry_window_ms_stays_in_band(), ok)
+	ok = _cs_step("feint_chips_if_you_defend", await feint_chips_if_you_defend(p_root), ok)
+	ok = _cs_step("defeat_on_brutal_enemy_turn", await defeat_on_brutal_enemy_turn(p_root), ok)
+	ok = _cs_step(
+			"strike_ignored_during_defensive_window",
+			await strike_ignored_during_defensive_window(p_root),
+			ok,
+	)
+	ok = _cs_step(
+			"strike_fails_when_stamina_too_low", await strike_fails_when_stamina_too_low(p_root), ok
+	)
+	ok = _cs_step(
+			"misstep_inverts_first_defensive_window",
+			await misstep_inverts_first_defensive_window(p_root),
+			ok,
+	)
 	return ok
+
+
+func _cs_step(name: String, step_ok: bool, ok_so_far: bool) -> bool:
+	if not step_ok:
+		printerr("COMBAT_SCENARIOS step failed: ", name)
+	return ok_so_far and step_ok
 
 
 func _spawn_cm(p_root: Window, enc: EncounterDef = null) -> CombatManager:
@@ -86,8 +112,8 @@ func parry_reduces_swing_damage(p_root: Window) -> bool:
 		_fail_cleanup(c)
 		return false
 	c.tick_window(2.0)
-	# 20 * 0.3 = 6 mitigated parry
-	if not is_equal_approx(c.player_hp, 94.0):
+	# Mitigated swing base is 12; parry applies ×0.3 → 3.6 damage (see CombatManager._resolve_window).
+	if not is_equal_approx(c.player_hp, 96.4):
 		_fail_cleanup(c)
 		return false
 	_fail_cleanup(c)
@@ -152,7 +178,8 @@ func strike_ignored_during_defensive_window(p_root: Window) -> bool:
 
 
 func misstep_inverts_first_defensive_window(p_root: Window) -> bool:
-	GameState.ethical_misstep_count = 1
+	var gs := _game_state(p_root.get_tree())
+	gs.ethical_misstep_count = 1
 	var c := _spawn_cm(p_root, null)
 	await p_root.get_tree().process_frame
 	c.player_dodge()
@@ -163,7 +190,7 @@ func misstep_inverts_first_defensive_window(p_root: Window) -> bool:
 	# Feint + wasted dodge: 5 chip
 	ok = ok and is_equal_approx(c.player_hp, 95.0)
 	_fail_cleanup(c)
-	GameState.ethical_misstep_count = 0
+	gs.ethical_misstep_count = 0
 	return ok
 
 
@@ -173,7 +200,9 @@ func strike_fails_when_stamina_too_low(p_root: Window) -> bool:
 	enc.enemy_id = "false"
 	enc.enemy_max_hp = 9999.0
 	enc.player_strike_damage = 1.0
-	enc.strike_stamina_cost = 51.0
+	# After a strike, instant enemy phase restores +15 stamina; cost must stay > post-regen stamina
+	# for the second strike to no-op.
+	enc.strike_stamina_cost = 58.0
 	enc.enemy_turn_damage = 0.0
 	var c := _spawn_cm(p_root, enc)
 	await p_root.get_tree().process_frame
@@ -181,7 +210,8 @@ func strike_fails_when_stamina_too_low(p_root: Window) -> bool:
 	if not is_equal_approx(c.enemy_hp, 9998.0):
 		_fail_cleanup(c)
 		return false
-	if not is_equal_approx(c.player_stamina, 49.0):
+	# Stamina after strike includes instant enemy-phase regen (+15).
+	if not is_equal_approx(c.player_stamina, 57.0):
 		_fail_cleanup(c)
 		return false
 	c.player_strike()
@@ -193,15 +223,19 @@ func strike_fails_when_stamina_too_low(p_root: Window) -> bool:
 
 
 func parry_window_ms_stays_in_band() -> bool:
-	GameState.reset_from_new_game()
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return false
+	var gs := _game_state(tree)
+	gs.reset_from_new_game()
 	for i in 80:
-		GameState.ethical_misstep_count = i
-		GameState.has_ever_had_hunger = (i % 3) != 0
+		gs.ethical_misstep_count = i
+		gs.has_ever_had_hunger = (i % 3) != 0
 		var ms: int = PlayerMovesetModifiers.parry_window_ms()
 		if ms < 170 or ms > 230:
-			GameState.reset_from_new_game()
+			gs.reset_from_new_game()
 			return false
-	GameState.reset_from_new_game()
+	gs.reset_from_new_game()
 	return true
 
 

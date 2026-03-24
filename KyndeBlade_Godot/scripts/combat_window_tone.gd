@@ -57,3 +57,18 @@ static func make_enemy_kill_impact() -> AudioStreamWAV:
 	stream.stereo = false
 	stream.data = data
 	return stream
+
+
+## Longer, louder cue while the enemy “gathers” before the reactive window (dodge/parry).
+static func make_defensive_windup_chirp(is_real_swing: bool) -> AudioStreamWAV:
+	var hz := 720.0 if is_real_swing else 300.0
+	return make_tone_hz(hz, 0.11, 0.26)
+
+
+## Window-open ping: sharper contrast than legacy 620/260 ms blips.
+static func make_defensive_window_open_tone(is_real_swing: bool, short_window: bool) -> AudioStreamWAV:
+	var dur := 0.048 if short_window else 0.078
+	var dur_feint := 0.042 if short_window else 0.068
+	if is_real_swing:
+		return make_tone_hz(680.0, dur, 0.26)
+	return make_tone_hz(240.0, dur_feint, 0.22)

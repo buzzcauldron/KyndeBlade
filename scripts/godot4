@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Real `godot4` entrypoint (works in non-interactive shells; zsh aliases do not).
+set -euo pipefail
+_REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export PATH="/Applications/Godot.app/Contents/MacOS:/Applications/Godot 4.app/Contents/MacOS:${_REPO_ROOT}/.cache/Godot.app/Contents/MacOS:${PATH}"
+exec Godot "$@"

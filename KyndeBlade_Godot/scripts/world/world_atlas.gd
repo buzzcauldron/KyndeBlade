@@ -29,8 +29,8 @@ func _build_list() -> void:
 
 
 func _on_pick(loc_id: String) -> void:
-	WorldNav.open_location_preview(loc_id)
+	await WorldNav.open_location_preview(loc_id)
 
 
 func _on_hub_pressed() -> void:
-	WorldNav.go_to_hub()
+	await WorldNav.go_to_hub()

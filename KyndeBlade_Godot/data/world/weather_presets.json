@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "presets": {
+    "mist_calm": {
+      "emitters": [
+        {
+          "amount": 36,
+          "lifetime": 9.0,
+          "preprocess": 2.0,
+          "explosiveness": 0.0,
+          "randomness": 0.45,
+          "direction_deg": 90,
+          "spread_deg": 55,
+          "gravity_x": 0,
+          "gravity_y": 8,
+          "velocity_min": 2,
+          "velocity_max": 14,
+          "angular_velocity_min": -8,
+          "angular_velocity_max": 8,
+          "scale_min": 2.2,
+          "scale_max": 5.5,
+          "color_hex": "7adcc840",
+          "color_end_hex": "1a283008",
+          "emission_half_w": 520,
+          "emission_half_h": 40,
+          "emission_offset_y": -300
+        }
+      ]
+    },
+    "leaves_light": {
+      "emitters": [
+        {
+          "amount": 42,
+          "lifetime": 5.5,
+          "preprocess": 0.8,
+          "explosiveness": 0.02,
+          "randomness": 0.55,
+          "direction_deg": 95,
+          "spread_deg": 42,
+          "gravity_x": 12,
+          "gravity_y": 68,
+          "velocity_min": 18,
+          "velocity_max": 55,
+          "angular_velocity_min": -120,
+          "angular_velocity_max": 120,
+          "scale_min": 2.8,
+          "scale_max": 6.0,
+          "color_hex": "4a8840b0",
+          "color_end_hex": "14322830",
+          "emission_half_w": 540,
+          "emission_half_h": 35,
+          "emission_offset_y": -310
+        }
+      ]
+    },
+    "rain_sheet": {
+      "emitters": [
+        {
+          "amount": 140,
+          "lifetime": 0.85,
+          "preprocess": 0.2,
+          "explosiveness": 0.0,
+          "randomness": 0.12,
+          "direction_deg": 102,
+          "spread_deg": 8,
+          "gravity_x": 80,
+          "gravity_y": 520,
+          "velocity_min": 120,
+          "velocity_max": 220,
+          "angular_velocity_min": 0,
+          "angular_velocity_max": 0,
+          "scale_min": 0.35,
+          "scale_max": 0.55,
+          "color_hex": "7adcc870",
+          "color_end_hex": "42c4b050",
+          "emission_half_w": 520,
+          "emission_half_h": 25,
+          "emission_offset_y": -320
+        },
+        {
+          "amount": 22,
+          "lifetime": 6.0,
+          "preprocess": 1.0,
+          "explosiveness": 0.0,
+          "randomness": 0.4,
+          "direction_deg": 90,
+          "spread_deg": 50,
+          "gravity_x": 0,
+          "gravity_y": 5,
+          "velocity_min": 1,
+          "velocity_max": 8,
+          "angular_velocity_min": -5,
+          "angular_velocity_max": 5,
+          "scale_min": 3.0,
+          "scale_max": 7.0,
+          "color_hex": "1a283055",
+          "color_end_hex": "0e161820",
+          "emission_half_w": 520,
+          "emission_half_h": 50,
+          "emission_offset_y": -280
+        }
+      ]
+    },
+    "snow_soft": {
+      "emitters": [
+        {
+          "amount": 55,
+          "lifetime": 7.0,
+          "preprocess": 1.2,
+          "explosiveness": 0.0,
+          "randomness": 0.5,
+          "direction_deg": 98,
+          "spread_deg": 28,
+          "gravity_x": 18,
+          "gravity_y": 42,
+          "velocity_min": 8,
+          "velocity_max": 38,
+          "angular_velocity_min": -45,
+          "angular_velocity_max": 45,
+          "scale_min": 1.2,
+          "scale_max": 2.6,
+          "color_hex": "fff4dcc8",
+          "color_end_hex": "7adcc828",
+          "emission_half_w": 520,
+          "emission_half_h": 30,
+          "emission_offset_y": -330
+        }
+      ]
+    },
+    "fire_embers": {
+      "emitters": [
+        {
+          "amount": 48,
+          "lifetime": 1.6,
+          "preprocess": 0.15,
+          "explosiveness": 0.05,
+          "randomness": 0.65,
+          "direction_deg": -90,
+          "spread_deg": 35,
+          "gravity_x": 0,
+          "gravity_y": -40,
+          "velocity_min": 25,
+          "velocity_max": 95,
+          "angular_velocity_min": -180,
+          "angular_velocity_max": 180,
+          "scale_min": 1.0,
+          "scale_max": 2.8,
+          "color_hex": "e8a010d0",
+          "color_end_hex": "bc102020",
+          "emission_half_w": 420,
+          "emission_half_h": 18,
+          "emission_offset_y": 260
+        },
+        {
+          "amount": 28,
+          "lifetime": 0.45,
+          "preprocess": 0.05,
+          "explosiveness": 0.15,
+          "randomness": 0.7,
+          "direction_deg": -90,
+          "spread_deg": 55,
+          "gravity_x": 0,
+          "gravity_y": -120,
+          "velocity_min": 40,
+          "velocity_max": 140,
+          "angular_velocity_min": -360,
+          "angular_velocity_max": 360,
+          "scale_min": 0.35,
+          "scale_max": 1.1,
+          "color_hex": "ffc090e0",
+          "color_end_hex": "bc102010",
+          "emission_half_w": 380,
+          "emission_half_h": 14,
+          "emission_offset_y": 275
+        }
+      ]
+    },
+    "ash_drift": {
+      "emitters": [
+        {
+          "amount": 50,
+          "lifetime": 2.2,
+          "preprocess": 0.3,
+          "explosiveness": 0.08,
+          "randomness": 0.72,
+          "direction_deg": -88,
+          "spread_deg": 48,
+          "gravity_x": -25,
+          "gravity_y": -55,
+          "velocity_min": 15,
+          "velocity_max": 70,
+          "angular_velocity_min": -200,
+          "angular_velocity_max": 200,
+          "scale_min": 0.6,
+          "scale_max": 1.8,
+          "color_hex": "5c4838a8",
+          "color_end_hex": "0a080618",
+          "emission_half_w": 480,
+          "emission_half_h": 22,
+          "emission_offset_y": 250
+        }
+      ]
+    },
+    "none": {
+      "emitters": []
+    }
+  }
+}

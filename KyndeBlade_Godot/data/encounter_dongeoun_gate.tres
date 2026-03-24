@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EncounterDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/encounter_def.gd" id="1_enc"]
+
+[resource]
+script = ExtResource("1_enc")
+encounter_id = "dongeoun_gate"
+enemy_id = "gate_warden"
+enemy_display_name = "Gate warden"
+enemy_max_hp = 72.0
+player_strike_damage = 14.0
+strike_stamina_cost = 15.0
+enemy_turn_damage = 14.0
+enemy_turn_bleed_damage = 4.0
+defensive_windup_sec = 0.42
+book_intro_theme = "default"

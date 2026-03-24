@@ -11,6 +11,7 @@ const FLOOR_COLLISION_LAYER := 1
 @onready var _camera: Camera3D = %YardCamera
 @onready var _gate_body: StaticBody3D = %GateBody
 @onready var _gate_mesh: MeshInstance3D = %GateMesh
+@onready var _gate_obstacle: NavigationObstacle3D = %GateObstacle
 @onready var _hint: Label = %HintLabel
 @onready var _dist: Label = %DistLabel
 @onready var _gate_check: CheckButton = %GateCheck
@@ -19,7 +20,8 @@ var _gate_open: bool = false
 
 
 func _ready() -> void:
-	_agent.avoidance_enabled = false
+	_agent.avoidance_enabled = true
+	_agent.velocity_computed.connect(_on_velocity_computed)
 	_gate_check.toggled.connect(_on_gate_toggled)
 	%BackButton.pressed.connect(_on_back_pressed)
 	_apply_gate_visual_and_collision()
@@ -81,20 +83,27 @@ func _raycast_floor(screen_pos: Vector2) -> Dictionary:
 func _physics_process(_delta: float) -> void:
 	if _agent.is_navigation_finished():
 		_player.velocity = Vector3.ZERO
+		_player.move_and_slide()
 		_dist.text = "Idle / arrived"
-	else:
-		var next := _agent.get_next_path_position()
-		var flat := Vector3(next.x - _player.global_position.x, 0.0, next.z - _player.global_position.z)
-		if flat.length_squared() < 0.0025:
-			var pts := _agent.get_current_navigation_path()
-			if pts.size() >= 2:
-				var p2: Vector3 = pts[1]
-				flat = Vector3(p2.x - _player.global_position.x, 0.0, p2.z - _player.global_position.z)
-		var vel := Vector3.ZERO
-		if flat.length_squared() > 0.0001:
-			vel = flat.normalized() * MOVE_SPEED
-		_player.velocity = vel
-		_dist.text = "To target: %.1f" % _player.global_position.distance_to(_agent.target_position)
+		return
+	var next := _agent.get_next_path_position()
+	var flat := Vector3(next.x - _player.global_position.x, 0.0, next.z - _player.global_position.z)
+	if flat.length_squared() < 0.0025:
+		var pts := _agent.get_current_navigation_path()
+		if pts.size() >= 2:
+			var p2: Vector3 = pts[1]
+			flat = Vector3(p2.x - _player.global_position.x, 0.0, p2.z - _player.global_position.z)
+	var vel := Vector3.ZERO
+	if flat.length_squared() > 0.0001:
+		vel = flat.normalized() * MOVE_SPEED
+	_agent.set_velocity(vel)
+	_dist.text = "To target: %.1f" % _player.global_position.distance_to(_agent.target_position)
+
+
+func _on_velocity_computed(safe_velocity: Vector3) -> void:
+	if _agent.is_navigation_finished():
+		return
+	_player.velocity = safe_velocity
 	_player.move_and_slide()
 
 
@@ -112,9 +121,13 @@ func _apply_gate_visual_and_collision() -> void:
 	if _gate_open:
 		_gate_body.collision_layer = 0
 		_gate_mesh.visible = false
+		if _gate_obstacle:
+			_gate_obstacle.avoidance_enabled = false
 	else:
 		_gate_body.collision_layer = 2
 		_gate_mesh.visible = true
+		if _gate_obstacle:
+			_gate_obstacle.avoidance_enabled = true
 
 
 ## For tests: open gate so the nav mesh is one island (long paths east-west).

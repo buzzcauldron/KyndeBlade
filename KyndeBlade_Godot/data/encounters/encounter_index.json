@@ -4,7 +4,7 @@
   "encounters": [
     { "unity_asset": "FayreFeldeEncounter", "location_id": "fayre_felde", "godot_resource": "res://data/encounter_fair_field.tres", "status": "wired" },
     { "unity_asset": "TutorialEncounter", "location_id": null, "godot_resource": null, "status": "placeholder" },
-    { "unity_asset": "DongeounEncounter", "location_id": "dongeoun", "godot_resource": null, "status": "placeholder" },
+    { "unity_asset": "DongeounEncounter", "location_id": "dongeoun", "godot_resource": "res://data/encounter_dongeoun_gate.tres", "status": "wired" },
     { "unity_asset": "PiersFieldEncounter", "location_id": "piers_field", "godot_resource": null, "status": "placeholder" },
     { "unity_asset": "SevenSinsEncounter", "location_id": "seven_sins", "godot_resource": null, "status": "placeholder" },
     { "unity_asset": "GreenChapelEncounter", "location_id": "green_chapel", "godot_resource": null, "status": "placeholder" },

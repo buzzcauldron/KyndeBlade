@@ -8,7 +8,7 @@ Run this **only after** `godot-m6-cutover-archive` exit criteria are met: `godot
 
 - [ ] Record **git SHA**: `git rev-parse HEAD`
 - [ ] Record **Unity Editor version** last used on `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`
-- [ ] Optional: export **.unitypackage** or zip of that folder for cold storage (not required for git history)
+- [ ] Optional: export **.unitypackage** or zip of `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity` for cold storage (not required for git history)
 
 ## Repository steps (destructive — confirm with team)
 

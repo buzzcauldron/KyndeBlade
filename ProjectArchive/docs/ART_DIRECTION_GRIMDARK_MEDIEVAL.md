@@ -33,7 +33,7 @@ Use **BossPalette** asset (Create → KyndeBlade → Boss Palette) in code for h
 
 ## Engine (Unity oracle: Built-in RP — not URP)
 
-The **Unity oracle project** ([`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`](../UnityKyndeBlade/KyndeBlade_Unity)) uses the **Built-in Render Pipeline** (no `com.unity.render-pipelines.universal` in [`Packages/manifest.json`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Packages/manifest.json)). Do **not** assume URP/HDRP unless you migrate the project.
+The **Unity oracle project** ([`ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity)) uses the **Built-in Render Pipeline** (no `com.unity.render-pipelines.universal` in [`Packages/manifest.json`](../../ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/Packages/manifest.json)). Do **not** assume URP/HDRP unless you migrate the project.
 
 **Art-adjacent packages actually in use (UPM ids):**
 

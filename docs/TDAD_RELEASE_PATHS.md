@@ -42,4 +42,4 @@ Tier B **depends on** Tier A in the root graph (`steam-early-access` → `demo-v
 | Godot CI / headless tests | [`docs/CI_GODOT_TESTS.md`](CI_GODOT_TESTS.md) |
 | Unity archive target (populate at M6) | [`ProjectArchive/UnityKyndeBlade/README.md`](../ProjectArchive/UnityKyndeBlade/README.md) |
 
-**Oracle:** Until M6 sign-off, Unity **demo-vertical-slice** + `PLAYABLE_SLICE.md` / `DEMO_RUN.md` (under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`) define expected behavior. Unity already lives under **`ProjectArchive/UnityKyndeBlade/`**; the **Godot** slice + headless tests are the live contract for the shipping build; Unity TDAD nodes remain as historical spec where noted.
+**Oracle:** Until M6 sign-off, Unity **demo-vertical-slice** + `PLAYABLE_SLICE.md` / `DEMO_RUN.md` (under `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`) define expected behavior. Unity already lives under **`ProjectArchive/UnityKyndeBlade/`**; the **Godot** slice + headless tests are the live contract for the shipping build. After M6 sign-off, Godot parity tests become the primary live contract; Unity TDAD nodes remain as historical spec where noted.

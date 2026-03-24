@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8fairfieldconcept1"
-path="res://.godot/imported/fair_field_lane_b_concept.png-9f2e1c8d4b7a6035e1f4d2c8b0a9e7f6.ctex"
+uid="uid://bhyf8mpnfyswy"
+path="res://.godot/imported/fair_field_lane_b_concept.png-ecb429ea29b73be2cf12ceda2e380706.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/concept/fair_field_lane_b_concept.png"
-dest_files=["res://.godot/imported/fair_field_lane_b_concept.png-9f2e1c8d4b7a6035e1f4d2c8b0a9e7f6.ctex"]
+dest_files=["res://.godot/imported/fair_field_lane_b_concept.png-ecb429ea29b73be2cf12ceda2e380706.ctex"]
 
 [params]
 

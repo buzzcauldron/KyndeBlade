@@ -1,11 +1,15 @@
 extends Control
-## Hub stub: tour / Fair Field travel (mirrors slice names + Unity export when present).
+## Hub: **route map** travel + Fair Field counsel flow. Atlas is secondary (writers’ index).
 
+const _NarrativeBeats := preload("res://scripts/world/narrative_beats.gd")
 const COMBAT := "res://scenes/combat.tscn"
 const MENU := "res://scenes/main_menu.tscn"
 
 enum CounselChoice { NONE, TREWTHE, MEDE, HUNGER }
 
+@onready var route_map: HubRouteMap = %HubRouteMap
+@onready var weather_root: Node2D = $WeatherFX/WeatherRoot
+@onready var counsel_row: HBoxContainer = %CounselRow
 @onready var location_label: RichTextLabel = %LocationLabel
 @onready var flavor_panel: PanelContainer = %FlavorPanel
 @onready var fair_button: Button = %FairFieldButton
@@ -19,17 +23,35 @@ enum CounselChoice { NONE, TREWTHE, MEDE, HUNGER }
 
 var _unity_export: Dictionary = {}
 var _pending_counsel: CounselChoice = CounselChoice.NONE
+## When true, Enter Combat skips counsel and loads the dongeoun gate encounter.
+var _pending_combat_from_dongeoun: bool = false
 
 
 func _ready() -> void:
 	theme = KyndeBladeManuscriptTheme.build_theme()
-	# Twilight / mist backdrop: `CrawlParallaxBackdrop` (parallax crawl feature)
-	$Margin/VBox/Title.add_theme_color_override("font_color", KyndeBladeArtPalette.VISTA_GOLD_TITLE)
-	$Margin/VBox/HintLabel.add_theme_color_override("font_color", KyndeBladeArtPalette.VISTA_BODY)
+	$RouteColumns/LeftWrap/VBox/Title.add_theme_color_override("font_color", KyndeBladeArtPalette.VISTA_GOLD_TITLE)
+	$RouteColumns/LeftWrap/VBox/HintLabel.add_theme_color_override("font_color", KyndeBladeArtPalette.VISTA_BODY)
 	_unity_export = UnityExportData.load_export()
 	_validate_slice_locations_json()
 	_validate_unity_export()
+	GameState.hub_on_map_opened()
+	AtmosphereProfile.apply_to_hub_crawl($CrawlParallaxBackdrop, GameState.current_location_id)
+	route_map.travel_requested.connect(_on_route_travel_requested)
 	_update_ui()
+	route_map.refresh()
+	_apply_hub_weather()
+
+
+func _apply_hub_weather() -> void:
+	var sz: Vector2 = get_viewport_rect().size
+	var w: Dictionary = AtmosphereProfile.weather_preset_for_location(GameState.current_location_id)
+	WeatherParticles.rebuild_under(
+			weather_root,
+			sz,
+			str(w.get("preset_id", "mist_calm")),
+			float(w.get("intensity", 1.0)),
+			true
+	)
 
 
 func _validate_slice_locations_json() -> void:
@@ -83,6 +105,10 @@ func _world_state_prefix() -> String:
 				"Hunger hath been named; the feeld remembereth thy want — "
 				+ "the next shelde-fray taketh a slightly other tithe each tyme."
 		)
+	if GameState.fair_field_cleared and not GameState.dongeoun_gate_cleared:
+		parts.append(
+				"The vale dongeoun openeth upon the map — a second fray awaiteth at the gate."
+		)
 	if parts.is_empty():
 		return ""
 	return "\n\n".join(parts) + "\n\n"
@@ -104,48 +130,173 @@ func _update_ui() -> void:
 	fair_button.disabled = false
 	fair_button.text = "Fayr Feeld — abide the fight again" if GameState.fair_field_cleared else "Travel to the Fayr Feeld"
 	if hint_label:
-		var base: String
+		var base := (
+				"**Tread the map** at right: each lit stede is a leaf thou mayst turn. "
+				+ "The writers’ index below listeth every place in the larger book, but the weyes thou goest here."
+		)
 		if not _unity_export.is_empty():
-			base = "Vision I writ is bound—the weyes and the feeld are true to the export."
-		else:
-			base = "Chuse whither thou goest. The Fayr Feeld lieth open in this slice. The World atlas listeth every stede planned with Unity."
+			base = (
+					"Tread the **map** — the codex and the export agree on tour and feeld. "
+					+ "Writers’ index: all skeleton stedes."
+			)
 		var extra := ""
 		if GameState.ethical_misstep_count > 0:
 			extra += " Mede’s count: %d." % GameState.ethical_misstep_count
 		if GameState.has_ever_had_hunger:
 			extra += " Hunger is named; punishments shift like weather — odd, sharp, not quite the same twice."
-		hint_label.text = base + extra
+		hint_label.text = base.replace("**", "") + extra
 	if locked_button:
-		locked_button.text = "Dongeoun — loke, not yet in this build"
+		locked_button.text = (
+				"Dongeoun — tread the map when the Fayr Feeld is won"
+				if not GameState.fair_field_cleared
+				else "Dongeoun — gate-ward shelde-fray (after the feeld)"
+		)
 
 
 func _reset_counsel_ui() -> void:
 	_pending_counsel = CounselChoice.NONE
+	_pending_combat_from_dongeoun = false
 	if proceed_combat_button:
 		proceed_combat_button.disabled = true
+	if counsel_row:
+		counsel_row.visible = true
 
 
-func _on_fair_field_pressed() -> void:
+func _on_route_travel_requested(loc_id: String) -> void:
+	match loc_id:
+		"fayre_felde":
+			_offer_travel_to_fair_field()
+		"tour":
+			_travel_to_tour()
+		"dongeoun":
+			_on_dongeoun_travel()
+		_:
+			pass
+
+
+func _travel_to_tour() -> void:
+	GameState.current_location_id = "tour"
+	GameState.record_location_visit("tour")
+	GameState.hub_on_map_opened()
+	GameState.sync_to_save()
+	_update_ui()
+	route_map.refresh()
+	_apply_hub_weather()
+
+
+func _on_dongeoun_travel() -> void:
+	if not GameState.fair_field_cleared:
+		_show_dongeoun_locked_stub()
+		return
+	if GameState.dongeoun_gate_cleared:
+		_show_dongeoun_cleared_flavor()
+		return
+	_offer_dongeoun_combat()
+
+
+func _show_dongeoun_locked_stub() -> void:
 	_reset_counsel_ui()
-	# Reading the Fair Field arrival flavor counts as ingesting that beat’s text grant.
+	flavor_text.text = (
+			"The dongeoun yawneth in the vale — yet the way is sealed until thou hast "
+			+ "faced False upon the Fayr Feeld."
+	)
+	if counsel_row:
+		counsel_row.visible = false
+	if proceed_combat_button:
+		proceed_combat_button.visible = false
+	flavor_panel.visible = true
+
+
+func _show_dongeoun_cleared_flavor() -> void:
+	_reset_counsel_ui()
+	flavor_text.text = "The outer ward is stille. Thy lettre of the gate is writ; turne againe to the map."
+	if counsel_row:
+		counsel_row.visible = false
+	if proceed_combat_button:
+		proceed_combat_button.visible = false
+	flavor_panel.visible = true
+
+
+func _offer_dongeoun_combat() -> void:
+	_reset_counsel_ui()
+	_pending_combat_from_dongeoun = true
+	GameState.mark_medieval_text_read("MalvernPrologue")
+	GameState.current_location_id = "dongeoun"
+	GameState.record_location_visit("dongeoun")
+	GameState.hub_on_map_opened()
+	GameState.sync_to_save()
+	var base := (
+			"The dongeoun mouth gapes; a warden keepeth the writ-mount of the gate. "
+			+ "Somer seson liȝ in memorie — lettres redde here spare a little stamyn ere the shelde-fray.\n\n"
+			+ "Enter combat when thou art ready."
+	)
+	var prefix := ""
+	if not _unity_export.is_empty():
+		var dun: Dictionary = UnityExportData.location_by_id(_unity_export, "dongeoun")
+		if not dun.is_empty():
+			var dbeat: String = str(dun.get("arrival_beat_text", ""))
+			if not dbeat.is_empty():
+				prefix = dbeat
+		if prefix.is_empty():
+			var mal: Dictionary = UnityExportData.location_by_id(_unity_export, "malvern")
+			if mal.is_empty():
+				mal = UnityExportData.location_by_id(_unity_export, "tour")
+			if not mal.is_empty():
+				var beat: String = str(mal.get("arrival_beat_text", ""))
+				if not beat.is_empty():
+					prefix = beat
+	if prefix.is_empty():
+		prefix = _NarrativeBeats.player_facing_arrival_line("dongeoun")
+	var body := base if prefix.is_empty() else prefix + "\n\n" + base
+	body = _world_state_prefix() + body
+	flavor_text.text = body
+	if counsel_row:
+		counsel_row.visible = false
+	flavor_panel.visible = true
+	if proceed_combat_button:
+		proceed_combat_button.visible = true
+		proceed_combat_button.disabled = false
+	_update_ui()
+	route_map.refresh()
+	_apply_hub_weather()
+
+
+func _offer_travel_to_fair_field() -> void:
+	_reset_counsel_ui()
+	_pending_combat_from_dongeoun = false
+	if proceed_combat_button:
+		proceed_combat_button.visible = true
 	GameState.mark_medieval_text_read("FayreFelde")
-	var body := "You step toward Fair Field. False waits in the encounter ahead."
+	var base := "You step toward Fair Field. False waits in the encounter ahead."
+	var prefix := ""
 	if not _unity_export.is_empty():
 		var fayre: Dictionary = UnityExportData.location_by_id(_unity_export, "fayre_felde")
 		if not fayre.is_empty():
 			var beat: String = str(fayre.get("arrival_beat_text", ""))
 			if not beat.is_empty():
-				body = beat + "\n\n" + body
+				prefix = beat
 			else:
 				var desc: String = str(fayre.get("description", ""))
 				if not desc.is_empty():
-					body = desc + "\n\n" + body
-	else:
-		body = "A fair feeld ful of folke… (slice flavor)\n\n" + body
+					prefix = desc
+	if prefix.is_empty():
+		prefix = _NarrativeBeats.player_facing_arrival_line("fayre_felde")
+	if prefix.is_empty() and _unity_export.is_empty():
+		prefix = "A fair feeld ful of folke… (slice flavor)"
+	var body := base if prefix.is_empty() else prefix + "\n\n" + base
 	body = _world_state_prefix() + body
 	if flavor_text:
 		flavor_text.text = body
 	flavor_panel.visible = true
+
+
+## Headless / tests: same as choosing Fair Field on the map.
+func travel_to_fair_field_for_tests() -> void:
+	_offer_travel_to_fair_field()
+
+
+func _on_fair_field_pressed() -> void:
+	_offer_travel_to_fair_field()
 
 
 func _on_counsel_trewthe_pressed() -> void:
@@ -167,6 +318,14 @@ func _on_counsel_hunger_pressed() -> void:
 
 
 func _on_flavor_continue_pressed() -> void:
+	if _pending_combat_from_dongeoun:
+		GameState.pending_combat_encounter_path = "res://data/encounter_dongeoun_gate.tres"
+		flavor_panel.visible = false
+		_reset_counsel_ui()
+		if proceed_combat_button:
+			proceed_combat_button.visible = true
+		await ManuscriptNav.turn_page_to(COMBAT, true)
+		return
 	if _pending_counsel == CounselChoice.NONE:
 		return
 	match _pending_counsel:
@@ -177,25 +336,31 @@ func _on_flavor_continue_pressed() -> void:
 		CounselChoice.HUNGER:
 			GameState.has_ever_had_hunger = true
 	GameState.record_location_visit("fayre_felde")
+	GameState.hub_on_map_opened()
 	GameState.sync_to_save()
 	flavor_panel.visible = false
 	_reset_counsel_ui()
+	if proceed_combat_button:
+		proceed_combat_button.visible = true
 	_update_ui()
-	get_tree().change_scene_to_file(COMBAT)
+	route_map.refresh()
+	await ManuscriptNav.turn_page_to(COMBAT, true)
 
 
 func _on_cancel_flavor_pressed() -> void:
 	flavor_panel.visible = false
 	_reset_counsel_ui()
+	if proceed_combat_button:
+		proceed_combat_button.visible = true
 
 
 func _on_back_menu_pressed() -> void:
-	get_tree().change_scene_to_file(MENU)
+	await ManuscriptNav.turn_page_to(MENU)
 
 
 func _on_locked_pressed() -> void:
-	pass
+	_show_dongeoun_locked_stub()
 
 
 func _on_world_atlas_pressed() -> void:
-	WorldNav.open_world_atlas()
+	await WorldNav.open_world_atlas()

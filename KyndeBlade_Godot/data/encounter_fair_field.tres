@@ -11,4 +11,6 @@ enemy_max_hp = 80.0
 player_strike_damage = 15.0
 strike_stamina_cost = 15.0
 enemy_turn_damage = 18.0
+enemy_turn_bleed_damage = 0.0
+defensive_windup_sec = 0.0
 book_intro_theme = "langage_fals"

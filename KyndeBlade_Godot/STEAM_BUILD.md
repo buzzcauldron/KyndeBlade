@@ -14,7 +14,9 @@
 
 This Godot 4 project is treated as the **shipping Steam (and desktop) build** for the slice: same scope as the Unity Tier A vertical slice, packaged for players — **not** an internal “demo-only” artifact. Unity remains the authoring oracle until M6 archive policy changes; see parity table below.
 
-**Player journey (current slice):** **main menu → tower arrival beat → hub → Fair Field flavor (export story text) → counsel (Trewthe / Mede / Name hunger) → combat → outcome → hub**, with **save / continue**, **autosave mirror**, **settings** (volume + fullscreen), and **pause** (freezes the real-time dodge/parry window).
+**Player journey (current slice):** **main menu → slice open yard** (Malvern prologue crawl: grass, streme, **step the right bank** to rest — hi-bit door-style; [`scenes/slice_open_yard.tscn`](scenes/slice_open_yard.tscn)) **→ tower arrival beat → hub → Fair Field flavor (export story text) → counsel (Trewthe / Mede / Name hunger) → combat → outcome → hub**, then optionally **Dongeoun** on the map (unlocks after Fair Field victory; gate warden encounter with defensive wind-up telegraph), with **save / continue**, **autosave mirror**, **settings** (volume + fullscreen), and **pause** (freezes the real-time dodge/parry window). **Continue** loads the hub and **skips** the yard.
+
+**Pacing (mini-act):** Target **~12–18 minutes** for a first cold run through tower → Fair Field combat → Dongeoun gate combat (reading speed and counsel choice variance). [`data/world/narrative_beats_skeleton.json`](data/world/narrative_beats_skeleton.json) supplies arrival fallbacks when the Unity export row has no beat text.
 
 **World skeleton (authoring):** From hub, **World atlas — all stedes** opens the full Unity-planned location list (`data/world/locations_registry.json`). See [`docs/GAME_SKELETON.md`](docs/GAME_SKELETON.md).
 
@@ -43,7 +45,7 @@ This is **not** a line-by-line port of Unity. It mirrors **names and flow** from
 | **Depots** | Use Godot export presets per OS; one depot per OS is typical for Steam. |
 | **steam_appid.txt** | For local Steam API testing, place `steam_appid.txt` with your AppID next to the executable (not committed here). |
 | **Cloud** | Saves live under Godot `user://` (`kyndeblade_save.cfg`, etc.). Enable **Steam Cloud** only after you map these paths in Steamworks partner settings. |
-| **Build ID** | Bump `SaveService.SAVE_VERSION` when you migrate save schema; document in release notes. **v2** adds Piers metadata: `piers_text_edition`, `narrative_phase_id`, `location_visit_counts` (pipe-separated `loc:count` pairs), `fair_field_return_count`, `dream_iteration` — older saves default these on load. |
+| **Build ID** | Bump `SaveService.SAVE_VERSION` when you migrate save schema; document in release notes. **v2** adds Piers metadata: `piers_text_edition`, `narrative_phase_id`, `location_visit_counts` (pipe-separated `loc:count` pairs), `fair_field_return_count`, `dream_iteration` — older saves default these on load. **v3** adds `dongeoun_gate_cleared` (second hub combat slice; defaults false on load). **`combat_defense_tip_ack`** (one-time feint-read HUD line; defaults false) is written alongside v3 saves. |
 
 ## Unity ↔ Godot parity (TDAD demo-vertical-slice titles)
 
@@ -52,12 +54,13 @@ This is **not** a line-by-line port of Unity. It mirrors **names and flow** from
 | Main scene map bootstraps at tour | **New Game** → `tower_intro.tscn` → hub; `GameState.current_location_id == tour`; manual #2 |
 | Tour location lists Fair Field as next | `data/slice_locations.json` + hub **Travel to Fair Field**; headless `_test_slice_locations_json` |
 | Fair Field encounter wired to False | `data/encounter_fair_field.tres` (`enemy_id: false`); `CombatManager` loads it |
+| Dongeoun gate encounter (post–Fair Field) | `data/encounter_dongeoun_gate.tres`; hub travel + `GameState.pending_combat_encounter_path`; headless `encounter_resource` + `dongeoun_gate_save_roundtrip` |
 | Save checkpoint updates current location | `SaveService.save_progress`; headless `_test_save_roundtrip_service` |
 | Game progress JSON roundtrip | **Unity:** JSON. **Godot:** `ConfigFile` — same *behaviour*; headless save test |
 | Pause overlay present after bootstrap | `combat.tscn` `PauseLayer`; manual #3 |
 | Settings master volume persists | `kyndeblade_settings.cfg`; headless `_test_settings_volume` |
 | Continue when save exists | Main menu **Continue**; headless + manual #1 |
-| Combat win → hub (manual) | Victory → **Continue to hub**; `GameState.on_victory_fair_field()`; manual #4 |
+| Combat win → hub (manual) | Victory → **Continue to hub**; `GameState.on_victory_fair_field()` or `on_victory_dongeoun_gate()`; manual #4–5 |
 
 **Oracle:** Until M6 archive, if behaviour disagrees, **Unity + DEMO_RUN** wins unless you **update both sides** and BDD ([`demo-vertical-slice.feature`](../.tdad/bdd/demo-vertical-slice.feature) / [`godot-parity-slice.feature`](../.tdad/bdd/godot-parity-slice.feature)).
 
@@ -92,19 +95,26 @@ See parity: `feint_pattern_offset`, `PlayerMovesetModifiers`, `MedievalTextCatal
 ## Manual QA checklist
 
 1. **Cold run**: F5 → main menu; **Continue** disabled without save.
-2. **New Game** → tower vista → hub (**tower_vista** read) → **Fair Field** (**FayreFelde** read) → counsel → combat.
-3. **Combat**: Lane B art, window SFX, eye UI, pause freezes window.
-4. **Victory** → hub; save state; **Continue** restores.
-5. **Settings**: volume + fullscreen.
-6. **Defeat** → hunger flag + autosave.
+2. **New Game** → **slice open yard** (walk the lea, ford the streme, **enter the right-bank rest** like the bonus door goal) → tower vista → hub (**tower_vista** read) → **Fair Field** (**FayreFelde** read) → counsel → combat.
+3. **Combat**: Lane B art, window SFX, eye UI (wind-up gather → open window phases), pause freezes window; **first defensive wind-up** clears the extra feint-vs-true line under the control hint (persisted as `combat_defense_tip_ack`).
+4. **Victory (Fair Field)** → hub; save state; **Continue** restores; **Dongeoun** should appear on the map with a hint in flavor copy.
+5. **Dongeoun**: travel → flavor → **Enter combat** → gate fight (wind-up phase before dodge/parry window; bleed ticks on enemy turns); **Victory** → cleared flavor on revisit.
+6. **Settings**: volume + fullscreen.
+7. **Defeat** → hunger flag + autosave.
 
 ## Headless regression
 
 ```bash
-godot4 --path KyndeBlade_Godot --headless --script res://tests/run_headless_tests.gd
+godot4 --path KyndeBlade_Godot --headless res://tests/headless_main.tscn
 ```
 
 See [`docs/CI_GODOT_TESTS.md`](../docs/CI_GODOT_TESTS.md).
+
+## Boss demo week — macOS greybox (two-day focus)
+
+**Today:** Run headless smoke; play **Reaction loop (greybox · B)** from the main menu (3 wins before 2 losses); play **Combat gauntlet (greybox · 3 fights)** (Fair Field ×2 → Dongeoun gate); confirm **Back to main menu** returns cleanly and your **Continue** save was not overwritten by gauntlet wins.
+
+**Tomorrow:** **Project → Export** with a **macOS** preset (Godot 4.6.x export templates installed); export to a fresh folder; zip the `.app` bundle; on another account or machine, **right-click → Open** the first time to satisfy Gatekeeper; note one paragraph of “known rough edges” for your walkthrough.
 
 ## Export (Steam / desktop)
 

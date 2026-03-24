@@ -15,10 +15,12 @@ This is the **authoring spine** for the full Kynde Blade campaign: same **locati
 | Encounter checklist | `data/encounters/encounter_index.json` | `EncounterConfig` referenced by locations |
 | Preview UI | `scenes/world/world_atlas.tscn` → `location_shell.tscn` | N/A (authoring aid) |
 | Navigation autoload | `WorldNav` | `WorldMapManager.TransitionTo` (future parity) |
+| Hub route + fog (slice) | `data/world/hub_route_map.json` + `HubRouteMap` on `hub_map.tscn` | N/A (Godot-first travel UI) |
+| Ambient weather + combat read | `data/world/atmosphere_profiles.json` + `data/world/weather_presets.json` → `AtmosphereProfile` / `WeatherParticles` | N/A |
 
 ## Player-facing flow today
 
-- **Hub** `hub_map.tscn` — slice: Tower / Fair Field → counsel → combat (unchanged).
+- **Hub** `hub_map.tscn` — **route map** (fog-of-war, saved in `hub_revealed_nodes`) → click **Fayr Feeld** → counsel → combat; **writers’ index** opens full atlas.
 - **World atlas** button on hub — opens **every** registry location for reading / preview.
 - **Location shell** — shows description, Unity asset path, **next** edges; only **tour** ↔ **fayre_felde** travel buttons are live (returns to hub). Other edges open another shell preview (skeleton).
 

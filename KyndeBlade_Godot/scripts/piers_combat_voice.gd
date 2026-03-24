@@ -16,7 +16,7 @@ const CODE_KENNING := {
 
 
 static func field_subtitle() -> String:
-	return "On the fayr feeld ful of folke — Langage fals abydeth."
+	return "Thou art sunk into the writ itself — the fayr feeld ful of folke; Langage fals abydeth."
 
 
 static func strike_action_name() -> String:
@@ -32,8 +32,11 @@ static func parry_action_name() -> String:
 
 
 static func enemy_epithet(display_name: String) -> String:
-	if display_name.to_lower().contains("false"):
+	var low := display_name.to_lower()
+	if low.contains("false"):
 		return "%s — he that speketh trewe til it be fals" % display_name
+	if low.contains("warden") or low.contains("gate"):
+		return "%s — kepere of the writ-mount" % display_name
 	return display_name
 
 
@@ -51,6 +54,12 @@ static func player_turn_rubric(strike_stam: float, strike_dmg: float, dodge_stam
 
 static func defensive_telegraph(is_real_swing: bool) -> String:
 	return "A soth swyng!" if is_real_swing else "Fals feynteth — loke wel!"
+
+
+static func defensive_windup_rubric(is_real_swing: bool) -> String:
+	if is_real_swing:
+		return "The warden draweth true stel — withdrawe ere the edge falleth!"
+	return "A fals wind riseth — rede the feynt, spend not thy shelde on naught."
 
 
 static func granted_kennings_block() -> String:

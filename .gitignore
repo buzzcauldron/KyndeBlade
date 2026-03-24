@@ -46,6 +46,9 @@ ProjectArchive/legacy/Build/
 # macOS
 .DS_Store
 
+# Local tool downloads (e.g. Godot .app zip unpacked for CI/dev)
+.cache/
+
 # Compiled
 *.so
 *.dylib

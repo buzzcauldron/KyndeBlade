@@ -1,0 +1,248 @@
+[gd_scene load_steps=9 format=3 uid="uid://sliceopenyard01"]
+
+[ext_resource type="Script" path="res://scripts/slice_open_yard.gd" id="1_yard"]
+[ext_resource type="Script" path="res://scripts/slice_open_yard_world.gd" id="2_world"]
+[ext_resource type="Script" path="res://scripts/slice_open_yard_player.gd" id="3_player"]
+[ext_resource type="Script" path="res://scripts/slice_open_yard_dream_fairies.gd" id="4_fairy"]
+
+[sub_resource type="RectangleShape2D" id="RectMeadow"]
+size = Vector2(768, 24)
+
+[sub_resource type="RectangleShape2D" id="RectPlayer"]
+size = Vector2(10, 18)
+
+[sub_resource type="RectangleShape2D" id="RectSleep"]
+size = Vector2(40, 26)
+
+[sub_resource type="RectangleShape2D" id="RectFord"]
+size = Vector2(104, 22)
+
+[sub_resource type="RectangleShape2D" id="RectCap"]
+size = Vector2(14, 64)
+
+[node name="SliceOpenYard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yard")
+
+[node name="ParchmentBase" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.98, 0.95, 0.86, 1)
+
+[node name="ParchmentWash" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.87, 0.75, 0.55, 0.12)
+
+[node name="EdgeAging" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.04, 0.03, 0.02, 0.14)
+
+[node name="SheetMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 20
+
+[node name="ManuscriptPanel" type="PanelContainer" parent="SheetMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PageInner" type="MarginContainer" parent="SheetMargin/ManuscriptPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="SheetMargin/ManuscriptPanel/PageInner"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="YardTitle" type="Label" parent="SheetMargin/ManuscriptPanel/PageInner/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Malvern side — ere the visio"
+
+[node name="YardSubtitle" type="Label" parent="SheetMargin/ManuscriptPanel/PageInner/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Somer seson, soft sun, sheep-bitten grass; the streme’s right bank; slepe; and afterward the dreme."
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="SheetMargin/ManuscriptPanel/PageInner/VBox"]
+texture_filter = 1
+custom_minimum_size = Vector2(640, 360)
+layout_mode = 2
+size_flags_vertical = 3
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer"]
+handle_input_locally = true
+canvas_item_default_texture_filter = 1
+size = Vector2i(320, 180)
+render_target_update_mode = 4
+
+[node name="Camera2D" type="Camera2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport"]
+position = Vector2(160, 90)
+limit_left = 0
+limit_top = 0
+limit_right = 512
+limit_bottom = 180
+
+[node name="World" type="Node2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport"]
+script = ExtResource("2_world")
+
+[node name="Sky" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+z_index = -10
+color = Color(0.72, 0.82, 0.88, 1)
+polygon = PackedVector2Array(0, 0, 768, 0, 768, 100, 0, 100)
+
+[node name="SkyWarm" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+z_index = -9
+color = Color(0.94, 0.78, 0.62, 0.55)
+polygon = PackedVector2Array(0, 0, 768, 0, 768, 72, 0, 52)
+
+[node name="HillsFar" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+z_index = -8
+color = Color(0.35, 0.48, 0.42, 1)
+polygon = PackedVector2Array(0, 118, 120, 88, 260, 102, 420, 78, 560, 96, 680, 82, 768, 108, 768, 180, 0, 180)
+
+[node name="MeadowGround" type="StaticBody2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+position = Vector2(384, 168)
+
+[node name="Earth" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/MeadowGround"]
+color = Color(0.32, 0.48, 0.22, 1)
+polygon = PackedVector2Array(-384, -12, 384, -12, 384, 12, -384, 12)
+
+[node name="GrassShadow" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/MeadowGround"]
+color = Color(0.2, 0.36, 0.14, 1)
+polygon = PackedVector2Array(-384, 4, 384, 4, 384, 12, -384, 12)
+
+[node name="GrassBlades" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/MeadowGround"]
+color = Color(0.26, 0.52, 0.2, 1)
+polygon = PackedVector2Array(-384, -14, -360, -22, -340, -14, -300, -20, -260, -14, 0, -18, 200, -16, 340, -20, 384, -14, 384, -12, -384, -12)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/MeadowGround"]
+shape = SubResource("RectMeadow")
+
+[node name="PrologueBounds" type="StaticBody2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+position = Vector2(508, 148)
+collision_layer = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/PrologueBounds"]
+shape = SubResource("RectCap")
+
+[node name="StreamWater" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+z_index = 1
+color = Color(0.22, 0.52, 0.62, 0.82)
+polygon = PackedVector2Array(300, 164, 460, 162, 472, 180, 288, 180)
+
+[node name="StreamFoam" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+z_index = 2
+color = Color(0.85, 0.92, 0.9, 0.35)
+polygon = PackedVector2Array(310, 168, 350, 166, 400, 169, 440, 167, 450, 172, 320, 172)
+
+[node name="StreamFord" type="Area2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+position = Vector2(392, 157)
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/StreamFord"]
+shape = SubResource("RectFord")
+
+[node name="StreamRest" type="Area2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+position = Vector2(468, 150)
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+
+[node name="BankGlow" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/StreamRest"]
+z_index = -1
+color = Color(0.55, 0.62, 0.35, 0.45)
+polygon = PackedVector2Array(-22, -14, 22, -14, 24, 16, -24, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/StreamRest"]
+shape = SubResource("RectSleep")
+
+[node name="DreamFairySwarm" type="Node2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+z_index = 6
+script = ExtResource("4_fairy")
+
+[node name="Player" type="CharacterBody2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World"]
+position = Vector2(44, 147)
+collision_layer = 1
+collision_mask = 1
+floor_stop_on_slope = true
+floor_max_angle = 0.785398
+script = ExtResource("3_player")
+
+[node name="Figure" type="Node2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/Player"]
+
+[node name="Cowl" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/Player/Figure"]
+color = Color(0.2, 0.18, 0.22, 1)
+polygon = PackedVector2Array(-9, -14, 10, -16, 12, -4, -8, -2)
+
+[node name="Tunic" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/Player/Figure"]
+color = Color(0.42, 0.34, 0.24, 1)
+polygon = PackedVector2Array(-6, -4, 7, -4, 8, 10, -7, 10)
+
+[node name="Hose" type="Polygon2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/Player/Figure"]
+color = Color(0.28, 0.26, 0.32, 1)
+polygon = PackedVector2Array(-5, 8, 5, 8, 4, 14, -4, 14)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SheetMargin/ManuscriptPanel/PageInner/VBox/SubViewportContainer/SubViewport/World/Player"]
+shape = SubResource("RectPlayer")
+
+[node name="FlavorLabel" type="Label" parent="SheetMargin/ManuscriptPanel/PageInner/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "…"
+autowrap_mode = 2
+
+[node name="WinLabel" type="Label" parent="SheetMargin/ManuscriptPanel/PageInner/VBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Thus I closid mine yȝen — the tour upon the toft openeth in slepe."
+autowrap_mode = 2
+
+[node name="BackButton" type="Button" parent="SheetMargin/ManuscriptPanel/PageInner/VBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Back to main menu"
+
+[connection signal="pressed" from="SheetMargin/ManuscriptPanel/PageInner/VBox/BackButton" to="." method="_on_back_pressed"]

@@ -1,6 +1,7 @@
 extends Control
 ## Lane A–style arrival beat from Unity export (`StoryBeatOnArrival`). Default: **tour** tower vista before hub.
 
+const _NarrativeBeats := preload("res://scripts/world/narrative_beats.gd")
 const HUB := "res://scenes/hub_map.tscn"
 
 ## Which `locations[]` entry supplies `arrival_beat_*` fields.
@@ -25,13 +26,15 @@ func _ready() -> void:
 	var display: String = str(loc.get("display_name", source_location_id))
 
 	if beat_text.is_empty() and source_location_id == "tour":
-		beat_text = _FALLBACK_TOWER
+		var sk: String = _NarrativeBeats.player_facing_arrival_line("tour")
+		beat_text = sk if not sk.is_empty() else _FALLBACK_TOWER
 		if speaker.is_empty():
 			speaker = "Narrator"
 
 	title_label.text = display
 	speaker_label.text = speaker if not speaker.is_empty() else "—"
 	body_label.text = "[center]%s[/center]" % _escape_bbcode(beat_text)
+	$Margin/VBox/ContinueBtn.text = "Turn the leaf — the weyes await"
 
 
 func _escape_bbcode(s: String) -> String:
@@ -42,4 +45,4 @@ func _on_continue_pressed() -> void:
 	# Medieval-text grant aligned with Unity `tower_vista` arrival beat (`medieval_text_unlocks.json`).
 	GameState.record_location_visit("tour")
 	GameState.mark_medieval_text_read("tower_vista")
-	get_tree().change_scene_to_file(HUB)
+	await ManuscriptNav.turn_page_to(HUB)

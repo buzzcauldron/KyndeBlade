@@ -8,8 +8,24 @@
       "description": "Turn-based state machine: initialization, turn order, state transitions, combat end detection",
       "nodeType": "folder",
       "folderPath": "combat-core",
-      "position": { "x": 100, "y": 100 },
-      "dependencies": []
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "dependencies": [],
+      "children": [
+        "initialize-combat",
+        "start-combat",
+        "calculate-turn-order",
+        "next-turn-skips-dead",
+        "next-turn-increments",
+        "end-turn-fires-event",
+        "check-combat-end-victory",
+        "check-combat-end-defeat",
+        "is-player-turn",
+        "add-character-mid-combat",
+        "on-action-executed-event"
+      ]
     },
     {
       "id": "combat-actions",
@@ -18,8 +34,27 @@
       "description": "Each action type (Strike, Escapade, Ward, Counter, Rest, Heal, RangedStrike) execution and gating",
       "nodeType": "folder",
       "folderPath": "combat-actions",
-      "position": { "x": 300, "y": 100 },
-      "dependencies": []
+      "position": {
+        "x": 300,
+        "y": 100
+      },
+      "dependencies": [],
+      "children": [
+        "execute-strike",
+        "execute-rest",
+        "execute-heal",
+        "execute-ranged-strike",
+        "execute-escapade",
+        "execute-ward",
+        "execute-counter",
+        "action-stamina-gate",
+        "action-kynde-gate",
+        "action-kynde-generation",
+        "deferred-hit-animation",
+        "create-default-actions",
+        "action-cast-time",
+        "action-execution-time"
+      ]
     },
     {
       "id": "combat-damage",
@@ -28,8 +63,23 @@
       "description": "Damage calculation formula, elemental multipliers, crit system, variance, broken multiplier",
       "nodeType": "folder",
       "folderPath": "combat-damage",
-      "position": { "x": 500, "y": 100 },
-      "dependencies": []
+      "position": {
+        "x": 500,
+        "y": 100
+      },
+      "dependencies": [],
+      "children": [
+        "calculate-base-damage",
+        "damage-variance",
+        "elemental-multiplier",
+        "broken-damage-multiplier",
+        "counter-damage-multiplier",
+        "crit-pressure-build",
+        "crit-trigger-and-reset",
+        "hunger-damage-amplify",
+        "ethical-misstep-multiplier",
+        "defense-window-damage"
+      ]
     },
     {
       "id": "combat-defense",
@@ -38,8 +88,28 @@
       "description": "Real-time dodge, parry, counter windows with timing-based Kynde rewards",
       "nodeType": "folder",
       "folderPath": "combat-defense",
-      "position": { "x": 700, "y": 100 },
-      "dependencies": []
+      "position": {
+        "x": 700,
+        "y": 100
+      },
+      "dependencies": [],
+      "children": [
+        "start-dodge-window",
+        "dodge-window-countdown",
+        "dodge-success",
+        "dodge-fail",
+        "dodge-grants-kynde",
+        "start-parry-window",
+        "parry-window-countdown",
+        "parry-reduces-damage",
+        "parry-success-grants-kynde",
+        "parry-opens-counter-window",
+        "counter-window-countdown",
+        "execute-counter-in-window",
+        "perfect-timing-check",
+        "real-time-window-resolve",
+        "game-settings-adjust-window"
+      ]
     },
     {
       "id": "combat-break",
@@ -48,8 +118,19 @@
       "description": "Break gauge depletion, stun state, recovery, broken damage multiplier",
       "nodeType": "folder",
       "folderPath": "combat-break",
-      "position": { "x": 100, "y": 250 },
-      "dependencies": []
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "dependencies": [],
+      "children": [
+        "take-break-damage",
+        "break-triggers-at-zero",
+        "broken-stun-timer",
+        "recover-from-break",
+        "already-broken-ignores",
+        "on-character-broken-event"
+      ]
     },
     {
       "id": "combat-status",
@@ -58,8 +139,26 @@
       "description": "Status effect application, stacking, expiry, removal, and per-type creation (Hunger, Age, Frost, etc.)",
       "nodeType": "folder",
       "folderPath": "combat-status",
-      "position": { "x": 300, "y": 250 },
-      "dependencies": []
+      "position": {
+        "x": 300,
+        "y": 250
+      },
+      "dependencies": [],
+      "children": [
+        "apply-status-effect",
+        "stack-existing-effect",
+        "remove-status-effect",
+        "effect-expiry",
+        "damage-over-time",
+        "create-hunger-effect",
+        "hunger-stack-remove",
+        "hunger-marks-save",
+        "create-hunger-scar",
+        "create-age-effect",
+        "create-frost-effect",
+        "create-burning-effect",
+        "stat-modifier-apply-remove"
+      ]
     },
     {
       "id": "combat-hazards",
@@ -68,8 +167,20 @@
       "description": "Piers-themed environmental hazards per turn (Exhaustion, Poverty, Labor, Hunger)",
       "nodeType": "folder",
       "folderPath": "combat-hazards",
-      "position": { "x": 500, "y": 250 },
-      "dependencies": []
+      "position": {
+        "x": 500,
+        "y": 250
+      },
+      "dependencies": [],
+      "children": [
+        "set-hazards",
+        "hazard-interval",
+        "hazard-player-only",
+        "exhaustion-hazard",
+        "poverty-hazard",
+        "labor-hazard",
+        "hunger-hazard"
+      ]
     },
     {
       "id": "combat-kynde",
@@ -78,8 +189,19 @@
       "description": "Kynde generation, consumption, and modifier pipeline (Hunger, Age, Scar, Poverty)",
       "nodeType": "folder",
       "folderPath": "combat-kynde",
-      "position": { "x": 700, "y": 250 },
-      "dependencies": []
+      "position": {
+        "x": 700,
+        "y": 250
+      },
+      "dependencies": [],
+      "children": [
+        "gain-kynde",
+        "consume-kynde",
+        "kynde-hunger-modifier",
+        "kynde-age-modifier",
+        "kynde-scar-modifier",
+        "kynde-poverty-modifier"
+      ]
     },
     {
       "id": "characters",
@@ -88,8 +210,25 @@
       "description": "Character class stats, identity, events, stamina restoration, fairy form",
       "nodeType": "folder",
       "folderPath": "characters",
-      "position": { "x": 100, "y": 400 },
-      "dependencies": []
+      "position": {
+        "x": 100,
+        "y": 400
+      },
+      "dependencies": [],
+      "children": [
+        "knight-class-stats",
+        "mage-class-stats",
+        "archer-class-stats",
+        "rogue-class-stats",
+        "dreamer-class-stats",
+        "set-identity",
+        "set-stats-override",
+        "health-change-event",
+        "stamina-change-event",
+        "character-defeated-event",
+        "restore-stamina-modifiers",
+        "fairy-form-apply-remove"
+      ]
     },
     {
       "id": "enemies",
@@ -98,8 +237,30 @@
       "description": "Enemy character setup, movesets, SimpleEnemyAI, AdaptiveEnemyAI, boss-specific AI logic",
       "nodeType": "folder",
       "folderPath": "enemies",
-      "position": { "x": 300, "y": 400 },
-      "dependencies": []
+      "position": {
+        "x": 300,
+        "y": 400
+      },
+      "dependencies": [],
+      "children": [
+        "hunger-character-setup",
+        "hunger-moveset",
+        "false-character-setup",
+        "lady-mede-character-setup",
+        "wrath-character-setup",
+        "pride-character-setup",
+        "green-knight-character-setup",
+        "elde-character-setup",
+        "elde-aging-on-hit",
+        "simple-enemy-ai-decision",
+        "adaptive-ai-targets-broken",
+        "adaptive-ai-counters-dodge",
+        "boss-ai-dialogue-phases",
+        "boss-ai-narrative-pause",
+        "green-knight-boss-logic",
+        "hunger-boss-logic",
+        "pride-boss-logic"
+      ]
     },
     {
       "id": "game-state",
@@ -108,8 +269,24 @@
       "description": "Victory/defeat handling, XP calculation, special outcomes (Orfeo, Green Chapel, death-of-old-age)",
       "nodeType": "folder",
       "folderPath": "game-state",
-      "position": { "x": 500, "y": 400 },
-      "dependencies": []
+      "position": {
+        "x": 500,
+        "y": 400
+      },
+      "dependencies": [],
+      "children": [
+        "victory-xp-calculation",
+        "victory-panel-display",
+        "defeat-panel-display",
+        "defeat-orfeo-transition",
+        "defeat-green-chapel-restart",
+        "death-of-old-age",
+        "victory-continue-to-map",
+        "final-combat-to-field-of-grace",
+        "on-victory-event",
+        "on-defeat-event",
+        "illumination-before-panel"
+      ]
     },
     {
       "id": "map-progression",
@@ -118,8 +295,21 @@
       "description": "World map navigation, location transitions, encounter spawning, story beat triggers",
       "nodeType": "folder",
       "folderPath": "map-progression",
-      "position": { "x": 700, "y": 400 },
-      "dependencies": []
+      "position": {
+        "x": 700,
+        "y": 400
+      },
+      "dependencies": [],
+      "children": [
+        "set-current-location",
+        "get-next-locations",
+        "transition-to-location",
+        "location-story-beats",
+        "location-dialogue-choices",
+        "encounter-config-spawn",
+        "rebuild-location-index",
+        "scene-transition"
+      ]
     },
     {
       "id": "narrative",
@@ -128,8 +318,21 @@
       "description": "Story beats, dialogue choices, boss dialogue phases, manuscript-themed display",
       "nodeType": "folder",
       "folderPath": "narrative",
-      "position": { "x": 100, "y": 550 },
-      "dependencies": []
+      "position": {
+        "x": 100,
+        "y": 550
+      },
+      "dependencies": [],
+      "children": [
+        "display-story-beat",
+        "story-beat-sequence",
+        "dialogue-choice-present",
+        "dialogue-choice-resolve",
+        "boss-dialogue-entry",
+        "boss-dialogue-midpoint",
+        "boss-dialogue-desperation",
+        "manuscript-theme-display"
+      ]
     },
     {
       "id": "save-system",
@@ -138,8 +341,27 @@
       "description": "Save/load via PlayerPrefs, checkpoints, progress tracking, accrual counters",
       "nodeType": "folder",
       "folderPath": "save-system",
-      "position": { "x": 300, "y": 550 },
-      "dependencies": []
+      "position": {
+        "x": 300,
+        "y": 550
+      },
+      "dependencies": [],
+      "children": [
+        "new-game",
+        "save-checkpoint",
+        "unlock-location",
+        "progress-json-roundtrip",
+        "has-visited-query",
+        "mark-ever-had-hunger",
+        "increment-elde-hits",
+        "increment-green-chapel-bodies",
+        "increment-otherworld-bodies",
+        "increment-otherworld-living",
+        "ethical-misstep-counter",
+        "green-knight-flags",
+        "damage-taken-multiplier",
+        "godot-save-service-steam-paths"
+      ]
     },
     {
       "id": "meta-progression",
@@ -148,8 +370,25 @@
       "description": "Aging, poverty, multi-run scaling, hidden effects, Wode-Wo passcode",
       "nodeType": "folder",
       "folderPath": "meta-progression",
-      "position": { "x": 500, "y": 550 },
-      "dependencies": []
+      "position": {
+        "x": 500,
+        "y": 550
+      },
+      "dependencies": [],
+      "children": [
+        "aging-speed-multiplier",
+        "aging-apply-to-party",
+        "aging-apply-to-character",
+        "poverty-stamina-regen",
+        "poverty-kynde-gen",
+        "poverty-level-clamp",
+        "death-of-old-age-trigger",
+        "green-knight-random-appear",
+        "suppress-combat-hazards",
+        "wode-wo-passcode",
+        "meta-progress-lifetime",
+        "multi-run-scaling"
+      ]
     },
     {
       "id": "input",
@@ -158,8 +397,15 @@
       "description": "Combat dodge/parry/counter: ICombatWindowInput facade, tests, future Input Actions and rebinding",
       "nodeType": "folder",
       "folderPath": "input",
-      "position": { "x": 100, "y": 700 },
-      "dependencies": []
+      "position": {
+        "x": 100,
+        "y": 700
+      },
+      "dependencies": [],
+      "children": [
+        "input-actions-resolve",
+        "rebinding-persist"
+      ]
     },
     {
       "id": "audio",
@@ -168,8 +414,15 @@
       "description": "MusicManager themes, crossfade, test hooks; future SFX director",
       "nodeType": "folder",
       "folderPath": "audio",
-      "position": { "x": 250, "y": 700 },
-      "dependencies": []
+      "position": {
+        "x": 250,
+        "y": 700
+      },
+      "dependencies": [],
+      "children": [
+        "music-combat-transition",
+        "sfx-strike-sync"
+      ]
     },
     {
       "id": "ui-shell",
@@ -178,8 +431,15 @@
       "description": "Menus, HUD, combat UI smoke flows",
       "nodeType": "folder",
       "folderPath": "ui-shell",
-      "position": { "x": 400, "y": 700 },
-      "dependencies": []
+      "position": {
+        "x": 400,
+        "y": 700
+      },
+      "dependencies": [],
+      "children": [
+        "hud-turn-indicator",
+        "menu-new-game-flow"
+      ]
     },
     {
       "id": "scenes",
@@ -188,8 +448,15 @@
       "description": "Build order, Main scene, GameRuntime wiring",
       "nodeType": "folder",
       "folderPath": "scenes",
-      "position": { "x": 550, "y": 700 },
-      "dependencies": []
+      "position": {
+        "x": 550,
+        "y": 700
+      },
+      "dependencies": [],
+      "children": [
+        "bootstrap-managers",
+        "scene-load-order"
+      ]
     },
     {
       "id": "perf",
@@ -198,8 +465,15 @@
       "description": "Frame budgets, GC-free hot paths, profiling",
       "nodeType": "folder",
       "folderPath": "perf",
-      "position": { "x": 700, "y": 700 },
-      "dependencies": []
+      "position": {
+        "x": 700,
+        "y": 700
+      },
+      "dependencies": [],
+      "children": [
+        "combat-frame-budget",
+        "no-gc-hotpath-turnmanager"
+      ]
     },
     {
       "id": "a11y-l10n",
@@ -208,8 +482,15 @@
       "description": "Timing windows, text scaling, future locale tables",
       "nodeType": "folder",
       "folderPath": "a11y-l10n",
-      "position": { "x": 850, "y": 700 },
-      "dependencies": []
+      "position": {
+        "x": 850,
+        "y": 700
+      },
+      "dependencies": [],
+      "children": [
+        "timing-window-accessibility",
+        "locale-switch"
+      ]
     },
     {
       "id": "demo-vertical-slice",
@@ -218,7 +499,10 @@
       "description": "Shippable playable demo: canonical path tour → fayre_felde combat → hub; tests + manual smoke per DEMO_RUN.md. Depends on core game folders.",
       "nodeType": "folder",
       "folderPath": "demo-vertical-slice",
-      "position": { "x": 100, "y": 850 },
+      "position": {
+        "x": 100,
+        "y": 850
+      },
       "dependencies": [
         "ui-shell",
         "map-progression",
@@ -226,6 +510,17 @@
         "save-system",
         "scenes",
         "combat-core"
+      ],
+      "children": [
+        "demo-main-map-bootstraps-tour",
+        "demo-map-graph-tour-to-fayre-felde",
+        "demo-fayre-felde-encounter-wired",
+        "demo-checkpoint-updates-location",
+        "demo-progress-json-roundtrip",
+        "demo-pause-overlay-present",
+        "demo-settings-volume-persists",
+        "demo-continue-available-when-save-exists",
+        "demo-slice-combat-victory-to-map-manual"
       ]
     },
     {
@@ -235,8 +530,21 @@
       "description": "Milestone planning track only—execute after Tier A Definition of Done (or parallel non-blocking assets). See .tdad/workflows/steam-early-access/ and plan-steam-milestones.md.",
       "nodeType": "folder",
       "folderPath": "steam-early-access",
-      "position": { "x": 400, "y": 850 },
-      "dependencies": ["demo-vertical-slice"]
+      "position": {
+        "x": 400,
+        "y": 850
+      },
+      "dependencies": [
+        "demo-vertical-slice"
+      ],
+      "children": [
+        "steam-milestone-scope-lock",
+        "steam-milestone-store-identity",
+        "steam-milestone-media",
+        "steam-milestone-build-depots",
+        "steam-milestone-playtest",
+        "steam-milestone-pricing-release"
+      ]
     },
     {
       "id": "godot-full-port",
@@ -245,8 +553,21 @@
       "description": "M1–M6 migration milestones; Unity demo-vertical-slice is oracle until M6. See .tdad/workflows/godot-full-port/ and prompts plan-godot-port-milestone.md, godot-archive-unity-snapshot.md.",
       "nodeType": "folder",
       "folderPath": "godot-full-port",
-      "position": { "x": 100, "y": 1000 },
-      "dependencies": ["demo-vertical-slice"]
+      "position": {
+        "x": 100,
+        "y": 1000
+      },
+      "dependencies": [
+        "demo-vertical-slice"
+      ],
+      "children": [
+        "godot-m1-foundation",
+        "godot-m2-combat-parity",
+        "godot-m3-save-ui-parity",
+        "godot-m4-map-narrative",
+        "godot-m5-systems-depth",
+        "godot-m6-cutover-archive"
+      ]
     },
     {
       "id": "godot-parity-slice",
@@ -255,8 +576,25 @@
       "description": "Mirrors demo-vertical-slice behaviors with Godot proofs. See .tdad/workflows/godot-parity-slice/ and .tdad/bdd/godot-parity-slice.feature. Retail save paths, autosave, and Steam ship checklist: godot-steam-build.",
       "nodeType": "folder",
       "folderPath": "godot-parity-slice",
-      "position": { "x": 400, "y": 1000 },
-      "dependencies": ["demo-vertical-slice", "godot-full-port"]
+      "position": {
+        "x": 400,
+        "y": 1000
+      },
+      "dependencies": [
+        "demo-vertical-slice",
+        "godot-full-port"
+      ],
+      "children": [
+        "gparity-hub-starts-tour",
+        "gparity-tour-to-fayre-felde",
+        "gparity-fayre-felde-false",
+        "gparity-save-location",
+        "gparity-save-roundtrip",
+        "gparity-pause-overlay",
+        "gparity-settings-volume",
+        "gparity-continue-save",
+        "gparity-victory-hub-manual"
+      ]
     },
     {
       "id": "godot-demo-components",
@@ -265,8 +603,31 @@
       "description": "Per-subsystem TDAD nodes mapping to run_headless_tests.gd and BDD; see .tdad/workflows/godot-demo-components/ and docs/CI_GODOT_TESTS.md.",
       "nodeType": "folder",
       "folderPath": "godot-demo-components",
-      "position": { "x": 550, "y": 1000 },
-      "dependencies": ["godot-parity-slice"]
+      "position": {
+        "x": 550,
+        "y": 1000
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gdc-main-menu",
+        "gdc-tower-intro",
+        "gdc-hub-slice-locations",
+        "gdc-hub-counsel-gate",
+        "gdc-world-atlas",
+        "gdc-location-shell",
+        "gdc-combat-encounter-load",
+        "gdc-combat-scenarios",
+        "gdc-combat-misstep-feint",
+        "gdc-combat-pause",
+        "gdc-combat-victory-save",
+        "gdc-settings-fullscreen",
+        "gdc-medieval-catalog",
+        "gdc-piers-symbols",
+        "gdc-placeholder-art-registry",
+        "gdc-scene-transition"
+      ]
     },
     {
       "id": "godot-steam-build",
@@ -275,8 +636,20 @@
       "description": "Shipping layer: user:// retail cfg names, autosave mirror, legacy demo migration, headless regression, export/Steamworks. Workflow: .tdad/workflows/godot-steam-build/. Depends on godot-parity-slice. Index: .tdad/README.md. Player/QA doc: KyndeBlade_Godot/STEAM_BUILD.md.",
       "nodeType": "folder",
       "folderPath": "godot-steam-build",
-      "position": { "x": 700, "y": 1000 },
-      "dependencies": ["godot-parity-slice"]
+      "position": {
+        "x": 700,
+        "y": 1000
+      },
+      "dependencies": [
+        "godot-parity-slice"
+      ],
+      "children": [
+        "gsteam-retail-paths",
+        "gsteam-autosave-mirror",
+        "gsteam-legacy-migration",
+        "gsteam-headless-suite",
+        "gsteam-export-steamworks"
+      ]
     }
   ],
   "edges": []

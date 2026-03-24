@@ -11,6 +11,10 @@ extends Resource
 @export var enemy_turn_damage: float = 18.0
 ## Duration of dodge/parry reaction window when enemy damage is gated (parity: Unity offensive `SuccessWindow`).
 @export var enemy_attack_reaction_window_seconds: float = 1.2
+## Extra damage each enemy strike phase (slice “bleed” / pressure); 0 for Fair Field parity.
+@export var enemy_turn_bleed_damage: float = 0.0
+## Pause after dodge/parry before the reactive window. **0** stays instant in headless; in normal play [CombatManager] applies a short minimum gather for UI (parry eye / SFX).
+@export var defensive_windup_sec: float = 0.0
 ## `auto` picks from `enemy_id` (false → langage_fals; green → green_chapel). See [`CombatBookIntro`](../../scripts/combat_book_intro.gd).
 @export var book_intro_theme: String = "auto"
 

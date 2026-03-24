@@ -20,7 +20,7 @@ Review of project history and code patterns that lead to breakages (compiler err
 
 ## 2. Project history (relevant to stability)
 
-- **Unreal → Unity**: Repo merged from Unreal 5.7; Unity project lives in `KyndeBlade_Unity/`. Some patterns (e.g. “one game manager”) may come from that transition.
+- **Unreal → Unity**: Repo merged from Unreal 5.7; Unity project lives in `ProjectArchive/UnityKyndeBlade/KyndeBlade_Unity/`. Some patterns (e.g. “one game manager”) may come from that transition.
 - **Big feature commits**: “Combat UI/input, enemy AI, Archer/Rogue, Guard, XP, game flow” and “Unity layout, visual pipeline, 16-bit” introduced a lot of systems at once; bootstrap and dependencies grew without a single clear contract.
 - **Recent fixes (this conversation)**:
   - Duplicate `Update()` in `CombatUI` (CS0111).

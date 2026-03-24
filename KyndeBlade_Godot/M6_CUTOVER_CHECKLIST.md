@@ -4,7 +4,7 @@ Use this when TDAD milestone **godot-m6-cutover-archive** is formally approved. 
 
 ## Preconditions
 
-- [ ] Headless tests pass: `godot4 --path KyndeBlade_Godot --headless --script res://tests/run_headless_tests.gd`
+- [ ] Headless tests pass: `godot4 --path KyndeBlade_Godot --headless res://tests/headless_main.tscn` (or `--headless --script res://tests/run_headless_tests.gd` if your runner uses that entry)
 - [ ] Manual QA in [`STEAM_BUILD.md`](STEAM_BUILD.md) complete for the shipping slice
 - [ ] [`PARITY_GAPS.md`](PARITY_GAPS.md) reviewed; intentional differences accepted by leads
 - [ ] Unity **Export Slice Data for Godot** run and `data/exported_from_unity.json` committed if data changed

@@ -25,7 +25,7 @@ Clone from repo root branch **`main`** (Godot-first default); see [`docs/BRANCH_
 From repo root:
 
 ```bash
-godot4 --path KyndeBlade_Godot --headless --script res://tests/run_headless_tests.gd
+godot4 --path KyndeBlade_Godot --headless res://tests/headless_main.tscn
 ```
 
 See [docs/CI_GODOT_TESTS.md](../docs/CI_GODOT_TESTS.md).
@@ -52,4 +52,4 @@ Full table: [STEAM_BUILD.md](STEAM_BUILD.md).
 
 ## License
 
-Game code and assets in this tree follow the **repository root** license unless a subdirectory specifies otherwise (see `docs/ASSET_LICENSES.md` for third-party bits).
+**All rights reserved** — see the **repository root** [`LICENSE`](../LICENSE). Third-party material may be listed in [`docs/ASSET_LICENSES.md`](../docs/ASSET_LICENSES.md).

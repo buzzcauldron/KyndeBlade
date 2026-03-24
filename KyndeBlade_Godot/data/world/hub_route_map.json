@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "description": "Slice hub route graph + fog-of-war. Positions normalized 0–1 over hub map panel.",
+  "nodes": [
+    {
+      "id": "tour",
+      "title": "Tour on the Toft",
+      "x": 0.22,
+      "y": 0.38
+    },
+    {
+      "id": "fayre_felde",
+      "title": "Fayr Feeld",
+      "x": 0.72,
+      "y": 0.52
+    },
+    {
+      "id": "dongeoun",
+      "title": "Dongeoun",
+      "x": 0.48,
+      "y": 0.78
+    }
+  ],
+  "edges": [
+    { "from": "tour", "to": "fayre_felde" },
+    { "from": "tour", "to": "dongeoun" },
+    { "from": "fayre_felde", "to": "tour" },
+    { "from": "dongeoun", "to": "tour" }
+  ],
+  "fog": {
+    "initial_revealed": ["tour"],
+    "reveal_neighbors_on_visit": true,
+    "reveal_when_flag": [
+      {
+        "node_id": "dongeoun",
+        "requires_fair_field_cleared": true
+      }
+    ]
+  }
+}

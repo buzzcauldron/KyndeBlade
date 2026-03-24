@@ -12,7 +12,6 @@ config_version=5
 
 config/name="Kynde Blade"
 run/main_scene="res://scenes/main_menu.tscn"
-; Target editor: Godot 4.6.1 (4.6.x). Feature level stays "4.6".
 config/features=PackedStringArray("4.6")
 
 [autoload]
@@ -21,6 +20,7 @@ AudioBusSetup="*res://scripts/audio_bus_setup.gd"
 InputMapSetup="*res://scripts/input_map_setup.gd"
 SaveService="*res://scripts/save_service.gd"
 GameState="*res://scripts/game_state.gd"
+ManuscriptNav="*res://scripts/manuscript_nav.gd"
 WorldNav="*res://scripts/world/world_nav.gd"
 
 [display]

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "default_location_id": "default",
+  "profiles": {
+    "default": {
+      "jewel_wash_strength": 0.14,
+      "jewel_wash_ultramarine_mix": 0.12,
+      "procedural_sky_alpha": 0.56,
+      "parallax_speed_scale": 1.0,
+      "manuscript_void_blend": 0.12,
+      "weather_preset_id": "mist_calm",
+      "weather_intensity": 1.0
+    },
+    "tour": {
+      "jewel_wash_strength": 0.1,
+      "jewel_wash_ultramarine_mix": 0.14,
+      "procedural_sky_alpha": 0.52,
+      "parallax_speed_scale": 0.85,
+      "manuscript_void_blend": 0.14,
+      "weather_preset_id": "mist_calm",
+      "weather_intensity": 1.0
+    },
+    "fayre_felde": {
+      "jewel_wash_strength": 0.16,
+      "jewel_wash_ultramarine_mix": 0.1,
+      "procedural_sky_alpha": 0.58,
+      "parallax_speed_scale": 1.05,
+      "manuscript_void_blend": 0.1,
+      "weather_preset_id": "leaves_light",
+      "weather_intensity": 1.0
+    },
+    "dongeoun": {
+      "jewel_wash_strength": 0.12,
+      "jewel_wash_ultramarine_mix": 0.18,
+      "procedural_sky_alpha": 0.48,
+      "parallax_speed_scale": 0.75,
+      "manuscript_void_blend": 0.18,
+      "weather_preset_id": "ash_drift",
+      "weather_intensity": 0.85
+    }
+  }
+}

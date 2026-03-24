@@ -13,7 +13,7 @@ Maps the **careful full port** waves to TDAD root workflow folders. Authoritativ
 | M5 Systems depth | W6 (+ W4–W5 extensions) | Hazards, Kynde, break, AI — incremental tests |
 | M6 Cutover | All + archive | **Human-gated** — see [`M6_CUTOVER_CHECKLIST.md`](M6_CUTOVER_CHECKLIST.md) |
 
-**Current wave (edit when you advance):** `W4` — combat core stable; expand W6/W7 hooks from Steam-slice baseline.
+**Current wave (edit when you advance):** `W4` + **mini-act slice** — two hub combats (Fair Field + Dongeoun gate), phased defensive telegraph, `narrative_beats_skeleton` fallbacks, act-1 hub/shell graph; W2 map still **partial** until full atlas travel ships.
 
 **Combat presentation (Unity-aligned, TDAD-segmented):** see [`docs/TDAD_COMBAT_PRESENTATION_PLAN.md`](docs/TDAD_COMBAT_PRESENTATION_PLAN.md) — segments **CP-01…CP-06** (API → stage → poses → parry/dodge eye → audio → docs/BDD). Extends W4/W5 **presentation** without changing combat rules.
 

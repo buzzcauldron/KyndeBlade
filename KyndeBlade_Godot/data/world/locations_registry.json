@@ -45,7 +45,7 @@
       "vision_index": 0,
       "passus_index": 1,
       "passus_title": "Passus I",
-      "next_location_ids": ["tour", "dongeoun", "green_chapel", "boundary_tree"],
+      "next_location_ids": ["tour", "dongeoun"],
       "tags": ["playable_slice_combat"],
       "encounter": { "unity_asset": "FayreFeldeEncounter", "godot_resource": "res://data/encounter_fair_field.tres" },
       "implementation_status": "wired",
@@ -62,11 +62,11 @@
       "vision_index": 0,
       "passus_index": 3,
       "passus_title": "Passus II-III",
-      "next_location_ids": ["piers_field"],
+      "next_location_ids": ["tour", "piers_field"],
       "tags": [],
-      "encounter": { "unity_asset": "DongeounEncounter", "godot_resource": null },
-      "implementation_status": "placeholder",
-      "writer_notes": "Add EncounterDef .tres + link when porting dungeon fight."
+      "encounter": { "unity_asset": "DongeounEncounter", "godot_resource": "res://data/encounter_dongeoun_gate.tres" },
+      "implementation_status": "wired",
+      "writer_notes": "Act 1 gate fight after Fair Field; hub_map sets pending encounter path."
     },
     "piers_field": {
       "display_name": "Piers' Field",

@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8combat001"]
+[gd_scene load_steps=15 format=3 uid="uid://c8combat001"]
 
 [ext_resource type="Script" path="res://scripts/combat_root.gd" id="1_root"]
 [ext_resource type="Script" path="res://scripts/combat_manager.gd" id="2_combat"]
-[ext_resource type="Script" path="res://scripts/combat_presentation.gd" id="3_pres"]
+[ext_resource type="Script" path="res://scripts/combat_presentation_3d.gd" id="3_pres3d"]
 [ext_resource type="PackedScene" path="res://scenes/parry_dodge_eye.tscn" id="4_eye"]
-[ext_resource type="Script" path="res://scripts/dreamer_ink_physics.gd" id="5_ink"]
 [ext_resource type="Script" path="res://scripts/combat_manuscript_backdrop.gd" id="6_backdrop"]
 [ext_resource type="Shader" path="res://shaders/kill_desaturate.gdshader" id="7_kill_shader"]
 [ext_resource type="Texture2D" path="res://assets/hi_bit_ruin_vista/reference_style_target.png" id="8_concept"]
@@ -13,10 +12,40 @@
 shader = ExtResource("7_kill_shader")
 shader_parameter/desat_strength = 0.0
 
-[sub_resource type="RectangleShape2D" id="InkFloorShape"]
-size = Vector2(920, 32)
+[sub_resource type="Environment" id="ArenaEnvironment"]
+background_mode = 1
+background_color = Color(0.05, 0.06, 0.09, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.16, 0.18, 0.26, 1)
+ambient_light_energy = 0.42
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.4, 0.5, 0.66, 1)
+fog_density = 0.032
 
-[node name="Combat" type="Node2D"]
+[sub_resource type="BoxMesh" id="GroundBoxMesh"]
+size = Vector3(52, 0.12, 52)
+
+[sub_resource type="StandardMaterial3D" id="GroundMat"]
+shading_mode = 0
+albedo_color = Color(0.11, 0.13, 0.15, 1)
+
+[sub_resource type="CapsuleMesh" id="PlayerCapsuleMesh"]
+radius = 0.32
+height = 1.5
+
+[sub_resource type="StandardMaterial3D" id="PlayerMat"]
+shading_mode = 0
+albedo_color = Color(0.36, 0.29, 0.22, 1)
+
+[sub_resource type="BoxMesh" id="EnemyBoxMesh"]
+size = Vector3(1.15, 1.95, 1.05)
+
+[sub_resource type="StandardMaterial3D" id="EnemyMat"]
+shading_mode = 0
+albedo_color = Color(0.48, 0.13, 0.11, 1)
+
+[node name="Combat" type="Node"]
 process_mode = 1
 script = ExtResource("1_root")
 
@@ -35,9 +64,56 @@ script = ExtResource("6_backdrop")
 mood_texture = ExtResource("8_concept")
 paint_mood_texture_only = false
 
+[node name="CombatWeatherRoot" type="Node2D" parent="BackdropLayer"]
+z_index = 2
+
 [node name="CombatManager" type="Node" parent="."]
 process_mode = 1
 script = ExtResource("2_combat")
+
+[node name="CombatArena3D" type="Node3D" parent="."]
+script = ExtResource("3_pres3d")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="CombatArena3D"]
+environment = SubResource("ArenaEnvironment")
+
+[node name="Sun" type="DirectionalLight3D" parent="CombatArena3D"]
+transform = Transform3D(0.884, -0.174, 0.432, 0, 0.927, 0.375, -0.467, -0.332, 0.819, 0, 9.5, 5.5)
+light_color = Color(0.95, 0.92, 0.85, 1)
+light_energy = 1.15
+shadow_enabled = true
+
+[node name="Ground" type="MeshInstance3D" parent="CombatArena3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06, 0)
+mesh = SubResource("GroundBoxMesh")
+surface_material_override/0 = SubResource("GroundMat")
+
+[node name="PlayerActor" type="Node3D" parent="CombatArena3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.35, 0, 3.15)
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="CombatArena3D/PlayerActor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("PlayerCapsuleMesh")
+surface_material_override/0 = SubResource("PlayerMat")
+
+[node name="EnemyActor" type="Node3D" parent="CombatArena3D"]
+transform = Transform3D(1.55, 0, 0, 0, 1.55, 0, 0, 0, 1.55, 2.65, 0, -3.85)
+
+[node name="EnemyMesh" type="MeshInstance3D" parent="CombatArena3D/EnemyActor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.02, 0)
+mesh = SubResource("EnemyBoxMesh")
+surface_material_override/0 = SubResource("EnemyMat")
+
+[node name="CombatCamera" type="Camera3D" parent="CombatArena3D"]
+transform = Transform3D(1, 0, 0, 0, 0.94, 0.342, 0, -0.342, 0.94, 2.8, 2.65, 7.4)
+fov = 54.0
+current = true
+
+[node name="HitFlashLight" type="OmniLight3D" parent="CombatArena3D"]
+visible = false
+light_color = Color(1, 0.88, 0.72, 1)
+light_energy = 0.0
+omni_range = 7.0
 
 [node name="WindowSfx" type="AudioStreamPlayer" parent="."]
 bus = &"SFX"
@@ -61,179 +137,328 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 1)
 
-[node name="CombatStage" type="Node2D" parent="."]
-position = Vector2(480, 288)
-script = ExtResource("3_pres")
-
-[node name="Camera2D" type="Camera2D" parent="CombatStage"]
-
-[node name="InkFloor" type="StaticBody2D" parent="CombatStage"]
-position = Vector2(0, 178)
-collision_layer = 1
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CombatStage/InkFloor"]
-shape = SubResource("InkFloorShape")
-
-[node name="DreamerInkPhysics" type="Node2D" parent="CombatStage"]
-z_index = 2
-script = ExtResource("5_ink")
-
-[node name="HazardStrip" type="Polygon2D" parent="CombatStage"]
-visible = false
-z_index = -2
-color = Color(0.75, 0.35, 0.12, 0.85)
-polygon = PackedVector2Array(-520, 188, 520, 188, 520, 230, -520, 230)
-
-[node name="PlayerRoot" type="Node2D" parent="CombatStage"]
-position = Vector2(-200, 24)
-
-[node name="EnemyRoot" type="Node2D" parent="CombatStage"]
-position = Vector2(208, 8)
-
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 8
 
-[node name="HudMargin" type="MarginContainer" parent="UI"]
+[node name="ReferenceTopBossBar" type="PanelContainer" parent="UI"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 10
+anchor_left = 0.22
+anchor_right = 0.78
+offset_top = 12.0
+offset_bottom = 52.0
 grow_horizontal = 2
-grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 108
 
-[node name="HudColumn" type="VBoxContainer" parent="UI/HudMargin"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="HudRow" type="HBoxContainer" parent="UI/HudMargin/HudColumn"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-alignment = 1
-
-[node name="HudPanel" type="PanelContainer" parent="UI/HudMargin/HudColumn/HudRow"]
-layout_mode = 2
-custom_minimum_size = Vector2(436, 0)
-
-[node name="HudVBox" type="VBoxContainer" parent="UI/HudMargin/HudColumn/HudRow/HudPanel"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="EncounterTitle" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 15
-text = "Shelde-fray"
-horizontal_alignment = 1
-
-[node name="Bars" type="VBoxContainer" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+[node name="BossVBox" type="VBoxContainer" parent="UI/ReferenceTopBossBar"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="PHLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
-unique_name_in_owner = true
+[node name="BossName" type="Label" parent="UI/ReferenceTopBossBar/BossVBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 11
-text = "Wille"
+theme_override_font_sizes/font_size = 13
+text = "False · Enemy"
+horizontal_alignment = 1
 
-[node name="PlayerHP" type="ProgressBar" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(396, 14)
+[node name="BossHP" type="ProgressBar" parent="UI/ReferenceTopBossBar/BossVBox"]
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
-max_value = 100.0
-value = 100.0
-show_percentage = false
-
-[node name="EHLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 11
-text = "False"
-
-[node name="EnemyHP" type="ProgressBar" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(396, 14)
-layout_mode = 2
+size_flags_horizontal = 3
 max_value = 80.0
 value = 80.0
 show_percentage = false
 
-[node name="StLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 11
-text = "Stamina"
+[node name="ReferenceLeftRoster" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_top = 0.12
+anchor_bottom = 0.62
+offset_right = 126.0
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="Stamina" type="ProgressBar" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox/Bars"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(396, 14)
+[node name="RosterVBox" type="VBoxContainer" parent="UI/ReferenceLeftRoster"]
 layout_mode = 2
-max_value = 100.0
-value = 100.0
-show_percentage = false
+theme_override_constants/separation = 8
 
-[node name="HudSep" type="HSeparator" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+[node name="RosterSlotA" type="PanelContainer" parent="UI/ReferenceLeftRoster/RosterVBox"]
+custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
 
-[node name="TurnLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+[node name="RosterBgA" type="ColorRect" parent="UI/ReferenceLeftRoster/RosterVBox/RosterSlotA"]
+layout_mode = 2
+color = Color(0.22, 0.21, 0.2, 0.88)
+
+[node name="RosterInitialA" type="Label" parent="UI/ReferenceLeftRoster/RosterVBox/RosterSlotA"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "W"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RosterSlotB" type="PanelContainer" parent="UI/ReferenceLeftRoster/RosterVBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+
+[node name="RosterBgB" type="ColorRect" parent="UI/ReferenceLeftRoster/RosterVBox/RosterSlotB"]
+layout_mode = 2
+color = Color(0.22, 0.21, 0.2, 0.82)
+
+[node name="RosterInitialB" type="Label" parent="UI/ReferenceLeftRoster/RosterVBox/RosterSlotB"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "T"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RosterSlotC" type="PanelContainer" parent="UI/ReferenceLeftRoster/RosterVBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+
+[node name="RosterBgC" type="ColorRect" parent="UI/ReferenceLeftRoster/RosterVBox/RosterSlotC"]
+layout_mode = 2
+color = Color(0.22, 0.21, 0.2, 0.76)
+
+[node name="RosterInitialC" type="Label" parent="UI/ReferenceLeftRoster/RosterVBox/RosterSlotC"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "M"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RosterSlotD" type="PanelContainer" parent="UI/ReferenceLeftRoster/RosterVBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+
+[node name="RosterBgD" type="ColorRect" parent="UI/ReferenceLeftRoster/RosterVBox/RosterSlotD"]
+layout_mode = 2
+color = Color(0.22, 0.21, 0.2, 0.7)
+
+[node name="RosterInitialD" type="Label" parent="UI/ReferenceLeftRoster/RosterVBox/RosterSlotD"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReferenceRightHelp" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 0.3
+anchor_right = 1.0
+anchor_bottom = 0.74
+offset_left = -270.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HelpVBox" type="VBoxContainer" parent="UI/ReferenceRightHelp"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StainsWireIcon" type="Label" parent="UI/ReferenceRightHelp/HelpVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.65, 0.2, 0.75)
+theme_override_font_sizes/font_size = 22
+text = "◇"
+horizontal_alignment = 1
+
+[node name="HelpTitle" type="Label" parent="UI/ReferenceRightHelp/HelpVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
+text = "Field"
+autowrap_mode = 3
+
+[node name="HelpBody" type="Label" parent="UI/ReferenceRightHelp/HelpVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "—"
+autowrap_mode = 3
+
+[node name="TurnLabel" type="Label" parent="UI/ReferenceRightHelp/HelpVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.92, 0.86, 0.72, 1)
 text = "Combat"
 autowrap_mode = 3
 
-[node name="TelegraphLabel" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.85, 0.55, 0.45, 1)
-text = ""
-autowrap_mode = 3
-
-[node name="FieldSubtitle" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+[node name="TelegraphLabel" type="Label" parent="UI/ReferenceRightHelp/HelpVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
-theme_override_colors/font_color = Color(0.68, 0.62, 0.52, 1)
-text = ""
+theme_override_colors/font_color = Color(0.85, 0.55, 0.45, 1)
 autowrap_mode = 3
 
-[node name="MovesetRubric" type="Label" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox"]
+[node name="FieldSubtitle" type="Label" parent="UI/ReferenceRightHelp/HelpVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.68, 0.62, 0.52, 1)
+autowrap_mode = 3
+
+[node name="MovesetRubric" type="Label" parent="UI/ReferenceRightHelp/HelpVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
 theme_override_colors/font_color = Color(0.55, 0.5, 0.42, 1)
 autowrap_mode = 3
 
-[node name="ParryDodgeEye" parent="UI/HudMargin/HudColumn/HudRow/HudPanel/HudVBox" instance=ExtResource("4_eye")]
+[node name="ReferenceBottomParty" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 9
+anchor_left = 0.66
+anchor_top = 1.0
+anchor_right = 0.98
+anchor_bottom = 1.0
+offset_top = -152.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="BottomPartyVBox" type="VBoxContainer" parent="UI/ReferenceBottomParty"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PartyRowA" type="HBoxContainer" parent="UI/ReferenceBottomParty/BottomPartyVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PartyPortraitA" type="ColorRect" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowA"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+color = Color(0.18, 0.17, 0.2, 0.92)
+
+[node name="PartyColA" type="VBoxContainer" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowA"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="PartyNameA" type="Label" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowA/PartyColA"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Wille"
+
+[node name="PlayerHP" type="ProgressBar" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowA/PartyColA"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 9)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Stamina" type="ProgressBar" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowA/PartyColA"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="PartyHpNumsA" type="Label" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowA/PartyColA"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "100 / 100"
 
-[node name="HudFill" type="Control" parent="UI/HudMargin/HudColumn"]
+[node name="PartyRowB" type="HBoxContainer" parent="UI/ReferenceBottomParty/BottomPartyVBox"]
 layout_mode = 2
-size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="PartyPortraitB" type="ColorRect" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowB"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+color = Color(0.18, 0.17, 0.2, 0.88)
+
+[node name="PartyColB" type="VBoxContainer" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowB"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="PartyNameB" type="Label" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowB/PartyColB"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Trewthe"
+
+[node name="PartyHPB" type="ProgressBar" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowB/PartyColB"]
+custom_minimum_size = Vector2(0, 9)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 78.0
+show_percentage = false
+
+[node name="PartyHpNumsB" type="Label" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowB/PartyColB"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "78 / 100"
+
+[node name="PartyRowC" type="HBoxContainer" parent="UI/ReferenceBottomParty/BottomPartyVBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PartyPortraitC" type="ColorRect" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowC"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+color = Color(0.18, 0.17, 0.2, 0.84)
+
+[node name="PartyColC" type="VBoxContainer" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowC"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="PartyNameC" type="Label" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowC/PartyColC"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Mercian"
+
+[node name="PartyHPC" type="ProgressBar" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowC/PartyColC"]
+custom_minimum_size = Vector2(0, 9)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+value = 88.0
+show_percentage = false
+
+[node name="PartyHpNumsC" type="Label" parent="UI/ReferenceBottomParty/BottomPartyVBox/PartyRowC/PartyColC"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "88 / 100"
+
+[node name="FooterHints" type="Label" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -36.0
+offset_right = 560.0
+offset_bottom = -10.0
+grow_vertical = 0
 mouse_filter = 2
+theme_override_font_sizes/font_size = 10
+text = "Esc — Pause  ·  Flee not; this is a dreme"
 
 [node name="ActionBar" type="MarginContainer" parent="UI"]
 layout_mode = 1
-anchors_preset = 12
-anchor_left = 0.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -108.0
-offset_right = -8.0
-offset_bottom = -4.0
-grow_horizontal = 2
+anchors_preset = 0
+anchor_left = 0.15
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.86
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
 grow_vertical = 0
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 2
@@ -250,42 +475,108 @@ grow_vertical = 2
 
 [node name="ActionPanel" type="PanelContainer" parent="UI/ActionBar/ActionCenter"]
 layout_mode = 2
-custom_minimum_size = Vector2(420, 0)
+custom_minimum_size = Vector2(360, 0)
 
 [node name="ActionInner" type="VBoxContainer" parent="UI/ActionBar/ActionCenter/ActionPanel"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="ControlsHint" type="Label" parent="UI/ActionBar/ActionPanel/ActionInner"]
+[node name="ControlsHint" type="Label" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 11
-text = "Strike — X   ·   Dodge — Space   ·   Parry — Shift   ·   Pause — Esc"
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 10
+text = "Esc — Pause"
+horizontal_alignment = 0
 autowrap_mode = 3
 
-[node name="ActionRow" type="HBoxContainer" parent="UI/ActionBar/ActionPanel/ActionInner"]
+[node name="ReadRow" type="HBoxContainer" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner"]
 layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="StrikeCombatButton" type="Button" parent="UI/ActionBar/ActionPanel/ActionInner/ActionRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(118, 32)
+[node name="ReadLabel" type="Label" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ReadRow"]
+custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Read"
+
+[node name="ReadCue" type="Label" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ReadRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.65, 0.6, 0.52, 1)
+text = "wind-up · cue · ear the pitch"
+autowrap_mode = 3
+
+[node name="ActionSkew" type="Control" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner"]
+custom_minimum_size = Vector2(300, 132)
+layout_mode = 2
+rotation = -0.0872664626
+pivot_offset = Vector2(150, 66)
+
+[node name="ActionCommandCol" type="VBoxContainer" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+
+[node name="StrikeRow" type="HBoxContainer" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StrikeHint" type="Label" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol/StrikeRow"]
+custom_minimum_size = Vector2(52, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "[X]"
+
+[node name="StrikeCombatButton" type="Button" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol/StrikeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Strike"
 
-[node name="DodgeCombatButton" type="Button" parent="UI/ActionBar/ActionPanel/ActionInner/ActionRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(118, 32)
+[node name="DodgeRow" type="HBoxContainer" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol"]
 layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DodgeHint" type="Label" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol/DodgeRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Space"
+
+[node name="DodgeCombatButton" type="Button" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol/DodgeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Dodge"
 
-[node name="ParryCombatButton" type="Button" parent="UI/ActionBar/ActionPanel/ActionInner/ActionRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(118, 32)
+[node name="ParryRow" type="HBoxContainer" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol"]
 layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ParryHint" type="Label" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol/ParryRow"]
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Shift"
+
+[node name="ParryCombatButton" type="Button" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner/ActionSkew/ActionCommandCol/ParryRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Parry"
+
+[node name="ParryDodgeEye" parent="UI/ActionBar/ActionCenter/ActionPanel/ActionInner" instance=ExtResource("4_eye")]
+unique_name_in_owner = true
+layout_mode = 2
+scale = Vector2(0.82, 0.82)
 
 [node name="PauseLayer" type="CanvasLayer" parent="."]
 process_mode = 3

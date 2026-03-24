@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8navtest001"]
+[gd_scene load_steps=13 format=3 uid="uid://c8navtest001"]
 
 [ext_resource type="Script" path="res://scripts/nav_test_yard.gd" id="1_nav"]
 
@@ -41,6 +41,16 @@ height = 1.5
 [sub_resource type="StandardMaterial3D" id="PlayerMat"]
 shading_mode = 0
 albedo_color = Color(0.32, 0.55, 0.42, 1)
+
+[sub_resource type="BoxShape3D" id="CrateShape"]
+size = Vector3(1.5, 0.9, 1.15)
+
+[sub_resource type="BoxMesh" id="CrateMesh"]
+size = Vector3(1.5, 0.9, 1.15)
+
+[sub_resource type="StandardMaterial3D" id="CrateMat"]
+shading_mode = 0
+albedo_color = Color(0.22, 0.2, 0.18, 1)
 
 [node name="NavTestYard" type="Node"]
 script = ExtResource("1_nav")
@@ -85,6 +95,44 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 mesh = SubResource("GateMeshRes")
 surface_material_override/0 = SubResource("GateMat")
+
+[node name="GateObstacle" type="NavigationObstacle3D" parent="World/GateBody"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+radius = 1.35
+height = 2.5
+
+[node name="DecorCrateA" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0.45, -5.5)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/DecorCrateA"]
+shape = SubResource("CrateShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/DecorCrateA"]
+mesh = SubResource("CrateMesh")
+surface_material_override/0 = SubResource("CrateMat")
+
+[node name="NavObstacle" type="NavigationObstacle3D" parent="World/DecorCrateA"]
+radius = 0.95
+height = 1.2
+
+[node name="DecorCrateB" type="StaticBody3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.42, 6.4)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/DecorCrateB"]
+shape = SubResource("CrateShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/DecorCrateB"]
+mesh = SubResource("CrateMesh")
+surface_material_override/0 = SubResource("CrateMat")
+
+[node name="NavObstacle" type="NavigationObstacle3D" parent="World/DecorCrateB"]
+radius = 0.95
+height = 1.2
 
 [node name="Player" type="CharacterBody3D" parent="World"]
 unique_name_in_owner = true

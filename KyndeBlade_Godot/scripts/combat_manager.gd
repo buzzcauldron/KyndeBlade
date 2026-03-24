@@ -8,12 +8,17 @@ signal combat_ended(victory: bool)
 signal stats_changed(player_hp: float, player_max: float, enemy_hp: float, enemy_max: float, stamina: float, stamina_max: float)
 ## Emitted when a dodge/parry defensive window opens; `is_real_swing` is false for a feint.
 signal defensive_window_started(is_real_swing: bool)
+## Fired when dodge/parry commits but the encounter delays the window (windup); same truth as the upcoming window.
+signal defensive_windup_started(is_real_swing: bool)
 ## Dreamer (Wille) presentation: strike / dodge / parry committed after stamina gate passes.
 signal dreamer_move_committed(move_kind: DreamerMoveKind)
 
-enum State { WAITING_PLAYER, EXECUTING, REAL_TIME_WINDOW, ENEMY_TURN, ENDED }
+enum State { WAITING_PLAYER, EXECUTING, REAL_TIME_WINDOW, ENEMY_TURN, DEFENSE_WINDUP, ENDED }
 
 enum DreamerMoveKind { STRIKE, DODGE, PARRY }
+
+## If `EncounterDef.defensive_windup_sec` is **0**, playable runs still use this gather so the eye / wind-up SFX read. **Headless** skips via [member use_instant_resolution_for_tests].
+const MIN_GATHER_WHEN_WINDUP_ZERO_SEC := 0.22
 
 ## Loaded from `data/encounter_fair_field.tres` if unset (parity: demo-fayre-felde-encounter-wired).
 @export var encounter: EncounterDef
@@ -42,6 +47,8 @@ var _enemy_will_hit: bool = true
 var _defense_windows_resolved: int = 0
 ## When **true**, `REAL_TIME_WINDOW` is the enemy-turn reaction phase (dodge/parry before `enemy_turn_damage` applies).
 var _enemy_turn_reaction_window: bool = false
+var _windup_preview_real: bool = true
+var _pending_window_duration: float = 1.5
 
 
 func is_enemy_swing_real() -> bool:
@@ -50,6 +57,11 @@ func is_enemy_swing_real() -> bool:
 
 func is_enemy_turn_reaction_window_active() -> bool:
 	return _enemy_turn_reaction_window
+
+
+## During [constant State.DEFENSE_WINDUP], the upcoming swing truth (matches next window).
+func defensive_preview_is_real() -> bool:
+	return _windup_preview_real
 
 
 ## `t` in [0,1] for phased UI: 0 = window start, 1 = window end (matches Unity `1 - remaining/duration`).
@@ -69,6 +81,11 @@ func apply_piers_hazard_damage() -> float:
 
 
 func _ready() -> void:
+	var pend := GameState.pending_combat_encounter_path.strip_edges()
+	if not pend.is_empty():
+		GameState.pending_combat_encounter_path = ""
+		if ResourceLoader.exists(pend):
+			encounter = load(pend) as EncounterDef
 	if encounter == null:
 		encounter = load("res://data/encounter_fair_field.tres") as EncounterDef
 	var feint_from_reads: int = PlayerMovesetModifiers.feint_pattern_offset_delta()
@@ -176,7 +193,7 @@ func player_dodge() -> void:
 	player_dodging = true
 	player_parrying = false
 	dreamer_move_committed.emit(DreamerMoveKind.DODGE)
-	_begin_defensive_window(1.5)
+	_request_defensive_window(1.5)
 
 
 func player_parry() -> void:
@@ -197,7 +214,42 @@ func player_parry() -> void:
 	player_parrying = true
 	player_dodging = false
 	dreamer_move_committed.emit(DreamerMoveKind.PARRY)
-	_begin_defensive_window(PlayerMovesetModifiers.parry_window_ms() / 1000.0)
+	_request_defensive_window(PlayerMovesetModifiers.parry_window_ms() / 1000.0)
+
+
+func _defensive_windup_sec() -> float:
+	if encounter == null:
+		return 0.0
+	return maxf(0.0, encounter.defensive_windup_sec)
+
+
+func _effective_defensive_windup_sec() -> float:
+	if use_instant_resolution_for_tests:
+		return _defensive_windup_sec()
+	var w: float = _defensive_windup_sec()
+	if w > 0.0001:
+		return w
+	return MIN_GATHER_WHEN_WINDUP_ZERO_SEC
+
+
+func _request_defensive_window(duration: float) -> void:
+	var wu := _effective_defensive_windup_sec()
+	if wu > 0.0001 and not use_instant_resolution_for_tests:
+		_pending_window_duration = duration
+		_windup_preview_real = enemy_swing_is_hit_for_window_index(_defense_windows_resolved, feint_pattern_offset)
+		state = State.DEFENSE_WINDUP
+		_emit_stats()
+		turn_changed.emit()
+		defensive_windup_started.emit(_windup_preview_real)
+		get_tree().create_timer(wu).timeout.connect(_finish_defense_windup, CONNECT_ONE_SHOT)
+	else:
+		_begin_defensive_window(duration)
+
+
+func _finish_defense_windup() -> void:
+	if state != State.DEFENSE_WINDUP:
+		return
+	_begin_defensive_window(_pending_window_duration)
 
 
 func _begin_defensive_window(duration: float) -> void:
@@ -311,8 +363,9 @@ func _begin_enemy_turn_reaction_window() -> void:
 
 func _apply_enemy_turn_damage_immediate() -> void:
 	var dmg: float = encounter.enemy_turn_damage if encounter else 18.0
+	var bleed: float = encounter.enemy_turn_bleed_damage if encounter else 0.0
 	var hazard: float = apply_piers_hazard_damage()
-	player_hp = maxf(0, player_hp - dmg - hazard)
+	player_hp = maxf(0, player_hp - dmg - bleed - hazard)
 	_emit_stats()
 	if player_hp <= 0:
 		state = State.ENDED

@@ -33,4 +33,4 @@ func _on_fell_in_moat() -> void:
 
 
 func _on_back_pressed() -> void:
-	get_tree().change_scene_to_file(MENU_SCENE)
+	await ManuscriptNav.turn_page_to(MENU_SCENE)

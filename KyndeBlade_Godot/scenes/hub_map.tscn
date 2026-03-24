@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8hubmap001"]
+[gd_scene load_steps=6 format=3 uid="uid://c8hubmap001"]
 
 [ext_resource type="Script" path="res://scripts/hub_map.gd" id="1_hub"]
 [ext_resource type="Script" path="res://scripts/hub_crawl_parallax.gd" id="2_crawl_bg"]
 [ext_resource type="Texture2D" path="res://assets/ui_manuscript/historiated_margin_crowned_figure.png" id="3_hist"]
+[ext_resource type="Script" path="res://scripts/hub_route_map.gd" id="4_route"]
 
 [node name="HubMap" type="Control"]
 layout_mode = 3
@@ -23,29 +24,41 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_crawl_bg")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="WeatherFX" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="WeatherRoot" type="Node2D" parent="WeatherFX"]
+
+[node name="RouteColumns" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 0
+theme_override_constants/separation = 14
+
+[node name="LeftWrap" type="MarginContainer" parent="RouteColumns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
+theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 24
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
+[node name="VBox" type="VBoxContainer" parent="RouteColumns/LeftWrap"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Title" type="Label" parent="Margin/VBox"]
+[node name="Title" type="Label" parent="RouteColumns/LeftWrap/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.92, 0.84, 0.65, 1)
-text = "Heere the weyes parte — thi drem"
+text = "Heere the weyes parte — each road, another leaf"
 
-[node name="LocationLabel" type="RichTextLabel" parent="Margin/VBox"]
+[node name="LocationLabel" type="RichTextLabel" parent="RouteColumns/LeftWrap/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
@@ -54,36 +67,47 @@ scroll_active = false
 theme_override_font_sizes/normal_font_size = 16
 text = "Current: —"
 
-[node name="HintLabel" type="Label" parent="Margin/VBox"]
+[node name="HintLabel" type="Label" parent="RouteColumns/LeftWrap/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.7, 0.66, 0.58, 1)
 text = "Chuse whither thou goest. In this slice the Fayr Feeld lieth open; othir stedes bide locked."
 
-[node name="FairFieldButton" type="Button" parent="Margin/VBox"]
+[node name="FairFieldButton" type="Button" parent="RouteColumns/LeftWrap/VBox"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "Travel to Fair Field"
 
-[node name="LockedButton" type="Button" parent="Margin/VBox"]
+[node name="LockedButton" type="Button" parent="RouteColumns/LeftWrap/VBox"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 disabled = true
 text = "Dongeoun (locked)"
 
-[node name="WorldAtlasButton" type="Button" parent="Margin/VBox"]
+[node name="WorldAtlasButton" type="Button" parent="RouteColumns/LeftWrap/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
-text = "World atlas — all stedes (skeleton)"
+text = "Writers’ index — all stedes (skeleton)"
 
-[node name="BackButton" type="Button" parent="Margin/VBox"]
+[node name="BackButton" type="Button" parent="RouteColumns/LeftWrap/VBox"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "Back to main menu"
+
+[node name="HubRouteMap" type="Control" parent="RouteColumns"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 280)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 0
+script = ExtResource("4_route")
 
 [node name="FlavorPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -162,10 +186,10 @@ text = "Proceed unto the fecht"
 layout_mode = 2
 text = "Cancel"
 
-[connection signal="pressed" from="Margin/VBox/FairFieldButton" to="." method="_on_fair_field_pressed"]
-[connection signal="pressed" from="Margin/VBox/LockedButton" to="." method="_on_locked_pressed"]
-[connection signal="pressed" from="Margin/VBox/WorldAtlasButton" to="." method="_on_world_atlas_pressed"]
-[connection signal="pressed" from="Margin/VBox/BackButton" to="." method="_on_back_menu_pressed"]
+[connection signal="pressed" from="RouteColumns/LeftWrap/VBox/FairFieldButton" to="." method="_on_fair_field_pressed"]
+[connection signal="pressed" from="RouteColumns/LeftWrap/VBox/LockedButton" to="." method="_on_locked_pressed"]
+[connection signal="pressed" from="RouteColumns/LeftWrap/VBox/WorldAtlasButton" to="." method="_on_world_atlas_pressed"]
+[connection signal="pressed" from="RouteColumns/LeftWrap/VBox/BackButton" to="." method="_on_back_menu_pressed"]
 [connection signal="pressed" from="FlavorPanel/FVBox/CounselRow/CounselTrewthe" to="." method="_on_counsel_trewthe_pressed"]
 [connection signal="pressed" from="FlavorPanel/FVBox/CounselRow/CounselMede" to="." method="_on_counsel_mede_pressed"]
 [connection signal="pressed" from="FlavorPanel/FVBox/CounselRow/CounselHunger" to="." method="_on_counsel_hunger_pressed"]

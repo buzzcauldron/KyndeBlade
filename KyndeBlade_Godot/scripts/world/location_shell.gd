@@ -97,34 +97,42 @@ func _build_next_buttons(loc_id: String) -> void:
 
 
 func _is_skeleton_travel_allowed(target_id: String) -> bool:
-	## Slice: only hub-safe destinations are interactive; everything else is preview-only from atlas.
+	## Slice: act-1 graph only (tour, Fair Field, Dongeoun after first combat); rest preview-only.
 	if target_id == GameWorldIds.LOCATION_FAYRE_FELDE:
 		return true
 	if target_id == GameWorldIds.LOCATION_TOUR:
 		return true
+	if target_id == GameWorldIds.LOCATION_DONGEOUN:
+		return GameState.fair_field_cleared
 	return false
 
 
 func _on_next_pressed(target_id: String) -> void:
 	if not _is_skeleton_travel_allowed(target_id):
-		WorldNav.open_location_preview(target_id)
+		await WorldNav.open_location_preview(target_id)
 		return
 	if target_id == GameWorldIds.LOCATION_FAYRE_FELDE:
 		GameState.record_location_visit("fayre_felde")
 		GameState.current_location_id = "fayre_felde"
 		GameState.sync_to_save()
-		get_tree().change_scene_to_file(HUB)
+		await ManuscriptNav.turn_page_to(HUB)
 		return
 	if target_id == GameWorldIds.LOCATION_TOUR:
 		GameState.record_location_visit("tour")
 		GameState.current_location_id = "tour"
 		GameState.sync_to_save()
-		get_tree().change_scene_to_file(HUB)
+		await ManuscriptNav.turn_page_to(HUB)
+		return
+	if target_id == GameWorldIds.LOCATION_DONGEOUN:
+		GameState.record_location_visit("dongeoun")
+		GameState.current_location_id = "dongeoun"
+		GameState.sync_to_save()
+		await ManuscriptNav.turn_page_to(HUB)
 
 
 func _on_back_hub_pressed() -> void:
-	get_tree().change_scene_to_file(HUB)
+	await ManuscriptNav.turn_page_to(HUB)
 
 
 func _on_back_atlas_pressed() -> void:
-	WorldNav.open_world_atlas()
+	await WorldNav.open_world_atlas()

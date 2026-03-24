@@ -4,17 +4,17 @@ Run automated checks for [`KyndeBlade_Godot/`](../KyndeBlade_Godot/). **TDAD:** 
 
 ## Prerequisites
 
-- **Godot 4.6.1** (or **4.6.x**) binary on `PATH` (e.g. `godot4`, or rename the editor binary).
+- **Godot 4.6.1** (or **4.6.x**): the editor binary inside the macOS `.app` is named **`Godot`** (capital G). This repo ships a launcher that works in **non-interactive** shells too: [`scripts/godot4`](../scripts/godot4) (executable; forwards to `Godot` after fixing `PATH`).
 - Project path: repo root + `KyndeBlade_Godot`.
 
 ### PATH on macOS (this repo + your shell)
 
-- **Cursor / VS Code:** [`.vscode/settings.json`](../.vscode/settings.json) prepends `Godot.app` / `Godot 4.app` `Contents/MacOS` to `PATH` in the **integrated terminal** (new terminal tab after saving).
-- **System zsh:** if you use the snippet in `~/.zshrc` (Godot paths + optional `alias godot4=Godot`), open a **new** terminal or run `source ~/.zshrc`. Install Godot from [godotengine.org](https://godotengine.org/download) or `brew install --cask godot` (adjust paths in `.zshrc` if the cask uses a different app name).
+- **Cursor / VS Code:** [`.vscode/settings.json`](../.vscode/settings.json) prepends `Godot.app` / `Godot 4.app` `Contents/MacOS` (and optional `${workspaceFolder}/.cache/Godot.app/...`) to `PATH` in the **integrated terminal** (new terminal tab after saving).
+- **System zsh:** `source scripts/path_godot4.zsh` from this repo (see file header) or prepend `scripts/` to `PATH` so `godot4` resolves to the launcher. Install Godot from [godotengine.org](https://godotengine.org/download) or `brew install --cask godot`.
 
 ## Headless smoke (no addon)
 
-The project ships [`tests/run_headless_tests.gd`](../KyndeBlade_Godot/tests/run_headless_tests.gd). It runs save/settings/export checks, scene smokes (**main menu Continue**, **hub counsel gate**, **combat pause vs window tick**, **world atlas**, **location shell**), **`_test_scene_transition_smoke`** (loads `hub_map.tscn` and `combat.tscn`, mounts each for one frame — future crawl pop-out path), then **[`tests/combat_scenarios.gd`](../KyndeBlade_Godot/tests/combat_scenarios.gd)** (strike loop, dodge/parry windows, feint chip, stamina gate, defeat) via `CombatManager.use_instant_resolution_for_tests`, then exits.
+The project ships [`tests/run_headless_tests.gd`](../KyndeBlade_Godot/tests/run_headless_tests.gd). It runs save/settings/export checks (incl. **dongeoun gate** + **`combat_defense_tip_ack`** roundtrips, **`narrative_beats_skeleton_lines`**, and **`replay_moveset_matrix`** — parry/feint/hunger/misstep/read-text + `NarrativeContext` return visit), scene smokes (**main menu Continue**, **hub counsel gate**, **combat pause vs window tick**, **world atlas**, **location shell**, **`slice_open_yard_scene_smoke`**), **`_test_scene_transition_smoke`** (loads `hub_map.tscn` and `combat.tscn`, mounts each for one frame — future crawl pop-out path), then **[`tests/combat_scenarios.gd`](../KyndeBlade_Godot/tests/combat_scenarios.gd)** (strike loop, dodge/parry windows, feint chip, stamina gate, defeat) via `CombatManager.use_instant_resolution_for_tests`, then exits.
 
 ## TDAD `godot-demo-components` traceability
 
@@ -43,13 +43,13 @@ Each row maps a node in [`.tdad/workflows/godot-demo-components/godot-demo-compo
 
 ```bash
 cd /path/to/KyndeBlade
-godot4 --path KyndeBlade_Godot --headless --script res://tests/run_headless_tests.gd
+godot4 --path KyndeBlade_Godot --headless res://tests/headless_main.tscn
 ```
 
 - Exit code **0** = all assertions passed.
 - Exit code **1** = failure (see stderr).
 
-**Note:** Autoloads from `project.godot` load with `--path`; the script extends `SceneTree` and runs after the engine initializes.
+**Note:** Entry scene `tests/headless_main.tscn` mounts [`run_headless_tests.gd`](../KyndeBlade_Godot/tests/run_headless_tests.gd) on a `Node` so autoload singletons (`SaveService`, `GameState`, …) exist before the runner script compiles. Running with `--script` on a `SceneTree` script was unreliable on Godot **4.6.x** (singletons not in scope at compile time).
 
 ## Local editor
 
@@ -78,7 +78,7 @@ jobs:
         with:
           godot_executable_download_url: 'https://github.com/godotengine/godot/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip'
       - name: Run headless tests
-        run: godot --path KyndeBlade_Godot --headless --script res://tests/run_headless_tests.gd
+        run: godot --path KyndeBlade_Godot --headless res://tests/headless_main.tscn
 ```
 
 Adjust the download URL to your pinned Godot version. If the action is overkill, use a plain `curl` + `unzip` step.
